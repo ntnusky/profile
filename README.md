@@ -1,0 +1,2 @@
+# profile
+Puppet profiles
