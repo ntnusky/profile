@@ -4,7 +4,7 @@ class profile::mysqlcluster {
   $rootpassword = hiera("profile::mysqlcluster::root_password")
   $bind_ip = hiera("profile::mysql::ip")
 
-  include ::haproxy
+  #include ::haproxy
 
   anchor { "profile::mysqlcluster::start" : } ->
   class { '::galera' : 
@@ -17,7 +17,7 @@ class profile::mysqlcluster {
     override_options    => {
       'mysqld' => {
         'port' => '3306',
-        'bind' => $bind_ip,
+        'bind-address' => $bind_ip,
       }
     },
   }->
