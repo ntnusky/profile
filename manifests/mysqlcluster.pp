@@ -2,6 +2,7 @@ class profile::mysqlcluster {
   $servers = hiera("controlleraddresses")
   $master  = hiera("profile::mysqlcluster::master")
   $rootpassword = hiera("profile::mysqlcluster::root_password")
+  $bind_ip = hiera("profile::mysql::ip")
 
   include ::haproxy
 
@@ -12,11 +13,11 @@ class profile::mysqlcluster {
     galera_package_name => "galera-3",
     vendor_type         => "mariadb",
     root_password       => $rootpassword,
-    local_ip            => "0.0.0.0",
-    before		=> Service["haproxy"],
+    local_ip            => $::ipaddress_eth1,
     override_options    => {
       'mysqld' => {
         'port' => '3306',
+        'bind' => $bind_ip,
       }
     },
   }->
