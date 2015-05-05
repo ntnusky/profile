@@ -16,4 +16,12 @@ class profile::baseconfig {
 		mode  => 444,
 		source => "puppet:///modules/profile/hosts",
 	}  
+	
+	class { '::ntp':
+		servers => [ '0.no.pool.ntp.org', 
+			'1.no.pool.ntp.org',  
+			'2.no.pool.ntp.org',  
+			'3.no.pool.ntp.org' 
+		],
+	}
 }
