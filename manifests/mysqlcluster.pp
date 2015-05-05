@@ -20,6 +20,13 @@ class profile::mysqlcluster {
       }
     },
   }->
+  mysql_grant { 'root@%/*.*':
+    ensure     => 'present',
+    options    => ['GRANT'],
+    privileges => ['ALL'],
+    table      => '*.*',
+    user       => 'root@%',
+  }->
   mysql_grant { 'haproxy_check@%/mysql.user':
     ensure     => 'present',
     options    => ['GRANT'],
