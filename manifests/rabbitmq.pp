@@ -24,5 +24,5 @@ class profile::rabbitmq {
     read_permission      => '.*',
     provider             => 'rabbitmqctl',
   } ->
-  anchor { "profile::rabbitmq::end" : }->
+  anchor { "profile::rabbitmq::end" : }
 }
