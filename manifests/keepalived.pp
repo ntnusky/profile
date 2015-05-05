@@ -19,13 +19,15 @@ class profile::keepalived {
 
   include ::keepalived
   
-  # Compete for the virtual IP if haproxy is running on the machine  
-  keepalived::vrrp::script { 'check_haproxy':
-    script => '/usr/bin/killall -0 haproxy',
+  keepalived::vrrp::script { 'check_keystone':
+    script => '/usr/bin/killall -0 keystone-all',
+  }
+  keepalived::vrrp::script { 'check_mysql':
+    script => '/usr/bin/killall -0 mysqld',
   }
   
   # Define the virtual addresses
-  keepalived::vrrp::instance { 'management-network':
+  keepalived::vrrp::instance { 'management-database':
     interface         => 'eth1',
     state             => 'MASTER',
     virtual_router_id => '50',
@@ -33,22 +35,45 @@ class profile::keepalived {
     auth_type         => 'PASS',
     auth_pass         => 'oXu7ahca',
     virtual_ipaddress => [
-      '172.16.2.5/32',	# Admin API IP
       '172.16.2.9/32',	# Memcache IP
       '172.16.2.10/32', # Mysql IP
     ],
-    track_script      => 'check_haproxy',
+    track_script      => 'check_mysql',
   }
-  keepalived::vrrp::instance { 'public-network':
+  #keepalived::vrrp::instance { 'public-network':
+  #  interface         => 'eth0',
+  #  state             => 'MASTER',
+  #  virtual_router_id => '50',
+  #  priority          => '100',
+  #  auth_type         => 'PASS',
+  #  auth_pass         => 'oXu7ahca',
+  #  virtual_ipaddress => [
+  #    '172.16.1.5/32',	# Public API IP
+  #  ],
+  #  track_script      => 'check_haproxy',
+  #}
+  keepalived::vrrp::instance { 'admin-keystone':
+    interface         => 'eth1',
+    state             => 'MASTER',
+    virtual_router_id => '51',
+    priority          => '100',
+    auth_type         => 'PASS',
+    auth_pass         => 'oXu7ahca',
+    virtual_ipaddress => [
+      '172.16.2.5/32',	
+    ],
+    track_script      => 'check_keystone',
+  }
+  keepalived::vrrp::instance { 'public-keystone':
     interface         => 'eth0',
     state             => 'MASTER',
-    virtual_router_id => '50',
+    virtual_router_id => '51',
     priority          => '100',
     auth_type         => 'PASS',
     auth_pass         => 'oXu7ahca',
     virtual_ipaddress => [
       '172.16.1.5/32',	# Public API IP
     ],
-    track_script      => 'check_haproxy',
+    track_script      => 'check_keystone',
   }
 }
