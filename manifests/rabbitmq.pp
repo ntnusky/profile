@@ -23,6 +23,6 @@ class profile::rabbitmq {
     write_permission     => '.*',
     read_permission      => '.*',
     provider             => 'rabbitmqctl',
-    require              => Rabbitmq_user[$rabbituser},
+    require              => Rabbitmq_user[$rabbituser],
   }
 }

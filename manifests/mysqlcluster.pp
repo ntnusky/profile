@@ -13,7 +13,7 @@ class profile::mysqlcluster {
     root_password       => $rootpassword,
     local_ip            => $::ipaddress_eth0,
     before		=> Service["haproxy"],
-    override_options    = {
+    override_options    => {
       'mysqld' => {
         'port' => '3307',
       }

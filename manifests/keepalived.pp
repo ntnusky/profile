@@ -3,7 +3,7 @@ class profile::keepalived {
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
   
   # Let VRRP packets trough the firewall of the management interface.
-  if($configure_firewall) = true) {
+  if($configure_firewall == true) {
     firewall { '0003 - Accept VRRP':
       action => 'accept',
       proto  => 'vrrp',
