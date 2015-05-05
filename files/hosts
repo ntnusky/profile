@@ -1,0 +1,18 @@
+127.0.0.1       localhost
+
+172.16.1.2      managerpublic managerpublic.openstack.loc
+172.16.2.2      manager manager.openstack.loc puppet puppet.openstack.loc puppetdb puppetdb.openstack.loc
+
+172.16.1.11     ctrl01public ctrl01public.openstack.loc
+172.16.1.12     ctrl02public ctrl02public.openstack.loc
+172.16.1.13     ctrl03public ctrl03public.openstack.loc
+
+172.16.2.10     mysql mysql.openstack.loc
+172.16.2.11     ctrl01 ctrl01.openstack.loc ctrl01mgmt ctrl01mgmt.openstack.loc
+172.16.2.12     ctrl02 ctrl02.openstack.loc ctrl02mgmt ctrl02mgmt.openstack.loc
+172.16.2.13     ctrl03 ctrl03.openstack.loc ctrl03mgmt ctrl03mgmt.openstack.loc
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
