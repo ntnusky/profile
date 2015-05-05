@@ -5,6 +5,7 @@ class profile::mysqlcluster {
 
   include ::haproxy
 
+  anchor { "profile::mysqlcluster::start" : } ->
   class { '::galera' : 
     galera_servers      => $servers,
     galera_master       => $master,
@@ -18,7 +19,14 @@ class profile::mysqlcluster {
         'port' => '3307',
       }
     },
-  }
+  }->
+  mysql_grant { 'haproxy_check@%/*.*':
+    ensure     => 'present',
+    options    => ['GRANT'],
+    privileges => ['SELECT'],
+    table      => 'mysql.user',
+    user       => 'haproxy_check@%',
+  }->
   
   ::haproxy::listen { 'mysql-cluster':
     collect_exported => false,
@@ -30,7 +38,8 @@ class profile::mysqlcluster {
                    'mysql-check user haproxy_check'],
       'balance' => 'roundrobin',
     }
-  }
+  }->
+  anchor { "profile::mysqlcluster::end" : }
 
   ::Haproxy::Balancermember <<| listening_service == 'mysql-cluster' |>>
 

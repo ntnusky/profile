@@ -1,4 +1,5 @@
 class profile::baseconfig {
+	anchor { "profile::baseconfig::start" : }->
 	package { [
 		'git',
 		'htop',
@@ -8,14 +9,14 @@ class profile::baseconfig {
 		'vim'
 	] :
 		ensure => 'latest',
-	}
+	} ->
 
 	file { "/etc/hosts":
 		owner => "root",
 		group => "root",
 		mode  => 444,
 		source => "puppet:///modules/profile/hosts",
-	}  
+	} ->  
 	
 	class { '::ntp':
 		servers => [ '0.no.pool.ntp.org', 
@@ -23,5 +24,6 @@ class profile::baseconfig {
 			'2.no.pool.ntp.org',  
 			'3.no.pool.ntp.org' 
 		],
-	}
+	}->
+	anchor { "profile::baseconfig::end" : }
 }
