@@ -20,6 +20,10 @@ class profile::mysqlcluster {
       }
     },
   }->
+  mysql_user { 'root@%':
+    ensure     => 'present',
+    password_hash => mysql_password($rootpassword)
+  }->
   mysql_grant { 'root@%/*.*':
     ensure     => 'present',
     options    => ['GRANT'],
