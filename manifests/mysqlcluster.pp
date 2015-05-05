@@ -20,7 +20,7 @@ class profile::mysqlcluster {
       }
     },
   }->
-  mysql_grant { 'haproxy_check@%/*.*':
+  mysql_grant { 'haproxy_check@%/mysql.user':
     ensure     => 'present',
     options    => ['GRANT'],
     privileges => ['SELECT'],
