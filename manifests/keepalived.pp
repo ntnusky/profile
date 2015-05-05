@@ -33,8 +33,9 @@ class profile::keepalived {
     auth_type         => 'PASS',
     auth_pass         => 'oXu7ahca',
     virtual_ipaddress => [
-      '172.16.2.9/32',
-      '172.16.2.10/32',
+      '172.16.2.5/32',	# Admin API IP
+      '172.16.2.9/32',	# Memcache IP
+      '172.16.2.10/32', # Mysql IP
     ],
     track_script      => 'check_haproxy',
   }
@@ -46,8 +47,7 @@ class profile::keepalived {
     auth_type         => 'PASS',
     auth_pass         => 'oXu7ahca',
     virtual_ipaddress => [
-      '172.16.1.9/32',
-      '172.16.1.10/32',
+      '172.16.1.5/32',	# Public API IP
     ],
     track_script      => 'check_haproxy',
   }
