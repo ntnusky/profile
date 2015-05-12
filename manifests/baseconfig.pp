@@ -35,7 +35,7 @@ class profile::baseconfig {
 	ssh_authorized_key { "root@manager":
 		user => "root",
 		type => 'ssh-rsa',
-		key => "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDkc0epI9xYbQgxheiv2w6es/pRnyA0BvUSA/dUvnxjt/CRdWT+z57xaUYVmlwdLTzmisPSxvUov24URpRZhkwLpSKICpsY/hbHii0OE01fWTJrAThAD9SDzyhj6BnB8cLsA8M+tcvqdB9aqOfUfqr7aUwvjDDFzD57Wj7p9TWXl7U0pMHKa5tshNhZNdEVlUwLCU3PM7ucQxvRkNeKiKkul9nMEkw659JGlFQWbeD9mhPGjM8tNLuyBGb3K+RrtBRf5XZfuW8Xu05dB9hqmSjxGLrQuu50SRQdde1n6yh0B9+XvP7QQOXkmVTWspMbnJDnMwbycp9NLS4WCV5Rl3rN root@manager"
+		key => "AAAAB3NzaC1yc2EAAAADAQABAAABAQDkc0epI9xYbQgxheiv2w6es/pRnyA0BvUSA/dUvnxjt/CRdWT+z57xaUYVmlwdLTzmisPSxvUov24URpRZhkwLpSKICpsY/hbHii0OE01fWTJrAThAD9SDzyhj6BnB8cLsA8M+tcvqdB9aqOfUfqr7aUwvjDDFzD57Wj7p9TWXl7U0pMHKa5tshNhZNdEVlUwLCU3PM7ucQxvRkNeKiKkul9nMEkw659JGlFQWbeD9mhPGjM8tNLuyBGb3K+RrtBRf5XZfuW8Xu05dB9hqmSjxGLrQuu50SRQdde1n6yh0B9+XvP7QQOXkmVTWspMbnJDnMwbycp9NLS4WCV5Rl3rN",
 	} ->
 	
 	class { '::ntp':
