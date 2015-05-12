@@ -1,6 +1,6 @@
 class profile::ceph::osd {
-  $controllernames = hiera("controllernames")
-  $controlleraddresses = hiera("controlleraddresses")
+  $controllernames = join(hiera("controllernames"), ",")
+  $controlleraddresses = join(hiera("controlleraddresses"), ",")
   
   $fsid = hiera("profile::ceph::fsid")
   $mon_key = hiera("profile::ceph::monitor_key")
