@@ -17,6 +17,14 @@ class profile::baseconfig {
 		mode  => 444,
 		source => "puppet:///modules/profile/hosts",
 	} ->  
+	
+	file { "/etc/resolvconf/resolv.conf.d/tail" :
+		ensure => file,
+		content => "nameserver 128.39.243.10",
+		mode => 644,
+		owner => "root",
+		group => "root",
+	} ->
 
 	ssh_authorized_key { "eigil@carajillo":
 		user => "eigil",
