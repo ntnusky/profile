@@ -1,4 +1,4 @@
-class profile::ceph::monitor {
+class profile::ceph::osd {
   $controllernames = hiera("controllernames")
   $controlleraddresses = hiera("controlleraddresses")
   
