@@ -6,6 +6,7 @@ class profile::ceph::osd {
   $mon_key = hiera("profile::ceph::monitor_key")
   $admin_key = hiera("profile::ceph::admin_key")
   $bootstrap_osd_key = hiera("profile::ceph::osd_bootstrap_key")
+  $replicas =  hiera("profile::ceph::replicas", undef)
   
   $osds = hiera("profile::ceph::osds")
   
@@ -14,6 +15,7 @@ class profile::ceph::osd {
     fsid  => $fsid,
     mon_initial_members => $controllernames,
     mon_host            => $controlleraddresses,
+    osd_pool_default_size => $replicas,
   }
   ceph::key {'client.bootstrap-osd':
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',

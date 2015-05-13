@@ -6,12 +6,14 @@ class profile::ceph::monitor {
   $mon_key = hiera("profile::ceph::monitor_key")
   $admin_key = hiera("profile::ceph::admin_key")
   $bootstrap_osd_key = hiera("profile::ceph::osd_bootstrap_key")
+  $replicas =  hiera("profile::ceph::replicas", undef)
   
   class { 'ceph::repo': }
   class { 'ceph':
     fsid  => $fsid,
     mon_initial_members => $controllernames,
     mon_host            => $controlleraddresses,
+    osd_pool_default_size => $replicas,
   }
   ceph::mon { $::hostname:
     key => $mon_key,
