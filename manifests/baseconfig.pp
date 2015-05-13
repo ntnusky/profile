@@ -39,7 +39,7 @@ class profile::baseconfig {
 	} ->
 	
 	class { '::ntp':
-		servers => [ '128.39.140.1'],
+		servers => [ 'ntp.hig.no'],
 	}->
 	anchor { "profile::baseconfig::end" : }
 }
