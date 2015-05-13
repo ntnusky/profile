@@ -1,6 +1,6 @@
 class profile::ceph::client {
-  $controllernames = join(hiera("controllernames"), ",")
-  $controlleraddresses = join(hiera("controlleraddresses"), ",")
+  $controllernames = join(hiera("controller::names"), ",")
+  $controlleraddresses = join(hiera("controller::storage::addresses"), ",")
   
   $fsid = hiera("profile::ceph::fsid")
   $admin_key = hiera("profile::ceph::admin_key")

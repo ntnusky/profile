@@ -1,14 +1,13 @@
 class profile::ceph::osd {
-  $controllernames = join(hiera("controllernames"), ",")
-  $controlleraddresses = join(hiera("controlleraddresses"), ",")
+  $controllernames = join(hiera("controller::names"), ",")
+  $controlleraddresses = join(hiera("controller::storage::addresses"), ",")
   
   $fsid = hiera("profile::ceph::fsid")
   $mon_key = hiera("profile::ceph::monitor_key")
   $admin_key = hiera("profile::ceph::admin_key")
   $bootstrap_osd_key = hiera("profile::ceph::osd_bootstrap_key")
   
-  $disks = hiera("profile::ceph::osds")
-  $journals = hiera("profile::ceph::journals", false)
+  $osds = hiera("profile::ceph::osds")
   
   class { 'ceph::repo': }
   class { 'ceph':
@@ -20,12 +19,8 @@ class profile::ceph::osd {
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',
     secret       => $bootstrap_osd_key,
   }
-   
-  if($journals) {
-    fail("Currently not implemented support for ceph journals")
-  } else {
-    ceph::osd {
-      $disks :
-    }
-  }
+
+  class { '::ceph::osds':
+    args => $osds,
+  }   
 }
