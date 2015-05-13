@@ -39,11 +39,7 @@ class profile::baseconfig {
 	} ->
 	
 	class { '::ntp':
-		servers => [ '0.no.pool.ntp.org', 
-			'1.no.pool.ntp.org',  
-			'2.no.pool.ntp.org',  
-			'3.no.pool.ntp.org' 
-		],
+		servers => [ '128.39.140.1'],
 	}->
 	anchor { "profile::baseconfig::end" : }
 }
