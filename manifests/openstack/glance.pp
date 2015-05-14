@@ -36,6 +36,7 @@ class profile::openstack::glance {
     os_region_name      => $region,
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
+    known_stores	=> ["glance.store.rbd.Store"],
   }
   
   class { 'glance::backend::rbd' : 
