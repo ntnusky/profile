@@ -5,8 +5,8 @@ class profile::openstack::glance {
   $glance_key = hiera("profile::ceph::glance_key")
 
   $region = hiera("profile::region")
-  $admin_ip = hiera("profile::api::admin::ip")
-  $public_ip = hiera("profile::api::public::ip")
+  $admin_ip = hiera("profile::api::glance::admin::ip")
+  $public_ip = hiera("profile::api::glance::public::ip")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
