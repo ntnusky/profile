@@ -60,7 +60,7 @@ class profile::openstack::glance {
   
   class  { '::glance::keystone::auth':
     password         => $password,
-    public_address   => $puiblic_ip,
+    public_address   => $public_ip,
     admin_address    => $admin_ip,
     internal_address => $admin_ip,
     region           => $region,
