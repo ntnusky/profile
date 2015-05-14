@@ -16,7 +16,7 @@ class profile::openstack::glance {
   
   anchor { "profile::openstack::glance::begin" : }
   
-  exec { "/usr/bin/ceph pool create images 2048" :
+  exec { "/usr/bin/ceph osd pool create images 2048" :
     unless => "/usr/bin/ceph osd pool get images size",
     before => Anchor['profile::openstack::glance::end'],
     require => Anchor['profile::openstack::glance::begin'],
