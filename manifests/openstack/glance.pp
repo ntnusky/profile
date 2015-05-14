@@ -39,7 +39,8 @@ class profile::openstack::glance {
   
   class { 'glance::backend::rbd' : 
     rbd_store_user      => 'glance',
-    before              => Anchor['profile::openstack::glance::end'],
+    rbd_store_ceph_conf => '/etc/ceph/ceph.client.glance.keyring',
+    before              => Ceph::Key['client.glance'],
     require             => Anchor['profile::openstack::glance::begin'],
   }
   
