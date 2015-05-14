@@ -15,8 +15,8 @@ class profile::openstack::glance {
   include ::profile::openstack::repo
   
   anchor { "profile::openstack::glance::begin" : 
-    require => [ Profile::Mysqlcluster::Anchor["profile::mysqlcluster::end"], 
-                 Profile::Ceph::Monitor::Anchor["profile::ceph::monitor::end"], ],
+    require => [ Anchor["profile::mysqlcluster::end"], 
+                 Anchor["profile::ceph::monitor::end"], ],
   }
   
   exec { "/usr/bin/ceph osd pool create images 2048" :
