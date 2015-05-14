@@ -58,5 +58,20 @@ class profile::openstack::glance {
     require         => Anchor['profile::openstack::glance::begin'],
   }
   
+  class  { '::glance::keystone::auth':
+    password         => $password,
+    public_address   => $puiblic_ip,
+    admin_address    => $admin_ip,
+    internal_address => $admin_ip,
+    region           => $region,
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
+  }
+  
+  class { 'glance::db::mysql' :
+    password         => $password,
+    allowed_hosts    => $allowed_hosts,
+  }
+  
   anchor { "profile::openstack::glance::end" : }
 }
