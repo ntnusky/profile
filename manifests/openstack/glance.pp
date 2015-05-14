@@ -98,8 +98,9 @@ class profile::openstack::glance {
       "${admin_ip}/32",	
     ],
     track_script      => 'check_glance',
-    before           => Anchor['profile::openstack::glance::end'],
-    require          => Anchor['profile::openstack::glance::begin'],
+    before            => Anchor['profile::openstack::glance::end'],
+    require           => Anchor['profile::openstack::glance::begin'],
+    notify            => Service['keepalived'],
   }
 
   keepalived::vrrp::instance { 'public-glance':
@@ -113,8 +114,9 @@ class profile::openstack::glance {
       "${public_ip}/32",	
     ],
     track_script      => 'check_glance',
-    before           => Anchor['profile::openstack::glance::end'],
-    require          => Anchor['profile::openstack::glance::begin'],
+    before            => Anchor['profile::openstack::glance::end'],
+    require           => Anchor['profile::openstack::glance::begin'],
+    notify            => Service['keepalived'],
   }
 
   ceph::key { 'client.glance':
