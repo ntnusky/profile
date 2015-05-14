@@ -11,8 +11,8 @@ class profile::keepalived {
     }
   }
   
-  anchor { "profile::keepalived::begin" }
-  anchor { "profile::keepalived::end" }
+  anchor { "profile::keepalived::begin" : }
+  anchor { "profile::keepalived::end" : }
   
   # Enable bindings to ip's not present on the machine, so that the
   # services can bind to keepalived addresses.
