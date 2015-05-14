@@ -125,7 +125,7 @@ class profile::openstack::glance {
     cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=images',
     before        => Anchor['profile::openstack::glance::end'],
     require       => Anchor['profile::openstack::glance::begin'],
-    keyring_path  => "/etc/ceph/ceph.conf",
+    #keyring_path  => "/etc/ceph/ceph.conf",
   }
   
   anchor { "profile::openstack::glance::end" : }
