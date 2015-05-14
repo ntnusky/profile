@@ -38,10 +38,14 @@ class profile::openstack::glance {
     require             => Anchor['profile::openstack::glance::begin'],
     known_stores	=> ["glance.store.rbd.Store"],
   }
+
+  ceph_config {
+      'client.glance/key':              value => $glance_key;
+  }
   
   class { 'glance::backend::rbd' : 
     rbd_store_user      => 'glance',
-    rbd_store_ceph_conf => '/etc/ceph/ceph.client.glance.keyring',
+    #rbd_store_ceph_conf => '/etc/ceph/ceph.client.glance.keyring',
     before              => Ceph::Key['client.glance'],
     require             => Anchor['profile::openstack::glance::begin'],
   }
