@@ -19,7 +19,7 @@ class profile::openstack::glance {
   exec { "/usr/bin/ceph pool create images 2048" :
     unless => "/usr/bin/ceph osd pool get images size",
     before => Anchor['profile::openstack::glance::end'],
-    after => Anchor['profile::openstack::glance::begin'],
+    require => Anchor['profile::openstack::glance::begin'],
   }
   
   class { '::glance::api':
@@ -31,12 +31,12 @@ class profile::openstack::glance {
     registry_host       => $::ipaddress_eth1,
     os_region_name      => $region,
     before              => Anchor['profile::openstack::glance::end'],
-    after               => Anchor['profile::openstack::glance::begin'],
+    require             => Anchor['profile::openstack::glance::begin'],
   }
   
   class { 'glance::backend::rbd' : 
     before              => Anchor['profile::openstack::glance::end'],
-    after               => Anchor['profile::openstack::glance::begin'],
+    require             => Anchor['profile::openstack::glance::begin'],
   }
   
   class { '::glance::registry':
@@ -47,7 +47,7 @@ class profile::openstack::glance {
     keystone_user       => 'glance',
     mysql_module        => '2.2',
     before              => Anchor['profile::openstack::glance::end'],
-    after               => Anchor['profile::openstack::glance::begin'],
+    require             => Anchor['profile::openstack::glance::begin'],
   }
   
   class { '::glance::notify::rabbitmq':
@@ -55,7 +55,7 @@ class profile::openstack::glance {
     rabbit_userid   => $rabbit_user,
     rabbit_host     => $admin_ip,
     before          => Anchor['profile::openstack::glance::end'],
-    after           => Anchor['profile::openstack::glance::begin'],
+    require         => Anchor['profile::openstack::glance::begin'],
   }
   
   anchor { "profile::openstack::glance::end" : }
