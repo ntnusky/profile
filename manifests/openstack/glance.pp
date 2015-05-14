@@ -2,6 +2,7 @@ class profile::openstack::glance {
   $password = hiera("profile::mysql::glancepass")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $mysql_ip = hiera("profile::mysql::ip")
+  $glance_key = hiera("profile::ceph::glance_key")
 
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::admin::ip")
