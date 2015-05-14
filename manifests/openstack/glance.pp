@@ -26,6 +26,10 @@ class profile::openstack::glance {
     require => Anchor['profile::openstack::glance::begin'],
   }
   
+  glance_api_config {
+    'DEFAULT/default_store': value => "rbd";
+  }
+  
   class { '::glance::api':
     keystone_password   => $password,
     auth_host           => $admin_ip,
