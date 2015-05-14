@@ -10,17 +10,24 @@ class profile::keepalived {
       before => [ Firewall['8999 - Accept all management network traffic'] ],
     }
   }
-
+  
+  anchor { "profile::keepalived::begin" }
+  anchor { "profile::keepalived::end" }
+  
   # Enable bindings to ip's not present on the machine, so that the
   # services can bind to keepalived addresses.
   sysctl::value { 'net.ipv4.ip_nonlocal_bind':
     value => "1",
+    before              => Anchor['profile::keepalived::end'],
+    require             => Anchor['profile::keepalived::begin'],
   }
 
   include ::keepalived
   
   keepalived::vrrp::script { 'check_mysql':
     script => '/usr/bin/killall -0 mysqld',
+    before              => Anchor['profile::keepalived::end'],
+    require             => Anchor['profile::keepalived::begin'],
   }
   
   # Define the virtual addresses
@@ -36,6 +43,8 @@ class profile::keepalived {
       '172.16.2.10/32', # Mysql IP
     ],
     track_script      => 'check_mysql',
+    before              => Anchor['profile::keepalived::end'],
+    require             => Anchor['profile::keepalived::begin'],
   }
   #keepalived::vrrp::instance { 'public-network':
   #  interface         => 'eth0',
