@@ -14,7 +14,10 @@ class profile::openstack::glance {
   
   include ::profile::openstack::repo
   
-  anchor { "profile::openstack::glance::begin" : }
+  anchor { "profile::openstack::glance::begin" : 
+    require => [ "profile::mysqlcluster::end", 
+                 "profile::ceph::monitor::end", ],
+  }
   
   exec { "/usr/bin/ceph osd pool create images 2048" :
     unless => "/usr/bin/ceph osd pool get images size",
@@ -35,6 +38,7 @@ class profile::openstack::glance {
   }
   
   class { 'glance::backend::rbd' : 
+    rbd_store_user      => 'glance',
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
   }
@@ -71,6 +75,51 @@ class profile::openstack::glance {
   class { 'glance::db::mysql' :
     password         => $password,
     allowed_hosts    => $allowed_hosts,
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
+  }
+  keepalived::vrrp::script { 'check_glance':
+    script => '/usr/bin/killall -0 glance-api',
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
+  }
+
+  keepalived::vrrp::instance { 'admin-glance':
+    interface         => 'eth1',
+    state             => 'MASTER',
+    virtual_router_id => '52',
+    priority          => '100',
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${admin_ip}/32",	
+    ],
+    track_script      => 'check_glance',
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
+  }
+
+  keepalived::vrrp::instance { 'public-glance':
+    interface         => 'eth0',
+    state             => 'MASTER',
+    virtual_router_id => '52',
+    priority          => '100',
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${public_ip}/32",	
+    ],
+    track_script      => 'check_glance',
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
+  }
+
+  ceph::key { 'client.glance':
+    secret  => $glance_key,
+    cap_mon => 'allow r',
+    cap_osd => 'allow class-read object_prefix rbd_children, allow rwx pool=images',
+    before           => Anchor['profile::openstack::glance::end'],
+    require          => Anchor['profile::openstack::glance::begin'],
   }
   
   anchor { "profile::openstack::glance::end" : }

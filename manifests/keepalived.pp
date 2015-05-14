@@ -19,9 +19,6 @@ class profile::keepalived {
 
   include ::keepalived
   
-  keepalived::vrrp::script { 'check_keystone':
-    script => '/usr/bin/killall -0 keystone-all',
-  }
   keepalived::vrrp::script { 'check_mysql':
     script => '/usr/bin/killall -0 mysqld',
   }
@@ -33,7 +30,7 @@ class profile::keepalived {
     virtual_router_id => '50',
     priority          => '100',
     auth_type         => 'PASS',
-    auth_pass         => 'oXu7ahca',
+    auth_pass         => $vrrp_password,
     virtual_ipaddress => [
       '172.16.2.9/32',	# Memcache IP
       '172.16.2.10/32', # Mysql IP
@@ -52,28 +49,4 @@ class profile::keepalived {
   #  ],
   #  track_script      => 'check_haproxy',
   #}
-  keepalived::vrrp::instance { 'admin-keystone':
-    interface         => 'eth1',
-    state             => 'MASTER',
-    virtual_router_id => '51',
-    priority          => '100',
-    auth_type         => 'PASS',
-    auth_pass         => 'oXu7ahca',
-    virtual_ipaddress => [
-      '172.16.2.5/32',	
-    ],
-    track_script      => 'check_keystone',
-  }
-  keepalived::vrrp::instance { 'public-keystone':
-    interface         => 'eth0',
-    state             => 'MASTER',
-    virtual_router_id => '51',
-    priority          => '100',
-    auth_type         => 'PASS',
-    auth_pass         => 'oXu7ahca',
-    virtual_ipaddress => [
-      '172.16.1.5/32',	# Public API IP
-    ],
-    track_script      => 'check_keystone',
-  }
 }
