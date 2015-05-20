@@ -1,4 +1,4 @@
-class profile::openstack::neutron {
+class profile::openstack::neutronserver {
   $password = hiera("profile::mysql::neutronpass")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $mysql_ip = hiera("profile::mysql::ip")
