@@ -63,11 +63,11 @@ class profile::openstack::neutronserver {
   }
 
   # Plugin
-  class { '::neutron::plugins::ovs':
-    tenant_network_type => 'gre',
-    before         => Anchor["profile::openstack::neutron::end"],
-    require        => Anchor["profile::openstack::neutron::begin"],
-  }
+  #class { '::neutron::plugins::ovs':
+  #  tenant_network_type => 'gre',
+  #  before         => Anchor["profile::openstack::neutron::end"],
+  #  require        => Anchor["profile::openstack::neutron::begin"],
+  #}
 
   # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
   class { '::neutron::plugins::ml2':
