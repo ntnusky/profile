@@ -1,6 +1,7 @@
 class profile::openstack::neutronserver {
   $password = hiera("profile::mysql::neutronpass")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
+  $keystone_ip = hiera("profile::api::keystone::public::ip")
   $mysql_ip = hiera("profile::mysql::ip")
 
   $region = hiera("profile::region")
@@ -32,7 +33,8 @@ class profile::openstack::neutronserver {
   class { '::neutron::server':
     enabled           => false,
     manage_service    => false,
-    auth_password      => $password,
+    auth_password     => $password,
+    $auth_uri         => "http://${keystone_ip}:5000/"
     connection        => $database_connection,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
