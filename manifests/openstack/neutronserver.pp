@@ -57,7 +57,7 @@ class profile::openstack::neutronserver {
 
   # This plugin configures Neutron for OVS on the server
   # Agent
-  class { '::neutron::agents::ovs':
+  class { '::neutron::agents::ml2::ovs':
     local_ip         => $::ipaddress_eth3,
     enable_tunneling => true,
     before         => Anchor["profile::openstack::neutron::end"],
