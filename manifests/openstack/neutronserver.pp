@@ -30,6 +30,15 @@ class profile::openstack::neutronserver {
     rabbit_host           => 'localhost',
   }
   
+  class { '::neutron::keystone::auth':
+    password         => $password,
+    public_address   => $public_ip,
+    admin_address    => $admin_ip,
+    internal_address => $admin_ip,
+    before           => Anchor["profile::openstack::neutron::end"],
+    require          => Anchor["profile::openstack::neutron::begin"],
+  }
+  
   class { '::neutron::server':
     enabled           => false,
     manage_service    => false,
@@ -49,7 +58,6 @@ class profile::openstack::neutronserver {
   
   # Configure nova notifications system
   class { '::neutron::server::notifications':
-    nova_admin_tenant_name => 'admin',
     nova_admin_password    => $password,
     before                 => Anchor["profile::openstack::neutron::end"],
     require                => Anchor["profile::openstack::neutron::begin"],
