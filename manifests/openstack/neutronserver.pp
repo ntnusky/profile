@@ -32,7 +32,7 @@ class profile::openstack::neutronserver {
   class { '::neutron::server':
     enabled           => false,
     manage_service    => false,
-    keystone_password => $password,
+    auth_password      => $password,
     connection        => $database_connection,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
