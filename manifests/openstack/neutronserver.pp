@@ -34,7 +34,7 @@ class profile::openstack::neutronserver {
     enabled           => false,
     manage_service    => false,
     auth_password     => $password,
-    auth_uri         => "http://${keystone_ip}:5000/",
+    auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
@@ -50,9 +50,9 @@ class profile::openstack::neutronserver {
   # Configure nova notifications system
   class { '::neutron::server::notifications':
     nova_admin_tenant_name => 'admin',
-    nova_admin_password    => 'secrete',
-    before         => Anchor["profile::openstack::neutron::end"],
-    require        => Anchor["profile::openstack::neutron::begin"],
+    nova_admin_password    => $password,
+    before                 => Anchor["profile::openstack::neutron::end"],
+    require                => Anchor["profile::openstack::neutron::begin"],
   }
 
   # This plugin configures Neutron for OVS on the server
@@ -60,8 +60,8 @@ class profile::openstack::neutronserver {
   class { '::neutron::agents::ml2::ovs':
     local_ip         => $::ipaddress_eth3,
     enable_tunneling => true,
-    before         => Anchor["profile::openstack::neutron::end"],
-    require        => Anchor["profile::openstack::neutron::begin"],
+    before           => Anchor["profile::openstack::neutron::end"],
+    require          => Anchor["profile::openstack::neutron::begin"],
   }
 
   # Plugin
