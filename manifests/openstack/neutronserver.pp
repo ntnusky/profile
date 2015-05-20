@@ -34,7 +34,7 @@ class profile::openstack::neutronserver {
     enabled           => false,
     manage_service    => false,
     auth_password     => $password,
-    $auth_uri         => "http://${keystone_ip}:5000/"
+    auth_uri         => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
