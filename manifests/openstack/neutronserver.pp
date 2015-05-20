@@ -1,5 +1,6 @@
 class profile::openstack::neutronserver {
   $password = hiera("profile::mysql::neutronpass")
+  $nova_password = hiera("profile::mysql::novapass")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $keystone_ip = hiera("profile::api::keystone::public::ip")
   $mysql_ip = hiera("profile::mysql::ip")
@@ -7,6 +8,8 @@ class profile::openstack::neutronserver {
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::neutron::admin::ip")
   $public_ip = hiera("profile::api::neutron::public::ip")
+  $nova_admin_ip = hiera("profile::api::nova::admin::ip")
+  $nova_public_ip = hiera("profile::api::nova::public::ip")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -39,6 +42,16 @@ class profile::openstack::neutronserver {
     require          => Anchor["profile::openstack::neutron::begin"],
   }
   
+  # HACK: Should be moved!!! (i guess?)
+  class { '::nova::keystone::auth':
+    password         => $nova_password,
+    public_address   => $nova_public_ip,
+    admin_address    => $nova_admin_ip,
+    internal_address => $nova_admin_ip,
+    before           => Anchor["profile::openstack::neutron::end"],
+    require          => Anchor["profile::openstack::neutron::begin"],
+  }
+  
   class { '::neutron::server':
     enabled           => false,
     manage_service    => false,
@@ -60,7 +73,7 @@ class profile::openstack::neutronserver {
   class { '::neutron::server::notifications':
     nova_admin_password    => $password,
     before                 => Anchor["profile::openstack::neutron::end"],
-    require                => Anchor["profile::openstack::neutron::begin"],
+    require                => Class["::nova::keystone::auth"],
   }
 
   # This plugin configures Neutron for OVS on the server
