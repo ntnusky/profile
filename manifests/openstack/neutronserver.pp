@@ -64,7 +64,7 @@ class profile::openstack::neutronserver {
     nova_admin_password    => $nova_password,
     nova_admin_auth_url    => 'http://${keystone_ip}:35357/v2.0',
     nova_region_name       => $region,
-    nova_url               => 'http://${nove_public_ip}:8774/v2'
+    nova_url               => 'http://${nove_public_ip}:8774/v2',
     before                 => Anchor["profile::openstack::neutron::end"],
     require                => Class["::nova::keystone::auth"],
   }
