@@ -1,6 +1,6 @@
 class profile::openstack::neutronserver {
   $password = hiera("profile::mysql::neutronpass")
-  $nova_password = hiera("profile::mysql::novapass")
+  $nova_password = hiera("profile::nova::keystone::password")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $keystone_ip = hiera("profile::api::keystone::public::ip")
   $mysql_ip = hiera("profile::mysql::ip")
@@ -61,7 +61,10 @@ class profile::openstack::neutronserver {
   
   # Configure nova notifications system
   class { '::neutron::server::notifications':
-    nova_admin_password    => $password,
+    nova_admin_password    => $nova_password,
+    nova_admin_auth_url    => 'http://${keystone_ip}:35357/v2.0',
+    nova_region_name       => $region,
+    nova_url               => 'http://${nove_public_ip}:8774/v2'
     before                 => Anchor["profile::openstack::neutron::end"],
     require                => Class["::nova::keystone::auth"],
   }
