@@ -42,16 +42,6 @@ class profile::openstack::neutronserver {
     require          => Anchor["profile::openstack::neutron::begin"],
   }
   
-  # HACK: Should be moved!!! (i guess?)
-  class { '::nova::keystone::auth':
-    password         => $nova_password,
-    public_address   => $nova_public_ip,
-    admin_address    => $nova_admin_ip,
-    internal_address => $nova_admin_ip,
-    before           => Anchor["profile::openstack::neutron::end"],
-    require          => Anchor["profile::openstack::neutron::begin"],
-  }
-  
   class { '::neutron::server':
     enabled           => false,
     manage_service    => false,
@@ -84,13 +74,6 @@ class profile::openstack::neutronserver {
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
   }
-
-  # Plugin
-  #class { '::neutron::plugins::ovs':
-  #  tenant_network_type => 'gre',
-  #  before         => Anchor["profile::openstack::neutron::end"],
-  #  require        => Anchor["profile::openstack::neutron::begin"],
-  #}
 
   # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
   class { '::neutron::plugins::ml2':
