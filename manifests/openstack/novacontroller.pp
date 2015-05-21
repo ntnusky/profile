@@ -1,0 +1,85 @@
+class profile::openstack::novacontroller {
+  $mysql_password = hiera("profile::mysql::novapass")
+  $allowed_hosts = hiera("profile::mysql::allowed_hosts")
+  $keystone_ip = hiera("profile::api::keystone::public::ip")
+  $mysql_ip = hiera("profile::mysql::ip")
+  $controllers = hiera("controller::management::addresses")
+
+  $region = hiera("profile::region")
+  $neutron_admin_ip = hiera("profile::api::neutron::admin::ip")
+  $nova_admin_ip = hiera("profile::api::nova::admin::ip")
+  $nova_public_ip = hiera("profile::api::nova::public::ip")
+  $glance_admin_ip = hiera("profile::api::glance::admin::ip")
+  $glance_public_ip = hiera("profile::api::glance::public::ip")
+  $nova_secret = hiera("profile::nova::sharedmetadataproxysecret")
+  $nova_password = hiera("profile::nova::keystone::password")
+  $neutron_password = hiera("profile::neutron::keystone::password")
+  
+  $rabbit_user = hiera("profile::rabbitmq::rabbituser")
+  $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
+
+  $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
+  
+  include ::profile::openstack::repo
+  
+  anchor { "profile::openstack::novacontroller::begin" : 
+    require => [ Anchor["profile::mysqlcluster::end"], ],
+  }
+  
+  class { '::nova::keystone::auth':
+    password         => $nova_password,
+    public_address   => $nova_public_ip,
+    admin_address    => $nova_admin_ip,
+    internal_address => $nova_admin_ip,
+    region           => $region,
+    before           => Anchor["profile::openstack::novacontroller::end"],
+    require          => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  class { 'nova':
+    sql_connection      => $database_connection,
+    rabbit_userid       => $rabbit_user,
+    rabbit_password     => $rabbit_pass,
+    image_service       => 'nova.image.glance.GlanceImageService',
+    glance_api_servers  => "${glance_public_ip}:9292",
+    rabbit_hosts        => $controllers,
+    before              => Anchor["profile::openstack::novacontroller::end"],
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  class { 'nova::api':
+    admin_password                       => $nova_password,
+    api_bind_address                     => $nova_public_ip,
+    auth_host                            => $keystone_ip,
+    neutron_metadata_proxy_shared_secret => $nova_secret,
+    before              => Anchor["profile::openstack::novacontroller::end"],
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  class { 'nova::network::neutron':
+    neutron_admin_password    => $neutron_password,
+    neutron_url               => "http://${neutron_admin_ip}:9696",
+    neutron_admin_auth_url    => "http://${keystone_ip}:35357/v2.0",
+    before              => Anchor["profile::openstack::novacontroller::end"],
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  class { 'nova::vncproxy':
+    host    => $nova_public_ip,
+    before              => Anchor["profile::openstack::novacontroller::end"],
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  class { [
+    'nova::scheduler',
+    'nova::objectstore',
+    'nova::cert',
+    'nova::consoleauth',
+    'nova::conductor'
+  ]:
+    before              => Anchor["profile::openstack::novacontroller::end"],
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+  }
+  
+  anchor { "profile::openstack::novacontroller::end" : }
+}
