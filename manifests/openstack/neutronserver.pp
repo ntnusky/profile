@@ -95,21 +95,21 @@ class profile::openstack::neutronserver {
     require        => Anchor["profile::openstack::neutron::begin"],
   }
   
-  cs_primitive { 'neutron_public_ip':
-    primitive_class => 'ocf',
-    primitive_type  => 'IPaddr2',
-    provided_by     => 'heartbeat',
-    parameters      => { 'ip' => $public_ip, 'cidr_netmask' => '24' },
-    operations      => { 'monitor' => { 'interval' => '2s' } },
-  }
-  
-  cs_primitive { 'neutron_private_ip':
-    primitive_class => 'ocf',
-    primitive_type  => 'IPaddr2',
-    provided_by     => 'heartbeat',
-    parameters      => { 'ip' => $private_ip, 'cidr_netmask' => '24' },
-    operations      => { 'monitor' => { 'interval' => '2s' } },
-  }
+#  cs_primitive { 'neutron_public_ip':
+#    primitive_class => 'ocf',
+#    primitive_type  => 'IPaddr2',
+#    provided_by     => 'heartbeat',
+#    parameters      => { 'ip' => $public_ip, 'cidr_netmask' => '24' },
+#    operations      => { 'monitor' => { 'interval' => '2s' } },
+#  }
+#  
+#  cs_primitive { 'neutron_private_ip':
+#    primitive_class => 'ocf',
+#    primitive_type  => 'IPaddr2',
+#    provided_by     => 'heartbeat',
+#    parameters      => { 'ip' => $private_ip, 'cidr_netmask' => '24' },
+#    operations      => { 'monitor' => { 'interval' => '2s' } },
+#  }
   
   anchor { "profile::openstack::neutron::end" : }
 }
