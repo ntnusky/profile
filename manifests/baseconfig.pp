@@ -2,6 +2,7 @@ class profile::baseconfig {
 	anchor { "profile::baseconfig::start" : }->
 	package { [
 		'git',
+		'hpacucli',
 		'htop',
 		'nmap',
 		'pwgen',
