@@ -92,7 +92,7 @@ class profile::openstack::novacontroller {
   keepalived::vrrp::instance { 'admin-nova':
     interface         => 'eth1',
     state             => 'MASTER',
-    virtual_router_id => '52',
+    virtual_router_id => '53',
     priority          => '100',
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
@@ -105,7 +105,7 @@ class profile::openstack::novacontroller {
   keepalived::vrrp::instance { 'public-nova':
     interface         => 'eth0',
     state             => 'MASTER',
-    virtual_router_id => '52',
+    virtual_router_id => '53',
     priority          => '100',
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
