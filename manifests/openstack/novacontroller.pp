@@ -54,6 +54,7 @@ class profile::openstack::novacontroller {
     neutron_metadata_proxy_shared_secret => $nova_secret,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
+    enabled		=> true,
   }
   
   class { 'nova::network::neutron':
@@ -68,6 +69,7 @@ class profile::openstack::novacontroller {
     host    => $nova_public_ip,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
+    enabled		=> true,
   }
   
   class { [
@@ -79,6 +81,39 @@ class profile::openstack::novacontroller {
   ]:
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
+    enabled		=> true,
+  }
+
+  keepalived::vrrp::script { 'check_nova':
+    require             => Anchor["profile::openstack::novacontroller::begin"],
+    script => '/usr/bin/killall -0 keystone-all',
+  } ->
+
+  keepalived::vrrp::instance { 'admin-nova':
+    interface         => 'eth1',
+    state             => 'MASTER',
+    virtual_router_id => '52',
+    priority          => '100',
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${nova_admin_ip}/32",	
+    ],
+    track_script      => 'check_nova',
+  } ->
+
+  keepalived::vrrp::instance { 'public-nova':
+    interface         => 'eth0',
+    state             => 'MASTER',
+    virtual_router_id => '52',
+    priority          => '100',
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${nova_public_ip}/32",	
+    ],
+    track_script      => 'check_nova',
+    before              => Anchor["profile::openstack::novacontroller::end"],
   }
   
   anchor { "profile::openstack::novacontroller::end" : }
