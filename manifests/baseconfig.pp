@@ -1,4 +1,6 @@
 class profile::baseconfig {
+  include ::hpacucli
+
   anchor { "profile::baseconfig::start" : }->
   package { [
     'git',
@@ -10,7 +12,7 @@ class profile::baseconfig {
   ] :
     ensure => 'latest',
   } ->
-
+  
   file { "/etc/hosts":
     owner => "root",
     group => "root",
