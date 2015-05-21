@@ -3,6 +3,7 @@ class profile::baseconfig {
 
   anchor { "profile::baseconfig::start" : }->
   package { [
+    'fio',
     'git',
     'htop',
     'nmap',
