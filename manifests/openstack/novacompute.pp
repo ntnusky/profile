@@ -59,7 +59,7 @@ class profile::openstack::novacompute {
 
   file { '/etc/libvirt/qemu.conf':
     ensure => present,
-    source => 'puppet:///modules/openstack/qemu.conf',
+    source => 'puppet:///modules/profile/qemu.conf',
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
