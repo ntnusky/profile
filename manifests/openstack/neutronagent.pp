@@ -38,15 +38,15 @@ class profile::openstack::neutronagent {
     rabbit_hosts          => $rabbit_hosts,
   }
   
-  class { '::neutron::keystone::auth':
-    password         => $neutron_pass,
-    public_address   => $public_ip,
-    admin_address    => $admin_ip,
-    internal_address => $admin_ip,
-    before           => Anchor["profile::openstack::neutronagent::end"],
-    require          => Anchor["profile::openstack::neutronagent::begin"],
-    region           => $region,
-  }
+#  class { '::neutron::keystone::auth':
+#    password         => $neutron_pass,
+#    public_address   => $public_ip,
+#    admin_address    => $admin_ip,
+#    internal_address => $admin_ip,
+#    before           => Anchor["profile::openstack::neutronagent::end"],
+#    require          => Anchor["profile::openstack::neutronagent::begin"],
+#    region           => $region,
+#  }
   
   class { '::neutron::server':
     enabled           => false,
