@@ -21,6 +21,7 @@ class profile::openstack::novacontroller {
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
+  $sync_db = hiera("profile::nova::sync_db")
   
   include ::profile::openstack::repo
   
@@ -61,6 +62,7 @@ class profile::openstack::novacontroller {
     api_bind_address                     => $nova_public_ip,
     auth_host                            => $keystone_ip,
     neutron_metadata_proxy_shared_secret => $nova_secret,
+    sync_db		=> $sync_db,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
     enabled		=> true,
