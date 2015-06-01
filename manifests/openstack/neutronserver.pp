@@ -12,6 +12,7 @@ class profile::openstack::neutronserver {
   $vrpri = hiera("profile::api::neutron::vrrp::priority")
   $nova_admin_ip = hiera("profile::api::nova::admin::ip")
   $nova_public_ip = hiera("profile::api::nova::public::ip")
+  $service_plugins = hiera("profile::neutron::service_plugins")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -28,7 +29,7 @@ class profile::openstack::neutronserver {
     verbose               => true,
     core_plugin           => 'ml2',
     allow_overlapping_ips => true,
-    service_plugins       => [ 'dhcp', 'l3' ],
+    service_plugins       => $service_plugins,
     before                => Anchor["profile::openstack::neutron::end"],
     require               => Anchor["profile::openstack::neutron::begin"],
     rabbit_password       => $rabbit_pass,
