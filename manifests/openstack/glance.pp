@@ -7,6 +7,8 @@ class profile::openstack::glance {
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::glance::admin::ip")
   $public_ip = hiera("profile::api::glance::public::ip")
+  $vrid = hiera("profile::api::glance::vrrp::id")
+  $vrpri = hiera("profile::api::glance::vrrp::priority")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -98,8 +100,8 @@ class profile::openstack::glance {
   keepalived::vrrp::instance { 'admin-glance':
     interface         => 'eth1',
     state             => 'MASTER',
-    virtual_router_id => '52',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [
@@ -114,8 +116,8 @@ class profile::openstack::glance {
   keepalived::vrrp::instance { 'public-glance':
     interface         => 'eth0',
     state             => 'MASTER',
-    virtual_router_id => '52',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [

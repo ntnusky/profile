@@ -14,6 +14,8 @@ class profile::openstack::novacontroller {
   $nova_secret = hiera("profile::nova::sharedmetadataproxysecret")
   $nova_password = hiera("profile::nova::keystone::password")
   $neutron_password = hiera("profile::neutron::keystone::password")
+  $vrid = hiera("profile::api::nova::vrrp::id")
+  $vrpri = hiera("profile::api::nova::vrrp::priority")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -92,8 +94,8 @@ class profile::openstack::novacontroller {
   keepalived::vrrp::instance { 'admin-nova':
     interface         => 'eth1',
     state             => 'MASTER',
-    virtual_router_id => '53',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [
@@ -105,8 +107,8 @@ class profile::openstack::novacontroller {
   keepalived::vrrp::instance { 'public-nova':
     interface         => 'eth0',
     state             => 'MASTER',
-    virtual_router_id => '53',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [

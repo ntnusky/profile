@@ -7,6 +7,8 @@ class profile::openstack::keystone {
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::keystone::admin::ip")
   $public_ip = hiera("profile::api::keystone::public::ip")
+  $vrid = hiera("profile::api::keystone::vrrp::id")
+  $vrpri = hiera("profile::api::keystone::vrrp::priority")
   
   $admin_token = hiera("profile::keystone::admin_token")
   $admin_email = hiera("profile::keystone::admin_email")
@@ -57,8 +59,8 @@ class profile::openstack::keystone {
   keepalived::vrrp::instance { 'admin-keystone':
     interface         => 'eth1',
     state             => 'MASTER',
-    virtual_router_id => '51',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [
@@ -70,8 +72,8 @@ class profile::openstack::keystone {
   keepalived::vrrp::instance { 'public-keystone':
     interface         => 'eth0',
     state             => 'MASTER',
-    virtual_router_id => '51',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [
