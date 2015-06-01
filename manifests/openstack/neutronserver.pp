@@ -42,6 +42,7 @@ class profile::openstack::neutronserver {
     internal_address => $admin_ip,
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
+    region           => $region,
   }
   
   class { '::neutron::server':
