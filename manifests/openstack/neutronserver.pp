@@ -33,7 +33,6 @@ class profile::openstack::neutronserver {
     rabbit_password       => $rabbit_pass,
     rabbit_user           => $rabbit_user,
     rabbit_host           => 'localhost',
-    sync_db               => true,
   }
   
   class { 'neutron::db::mysql' :
@@ -59,6 +58,7 @@ class profile::openstack::neutronserver {
     auth_password     => $password,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
+    sync_db               => true,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
   }
