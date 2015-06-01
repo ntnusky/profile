@@ -8,6 +8,8 @@ class profile::openstack::neutronserver {
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::neutron::admin::ip")
   $public_ip = hiera("profile::api::neutron::public::ip")
+  $vrid = hiera("profile::api::neutron::vrrp::id")
+  $vrpri = hiera("profile::api::neutron::vrrp::priority")
   $nova_admin_ip = hiera("profile::api::nova::admin::ip")
   $nova_public_ip = hiera("profile::api::nova::public::ip")
   
@@ -93,6 +95,38 @@ class profile::openstack::neutronserver {
     manage_service => false,
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
+  }
+
+  keepalived::vrrp::script { 'check_neutron':
+    require        => Anchor["profile::openstack::neutron::begin"],
+    script => '/usr/bin/killall -0 keystone-all',
+  } ->
+
+  keepalived::vrrp::instance { 'admin-neutron':
+    interface         => 'eth1',
+    state             => 'MASTER',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${admin_ip}/32",	
+    ],
+    track_script      => 'check_keystone',
+  } ->
+
+  keepalived::vrrp::instance { 'public-neutron':
+    before            => Anchor["profile::openstack::neutron::end"],
+    interface         => 'eth0',
+    state             => 'MASTER',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password, 
+    virtual_ipaddress => [
+      "${public_ip}/32",	
+    ],
+    track_script      => 'check_keystone',
   }
   
 #  cs_primitive { 'neutron_public_ip':
