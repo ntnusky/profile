@@ -53,8 +53,8 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::server':
-    enabled           => false,
-    manage_service    => false,
+    #enabled           => false,
+    #manage_service    => false,
     auth_password     => $password,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
@@ -64,8 +64,8 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::agents::dhcp':
-    enabled        => false,
-    manage_service => false,
+    #enabled        => false,
+    #manage_service => false,
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
@@ -100,8 +100,8 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::agents::l3':
-    enabled        => false,
-    manage_service => false,
+    #enabled        => false,
+    #manage_service => false,
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
