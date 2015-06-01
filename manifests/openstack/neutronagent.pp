@@ -2,6 +2,7 @@ class profile::openstack::neutronagent {
   $password = hiera("profile::mysql::neutronpass")
   $keystone_ip = hiera("profile::api::keystone::public::ip")
   $mysql_ip = hiera("profile::mysql::ip")
+  $neutron_pass = hiera("profile::neutron::keystone::password")
 
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::neutron::admin::ip")
@@ -38,7 +39,7 @@ class profile::openstack::neutronagent {
   }
   
   class { '::neutron::keystone::auth':
-    password         => $password,
+    password         => $neutron_pass,
     public_address   => $public_ip,
     admin_address    => $admin_ip,
     internal_address => $admin_ip,
@@ -50,7 +51,7 @@ class profile::openstack::neutronagent {
   class { '::neutron::server':
     enabled           => false,
     sync_db           => false,
-    auth_password     => $password,
+    auth_password     => $neutron_pass,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
     before            => Anchor["profile::openstack::neutronagent::end"],
