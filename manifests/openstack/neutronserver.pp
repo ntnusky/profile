@@ -26,7 +26,7 @@ class profile::openstack::neutronserver {
   
   class { '::neutron':
     verbose               => true,
-    core_plugin           => 'ml2'
+    core_plugin           => 'ml2',
     allow_overlapping_ips => true,
     service_plugins       => [ 'dhcp', 'l3' ],
     before                => Anchor["profile::openstack::neutron::end"],
