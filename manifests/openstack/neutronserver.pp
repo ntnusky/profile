@@ -26,8 +26,9 @@ class profile::openstack::neutronserver {
   
   class { '::neutron':
     verbose               => true,
+    core_plugin           => 'ml2'
     allow_overlapping_ips => true,
-    service_plugins       => [ 'routing', 'dhcp', 'l3' ],
+    service_plugins       => [ 'dhcp', 'l3' ],
     before                => Anchor["profile::openstack::neutron::end"],
     require               => Anchor["profile::openstack::neutron::begin"],
     rabbit_password       => $rabbit_pass,
@@ -58,7 +59,7 @@ class profile::openstack::neutronserver {
     auth_password     => $password,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
-    sync_db               => true,
+    sync_db           => true,
     before            => Anchor["profile::openstack::neutron::end"],
     require           => Anchor["profile::openstack::neutron::begin"],
   }
