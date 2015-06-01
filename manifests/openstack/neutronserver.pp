@@ -27,7 +27,7 @@ class profile::openstack::neutronserver {
   class { '::neutron':
     verbose               => true,
     allow_overlapping_ips => true,
-    service_plugins       => [ 'dhcp', 'l3' ],
+    service_plugins       => [ 'routing', 'dhcp', 'l3' ],
     before                => Anchor["profile::openstack::neutron::end"],
     require               => Anchor["profile::openstack::neutron::begin"],
     rabbit_password       => $rabbit_pass,
