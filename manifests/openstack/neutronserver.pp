@@ -33,6 +33,7 @@ class profile::openstack::neutronserver {
     rabbit_password       => $rabbit_pass,
     rabbit_user           => $rabbit_user,
     rabbit_host           => 'localhost',
+    sync_db               => true,
   }
   
   class { 'neutron::db::mysql' :
