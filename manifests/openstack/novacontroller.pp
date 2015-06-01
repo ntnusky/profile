@@ -39,7 +39,7 @@ class profile::openstack::novacontroller {
   }
 
   class { 'nova::db::mysql' :
-    password         => $password,
+    password         => $mysql_password,
     allowed_hosts    => $allowed_hosts,
     before           => Anchor['profile::openstack::novacontroller::end'],
     require          => Anchor['profile::openstack::novacontroller::begin'],
