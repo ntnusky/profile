@@ -21,8 +21,6 @@ class profile::openstack::novacompute {
   
   include ::profile::openstack::repo
 
-  package{ 'libvirt':}
-
   class { '::nova':
     database_connection => $database_connection,
     glance_api_servers  => join($controller_management_addresses, ','),
