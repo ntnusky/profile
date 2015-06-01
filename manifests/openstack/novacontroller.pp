@@ -46,7 +46,7 @@ class profile::openstack::novacontroller {
   }
   
   class { 'nova':
-    sql_connection      => $database_connection,
+    database_connection => $database_connection,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
     image_service       => 'nova.image.glance.GlanceImageService',
