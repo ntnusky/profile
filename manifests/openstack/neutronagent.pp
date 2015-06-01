@@ -21,7 +21,7 @@ class profile::openstack::neutronagent {
 
   class { '::neutron::agents::ml2::ovs':
     enable_tunneling => true,
-    local_ip         => $::ipaddress_eth3,
+    local_ip         => $::ipaddress_eth1,
     enabled          => true,
     tunnel_types     => ['gre'],
   }
