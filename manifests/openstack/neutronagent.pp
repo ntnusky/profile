@@ -53,7 +53,7 @@ class profile::openstack::neutronagent {
     auth_password     => $password,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
-    before            => Anchor["profile::openstack::neutron::end"],
-    require           => Anchor["profile::openstack::neutron::begin"],
+    before            => Anchor["profile::openstack::neutronagent::end"],
+    require           => Anchor["profile::openstack::neutronagent::begin"],
   }
 }
