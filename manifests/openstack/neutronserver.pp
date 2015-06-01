@@ -35,6 +35,13 @@ class profile::openstack::neutronserver {
     rabbit_host           => 'localhost',
   }
   
+  class { 'neutron::db::mysql' :
+    password         => $password,
+    allowed_hosts    => $allowed_hosts,
+    before           => Anchor['profile::openstack::neutron::end'],
+    require          => Anchor['profile::openstack::neutron::begin'],
+  }
+
   class { '::neutron::keystone::auth':
     password         => $password,
     public_address   => $public_ip,
