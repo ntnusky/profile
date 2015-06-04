@@ -33,8 +33,8 @@ class profile::openstack::novacompute {
     mysql_module        => '2.2',
   }
 
-  exec { "/usr/bin/ceph osd pool create vms 2048" :
-    unless => "/usr/bin/ceph osd pool get vms size",
+  exec { "/usr/bin/ceph osd pool create volumes 2048" :
+    unless => "/usr/bin/ceph osd pool get volumes size",
   }
 
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
@@ -77,7 +77,7 @@ class profile::openstack::novacompute {
   ceph::key { 'client.nova':
     secret        => $nova_key,
     cap_mon       => 'allow r',
-    cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=images',
+    cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rx pool=images',
   }
 
   file { '/etc/libvirt/qemu.conf':
