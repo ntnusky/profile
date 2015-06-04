@@ -14,6 +14,7 @@ class profile::openstack::neutronserver {
   $nova_admin_ip = hiera("profile::api::nova::admin::ip")
   $nova_public_ip = hiera("profile::api::nova::public::ip")
   $service_plugins = hiera("profile::neutron::service_plugins")
+  $neutron_vrrp_pass = hiera("profile::neutron::vrrp_pass")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -88,6 +89,7 @@ class profile::openstack::neutronserver {
   class { '::neutron::agents::ml2::ovs':
     local_ip         => $::ipaddress_eth3,
     enable_tunneling => true,
+    bridge_mappings  => ['external:br-ex'],
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
   }
@@ -103,10 +105,20 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::agents::l3':
-    #enabled        => false,
-    #manage_service => false,
-    before         => Anchor["profile::openstack::neutron::end"],
-    require        => Anchor["profile::openstack::neutron::begin"],
+    before                           => Anchor["profile::openstack::neutron::end"],
+    require                          => Anchor["profile::openstack::neutron::begin"],
+    allow_automatic_l3agent_failover => true,
+    ha_enabled                       => true,
+    ha_vrrp_auth_password            => $neutron_vrrp_pass,
+  }
+  
+  vs_bridge { "br-ex":
+    ensure => present,
+  }
+
+  vs_port { "eth0":
+    ensure => present,
+    bridge => "br-ex",
   }
 
   keepalived::vrrp::script { 'check_neutron':
