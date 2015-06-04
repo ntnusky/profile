@@ -1,6 +1,7 @@
 class profile::openstack::novacompute {
   $nova_public_api = hiera("profile::api::nova::public::ip")
   $nova_libvirt_type = hiera("profile::nova::libvirt_type")
+  $nova_key = hiera("profile::ceph::nova_key")
   
   $controller_management_addresses = hiera("controller::management::addresses")
   $memcache_ip = hiera("profile::memcache::ip")
@@ -31,6 +32,10 @@ class profile::openstack::novacompute {
     mysql_module        => '2.2',
   }
 
+  exec { "/usr/bin/ceph osd pool create vms 2048" :
+    unless => "/usr/bin/ceph osd pool get vms size",
+  }
+
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
 
   class { '::nova::network::neutron':
@@ -54,7 +59,18 @@ class profile::openstack::novacompute {
     vncserver_listen  => $::ipaddress_eth1,
   }
 
-  class { 'nova::migration::libvirt':
+  class { '::nova::compute::rbd':
+    rbd_store_user      => 'nova',
+    before              => Ceph::Key['client.nova'],
+  }
+
+  class { '::nova::migration::libvirt':
+  }
+
+  ceph::key { 'client.nova':
+    secret        => $nova_key,
+    cap_mon       => 'allow r',
+    cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=vms',
   }
 
   file { '/etc/libvirt/qemu.conf':
