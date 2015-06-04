@@ -43,6 +43,7 @@ class profile::openstack::glance {
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
     known_stores	=> ["glance.store.rbd.Store"],
+    show_image_direct_url => true,
   }
 
   ceph_config {
