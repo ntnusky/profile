@@ -54,6 +54,10 @@ class profile::openstack::novacompute {
     vncproxy_host                 => $nova_public_api
   }
 
+  ceph_config {
+      'client.nova/key':              value => $nova_key;
+  }
+
   class { '::nova::compute::libvirt':
     libvirt_virt_type => $nova_libvirt_type,
     vncserver_listen  => $::ipaddress_eth1,
@@ -61,6 +65,7 @@ class profile::openstack::novacompute {
 
   class { '::nova::compute::rbd':
     libvirt_rbd_user    => 'nova',
+    libvirt_images_rbd_pool => 'images',
     before              => Ceph::Key['client.nova'],
   }
 
@@ -70,7 +75,7 @@ class profile::openstack::novacompute {
   ceph::key { 'client.nova':
     secret        => $nova_key,
     cap_mon       => 'allow r',
-    cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=vms',
+    cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=images',
   }
 
   file { '/etc/libvirt/qemu.conf':
