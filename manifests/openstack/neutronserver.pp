@@ -116,10 +116,10 @@ class profile::openstack::neutronserver {
   #  ensure => present,
   #}
   #
-  #vs_port { "eth0":
-  #  ensure => present,
-  #  bridge => "br-ex",
-  #}
+  vs_port { "eth0":
+    ensure => present,
+    bridge => "br-ex",
+  }
 
   keepalived::vrrp::script { 'check_neutron':
     require        => Anchor["profile::openstack::neutron::begin"],
