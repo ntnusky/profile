@@ -94,7 +94,7 @@ class profile::openstack::neutronserver {
 
   # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
   class { '::neutron::plugins::ml2':
-    type_drivers         => ['gre'],
+    type_drivers         => ['gre', 'flat'],
     tenant_network_types => ['gre'],
     mechanism_drivers    => ['openvswitch'],
     tunnel_id_ranges     => ['100:999'],
