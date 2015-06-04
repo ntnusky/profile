@@ -2,6 +2,7 @@ class profile::openstack::novacompute {
   $nova_public_api = hiera("profile::api::nova::public::ip")
   $nova_libvirt_type = hiera("profile::nova::libvirt_type")
   $nova_key = hiera("profile::ceph::nova_key")
+  $nova_uuid = hiera("profile::ceph::nova_uuid")
   
   $controller_management_addresses = hiera("controller::management::addresses")
   $memcache_ip = hiera("profile::memcache::ip")
@@ -66,6 +67,7 @@ class profile::openstack::novacompute {
   class { '::nova::compute::rbd':
     libvirt_rbd_user    => 'nova',
     libvirt_images_rbd_pool => 'images',
+    libvirt_rbd_secret_uuid => $nova_uuid,
     before              => Ceph::Key['client.nova'],
   }
 
