@@ -60,7 +60,7 @@ class profile::openstack::novacompute {
   }
 
   class { '::nova::compute::rbd':
-    rbd_store_user      => 'nova',
+    libvirt_rbd_user    => 'nova',
     before              => Ceph::Key['client.nova'],
   }
 
