@@ -15,6 +15,7 @@ class profile::openstack::neutronserver {
   $nova_public_ip = hiera("profile::api::nova::public::ip")
   $service_plugins = hiera("profile::neutron::service_plugins")
   $neutron_vrrp_pass = hiera("profile::neutron::vrrp_pass")
+  $nova_metadata_secret = hiera("profile::nova::sharedmetadataproxysecret")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -55,10 +56,17 @@ class profile::openstack::neutronserver {
     require          => Anchor["profile::openstack::neutron::begin"],
     region           => $region,
   }
+
+  class { '::neutron::agents::metadata':
+    auth_password => $neutron_password,
+    shared_secret => $nova_metadata_secret,
+    auth_url      => "http://${keystone_ip}:35357/v2.0",
+    auth_region   => $region,
+    metadata_ip   => $admin_ip,
+    enabled       => true,
+  }
   
   class { '::neutron::server':
-    #enabled           => false,
-    #manage_service    => false,
     auth_password     => $neutron_password,
     auth_uri          => "http://${keystone_ip}:5000/",
     connection        => $database_connection,
