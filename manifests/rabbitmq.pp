@@ -2,7 +2,7 @@ class profile::rabbitmq {
   $rabbituser = hiera("profile::rabbitmq::rabbituser")
   $rabbitpass = hiera("profile::rabbitmq::rabbitpass")
   $secret     = hiera("profile::rabbitmq::rabbitsecret")
-  $ctrlnodes  = hiera("controllernames")
+  $ctrlnodes  = hiera("controller::names")
 
   anchor { "profile::rabbitmq::start" : }->
 

@@ -1,5 +1,5 @@
 class profile::mysqlcluster {
-  $servers = hiera("controlleraddresses")
+  $servers = hiera("controller::management::addresses")
   $master  = hiera("profile::mysqlcluster::master")
   $rootpassword = hiera("profile::mysqlcluster::root_password")
   $bind_ip = hiera("profile::mysql::ip")
