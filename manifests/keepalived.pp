@@ -2,6 +2,12 @@ class profile::keepalived {
   $configure_firewall 	= hiera("profile::keepalived::configure_firewall", false)
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
   
+  $management_if = hiera("profile::interface::management")
+  $management_ip = getvar("::ipaddress_${management_if}")
+  
+  $mysql_ip = hiera("profile::mysql::ip")
+  $memcache_ip = hiera("profile::memcache::ip")
+
   # Let VRRP packets trough the firewall of the management interface.
   if($configure_firewall == true) {
     firewall { '0003 - Accept VRRP':
@@ -32,15 +38,15 @@ class profile::keepalived {
   
   # Define the virtual addresses
   keepalived::vrrp::instance { 'management-database':
-    interface         => 'eth1',
+    interface         => $management-if,
     state             => 'MASTER',
     virtual_router_id => '50',
     priority          => '100',
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password,
     virtual_ipaddress => [
-      '172.16.2.9/32',	# Memcache IP
-      '172.16.2.10/32', # Mysql IP
+      "$memcache_ip/32",
+      '$mysql_ip/32',
     ],
     track_script      => 'check_mysql',
     before              => Anchor['profile::keepalived::end'],

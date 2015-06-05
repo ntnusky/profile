@@ -4,6 +4,9 @@ class profile::mysqlcluster {
   $rootpassword = hiera("profile::mysqlcluster::root_password")
   $bind_ip = hiera("profile::mysql::ip")
 
+  $management_if = hiera("profile::interface::management")
+  $management_ip = getvar("::ipaddress_${management_if}")
+
   #include ::haproxy
 
   anchor { "profile::mysqlcluster::start" : } ->
@@ -13,7 +16,7 @@ class profile::mysqlcluster {
     galera_package_name => "galera-3",
     vendor_type         => "mariadb",
     root_password       => $rootpassword,
-    local_ip            => $::ipaddress_eth1,
+    local_ip            => $management_ip
     override_options    => {
       'mysqld' => {
         'port' => '3306',
