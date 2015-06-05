@@ -46,7 +46,7 @@ class profile::keepalived {
     auth_pass         => $vrrp_password,
     virtual_ipaddress => [
       "$memcache_ip/32",
-      '$mysql_ip/32',
+      "$mysql_ip/32",
     ],
     track_script      => 'check_mysql',
     before              => Anchor['profile::keepalived::end'],
