@@ -140,7 +140,7 @@ class profile::openstack::neutronserver {
 
   keepalived::vrrp::script { 'check_neutron':
     require        => Anchor["profile::openstack::neutron::begin"],
-    script => '/usr/bin/killall -0 keystone-all',
+    script => '/usr/bin/killall -0 neutron-server',
   } ->
 
   keepalived::vrrp::instance { 'admin-neutron':

@@ -100,7 +100,7 @@ class profile::openstack::novacontroller {
 
   keepalived::vrrp::script { 'check_nova':
     require             => Anchor["profile::openstack::novacontroller::begin"],
-    script => '/usr/bin/killall -0 keystone-all',
+    script => '/usr/bin/killall -0 nova-api',
   } ->
 
   keepalived::vrrp::instance { 'admin-nova':
