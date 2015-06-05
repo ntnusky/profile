@@ -98,7 +98,7 @@ class profile::openstack::neutronserver {
   # This plugin configures Neutron for OVS on the server
   # Agent
   class { '::neutron::agents::ml2::ovs':
-    bridge_mappings  => ['external:br-ex,physnet-vlan:br-vlan'],
+    bridge_mappings  => ['external:br-ex','physnet-vlan:br-vlan'],
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
   }
