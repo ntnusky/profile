@@ -16,7 +16,7 @@ class profile::mysqlcluster {
     galera_package_name => "galera-3",
     vendor_type         => "mariadb",
     root_password       => $rootpassword,
-    local_ip            => $management_ip
+    local_ip            => $management_ip,
     override_options    => {
       'mysqld' => {
         'port' => '3306',
