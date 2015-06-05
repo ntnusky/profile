@@ -12,6 +12,8 @@ class profile::openstack::neutronagent {
   $rabbit_hosts = hiera("controller::management::addresses")
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
+  $vlan_low = hiera("profile::neutron::vlan_low")
+  $vlan_high = hiera("profile::neutron::vlan_high")
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   
@@ -22,6 +24,26 @@ class profile::openstack::neutronagent {
 
   class { '::neutron::agents::ml2::ovs':
     enabled          => true,
+  }
+
+  class { '::neutron::agents::ml2::ovs':
+    bridge_mappings  => ['physnet-vlan:br-vlan'],
+    before           => Anchor["profile::openstack::neutron::end"],
+    require          => Anchor["profile::openstack::neutron::begin"],
+  }
+
+  class { '::neutron::plugins::ml2':
+    type_drivers         => ['vlan', 'flat'],
+    tenant_network_types => ['vlan'],
+    mechanism_drivers    => ['openvswitch'],
+    network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
+    before         => Anchor["profile::openstack::neutron::end"],
+    require        => Anchor["profile::openstack::neutron::begin"],
+  }
+  
+  vs_port { "eth2":
+    ensure => present,
+    bridge => "br-vlan",
   }
 
   class { '::neutron':
