@@ -38,7 +38,7 @@ class profile::keepalived {
   
   # Define the virtual addresses
   keepalived::vrrp::instance { 'management-database':
-    interface         => $management-if,
+    interface         => $management_if,
     state             => 'MASTER',
     virtual_router_id => '50',
     priority          => '100',
