@@ -125,6 +125,9 @@ class profile::openstack::neutronserver {
     ensure => present,
     bridge => "br-ex",
   }
+  vs_bridge { "br-vlan":
+    ensure => present,
+  } ->
   vs_port { "eth3":
     ensure => present,
     bridge => "br-vlan",
