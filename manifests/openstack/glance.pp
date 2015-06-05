@@ -15,6 +15,10 @@ class profile::openstack::glance {
 
   $database_connection = "mysql://glance:${password}@${mysql_ip}/glance"
   
+  $public_if = hiera("profile::interface::public")
+  $management_if = hiera("profile::interface::management")
+  $management_ip = getvar("::ipaddress_${management_if}")
+  
   include ::profile::openstack::repo
   
   anchor { "profile::openstack::glance::begin" : 
@@ -38,7 +42,7 @@ class profile::openstack::glance {
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     database_connection => $database_connection,
-    registry_host       => $::ipaddress_eth1,
+    registry_host       => $management_ip,
     os_region_name      => $region,
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
@@ -99,7 +103,7 @@ class profile::openstack::glance {
   }
 
   keepalived::vrrp::instance { 'admin-glance':
-    interface         => 'eth1',
+    interface         => $management_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,
@@ -115,7 +119,7 @@ class profile::openstack::glance {
   }
 
   keepalived::vrrp::instance { 'public-glance':
-    interface         => 'eth0',
+    interface         => $public_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,

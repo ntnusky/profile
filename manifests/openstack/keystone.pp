@@ -14,6 +14,9 @@ class profile::openstack::keystone {
   $admin_email = hiera("profile::keystone::admin_email")
   $admin_pass = hiera("profile::keystone::admin_password")
 
+  $public_if = hiera("profile::interface::public")
+  $management_if = hiera("profile::interface::management")
+
   $database_connection = "mysql://keystone:${password}@${mysql_ip}/keystone"
   
   include ::profile::openstack::repo
@@ -57,7 +60,7 @@ class profile::openstack::keystone {
   } ->
 
   keepalived::vrrp::instance { 'admin-keystone':
-    interface         => 'eth1',
+    interface         => $management_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,
@@ -70,7 +73,7 @@ class profile::openstack::keystone {
   } ->
 
   keepalived::vrrp::instance { 'public-keystone':
-    interface         => 'eth0',
+    interface         => $public_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,

@@ -15,6 +15,8 @@ class profile::openstack::neutronagent {
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
 
+  $tenant_if = hiera("profile::interface::tenant")
+
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   
   include ::profile::openstack::repo
@@ -38,7 +40,7 @@ class profile::openstack::neutronagent {
     require        => Anchor["profile::openstack::neutronagent::begin"],
   }
   
-  vs_port { "eth2":
+  vs_port { $tenant_if:
     ensure => present,
     bridge => "br-vlan",
   }

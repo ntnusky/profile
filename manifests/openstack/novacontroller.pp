@@ -20,6 +20,9 @@ class profile::openstack::novacontroller {
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
 
+  $public_if = hiera("profile::interface::public")
+  $management_if = hiera("profile::interface::management")
+
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $sync_db = hiera("profile::nova::sync_db")
   
@@ -101,7 +104,7 @@ class profile::openstack::novacontroller {
   } ->
 
   keepalived::vrrp::instance { 'admin-nova':
-    interface         => 'eth1',
+    interface         => $management_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,
@@ -114,7 +117,7 @@ class profile::openstack::novacontroller {
   } ->
 
   keepalived::vrrp::instance { 'public-nova':
-    interface         => 'eth0',
+    interface         => $public_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,

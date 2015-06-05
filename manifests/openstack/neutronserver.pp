@@ -20,6 +20,11 @@ class profile::openstack::neutronserver {
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
   
+  $public_if = hiera("profile::interface::public")
+  $management_if = hiera("profile::interface::management")
+  $external_if = hiera("profile::interface::external")
+  $tenant_if = hiera("profile::interface::tenant")
+
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
 
@@ -121,14 +126,14 @@ class profile::openstack::neutronserver {
     ha_vrrp_auth_password            => $neutron_vrrp_pass,
   }
   
-  vs_port { "eth0":
+  vs_port { $external_if:
     ensure => present,
     bridge => "br-ex",
   }
  # vs_bridge { "br-vlan":
  #   ensure => present,
  # } ->
-  vs_port { "eth3":
+  vs_port { $tenant_if:
     ensure => present,
     bridge => "br-vlan",
   }
@@ -139,7 +144,7 @@ class profile::openstack::neutronserver {
   } ->
 
   keepalived::vrrp::instance { 'admin-neutron':
-    interface         => 'eth1',
+    interface         => $management_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,
@@ -153,7 +158,7 @@ class profile::openstack::neutronserver {
 
   keepalived::vrrp::instance { 'public-neutron':
     before            => Anchor["profile::openstack::neutron::end"],
-    interface         => 'eth0',
+    interface         => $public_if,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,

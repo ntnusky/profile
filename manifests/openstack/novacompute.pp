@@ -15,6 +15,9 @@ class profile::openstack::novacompute {
   $neutron_ip = hiera("profile::api::neutron::admin::ip")
   $nova_password = hiera("profile::nova::keystone::password")
   $neutron_password = hiera("profile::neutron::keystone::password")
+
+  $management_if = hiera("profile::interface::management")
+  $management_ip = getvar("::ipaddress_${management_if}")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -51,7 +54,7 @@ class profile::openstack::novacompute {
   class { '::nova::compute':
     enabled                       => true,
     vnc_enabled                   => true,
-    vncserver_proxyclient_address => $::ipaddress_eth1,
+    vncserver_proxyclient_address => $management_ip,
     vncproxy_host                 => $nova_public_api
   }
 
@@ -61,7 +64,7 @@ class profile::openstack::novacompute {
 
   class { '::nova::compute::libvirt':
     libvirt_virt_type => $nova_libvirt_type,
-    vncserver_listen  => $::ipaddress_eth1,
+    vncserver_listen  => $management_ip,
   }
 
   class { '::nova::compute::rbd':
