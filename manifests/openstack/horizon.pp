@@ -36,7 +36,7 @@ class profile::openstack::horizon {
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password, 
     virtual_ipaddress => [
-      "${public_ip}/32",	
+      "${horizon_ip}/32",	
     ],
     track_script      => 'check_horizon',
   }
