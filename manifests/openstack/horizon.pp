@@ -9,6 +9,8 @@ class profile::openstack::horizon {
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
   $vrid = hiera("profile::api::horizon::vrrp::id")
   $vrpri = hiera("profile::api::horizon::vrrp::priority")
+
+  $if_public = hiera("profile::interface::public")
   
 
   anchor { "profile::openstack::horizon::begin" : 
@@ -25,11 +27,11 @@ class profile::openstack::horizon {
   }
 
   keepalived::vrrp::script { 'check_horizon':
-    script => '/usr/bin/killall -0 keystone-all',
+    script => '/usr/bin/killall -0 apache2',
   }
 
   keepalived::vrrp::instance { 'public-horizon':
-    interface         => 'eth0',
+    interface         => $if_public,
     state             => 'MASTER',
     virtual_router_id => $vrid,
     priority          => $vrpri,
