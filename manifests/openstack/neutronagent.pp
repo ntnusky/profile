@@ -24,12 +24,9 @@ class profile::openstack::neutronagent {
 
   class { '::neutron::agents::ml2::ovs':
     enabled          => true,
-  }
-
-  class { '::neutron::agents::ml2::ovs':
     bridge_mappings  => ['physnet-vlan:br-vlan'],
-    before           => Anchor["profile::openstack::neutron::end"],
-    require          => Anchor["profile::openstack::neutron::begin"],
+    before           => Anchor["profile::openstack::neutronagent::end"],
+    require          => Anchor["profile::openstack::neutronagent::begin"],
   }
 
   class { '::neutron::plugins::ml2':
@@ -37,8 +34,8 @@ class profile::openstack::neutronagent {
     tenant_network_types => ['vlan'],
     mechanism_drivers    => ['openvswitch'],
     network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
-    before         => Anchor["profile::openstack::neutron::end"],
-    require        => Anchor["profile::openstack::neutron::begin"],
+    before         => Anchor["profile::openstack::neutronagent::end"],
+    require        => Anchor["profile::openstack::neutronagent::begin"],
   }
   
   vs_port { "eth2":
