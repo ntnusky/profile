@@ -16,6 +16,9 @@ class profile::openstack::neutronserver {
   $service_plugins = hiera("profile::neutron::service_plugins")
   $neutron_vrrp_pass = hiera("profile::neutron::vrrp_pass")
   $nova_metadata_secret = hiera("profile::nova::sharedmetadataproxysecret")
+
+  $vlan_low = hiera("profile::neutron::vlan_low")
+  $vlan_high = hiera("profile::neutron::vlan_high")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -97,17 +100,17 @@ class profile::openstack::neutronserver {
   class { '::neutron::agents::ml2::ovs':
     local_ip         => $::ipaddress_eth3,
     enable_tunneling => true,
-    bridge_mappings  => ['external:br-ex'],
+    bridge_mappings  => ['external:br-ex,physnet-vlan:br-vlan'],
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
   }
 
   # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
   class { '::neutron::plugins::ml2':
-    type_drivers         => ['gre', 'flat'],
-    tenant_network_types => ['gre'],
+    type_drivers         => ['vlan', 'flat'],
+    tenant_network_types => ['vlan'],
     mechanism_drivers    => ['openvswitch'],
-    tunnel_id_ranges     => ['100:999'],
+    network_vlan_range   => ["physnet-vlan:${vlan_low}:${vlan_high}"]
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
@@ -120,13 +123,13 @@ class profile::openstack::neutronserver {
     ha_vrrp_auth_password            => $neutron_vrrp_pass,
   }
   
-  #vs_bridge { "br-ex":
-  #  ensure => present,
-  #}
-  #
   vs_port { "eth0":
     ensure => present,
     bridge => "br-ex",
+  }
+  vs_port { "eth3":
+    ensure => present,
+    bridge => "br-vlan",
   }
 
   keepalived::vrrp::script { 'check_neutron':
