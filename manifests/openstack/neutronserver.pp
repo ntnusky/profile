@@ -108,7 +108,7 @@ class profile::openstack::neutronserver {
     type_drivers         => ['vlan', 'flat'],
     tenant_network_types => ['vlan'],
     mechanism_drivers    => ['openvswitch'],
-    network_vlan_range   => ["physnet-vlan:${vlan_low}:${vlan_high}"],
+    network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
