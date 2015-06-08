@@ -11,6 +11,7 @@ class profile::openstack::neutronserver {
   $public_ip = hiera("profile::api::neutron::public::ip")
   $vrid = hiera("profile::api::neutron::vrrp::id")
   $vrpri = hiera("profile::api::neutron::vrrp::priority")
+  $vrrp_password = hiera("profile::keepalived::vrrp_password")
   $nova_admin_ip = hiera("profile::api::nova::admin::ip")
   $nova_public_ip = hiera("profile::api::nova::public::ip")
   $service_plugins = hiera("profile::neutron::service_plugins")

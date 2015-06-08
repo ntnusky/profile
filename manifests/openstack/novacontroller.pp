@@ -16,6 +16,7 @@ class profile::openstack::novacontroller {
   $neutron_password = hiera("profile::neutron::keystone::password")
   $vrid = hiera("profile::api::nova::vrrp::id")
   $vrpri = hiera("profile::api::nova::vrrp::priority")
+  $vrrp_password = hiera("profile::keepalived::vrrp_password")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")

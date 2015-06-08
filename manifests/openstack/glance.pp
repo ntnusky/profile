@@ -8,6 +8,7 @@ class profile::openstack::glance {
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::glance::admin::ip")
   $public_ip = hiera("profile::api::glance::public::ip")
+  $vrrp_password = hiera("profile::keepalived::vrrp_password")
   $vrid = hiera("profile::api::glance::vrrp::id")
   $vrpri = hiera("profile::api::glance::vrrp::priority")
   
