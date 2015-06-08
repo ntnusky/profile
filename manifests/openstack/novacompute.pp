@@ -21,6 +21,7 @@ class profile::openstack::novacompute {
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
+  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   
@@ -30,7 +31,7 @@ class profile::openstack::novacompute {
     database_connection => $database_connection,
     glance_api_servers  => join($controller_management_addresses, ','),
     memcached_servers   => ["${memcache_ip}:11211"],
-    rabbit_hosts        => $controller_management_addresses,
+    rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
     mysql_module        => '2.2',

@@ -19,6 +19,7 @@ class profile::openstack::novacontroller {
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
+  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $public_if = hiera("profile::interface::public")
   $management_if = hiera("profile::interface::management")
@@ -55,7 +56,7 @@ class profile::openstack::novacontroller {
     rabbit_password     => $rabbit_pass,
     image_service       => 'nova.image.glance.GlanceImageService',
     glance_api_servers  => "${glance_public_ip}:9292",
-    rabbit_hosts        => $controllers,
+    rabbit_host         => $rabbit_ip,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
   }

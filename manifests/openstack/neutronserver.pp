@@ -27,6 +27,7 @@ class profile::openstack::neutronserver {
 
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
+  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   
@@ -45,7 +46,7 @@ class profile::openstack::neutronserver {
     require               => Anchor["profile::openstack::neutron::begin"],
     rabbit_password       => $rabbit_pass,
     rabbit_user           => $rabbit_user,
-    rabbit_host           => 'localhost',
+    rabbit_host           => $rabbit_ip,
   }
   
   class { 'neutron::db::mysql' :

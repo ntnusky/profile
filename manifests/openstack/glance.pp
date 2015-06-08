@@ -3,6 +3,7 @@ class profile::openstack::glance {
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $mysql_ip = hiera("profile::mysql::ip")
   $glance_key = hiera("profile::ceph::glance_key")
+  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::glance::admin::ip")
@@ -75,7 +76,7 @@ class profile::openstack::glance {
   class { '::glance::notify::rabbitmq':
     rabbit_password => $rabbit_pass,
     rabbit_userid   => $rabbit_user,
-    rabbit_host     => $admin_ip,
+    rabbit_host     => $rabbit_ip,
     before          => Anchor['profile::openstack::glance::end'],
     require         => Anchor['profile::openstack::glance::begin'],
   }

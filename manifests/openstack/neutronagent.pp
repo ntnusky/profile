@@ -3,13 +3,13 @@ class profile::openstack::neutronagent {
   $keystone_ip = hiera("profile::api::keystone::public::ip")
   $mysql_ip = hiera("profile::mysql::ip")
   $neutron_pass = hiera("profile::neutron::keystone::password")
+  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::neutron::admin::ip")
   $public_ip = hiera("profile::api::neutron::public::ip")
   $service_plugins = hiera("profile::neutron::service_plugins")
   
-  $rabbit_hosts = hiera("controller::management::addresses")
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
   $vlan_low = hiera("profile::neutron::vlan_low")
@@ -53,7 +53,7 @@ class profile::openstack::neutronagent {
     require               => Anchor["profile::openstack::neutronagent::begin"],
     rabbit_password       => $rabbit_pass,
     rabbit_user           => $rabbit_user,
-    rabbit_hosts          => $rabbit_hosts,
+    rabbit_host           => $rabbit_ip,
   }
   
 #  class { '::neutron::keystone::auth':
