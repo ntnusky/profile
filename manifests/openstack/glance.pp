@@ -50,6 +50,7 @@ class profile::openstack::glance {
     require             => Anchor['profile::openstack::glance::begin'],
     known_stores	=> ["glance.store.rbd.Store"],
     show_image_direct_url => true,
+    pipeline            => 'keystone',
   }
 
   ceph_config {
