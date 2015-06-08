@@ -44,7 +44,7 @@ class profile::rabbitmq {
     track_script      => 'check_rabbitmq',
   }
   anchor { "profile::rabbitmq::end" : 
-    after => [Keepalived::Vrrp::Instance['public-horizon'], 
+    require => [Keepalived::Vrrp::Instance['public-horizon'], 
               Keepalived::Vrrp::Script['public-horizon']],
   }
 }
