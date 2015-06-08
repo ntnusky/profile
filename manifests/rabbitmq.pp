@@ -28,7 +28,7 @@ class profile::rabbitmq {
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
-    script => '/usr/bin/killall -0 epmd',
+    script => '/usr/sbin/service rabbitmq-server status',
   }
 
   keepalived::vrrp::instance { 'public-rabbitmq':
