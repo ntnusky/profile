@@ -1,6 +1,8 @@
 class profile::keepalived {
   $configure_firewall 	= hiera("profile::keepalived::configure_firewall", false)
-  $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
+  $vrrp_password = hiera("profile::keepalived::vrrp_password")
+  $vrid = hiera("profile::mysql::vrrp::id")
+  $vrpri = hiera("profile::mysql::vrrp::priority")
   
   $management_if = hiera("profile::interface::management")
   $management_ip = getvar("::ipaddress_${management_if}")
@@ -40,8 +42,8 @@ class profile::keepalived {
   keepalived::vrrp::instance { 'management-database':
     interface         => $management_if,
     state             => 'MASTER',
-    virtual_router_id => '50',
-    priority          => '100',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password,
     virtual_ipaddress => [
