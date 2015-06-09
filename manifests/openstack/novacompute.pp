@@ -70,7 +70,7 @@ class profile::openstack::novacompute {
 
   class { '::nova::compute::rbd':
     libvirt_rbd_user    => 'nova',
-    libvirt_images_rbd_pool => 'images',
+    libvirt_images_rbd_pool => 'volumes',
     libvirt_rbd_secret_uuid => $nova_uuid,
     before              => Ceph::Key['client.nova'],
   }
