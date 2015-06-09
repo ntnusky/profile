@@ -29,7 +29,7 @@ class profile::openstack::novacompute {
 
   class { '::nova':
     database_connection => $database_connection,
-    glance_api_servers  => join($controller_management_addresses, ','),
+    glance_api_servers  => join([join($controller_management_addresses, ':9292,'),""], ':9292'),
     memcached_servers   => ["${memcache_ip}:11211"],
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
