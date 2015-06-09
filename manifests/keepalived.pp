@@ -9,6 +9,9 @@ class profile::keepalived {
   
   $mysql_ip = hiera("profile::mysql::ip")
   $memcache_ip = hiera("profile::memcache::ip")
+  
+  Keepalived::Vrrp::Instance <| |> ~> Service['keepalived']
+  Keepalived::Vrrp::Script <| |> ~> Service['keepalived']
 
   # Let VRRP packets trough the firewall of the management interface.
   if($configure_firewall == true) {
