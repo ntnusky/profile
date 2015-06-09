@@ -28,7 +28,8 @@ class profile::rabbitmq {
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
-    script => '/usr/sbin/service rabbitmq-server status',
+    #script => '/usr/sbin/service rabbitmq-server status',
+    script => '/usr/sbin/rabbitmqctl report',
   }
 
   keepalived::vrrp::instance { 'public-rabbitmq':
