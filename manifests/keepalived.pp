@@ -12,7 +12,7 @@ class profile::keepalived {
   
   #Keepalived::Vrrp::Instance <| |> ~> Service['keepalived']
   #Keepalived::Vrrp::Script <| |> ~> Service['keepalived']
-  File[/etc/keepalived/keepalived.conf] ~> Service['keepalived']
+  File['/etc/keepalived/keepalived.conf'] ~> Service['keepalived']
 
   # Let VRRP packets trough the firewall of the management interface.
   if($configure_firewall == true) {
