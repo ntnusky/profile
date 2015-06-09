@@ -40,6 +40,7 @@ class profile::openstack::keystone {
     debug               => $debug,
     enabled             => true,
     admin_bind_host     => "0.0.0.0",
+    paste_config        => '/etc/keystone/keystone-paste.ini',
   } ->
    
   class { '::keystone::roles::admin':
