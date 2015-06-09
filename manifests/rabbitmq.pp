@@ -28,7 +28,7 @@ class profile::rabbitmq {
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
-    script => '[[ $(/usr/sbin/rabbitmqctl status | grep -c rabbit) -ge 2 ]]',
+    script => "bash -c '[[ $(/usr/sbin/rabbitmqctl status | grep -c rabbit) -ge 2 ]]'",
   }
 
   keepalived::vrrp::instance { 'public-rabbitmq':
