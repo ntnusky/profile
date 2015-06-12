@@ -3,7 +3,6 @@ class profile::baseconfig {
     include ::hpacucli
   }
 
-  anchor { "profile::baseconfig::start" : }->
   package { [
     'fio',
     'git',
@@ -14,10 +13,9 @@ class profile::baseconfig {
     'vim'
   ] :
     ensure => 'latest',
-  } ->
+  }
   
   class { '::ntp':
     servers => [ 'ntp.hig.no'],
-  }->
-  anchor { "profile::baseconfig::end" : }
+  }
 }
