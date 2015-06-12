@@ -1,7 +1,7 @@
 class profile::nfs::server {
   include nfs::server
 
-  file{"/etc/exports":
+  concat{ "/etc/exports":
     ensure => present,
   }
 
