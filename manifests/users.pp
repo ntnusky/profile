@@ -10,12 +10,12 @@ class profile::users {
     mode     => 700,
     ensure   => "directory",
   }
-#  ssh_authorized_key { "root@manager":
-#    user => "root",
-#    type => 'ssh-rsa',
-#    key => 'AAAAB3NzaC1yc2EAAAADAQABAAABAQC2dg0IiMelKaB4UTF1r6O7lPC2YCWLhQmDYAY4zdpZ/phdodWcSARpMkCncMNCPw6GxGdMi74U2QgFjUSRRAnO+Cw56HoqNWTq2MshiFU/ay3gJqr+pleELU00PnHfu6uL2Tiarh3f3eJYCQXysniLwWbsf929mgeDXv/NEJFyX9A+YGok2H0AHs5bPl1JqFRzZx8zYPPK04P7g2bXyFGRWFL0tlczqgavmP+ews/vqD6wItI0tLPToqIpL1tgEH77LpV9/ZXTz9PyvOLanEuB3INqjM9hqlaWN03361yKKOtwH46/AMJdafFUFZIhomJd9MkCCGQNtCg4EYiiJs+f',
-#    require => File['/root/.ssh'], 
-#  }
+  ssh_authorized_key { "root@manager":
+    user => "root",
+    type => 'ssh-rsa',
+    key => 'AAAAB3NzaC1yc2EAAAADAQABAAABAQCdvmiR2cTIKgxSHfIADwb808QDnqx83VxsqNlmRYx3CopAbrXMF/84WAMkYcumnG4y7qIhCbkLfMlaB4Ym1mutmQWWxUVnnLGUsxoeZxPqbeBcmkwSseahEl1X/yg65H0rh+9bj6gCLbNdORM6sqAVlzdHpus3VppVdFr8Wq1Zm37rh4dI2SWfMDrND9RfZ2Eirmg3HhhF+MAiADo4itGbsR7ALJWf0V6kTFr2sgDZ2fNZ8xDO52bS1LxJK9s0zL+ilyi+vhGNCv00yrYe9CQAGG4P2C/sDNyDt6eaEg4c5eCgba1mfjSrFlIZg6ZGaxkJ5IAli71oN+honP7z0XGL',
+    require => File['/root/.ssh'], 
+  }
   
   include ::profile::users::eigil
   include ::profile::users::erikh
