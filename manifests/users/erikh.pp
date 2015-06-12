@@ -4,7 +4,7 @@ class profile::users::erikh {
     gid         => 'users',
     require     => Group['users'],
     groups      => ['sudo'],
-    uid         => 1001,
+    uid         => 1000,
     shell       => '/bin/bash',
     home        => '/home/erikh',
     managehome  => true,
