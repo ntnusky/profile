@@ -6,6 +6,7 @@ class profile::baseconfig {
   package { [
     'fio',
     'git',
+	'gdisk',
     'htop',
     'nmap',
     'pwgen',
