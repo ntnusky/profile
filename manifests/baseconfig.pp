@@ -1,6 +1,9 @@
 define setDHCP {
-  notify{ "Configure IF $name" : }
+  network::interface{ $name:
+    method => 'dhcp',
+  }
 }
+
 class profile::baseconfig {
   if($::bios_vendor == "HP") {
     include ::hpacucli
