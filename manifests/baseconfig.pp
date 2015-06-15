@@ -1,3 +1,15 @@
+define setDHCP {
+  $method = hiera("profile::interfaces::${name}::method")
+  $address = hiera("profile::interfaces::${name}::address", false)
+  $netmask = hiera("profile::interfaces::${name}::netmask", "255.255.255.0")
+
+  network::interface{ $name:
+    method => $method,
+    address => $address,
+    netmask => $netmask,
+  }
+}
+
 class profile::baseconfig {
   if($::bios_vendor == "HP") {
     include ::hpacucli
@@ -8,6 +20,7 @@ class profile::baseconfig {
     'git',
 	'gdisk',
     'htop',
+	'iperf3',
     'nmap',
     'pwgen',
     'sysstat',
@@ -29,5 +42,10 @@ class profile::baseconfig {
   } ~>
   service { 'puppet':
     ensure => 'running',
+  }
+
+  $interfacesToConfigure = hiera("profile::interfaces", false)
+  if($interfacesToConfigure) {
+	setDHCP { $interfacesToConfigure: }
   }
 }

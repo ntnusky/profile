@@ -4,7 +4,7 @@ class profile::keepalived {
   $vrid = hiera("profile::mysql::vrrp::id")
   $vrpri = hiera("profile::mysql::vrrp::priority")
   
-  $management_if = hiera("profile::interface::management")
+  $management_if = hiera("profile::interfaces::management")
   $management_ip = getvar("::ipaddress_${management_if}")
   
   $mysql_ip = hiera("profile::mysql::ip")

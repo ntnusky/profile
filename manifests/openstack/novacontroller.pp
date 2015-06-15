@@ -22,8 +22,8 @@ class profile::openstack::novacontroller {
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
   $rabbit_ip = hiera("profile::rabbitmq::ip")
 
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $sync_db = hiera("profile::nova::sync_db")

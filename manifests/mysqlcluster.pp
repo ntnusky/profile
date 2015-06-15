@@ -4,7 +4,7 @@ class profile::mysqlcluster {
   $rootpassword = hiera("profile::mysqlcluster::root_password")
   $bind_ip = hiera("profile::mysql::ip")
 
-  $management_if = hiera("profile::interface::management")
+  $management_if = hiera("profile::interfaces::management")
   $management_ip = getvar("::ipaddress_${management_if}")
 
   #include ::haproxy

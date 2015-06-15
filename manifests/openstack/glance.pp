@@ -17,8 +17,8 @@ class profile::openstack::glance {
 
   $database_connection = "mysql://glance:${password}@${mysql_ip}/glance"
   
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
   $management_ip = getvar("::ipaddress_${management_if}")
   
   include ::profile::openstack::repo
@@ -31,7 +31,8 @@ class profile::openstack::glance {
   exec { "/usr/bin/ceph osd pool create images 2048" :
     unless => "/usr/bin/ceph osd pool get images size",
     before => Anchor['profile::openstack::glance::end'],
-    require => Anchor['profile::openstack::glance::begin'],
+    require => [Anchor['profile::openstack::glance::begin'],
+				Anchor['profile::ceph::monitor::end'],],
   }
   
   glance_api_config {

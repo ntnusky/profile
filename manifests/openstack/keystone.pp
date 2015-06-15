@@ -14,8 +14,8 @@ class profile::openstack::keystone {
   $admin_email = hiera("profile::keystone::admin_email")
   $admin_pass = hiera("profile::keystone::admin_password")
 
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
 
   $database_connection = "mysql://keystone:${password}@${mysql_ip}/keystone"
   
@@ -40,7 +40,6 @@ class profile::openstack::keystone {
     debug               => $debug,
     enabled             => true,
     admin_bind_host     => "0.0.0.0",
-    paste_config        => '/etc/keystone/keystone-paste.ini',
   } ->
    
   class { '::keystone::roles::admin':

@@ -16,7 +16,7 @@ class profile::openstack::novacompute {
   $nova_password = hiera("profile::nova::keystone::password")
   $neutron_password = hiera("profile::neutron::keystone::password")
 
-  $management_if = hiera("profile::interface::management")
+  $management_if = hiera("profile::interfaces::management")
   $management_ip = getvar("::ipaddress_${management_if}")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
@@ -39,6 +39,7 @@ class profile::openstack::novacompute {
 
   exec { "/usr/bin/ceph osd pool create volumes 2048" :
     unless => "/usr/bin/ceph osd pool get volumes size",
+    require => Anchor['profile::ceph::client::end'],
   }
 
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }

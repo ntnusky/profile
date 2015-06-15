@@ -15,7 +15,7 @@ class profile::openstack::neutronagent {
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
 
-  $tenant_if = hiera("profile::interface::tenant")
+  $tenant_if = hiera("profile::interfaces::tenant")
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   
