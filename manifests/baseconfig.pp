@@ -1,3 +1,6 @@
+define setDHCP {
+  notify{ "Configure IF $name" : }
+}
 class profile::baseconfig {
   if($::bios_vendor == "HP") {
     include ::hpacucli
@@ -27,9 +30,6 @@ class profile::baseconfig {
 
   $interfacesToConfigure = hiera("profile::interfaces", false)
   if($interfacesToConfigure) {
-    define setDHCP {
-      notify{ "Configure IF $name" : }
-    }
 	setDHCP { $interfacesToConfigure: }
   }
 }
