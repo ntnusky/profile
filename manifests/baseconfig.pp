@@ -24,4 +24,12 @@ class profile::baseconfig {
     unless => "dpkg -l | grep puppetlabs",
     path => "/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin",
   }
+
+  $interfacesToConfigure = hiera("profile::interfaces", false)
+  if($interfacesToConfigure) {
+    define setDHCP {
+      notify{ "Configure IF $name" : }
+    }
+	setDHCP { $interfacesToConfigure: }
+  }
 }
