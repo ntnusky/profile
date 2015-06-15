@@ -31,7 +31,8 @@ class profile::openstack::glance {
   exec { "/usr/bin/ceph osd pool create images 2048" :
     unless => "/usr/bin/ceph osd pool get images size",
     before => Anchor['profile::openstack::glance::end'],
-    require => Anchor['profile::openstack::glance::begin'],
+    require => [Anchor['profile::openstack::glance::begin'],
+				Anchor['profile::ceph::monitor::end'],],
   }
   
   glance_api_config {

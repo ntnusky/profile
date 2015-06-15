@@ -39,6 +39,7 @@ class profile::openstack::novacompute {
 
   exec { "/usr/bin/ceph osd pool create volumes 2048" :
     unless => "/usr/bin/ceph osd pool get volumes size",
+    require => Anchor['profile::ceph::client::end'],
   }
 
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
