@@ -17,7 +17,7 @@ class profile::monitoring::elk {
     install_contrib  => true,
   }
   logstash::configfile { 'logstash-syslog.conf':
-    source => 'puppet:///modules/profile/monitoring/logstash-syslog.conf',
+    source => 'puppet:///modules/profile/logstash-syslog.conf',
   }
 
 # K
