@@ -23,7 +23,6 @@ class profile::baseconfig {
 	'iperf3',
     'nmap',
     'pwgen',
-    'screen',
     'sysstat',
     'vim'
   ] :
