@@ -1,6 +1,12 @@
 define setDHCP {
+  $method = hiera("profile::interfaces::${name}::method")
+  $address = hiera("profile::interfaces::${name}::method", false)
+  $netmask = hiera("profile::interfaces::${name}::method", "255.255.255.0")
+
   network::interface{ $name:
-    method => 'dhcp',
+    method => $method,
+    address => $address,
+    netmask => $netmask,
   }
 }
 
