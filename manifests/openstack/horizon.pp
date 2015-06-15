@@ -10,7 +10,7 @@ class profile::openstack::horizon {
   $vrid = hiera("profile::api::horizon::vrrp::id")
   $vrpri = hiera("profile::api::horizon::vrrp::priority")
 
-  $if_public = hiera("profile::interface::public")
+  $if_public = hiera("profile::interfaces::public")
   
 
   anchor { "profile::openstack::horizon::begin" : 

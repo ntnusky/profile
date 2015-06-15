@@ -14,8 +14,8 @@ class profile::openstack::keystone {
   $admin_email = hiera("profile::keystone::admin_email")
   $admin_pass = hiera("profile::keystone::admin_password")
 
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
 
   $database_connection = "mysql://keystone:${password}@${mysql_ip}/keystone"
   

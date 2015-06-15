@@ -17,8 +17,8 @@ class profile::openstack::glance {
 
   $database_connection = "mysql://glance:${password}@${mysql_ip}/glance"
   
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
   $management_ip = getvar("::ipaddress_${management_if}")
   
   include ::profile::openstack::repo

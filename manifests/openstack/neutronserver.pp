@@ -21,10 +21,10 @@ class profile::openstack::neutronserver {
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
   
-  $public_if = hiera("profile::interface::public")
-  $management_if = hiera("profile::interface::management")
-  $external_if = hiera("profile::interface::external")
-  $tenant_if = hiera("profile::interface::tenant")
+  $public_if = hiera("profile::interfaces::public")
+  $management_if = hiera("profile::interfaces::management")
+  $external_if = hiera("profile::interfaces::external")
+  $tenant_if = hiera("profile::interfaces::tenant")
 
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")

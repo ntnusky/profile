@@ -1,5 +1,5 @@
 class profile::rabbitmq {
-  $if_management = hiera("profile::interface::management")
+  $if_management = hiera("profile::interfaces::management")
   $rabbit_ip = hiera("profile::rabbitmq::ip")
   $vrrp_password = hiera("profile::keepalived::vrrp_password")
   $vrid = hiera("profile::rabbitmq::vrrp::id")
