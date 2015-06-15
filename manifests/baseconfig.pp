@@ -20,6 +20,7 @@ class profile::baseconfig {
     'git',
 	'gdisk',
     'htop',
+	'iperf3',
     'nmap',
     'pwgen',
     'sysstat',
