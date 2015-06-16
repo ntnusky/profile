@@ -39,6 +39,13 @@ class profile::baseconfig {
   } ->
   package { 'puppet':
     ensure => '3.8.1-1puppetlabs1',
+  } ->
+  ini_setting { 'enablepuppet': 
+    ensure => present, 
+    path => '/etc/default/puppet', 
+    section => '', 
+    setting => 'START', 
+    value => 'yes' 
   } ~>
   service { 'puppet':
     ensure => 'running',
