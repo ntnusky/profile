@@ -33,19 +33,23 @@ class profile::baseconfig {
     servers => [ 'ntp.hig.no'],
   }
   
-  exec { "wget https://apt.puppetlabs.com/puppetlabs-release-trusty.deb && dpkg -i puppetlabs-release-trusty.deb":
-    unless => "dpkg -l | grep puppetlabs",
-    path   => "/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin",
+  apt::source { 'puppetlabs':
+    location => 'http://apt.puppetlabs.com',
+    repos    => 'main',
+    key      => {
+      'id'     => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
+      'server' => 'pgp.mit.edu',
+      }
   } ->
   package { 'puppet':
     ensure => '3.8.1-1puppetlabs1',
   } ->
   ini_setting { 'enablepuppet': 
-    ensure => present, 
-    path => '/etc/default/puppet', 
+    ensure  => present, 
+    path    => '/etc/default/puppet', 
     section => '', 
     setting => 'START', 
-    value => 'yes' 
+    value   => 'yes' 
   } ~>
   service { 'puppet':
     ensure => 'running',
