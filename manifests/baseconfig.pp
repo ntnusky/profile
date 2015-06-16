@@ -34,14 +34,12 @@ class profile::baseconfig {
   }
   
   apt::source { 'puppetlabs':
-    location => 'http://apt.puppetlabs.com',
-    repos    => 'main',
-    release  => 'trusty',
-    key      => {
-      'key'         => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30', # 'key' -> 'id' in apt 2.0
-      'key_server'  => 'pgp.mit.edu',                              # 'key_server' -> 'server' in apt 2.0
-      }
-  } ->
+    location   => 'http://apt.puppetlabs.com',
+    repos      => 'main',
+    release    => 'trusty',
+    key        => '1054B7A24BD6EC30',
+    key_server => 'pgp.mit.edu',
+    } ->
   package { 'puppet':
     ensure => '3.8.1-1puppetlabs1',
   } ->
