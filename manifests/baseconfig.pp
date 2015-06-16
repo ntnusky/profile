@@ -37,4 +37,12 @@ class profile::baseconfig {
   if($interfacesToConfigure) {
 	setDHCP { $interfacesToConfigure: }
   }
+
+  mount{'/fill':
+    ensure => absent,
+  } ->
+  logical_volume { 'fill':
+    ensure       => absent,
+    volume_group => 'hdd',
+  }
 }
