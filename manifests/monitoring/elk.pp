@@ -5,6 +5,8 @@ class profile::monitoring::elk {
 
   class { 'elasticsearch':
     autoupgrade  => true,
+    manage_repo  => true,
+    repo_version => '1.6',
     java_install => true,
   }
   elasticsearch::instance { 'es-01': }
@@ -13,6 +15,8 @@ class profile::monitoring::elk {
 
   class { 'logstash':
     autoupgrade      => true,
+    manage_repo      => true,
+    repo_version     => '1.5'
     java_install     => true,
     install_contrib  => true,
   }
