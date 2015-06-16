@@ -18,7 +18,7 @@ class profile::monitoring::elk {
     manage_repo      => true,
     repo_version     => '1.5',
     java_install     => true,
-    install_contrib  => true,
+#    install_contrib  => true, # DOES NOT WORK, contribs are being renamed with version 1.5, check this out later
   }
   logstash::configfile { 'logstash-syslog.conf':
     source => 'puppet:///modules/profile/logstash-syslog.conf',
