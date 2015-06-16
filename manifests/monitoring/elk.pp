@@ -16,7 +16,7 @@ class profile::monitoring::elk {
   class { 'logstash':
     autoupgrade      => true,
     manage_repo      => true,
-    repo_version     => '1.5'
+    repo_version     => '1.5',
     java_install     => true,
     install_contrib  => true,
   }
