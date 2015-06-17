@@ -2,6 +2,7 @@ class profile::mysqlcluster {
   $servers = hiera("controller::management::addresses")
   $master  = hiera("profile::mysqlcluster::master")
   $rootpassword = hiera("profile::mysqlcluster::root_password")
+  $statuspassword = hiera("profile::mysqlcluster::status_password")
   $bind_ip = hiera("profile::mysql::ip")
 
   $management_if = hiera("profile::interfaces::management")
@@ -14,6 +15,7 @@ class profile::mysqlcluster {
     galera_servers      => $servers,
     galera_master       => $master,
     galera_package_name => "galera-3",
+	status_password     => $statuspassword,
     vendor_type         => "mariadb",
     root_password       => $rootpassword,
     local_ip            => $management_ip,
