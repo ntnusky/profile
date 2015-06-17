@@ -7,6 +7,7 @@ class profile::ceph::monitor {
   $admin_key = hiera("profile::ceph::admin_key")
   $bootstrap_osd_key = hiera("profile::ceph::osd_bootstrap_key")
   $replicas =  hiera("profile::ceph::replicas", undef)
+  $journal_size =  hiera("profile::ceph::journal::size", 10000)
   
   class { 'ceph::repo': }
   class { 'ceph':
@@ -16,7 +17,7 @@ class profile::ceph::monitor {
     osd_pool_default_size => $replicas,
   }
   ceph_config {
-    'global/osd_journal_size': value => 12000;
+    'global/osd_journal_size': value => $journal_size;
   }
   ceph::mon { $::hostname:
     key => $mon_key,
