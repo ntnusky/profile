@@ -37,7 +37,7 @@ class profile::openstack::novacompute {
     mysql_module        => '2.2',
   }
 
-  exec { "/usr/bin/ceph osd pool create volumes 2048" :
+  exec { "/usr/bin/ceph osd pool create volumes 4096" :
     unless => "/usr/bin/ceph osd pool get volumes size",
     require => Anchor['profile::ceph::client::end'],
   }
