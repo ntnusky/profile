@@ -17,6 +17,9 @@ class profile::ceph::osd {
     mon_host            => $controlleraddresses,
     osd_pool_default_size => $replicas,
   }
+  ceph_config {
+    'global/osd_journal_size': value => 12000;
+  }
   ceph::key {'client.bootstrap-osd':
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',
     secret       => $bootstrap_osd_key,

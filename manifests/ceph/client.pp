@@ -17,4 +17,7 @@ class profile::ceph::client {
     secret              => $admin_key,
   } ->
   anchor{'profile::ceph::client::end':}
+  ceph_config {
+    'global/osd_journal_size': value => 12000;
+  }
 }

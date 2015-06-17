@@ -8,20 +8,18 @@ class profile::ceph::monitor {
   $bootstrap_osd_key = hiera("profile::ceph::osd_bootstrap_key")
   $replicas =  hiera("profile::ceph::replicas", undef)
   
-  anchor { "profile::ceph::monitor::begin" : } ->
-  class { 'ceph::repo': } ->
+  class { 'ceph::repo': }
   class { 'ceph':
     fsid  => $fsid,
     mon_initial_members => $controllernames,
     mon_host            => $controlleraddresses,
     osd_pool_default_size => $replicas,
-    before              => Anchor['profile::ceph::monitor::end'],
-    require             => Anchor['profile::ceph::monitor::begin'],
+  }
+  ceph_config {
+    'global/osd_journal_size': value => 12000;
   }
   ceph::mon { $::hostname:
     key => $mon_key,
-    before              => Anchor['profile::ceph::monitor::end'],
-    require             => Anchor['profile::ceph::monitor::begin'],
   }
   Ceph::Key {
     inject         => true,
@@ -33,14 +31,9 @@ class profile::ceph::monitor {
     cap_mon => 'allow *',
     cap_osd => 'allow *',
     cap_mds => 'allow',
-    before              => Anchor['profile::ceph::monitor::end'],
-    require             => Anchor['profile::ceph::monitor::begin'],
   }
   ceph::key { 'client.bootstrap-osd':
     secret  => $bootstrap_osd_key,
     cap_mon => 'allow profile bootstrap-osd',
-    before              => Anchor['profile::ceph::monitor::end'],
-    require             => Anchor['profile::ceph::monitor::begin'],
   }
-  anchor { "profile::ceph::monitor::end" : }
 }
