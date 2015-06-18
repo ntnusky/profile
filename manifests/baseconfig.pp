@@ -33,30 +33,16 @@ class profile::baseconfig {
     servers => [ 'ntp.hig.no'],
   }
   
-  apt::source { 'puppetlabs':
-    location   => 'http://apt.puppetlabs.com',
-    repos      => 'main',
-    release    => 'trusty',
-#    key        => '1054B7A24BD6EC30', # old key which works but complains its short
-    key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
-    key_server => 'pgp.mit.edu',
-  } ->
-  package { 'puppet':
-    ensure => '3.8.1-1puppetlabs1',
-  } ->
-  ini_setting { 'enablepuppet': 
-    ensure  => present, 
-    path    => '/etc/default/puppet', 
-    section => '', 
-    setting => 'START', 
-    value   => 'yes' 
-  } ~>
-  service { 'puppet':
-    ensure => 'running',
-  }
-
   $interfacesToConfigure = hiera("profile::interfaces", false)
   if($interfacesToConfigure) {
 	setDHCP { $interfacesToConfigure: }
+  }
+
+  mount{'/fill':
+    ensure => absent,
+  } ->
+  logical_volume { 'fill':
+    ensure       => absent,
+    volume_group => 'hdd',
   }
 }

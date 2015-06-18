@@ -5,6 +5,8 @@ class profile::ceph::client {
   $fsid = hiera("profile::ceph::fsid")
   $admin_key = hiera("profile::ceph::admin_key")
   $replicas =  hiera("profile::ceph::replicas", undef)
+
+  $journal_size =  hiera("profile::ceph::journal::size", 10000)
   
   class { 'ceph::repo': } ->
   class { 'ceph':
@@ -17,4 +19,7 @@ class profile::ceph::client {
     secret              => $admin_key,
   } ->
   anchor{'profile::ceph::client::end':}
+  ceph_config {
+    'global/osd_journal_size': value => $journal_size;
+  }
 }
