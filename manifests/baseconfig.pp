@@ -37,9 +37,10 @@ class profile::baseconfig {
     location   => 'http://apt.puppetlabs.com',
     repos      => 'main',
     release    => 'trusty',
-    key        => '1054B7A24BD6EC30',
+#    key        => '1054B7A24BD6EC30', # old key which works but complains its short
+    key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
     key_server => 'pgp.mit.edu',
-    } ->
+  } ->
   package { 'puppet':
     ensure => '3.8.1-1puppetlabs1',
   } ->
