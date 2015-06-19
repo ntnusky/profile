@@ -14,6 +14,10 @@ class profile::monitoring::reverseproxy {
     ensure => file,
     source => 'puppet:///modules/profile/keys/certs/nginx.crt',
   } ->
+   file { '/etc/nginx/htpasswd.users':
+    ensure => file,
+    source => 'puppet:///modules/profile/htpasswd.users',
+  } ->
   nginx::resource::vhost { 'monitor.skyhigh':
     use_default_location => false,
     listen_port          => 8081,
@@ -21,6 +25,8 @@ class profile::monitoring::reverseproxy {
     ssl                  => true,
     ssl_key              => '/etc/nginx/ssl/nginx.key',
     ssl_cert             => '/etc/nginx/ssl/nginx.crt',
+    auth_basic           => 'Restricted Access',
+    auth_basic_user_file => '/etc/nginx/htpasswd.users',
 #    proxy               => 'http://localhost:5601',
   }
   nginx::resource::location { 'kibana' :
