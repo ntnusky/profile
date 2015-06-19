@@ -15,11 +15,12 @@ class profile::monitoring::reverseproxy {
     source => 'puppet:///modules/profile/keys/certs/nginx.crt',
   } ->
   nginx::resource::vhost { '172.17.1.12':
-    listen_port    => 8081,
-    ssl_port       => 8081,
-    ssl            => true,
-    ssl_key        => '/etc/nginx/ssl/nginx.key',
-    ssl_cert       => '/etc/nginx/ssl/nginx.crt',
+    use_default_location => false
+    listen_port          => 8081,
+    ssl_port             => 8081,
+    ssl                  => true,
+    ssl_key              => '/etc/nginx/ssl/nginx.key',
+    ssl_cert             => '/etc/nginx/ssl/nginx.crt',
   }
   nginx::resource::location { 'kibana' :
     vhost               => '172.17.1.12',
