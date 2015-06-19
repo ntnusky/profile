@@ -26,6 +26,8 @@ class profile::monitoring::reverseproxy {
   nginx::resource::location { 'kibana' :
     vhost               => 'monitor.skyhigh',
     location            => '/',
+    ssl                 => true,
+    ssl_only            => true,
     proxy               => 'http://localhost:5601',
   }
 
