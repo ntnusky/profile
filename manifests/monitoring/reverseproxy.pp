@@ -15,7 +15,7 @@ class profile::monitoring::reverseproxy {
     source => 'puppet:///modules/profile/keys/certs/nginx.crt',
   } ->
   nginx::resource::vhost { '172.17.1.12':
-    use_default_location => false
+    use_default_location => false,
     listen_port          => 8081,
     ssl_port             => 8081,
     ssl                  => true,
