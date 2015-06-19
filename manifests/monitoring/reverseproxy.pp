@@ -20,7 +20,11 @@ class profile::monitoring::reverseproxy {
     ssl            => true,
     ssl_key        => '/etc/nginx/ssl/nginx.key',
     ssl_cert       => '/etc/nginx/ssl/nginx.crt',
-    proxy_redirect => 'http://localhost:5601',
+  }
+  nginx::resource::location { 'kibana' :
+    vhost               => '172.17.1.12',
+    location            => '/',
+    proxy               => 'http://localhost:5601',
   }
 
 }
