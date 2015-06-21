@@ -13,6 +13,20 @@ class profile::monitoring::elk {
 
 # L
 
+  file { '/etc/pki/tls/certs/':
+    ensure => directory,
+  } ->
+  file { '/etc/pki/tls/private/':
+    ensure => directory,
+  } ->
+  file { '/etc/pki/tls/private/selfsigned.key':
+    ensure => file,
+    source => 'puppet:///modules/profile/keys/private/selfsigned.key',
+  } ->
+  file { '/etc/pki/tls/certs/selfsigned.crt':
+    ensure => file,
+    source => 'puppet:///modules/profile/keys/certs/selfsigned.crt',
+  } ->
   class { 'logstash':
     autoupgrade      => true,
     manage_repo      => true,
