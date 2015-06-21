@@ -13,10 +13,7 @@ class profile::monitoring::elk {
 
 # L
 
-  file { '/etc/pki/tls/certs/':
-    ensure => directory,
-  } ->
-  file { '/etc/pki/tls/private/':
+  file { [ '/etc/pki/', '/etc/pki/tls/', '/etc/pki/tls/certs/', '/etc/pki/tls/private/' ]:
     ensure => directory,
   } ->
   file { '/etc/pki/tls/private/selfsigned.key':
