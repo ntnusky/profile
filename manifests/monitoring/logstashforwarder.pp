@@ -3,7 +3,7 @@ class profile::monitoring::logstashforwarder {
 
 # BLOCK OF SSL KEYS TO BE REQUIRED BY logstashforwarder
 
-  class { 'logstashforwarder':
+  class { '::logstashforwarder':
     servers     => [ 'monitor.skyhigh' ],
 #    ssl_key     => 'puppet:///modules/profile/keys/private/logstash-forwarder.key',
     ssl_ca      => 'puppet:///modules/profile/keys/certs/selfsigned.crt',
