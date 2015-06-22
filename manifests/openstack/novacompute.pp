@@ -83,6 +83,7 @@ class profile::openstack::novacompute {
     secret        => $nova_key,
     cap_mon       => 'allow r',
     cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rx pool=images',
+	inject        => true,
   }
 
   file { '/etc/libvirt/qemu.conf':
