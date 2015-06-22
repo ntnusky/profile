@@ -74,7 +74,6 @@ class profile::openstack::novacompute {
     libvirt_images_rbd_pool => 'volumes',
     libvirt_rbd_secret_uuid => $nova_uuid,
     before              => Ceph::Key['client.nova'],
-	require             => Class['::nova::compute'],
   }
 
   class { '::nova::migration::libvirt':
