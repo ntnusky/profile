@@ -23,6 +23,7 @@ class profile::mysqlcluster {
       'mysqld' => {
         'port' => '3306',
         'bind-address' => $bind_ip,
+		'max_connections' => '1000',
       }
     },
   }->
