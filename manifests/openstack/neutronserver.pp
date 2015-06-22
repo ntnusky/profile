@@ -43,6 +43,7 @@ class profile::openstack::neutronserver {
     core_plugin           => 'ml2',
     allow_overlapping_ips => true,
     service_plugins       => $service_plugins,
+	dhcp_agents_per_network => 2,
     before                => Anchor["profile::openstack::neutron::end"],
     require               => Anchor["profile::openstack::neutron::begin"],
     rabbit_password       => $rabbit_pass,
@@ -58,7 +59,6 @@ class profile::openstack::neutronserver {
   }
   
   neutron_config {
-    'DEFAULT/dhcp_agents_per_network': value => '2';
 #    'DEFAULT/l3_ha': value => 'true';
 #    'DEFAULT/max_l3_agents_per_router': value => '3';
 #    'DEFAULT/min_l3_agents_per_router': value => '2';
