@@ -58,11 +58,11 @@ class profile::openstack::neutronserver {
     require          => Anchor['profile::openstack::neutron::begin'],
   }
   
-  neutron_config {
+#  neutron_config {
 #    'DEFAULT/l3_ha': value => 'true';
 #    'DEFAULT/max_l3_agents_per_router': value => '3';
 #    'DEFAULT/min_l3_agents_per_router': value => '2';
-  }
+#  }
 
   class { '::neutron::keystone::auth':
     password         => $neutron_password,
