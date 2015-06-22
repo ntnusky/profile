@@ -142,6 +142,7 @@ class profile::openstack::glance {
     secret        => $glance_key,
     cap_mon       => 'allow r',
     cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=images',
+    inject        => true,
     before        => Anchor['profile::openstack::glance::end'],
     require       => Anchor['profile::openstack::glance::begin'],
   }
