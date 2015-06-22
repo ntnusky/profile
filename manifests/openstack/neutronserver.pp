@@ -56,6 +56,13 @@ class profile::openstack::neutronserver {
     before           => Anchor['profile::openstack::neutron::end'],
     require          => Anchor['profile::openstack::neutron::begin'],
   }
+  
+  neutron_config {
+    'DEFAULT/dhcp_agents_per_network': value => '2';
+#    'DEFAULT/l3_ha': value => 'true';
+#    'DEFAULT/max_l3_agents_per_router': value => '3';
+#    'DEFAULT/min_l3_agents_per_router': value => '2';
+  }
 
   class { '::neutron::keystone::auth':
     password         => $neutron_password,
