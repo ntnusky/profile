@@ -29,6 +29,12 @@ class profile::baseconfig {
     ensure => 'latest',
   }
   
+  include ::keystone::client
+  include ::cinder::client
+  include ::nova::client
+  include ::neutron::client
+  include ::glance::client
+  
   class { '::ntp':
     servers => [ 'ntp.hig.no'],
   }
