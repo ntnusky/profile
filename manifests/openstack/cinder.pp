@@ -63,7 +63,7 @@ class profile::openstack::cinder {
   }
   
   class { '::cinder::api':
-    keystone_password  => $keystone_password
+    keystone_password  => $keystone_password,
     keystone_auth_host => $keystone_admin_ip,
     enabled            => true,
   }
