@@ -5,7 +5,6 @@ class profile::openstack::cinder {
   $mysql_ip = hiera("profile::mysql::ip")
   $ceph_key = hiera("profile::ceph::nova_key")
   $ceph_uuid = hiera("profile::ceph::nova_uuid")
-  $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $region = hiera("profile::region")
   $keystone_admin_ip = hiera("profile::api::keystone::admin::ip")
