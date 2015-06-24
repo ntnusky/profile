@@ -20,7 +20,7 @@ class profile::monitoring::reverseproxy {
     ensure => file,
     source => 'puppet:///modules/profile/htpasswd.users',
   } ->
-  nginx::resource::vhost { ${kibana_vhost}:
+  nginx::resource::vhost { "${kibana_vhost}":
     use_default_location => false,
     listen_port          => 8081,
     ssl_port             => 8081,
@@ -31,7 +31,7 @@ class profile::monitoring::reverseproxy {
     auth_basic_user_file => 'htpasswd.users',
   }
   nginx::resource::location { 'kibana' :
-    vhost    => ${kibana_vhost},
+    vhost    => "${kibana_vhost}",
     location => '/',
     ssl      => true,
     ssl_only => true,
