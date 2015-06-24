@@ -1,9 +1,17 @@
+#
+# The only trick here is to generate the certificate:
+# wget https://github.com/driskell/log-courier/raw/master/src/lc-tlscert/lc-tlscert.g
+# apt-get install golang
+# go build lc-tlscert.go
+# ./lc-tlscert
+#
+
 # Elasticsearch, Logstash and Kibana
 class profile::monitoring::elk {
 
 # E
 
-  class { 'elasticsearch':
+  class { '::elasticsearch':
     autoupgrade  => true,
     manage_repo  => true,
     repo_version => '1.6',
@@ -13,7 +21,8 @@ class profile::monitoring::elk {
 
 # L
 
-  file { [ '/etc/pki/', '/etc/pki/tls/', '/etc/pki/tls/certs/', '/etc/pki/tls/private/' ]:
+  file { [ '/etc/pki/', '/etc/pki/tls/', '/etc/pki/tls/certs/',
+  '/etc/pki/tls/private/' ]:
     ensure => directory,
   } ->
   file { '/etc/pki/tls/private/selfsigned.key':
@@ -24,12 +33,13 @@ class profile::monitoring::elk {
     ensure => file,
     source => 'puppet:///modules/profile/keys/certs/selfsigned.crt',
   } ->
-  class { 'logstash':
-    autoupgrade      => true,
-    manage_repo      => true,
-    repo_version     => '1.5',
-    java_install     => true,
-#    install_contrib  => true, # DOES NOT WORK, contribs are being renamed with version 1.5, check this out later
+  class { '::logstash':
+    autoupgrade  => true,
+    manage_repo  => true,
+    repo_version => '1.5',
+    java_install => true,
+#    install_contrib  => true, # DOES NOT WORK, contribs are being renamed 
+#                              # with version 1.5, check this out later
   }
   logstash::configfile { 'logstash-syslog.conf':
     source => 'puppet:///modules/profile/logstash-syslog.conf',
@@ -37,7 +47,7 @@ class profile::monitoring::elk {
 
 # K
 
-  class { 'kibana': }
+  class { '::kibana': }
 
 }
 
