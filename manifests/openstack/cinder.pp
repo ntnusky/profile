@@ -7,6 +7,7 @@ class profile::openstack::cinder {
   $ceph_uuid = hiera("profile::ceph::nova_uuid")
 
   $region = hiera("profile::region")
+  $keystone_ip = hiera("profile::api::keystone::public::ip")
   $keystone_admin_ip = hiera("profile::api::keystone::admin::ip")
   $keystone_admin_pass = hiera("profile::keystone::admin_password")
   $admin_ip = hiera("profile::api::cinder::admin::ip")
@@ -63,7 +64,7 @@ class profile::openstack::cinder {
   
   class { '::cinder::api':
     keystone_password  => $keystone_password,
-    keystone_auth_host => $keystone_admin_ip,
+    keystone_auth_host => $keystone_ip,
     enabled            => true,
   }
 
