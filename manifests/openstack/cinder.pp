@@ -46,7 +46,7 @@ class profile::openstack::cinder {
   }
   
   class  { '::cinder::keystone::auth':
-    password         => $password,
+    password         => $keystone_password,
     public_address   => $public_ip,
     admin_address    => $admin_ip,
     internal_address => $admin_ip,
