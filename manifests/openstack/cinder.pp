@@ -75,27 +75,12 @@ class profile::openstack::cinder {
   
   class { 'cinder::volume': }
   
-  cinder::backend::rbd {'rbd-images':
-    rbd_pool => 'volumes',
-    rbd_user => 'nova',
+  class { 'cinder::volume::rbd':
+    rbd_pool        => "volumes",
+    rbd_user        => "nova",
+    rbd_secret_uuid => $ceph_uuid,
   }
   
-  Cinder::Type {
-    os_password     => $keystone_admin_pass,
-    os_tenant_name  => 'admin',
-    os_username     => 'admin',
-    os_auth_url     => 'http://127.0.0.1:5000/v2.0/',
-  }
-  
-  cinder::type {'rbd':
-    set_key   => 'rbd-images',
-    set_value => 'rbd-images',
-  }
-  
-  class { 'cinder::backends':
-    enabled_backends => ['rbd-images']
-  }
-
   keepalived::vrrp::script { 'check_cinder':
     script => '/usr/bin/killall -0 cinder-api',
     before           => Anchor['profile::openstack::cinder::end'],
