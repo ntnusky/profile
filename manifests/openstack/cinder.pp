@@ -76,7 +76,7 @@ class profile::openstack::cinder {
   class { 'cinder::volume': }
   
   cinder::backend::rbd {'rbd-images':
-    rbd_pool => 'images',
+    rbd_pool => 'volumes',
     rbd_user => 'nova',
   }
   
