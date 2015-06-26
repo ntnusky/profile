@@ -1,0 +1,31 @@
+--- 
+profile::interfaces:
+ - 'em1'
+ - 'p1p1'
+ - 'p1p2'
+ - 'br-ex'
+
+profile::interfaces::em1::method: 'dhcp'
+profile::interfaces::p1p1::method: 'static'
+profile::interfaces::p1p1::address: '172.21.2.21'
+profile::interfaces::p1p1::netmask: '255.255.255.0'
+profile::interfaces::p1p2::method: 'manual'
+profile::interfaces::br-ex::method: 'static'
+profile::interfaces::br-ex::address: '172.20.0.21'
+profile::interfaces::br-ex::netmask: '255.255.0.0'
+
+profile::interfaces::external: 'p1p2'
+profile::interfaces::public: 'br-ex'
+profile::interfaces::management: 'em1'
+profile::interfaces::storage: 'p1p1'
+profile::interfaces::tenant: 'em2'
+
+profile::nova::sync_db: true
+
+profile::api::horizon::vrrp::priority: 130
+profile::api::keystone::vrrp::priority: 140
+profile::api::glance::vrrp::priority: 150
+profile::api::neutron::vrrp::priority: 130
+profile::api::nova::vrrp::priority: 140
+profile::rabbitmq::vrrp::priority: 150
+profile::mysql::vrrp::priority: 130
