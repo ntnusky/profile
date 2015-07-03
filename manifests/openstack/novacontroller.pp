@@ -17,6 +17,7 @@ class profile::openstack::novacontroller {
   $vrid = hiera("profile::api::nova::vrrp::id")
   $vrpri = hiera("profile::api::nova::vrrp::priority")
   $vrrp_password = hiera("profile::keepalived::vrrp_password")
+  $vnc_proxy_ip = hiera("nova::vncproxy::common::vncproxy_host")
   
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
@@ -82,7 +83,7 @@ class profile::openstack::novacontroller {
   }
   
   class { 'nova::vncproxy':
-    host    => $nova_public_ip,
+    host    => $vnc_proxy_ip,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
     enabled		=> true,
