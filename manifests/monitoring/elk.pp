@@ -41,8 +41,8 @@ class profile::monitoring::elk {
 #    install_contrib  => true, # DOES NOT WORK, contribs are being renamed 
 #                              # with version 1.5, check this out later
   }
-  logstash::configfile { 'logstash-syslog.conf':
-    source => 'puppet:///modules/profile/logstash-syslog.conf',
+  logstash::configfile { 'logstash-logs.conf':
+    source => 'puppet:///modules/profile/logstash-logs.conf',
   }
 
 # K
