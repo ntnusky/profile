@@ -13,8 +13,18 @@ class profile::monitoring::logstashforwarder {
   }
 
   logstashforwarder::file { 'syslog':
-    paths  => [ '/var/log/syslog' ],
-    fields => { 'type' => 'syslod' },
+    paths  => [ '/var/log/syslog', '/var/log/auth.log' ],
+    fields => { 'type' => 'syslog' },
   }
+  logstashforwarder::file { 'nova':
+    paths  => [ '/var/log/nova/*.log' ],
+    fields => { 'type' => 'openstack', 'component' => 'nova' },
+  }
+  logstashforwarder::file { 'neutron':
+    paths  => [ '/var/log/neutron/*.log' ],
+    fields => { 'type' => 'openstack', 'component' => 'neutron' },
+  }
+
+
 
 }
