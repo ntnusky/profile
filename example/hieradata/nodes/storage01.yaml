@@ -1,0 +1,23 @@
+--- 
+profile::interfaces:
+ - 'em1'
+ - 'p2p1'
+
+profile::interfaces::em1::method: 'dhcp'
+profile::interfaces::p2p1::method: 'static'
+profile::interfaces::p2p1::address: '172.21.2.31'
+profile::interfaces::p2p1::netmask: '255.255.255.0'
+
+profile::ceph::osds:
+   '/dev/sdc':
+      journal: '/dev/sdb'
+   '/dev/sdd':
+      journal: '/dev/sdb'
+   '/dev/sde':
+      journal: '/dev/sdb'
+   '/dev/sdf':
+      journal: '/dev/sdb'
+   '/dev/sdg':
+      journal: '/dev/sdb'
+   '/dev/sdh':
+      journal: '/dev/sdb'

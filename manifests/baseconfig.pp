@@ -37,6 +37,10 @@ class profile::baseconfig {
   
   class { '::ntp':
     servers => [ 'ntp.hig.no'],
+    restrict  => [
+	  'default kod nomodify notrap nopeer noquery',
+	  '-6 default kod nomodify notrap nopeer noquery',
+    ],
   }
   
   $interfacesToConfigure = hiera("profile::interfaces", false)
