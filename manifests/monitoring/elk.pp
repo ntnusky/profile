@@ -41,9 +41,20 @@ class profile::monitoring::elk {
 #    install_contrib  => true, # DOES NOT WORK, contribs are being renamed 
 #                              # with version 1.5, check this out later
   }
-  logstash::configfile { 'logstash-syslog.conf':
-    source => 'puppet:///modules/profile/logstash-syslog.conf',
+#  file { '/etc/logstash/conf.d/logstash.conf':
+#    ensure => file,
+#    source => 'puppet:///modules/profile/logstash-logs.conf',
+#  }
+# The following generates an error /Stage[main]/Logstash::Config/File_concat[ls-config]: 
+# Failed to generate additional resources using 'eval_generate': undefined method `join' 
+# for "puppet:///modules/profile/logstash-logs.conf" if using file_concat module newer than 0.3.0
+  logstash::configfile { 'logstash-logs.conf':
+    source => 'puppet:///modules/profile/logstash-logs.conf',
   }
+  logstash::patternfile { 'openstack-patterns':
+    source => 'puppet:///modules/profile/openstack-patterns',
+  }
+
 
 # K
 
