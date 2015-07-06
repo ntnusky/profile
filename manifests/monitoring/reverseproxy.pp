@@ -2,6 +2,7 @@
 class profile::monitoring::reverseproxy {
 
   $kibana_vhost = hiera('profile::monitoring::kibana_vhost')
+  $datapasswd = hiera('profile::monitoring::datapasswd')
 
   include ::nginx
 
@@ -16,10 +17,11 @@ class profile::monitoring::reverseproxy {
     ensure => file,
     source => 'puppet:///modules/profile/keys/certs/nginx.crt',
   } ->
-  file { '/etc/nginx/htpasswd.users':
-    ensure => file,
-    source => 'puppet:///modules/profile/htpasswd.users',
-  } ->
+  htpasswd { 'data':
+    username    => 'data',
+    cryptpasswd => ht_sha1('$datapasswd'),
+    target      => '/etc/nginx/htpasswd.users',
+  }
   nginx::resource::vhost { "${kibana_vhost}":
     use_default_location => false,
     listen_port          => 8081,
