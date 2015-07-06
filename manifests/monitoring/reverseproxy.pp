@@ -19,7 +19,7 @@ class profile::monitoring::reverseproxy {
   } ->
   htpasswd { 'data':
     username    => 'data',
-    cryptpasswd => ht_sha1('$datapasswd'),
+    cryptpasswd => ht_crypt('$datapasswd','aB'),
     target      => '/etc/nginx/htpasswd.users',
   }
   nginx::resource::vhost { "${kibana_vhost}":
