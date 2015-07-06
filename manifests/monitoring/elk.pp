@@ -42,7 +42,8 @@ class profile::monitoring::elk {
 #                              # with version 1.5, check this out later
   }
   logstash::configfile { 'logstash-logs.conf':
-    source => 'puppet:///modules/profile/logstash-logs.conf',
+#    source => 'puppet:///modules/profile/logstash-logs.conf',
+   content => file('puppet:///modules/profile/logstash-logs.conf'),
   }
 
 # K
