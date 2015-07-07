@@ -1,10 +1,10 @@
 # logstashforwarder
 class profile::monitoring::logstashforwarder {
 
-  $logstashserver = hiera('profile::monitoring::logstashserver')
+  $logstash_server = hiera('profile::monitoring::logstash_server')
 
   class { '::logstashforwarder':
-    servers     => [ "${logstashserver}" ],
+    servers     => [ "${logstash_server}" ],
 #    ssl_key     => 'puppet:///modules/profile/keys/private/logstash-forwarder.key',
     ssl_ca      => 'puppet:///modules/profile/keys/certs/selfsigned.crt',
 #    ssl_cert    => 'puppet:///modules/profile/keys/certs/logstash-forwarder.crt',
