@@ -9,6 +9,8 @@
 # Elasticsearch, Logstash and Kibana
 class profile::monitoring::elk {
 
+  $logstash_key = hiera('profile::keys::logstash')
+
 # E
 
   class { '::elasticsearch':
@@ -25,13 +27,13 @@ class profile::monitoring::elk {
   '/etc/pki/tls/private/' ]:
     ensure => directory,
   } ->
-  file { '/etc/pki/tls/private/selfsigned.key':
-    ensure => file,
-    source => 'puppet:///modules/profile/keys/private/selfsigned.key',
+  file { '/etc/pki/tls/private/logstash.key':
+    ensure  => file,
+    content => "${logstash_key}",
   } ->
-  file { '/etc/pki/tls/certs/selfsigned.crt':
+  file { '/etc/pki/tls/certs/logstash.crt':
     ensure => file,
-    source => 'puppet:///modules/profile/keys/certs/selfsigned.crt',
+    source => 'puppet:///modules/profile/keys/certs/logstash.crt',
   } ->
   class { '::logstash':
     autoupgrade  => true,
