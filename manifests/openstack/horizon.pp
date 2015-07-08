@@ -20,15 +20,23 @@ class profile::openstack::horizon {
     before => Class["::horizon"],
   }
 
+  file { '/etc/ssl/private/horizon.key':
+    ensure  => file,
+    content => "${apache_key}",
+  } ->
+  file { '/etc/ssl/certs/horizon.crt':
+    ensure => file,
+    source => 'puppet:///modules/profile/keys/certs/horizon.crt',
+  } ->
   class { '::horizon':
     allowed_hosts   => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_allowed_hosts),
     server_aliases  => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_server_aliases),
     secret_key      => $django_secret,
     cache_server_ip => $memcache_ip,
     listen_ssl      => true,
-    horizon_cert    => 'puppet:///modules/profile/keys/certs/horizon.crt',
-    horizon_key     => $apache_key,
-    horizon_ca      => 'puppet:///modules/profile/keys/certs/horizon.crt',
+    horizon_cert    => '/etc/ssl/certs/horizon.crt',
+    horizon_key     => '/etc/ssl/private/horizon.key',
+    horizon_ca      => '/etc/ssl/certs/horizon.crt',
   }
 
   keepalived::vrrp::script { 'check_horizon':
