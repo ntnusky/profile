@@ -29,9 +29,9 @@ class profile::openstack::horizon {
     ensure => file,
     source => 'puppet:///modules/profile/keys/certs/horizon.crt',
   } ->
-  file { '/etc/ssl/certs/DigiCert.crt':
+  file { '/etc/ssl/certs/DigiCertCA.crt':
     ensure => file,
-    source => 'puppet:///modules/profile/keys/certs/DigiCert.crt',
+    source => 'puppet:///modules/profile/keys/certs/DigiCertCA.crt',
   } ->
   class { '::horizon':
     allowed_hosts   => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_allowed_hosts),
@@ -42,7 +42,7 @@ class profile::openstack::horizon {
     servername      => $server_name,
     horizon_cert    => '/etc/ssl/certs/horizon.crt',
     horizon_key     => '/etc/ssl/private/horizon.key',
-    horizon_ca      => '/etc/ssl/certs/DigiCert.crt',
+    horizon_ca      => '/etc/ssl/certs/DigiCertCA.crt',
   }
 
   keepalived::vrrp::script { 'check_horizon':
