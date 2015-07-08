@@ -5,6 +5,7 @@ class profile::openstack::horizon {
   $horizon_server_aliases = hiera("profile::horizon::server_aliases")
   $controller_api = hiera("controller::api::addresses")
   $apache_key = hiera("profile::horizon::apache_key")
+  $server_name = hiera("profile::horizon::server_name")
 
   $horizon_ip = hiera("profile::api::horizon::public::ip")
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
@@ -34,6 +35,7 @@ class profile::openstack::horizon {
     secret_key      => $django_secret,
     cache_server_ip => $memcache_ip,
     listen_ssl      => true,
+    servername      => $server_name,
     horizon_cert    => '/etc/ssl/certs/horizon.crt',
     horizon_key     => '/etc/ssl/private/horizon.key',
     horizon_ca      => '/etc/ssl/certs/horizon.crt',
