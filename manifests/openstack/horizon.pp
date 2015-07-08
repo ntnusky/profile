@@ -4,6 +4,7 @@ class profile::openstack::horizon {
   $horizon_allowed_hosts = hiera("profile::horizon::allowed_hosts")
   $horizon_server_aliases = hiera("profile::horizon::server_aliases")
   $controller_api = hiera("controller::api::addresses")
+  $apache_key = hiera("profile::horizon::apache_key")
 
   $horizon_ip = hiera("profile::api::horizon::public::ip")
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
@@ -24,6 +25,10 @@ class profile::openstack::horizon {
     server_aliases  => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_server_aliases),
     secret_key      => $django_secret,
     cache_server_ip => $memcache_ip,
+    listen_ssl      => true,
+    horizon_cert    => 'puppet:///modules/profile/keys/certs/horizon.crt',
+    horizon_key     => $apache_key,
+    horizon_ca      => 'puppet:///modules/profile/keys/certs/horizon.crt',
   }
 
   keepalived::vrrp::script { 'check_horizon':
