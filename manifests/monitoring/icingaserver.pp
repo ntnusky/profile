@@ -39,7 +39,7 @@ class profile::monitoring::icingaserver {
   htpasswd { 'icingaadmin':
     username    => 'icingaadmin',
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
-    target      => '/etc/icinga2/classicui/htpasswd.users',
+    target      => '/etc/icinga2-classicui/htpasswd.users',
   }
 
 }
