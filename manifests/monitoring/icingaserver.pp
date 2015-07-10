@@ -33,7 +33,7 @@ class profile::monitoring::icingaserver {
     categories       => ['DbCatConfig', 'DbCatState', 'DbCatAcknowledgement',
                          'DbCatComment', 'DbCatDowntime', 'DbCatEventHandler' ],
   }
-  icinga2::object::hostgroup { 'linux_servers': }
+  icinga2::object::hostgroup { 'linux-servers': }
   Icinga2::Object::Host <<| |>>
   package { 'apache2':
      ensure => latest,
