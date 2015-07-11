@@ -35,7 +35,7 @@ class profile::openstack::heat {
     database_connection => $database_connection,
     verbose             => $verbose,
     debug               => $debug,
-    region_name         => $region,
+#    region_name         => $region, # probably uncomment this when Kilo
     rabbit_password     => $rabbit_pass,
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
