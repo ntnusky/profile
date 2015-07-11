@@ -47,8 +47,8 @@ class profile::openstack::cinder {
   
   class  { '::cinder::keystone::auth':
     password         => $keystone_password,
-    public_address   => $public_ip,
-    admin_address    => $admin_ip,
+    public_address   => $public_ip, # BURDE IKKE DENNE VÆRE $keystone_ip ???
+    admin_address    => $admin_ip,  # tilsv ???
     internal_address => $admin_ip,
     region           => $region,
     before           => Anchor['profile::openstack::cinder::end'],
