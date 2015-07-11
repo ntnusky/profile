@@ -40,7 +40,8 @@ class profile::openstack::heat {
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
     auth_uri            => "http://${keystone_ip}:5000/v2.0",
-    identity_uri        => "http://${keystone_ip}:35357",
+#    identity_uri        => "http://${keystone_ip}:35357", # this replace keystone_host in Kilo
+    keystone_host       => $keystone_ip,
     keystone_tenant     => 'services',
     keystone_user       => 'heat',
     keystone_password   => $password,
