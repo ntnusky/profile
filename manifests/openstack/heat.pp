@@ -45,13 +45,13 @@ class profile::openstack::heat {
     keystone_tenant     => 'services',
     keystone_user       => 'heat',
     keystone_password   => $password,
-  } ->
+  } 
 
   class { 'heat::engine':
     auth_encryption_key => $auth_encryption_key,
     heat_metadata_server_url => "http://${public_ip}:8000",
     heat_waitcondition_server_url => "http://${public_ip}:8000/v1/waitcondition",
-  } ->
+  } 
 
   class { 'heat::api': 
     bind_host => $public_ip,
