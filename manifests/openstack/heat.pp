@@ -23,13 +23,21 @@ class profile::openstack::heat {
 
   anchor { "profile::openstack::heat::begin" : } ->
 
-  class { "::heat::db::mysql":
+  class { '::heat::db::mysql':
     user          => 'heat',
     password      => $password,
     allowed_hosts => $allowed_hosts,
     dbname        => 'heat',
     require       => Anchor['profile::mysqlcluster::end'],
   } ->
+
+  class  { '::heat::keystone::auth':
+    password         => $password,
+    public_address   => $public_ip,
+    admin_address    => $admin_ip,
+    internal_address => $admin_ip,
+    region           => $region,
+  }
 
   class { '::heat':
     database_connection => $database_connection,
