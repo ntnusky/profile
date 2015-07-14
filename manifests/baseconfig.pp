@@ -4,7 +4,7 @@ define setDHCP {
   $netmask = hiera("profile::interfaces::${name}::netmask", "255.255.255.0")
 
   network::interface{ $name:
-    method => $method,
+    method  => $method,
     address => $address,
     netmask => $netmask,
   }
@@ -18,9 +18,9 @@ class profile::baseconfig {
   package { [
     'fio',
     'git',
-	'gdisk',
+    'gdisk',
     'htop',
-	'iperf3',
+    'iperf3',
     'nmap',
     'pwgen',
     'sysstat',
@@ -36,23 +36,23 @@ class profile::baseconfig {
   include ::glance::client
   
   class { '::ntp':
-    servers => [ 'ntp.hig.no'],
+    servers   => [ 'ntp.hig.no'],
     restrict  => [
-	  'default kod nomodify notrap nopeer noquery',
-	  '-6 default kod nomodify notrap nopeer noquery',
+      'default kod nomodify notrap nopeer noquery',
+      '-6 default kod nomodify notrap nopeer noquery',
     ],
   }
   
   $interfacesToConfigure = hiera("profile::interfaces", false)
   if($interfacesToConfigure) {
-	setDHCP { $interfacesToConfigure: }
+    setDHCP { $interfacesToConfigure: }
   }
 
-  mount{'/fill':
-    ensure => absent,
-  } ->
-  logical_volume { 'fill':
-    ensure       => absent,
-    volume_group => 'hdd',
-  }
+#  mount{'/fill':
+#    ensure => absent,
+#  } ->
+#  logical_volume { 'fill':
+#    ensure       => absent,
+#    volume_group => 'hdd',
+#  }
 }
