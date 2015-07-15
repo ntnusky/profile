@@ -42,6 +42,26 @@ class profile::baseconfig {
       '-6 default kod nomodify notrap nopeer noquery',
     ],
   }
+
+  apt::source { 'puppetlabs':
+    location   => 'http://apt.puppetlabs.com',
+    repos      => 'main',
+    key        => '1054B7A24BD6EC30',
+    key_server => 'pgp.mit.edu',
+  } ->
+  package { 'puppet':
+    ensure => '3.8.1-1puppetlabs1',
+  } ->
+  ini_setting { "Puppet Start":
+    ensure  => present,
+    path    => '/etc/default/puppet',
+    section => '',
+    setting => 'START',
+    value   => 'yes',
+  } ->
+  service { 'puppet':
+    ensure => 'running',
+  }
   
   $interfacesToConfigure = hiera("profile::interfaces", false)
   if($interfacesToConfigure) {
