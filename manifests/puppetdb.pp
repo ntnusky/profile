@@ -1,6 +1,6 @@
 class profile::puppetdb {
 
-  class { 'puppetdb': }
-  class { 'puppetdb::master::config': }
+  class { '::puppetdb': }
+  class { '::puppetdb::master::config': }
 
 }
