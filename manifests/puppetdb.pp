@@ -1,5 +1,8 @@
 class profile::puppetdb {
 
+  class { '::java':
+    distribution => 'jre',
+  } ->
   class { '::puppetdb':
     confdir          => '/etc/puppetdb/conf.d',
   }
