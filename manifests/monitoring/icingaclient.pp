@@ -26,13 +26,17 @@ class profile::monitoring::icingaclient {
     nrpe_plugin_name => 'check_disk',
     nrpe_plugin_args => '-w 50% -c 20%',
   }
+  sudo::conf { 'nagios':
+    content => 'nagios ALL=(ALL) NOPASSWD: /usr/lib/nagios/plugins/',
+  } 
   file { '/usr/lib/nagios/plugins/check_hpacucli':
     ensure => file,
     mode   => '755',
     source => 'puppet:///modules/profile/icingaplugins/check_hpacucli.py',
   } ->
   icinga2::nrpe::command { 'check_hpacucli':
-    nrpe_plugin_name => 'check_hpacucli',
+    nrpe_plugin_libdir => 'sudo /usr/lib/nagios/plugins/',
+    nrpe_plugin_name   => 'check_hpacucli',
   }
 
 }
