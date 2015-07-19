@@ -47,6 +47,8 @@ class profile::monitoring::icingaserver {
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
   class { '::icingaweb2':
-    manage_apache_vhost => true,
+#    manage_apache_vhost => true, # fails because require Package[httpd] in 
+# /etc/puppet/environments/testing/modules/apache/manifests/custom_config.pp
+# from end of /etc/puppet/environments/testing/modules/icingaweb2/manifests/config.pp
   }
 }
