@@ -76,6 +76,9 @@ class profile::monitoring::icingaserver {
     ignore_where => 'host.name == "localhost"',
     target_dir => '/etc/icinga2/objects/applys'
   }
+  package { 'nagios-nrpe-plugin':
+    ensure => latest,
+  }  
 
   package { 'apache2':
      ensure => latest,
