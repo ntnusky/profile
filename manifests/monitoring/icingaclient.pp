@@ -3,7 +3,7 @@ class profile::monitoring::icingaclient {
   @@icinga2::object::host { $::fqdn:
     display_name     => $::fqdn,
     ipv4_address     => $::ipaddress_em1, # should be fqdn reverse lookup instead
-    groups           => ['linux_servers'],
+    groups           => [ 'linux_servers', 'linux-servers' ],
     vars             => {
                          os     => 'linux',
                          distro => $::operatingsystem,
