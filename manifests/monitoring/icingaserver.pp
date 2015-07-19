@@ -35,6 +35,48 @@ class profile::monitoring::icingaserver {
   }
   icinga2::object::hostgroup { 'linux_servers': }
   Icinga2::Object::Host <<| |>>
+
+  icinga2::object::apply_service_to_host { 'check_load':
+    display_name => 'Load from nrpe',
+    check_command => 'nrpe',
+    vars => {
+      nrpe_command => 'check_load',
+    },
+    assign_where => '"linux_servers" in host.groups',
+    ignore_where => 'host.name == "localhost"',
+    target_dir => '/etc/icinga2/objects/applys'
+  }
+  icinga2::object::apply_service_to_host { 'check_swap':
+    display_name => 'Swap from nrpe',
+    check_command => 'nrpe',
+    vars => {
+      nrpe_command => 'check_swap',
+    },
+    assign_where => '"linux_servers" in host.groups',
+    ignore_where => 'host.name == "localhost"',
+    target_dir => '/etc/icinga2/objects/applys'
+  }
+  icinga2::object::apply_service_to_host { 'check_disk':
+    display_name => 'Disk from nrpe',
+    check_command => 'nrpe',
+    vars => {
+      nrpe_command => 'check_disk',
+    },
+    assign_where => '"linux_servers" in host.groups',
+    ignore_where => 'host.name == "localhost"',
+    target_dir => '/etc/icinga2/objects/applys'
+  }
+  icinga2::object::apply_service_to_host { 'check_hpacucli':
+    display_name => 'Apt from nrpe',
+    check_command => 'nrpe',
+    vars => {
+      nrpe_command => 'check_hpacucli',
+    },
+    assign_where => '"linux_servers" in host.groups',
+    ignore_where => 'host.name == "localhost"',
+    target_dir => '/etc/icinga2/objects/applys'
+  }
+
   package { 'apache2':
      ensure => latest,
   } ->
