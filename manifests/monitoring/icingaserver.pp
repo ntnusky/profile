@@ -67,7 +67,7 @@ class profile::monitoring::icingaserver {
     target_dir => '/etc/icinga2/objects/applys'
   }
   icinga2::object::apply_service_to_host { 'check_hpacucli':
-    display_name => 'Apt from nrpe',
+    display_name => 'hpacucli from nrpe',
     check_command => 'nrpe',
     vars => {
       nrpe_command => 'check_hpacucli',
