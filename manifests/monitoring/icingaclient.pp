@@ -35,7 +35,7 @@ class profile::monitoring::icingaclient {
     source => 'puppet:///modules/profile/icingaplugins/check_hpacucli.py',
   } ->
   icinga2::nrpe::command { 'check_hpacucli':
-    nrpe_plugin_libdir => 'sudo /usr/lib/nagios/plugins/',
+    nrpe_plugin_libdir => 'sudo /usr/lib/nagios/plugins',
     nrpe_plugin_name   => 'check_hpacucli',
   }
 
