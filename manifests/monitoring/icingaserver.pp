@@ -46,5 +46,7 @@ class profile::monitoring::icingaserver {
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
-  include ::icingaweb2
+  class { '::icingaweb2':
+    manage_apache_vhost => true,
+  }
 }
