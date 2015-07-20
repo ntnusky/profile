@@ -91,9 +91,7 @@ class profile::monitoring::icingaserver {
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
-  package { 'httpd':
-    ensure => present,
-  } ->
+  include '::apache'
   class { '::icingaweb2':
     manage_apache_vhost => true, # fails because require Package[httpd] in 
 # /etc/puppet/environments/testing/modules/apache/manifests/custom_config.pp
