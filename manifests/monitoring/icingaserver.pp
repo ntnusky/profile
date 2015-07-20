@@ -4,6 +4,7 @@ class profile::monitoring::icingaserver {
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
   include '::apache'
+  apache::mod { 'rewrite': }
 
   class { '::mysql::server':
     root_password => $mysql_password,
