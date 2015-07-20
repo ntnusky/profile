@@ -29,14 +29,15 @@ class profile::monitoring::icingaclient {
   sudo::conf { 'nagios':
     content => 'nagios ALL=(ALL) NOPASSWD: /usr/lib/nagios/plugins/',
   } 
-  file { '/usr/lib/nagios/plugins/check_hpacucli':
-    ensure => file,
-    mode   => '755',
-    source => 'puppet:///modules/profile/icingaplugins/check_hpacucli.py',
-  } ->
-  icinga2::nrpe::command { 'check_hpacucli':
-    nrpe_plugin_libdir => 'sudo /usr/lib/nagios/plugins',
-    nrpe_plugin_name   => 'check_hpacucli',
+  if($::bios_vendor == "HP") {
+    file { '/usr/lib/nagios/plugins/check_hpacucli':
+      ensure => file,
+      mode   => '755',
+      source => 'puppet:///modules/profile/icingaplugins/check_hpacucli.py',
+    } ->
+    icinga2::nrpe::command { 'check_hpacucli':
+      nrpe_plugin_libdir => 'sudo /usr/lib/nagios/plugins',
+      nrpe_plugin_name   => 'check_hpacucli',
+    }
   }
-
 }
