@@ -3,6 +3,8 @@ class profile::monitoring::icingaserver {
   $icinga_db_password = hiera('profile::monitoring::icinga_db_password')
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
+  include '::apache'
+
   class { '::mysql::server':
     root_password => $mysql_password,
   } ->
@@ -80,9 +82,6 @@ class profile::monitoring::icingaserver {
     ensure => latest,
   }  
 
-  package { 'apache2':
-     ensure => latest,
-  } ->
   package { 'icinga2-classicui':
     ensure => latest,
   } ->
@@ -91,7 +90,6 @@ class profile::monitoring::icingaserver {
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
-  include '::apache'
   class { '::icingaweb2':
     manage_apache_vhost => true, # fails because require Package[httpd] in 
 # /etc/puppet/environments/testing/modules/apache/manifests/custom_config.pp
