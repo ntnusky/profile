@@ -4,6 +4,7 @@ class profile::monitoring::icingaserver {
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
   include '::apache'
+  include '::apache::mod::prefork'
   include '::apache::mod::php'
   apache::mod { 'rewrite': }
 
