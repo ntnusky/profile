@@ -3,10 +3,24 @@ class profile::monitoring::icingaserver {
   $icinga_db_password = hiera('profile::monitoring::icinga_db_password')
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
-  include '::apache'
-  include '::apache::mod::prefork'
-  include '::apache::mod::php'
-  apache::mod { 'rewrite': }
+#  include '::apache'
+#  include '::apache::mod::prefork'
+#  include '::apache::mod::php'
+#  apache::mod { 'rewrite': }
+
+class { 'apache': 
+    mpm_module => 'prefork',
+}
+include apache::mod::rewrite
+include apache::mod::prefork
+include apache::mod::php
+
+#  class { '::apache':
+#    ??????? php med prefork slik at vi unngår worker mod, sjekk med apache2ctl -M | grep php at den er enablet, evn dpkg-reconfigure
+#  }
+
+#  icingaweb2::mod::deployment for å få setup dialogen ???????
+#finner heller ingen database i mysql, kanksje deployment lager den og ????????
 
   class { '::mysql::server':
     root_password => $mysql_password,
@@ -93,10 +107,7 @@ class profile::monitoring::icingaserver {
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
-  class { '::icingaweb2':
-    manage_apache_vhost => true, # fails because require Package[httpd] in 
-# /etc/puppet/environments/testing/modules/apache/manifests/custom_config.pp
-# from end of /etc/puppet/environments/testing/modules/icingaweb2/manifests/config.pp
-# fixed with fake-httpd from equivs package
-  }
+#  class { '::icingaweb2':
+#    manage_apache_vhost => true, 
+#  }
 }
