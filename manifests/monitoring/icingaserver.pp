@@ -107,7 +107,11 @@ include apache::mod::php
     cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
-#  class { '::icingaweb2':
-#    manage_apache_vhost => true, 
-#  }
+  class { '::icingaweb2':
+    manage_apache_vhost => true, 
+  }
+  class { '::icingaweb2::mod::deployment':
+    auth_token => '1914a82d7da612be',
+  }
+  
 }
