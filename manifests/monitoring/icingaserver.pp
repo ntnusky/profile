@@ -110,9 +110,18 @@ include apache::mod::php
   class { 
     '::icingaweb2':
       manage_apache_vhost => true;
-    '::icingaweb2::mod::deployment':
+    '::icingaweb2::mod::deployment': # Dette burde være setup modulen! snodige greier...
       auth_token => '1914a82d7da612be',
       web_root   => '/etc/icingaweb2';
   }
-  
+# after this, have to do:
+# ln -s /usr/share/icingaweb2/modules/setup /etc/icingaweb2/enabledModules/
+# ./bin/icingacli setup token create
+# chown icingaweb2:icingaweb2 /etc/icingaweb2/setup.token
+# usermod -a -G icingaweb2 www-data
+# service apache2 restart
+# php.ini: date.timezone = Europe/Oslo
+# chmod 775 /etc/icingaweb2
+# må config'e alt manuelt fra setup gui etterpå samt for å fullføre:
+# chmod -R g+w /etc/icingaweb2/*  
 }
