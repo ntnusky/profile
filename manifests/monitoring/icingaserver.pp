@@ -111,7 +111,8 @@ include apache::mod::php
     '::icingaweb2':
       manage_apache_vhost => true;
     '::icingaweb2::mod::deployment':
-      auth_token => '1914a82d7da612be';
+      auth_token => '1914a82d7da612be',
+      web_root   => '/etc/icingaweb2';
   }
   
 }
