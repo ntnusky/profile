@@ -1,6 +1,7 @@
 class profile::monitoring::icingaserver {
   $mysql_password = hiera('profile::monitoring::mysql_password')
   $icinga_db_password = hiera('profile::monitoring::icinga_db_password')
+  $icingaweb2_db_password = hiera('profile::monitoring::icingaweb2_db_password')
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
   class { '::apache': 
@@ -20,7 +21,7 @@ class profile::monitoring::icingaserver {
   }
   mysql::db { 'icingaweb2':
     user     => 'icingaweb2',
-    password => 'icingaweb2',
+    password => $icingaweb2_db_password,
     host     => 'localhost',
   }
   
@@ -101,7 +102,9 @@ class profile::monitoring::icingaserver {
     target      => '/etc/icinga2-classicui/htpasswd.users',
   }
   class { 
+# should initiate the db and the webuser here, db=icingaweb2,table=icingaweb_user,{name=data,active=1,password_hash=...}
     '::icingaweb2':
+      admin_users         => 'data'
       ido_db_name         => 'icinga2_data',
       ido_db_pass         => $icinga_db_password,
       ido_db_user         => 'icinga2',
