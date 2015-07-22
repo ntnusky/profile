@@ -86,7 +86,7 @@ class profile::monitoring::icingaserver {
       nrpe_command => 'check_hpacucli',
     },
     assign_where => '"linux_servers" in host.groups',
-    ignore_where => 'host.name == "localhost"',
+    ignore_where => 'regex("(localhost|compute0(4|5))", host.name)',
     target_dir => '/etc/icinga2/objects/applys'
   }
   package { 'nagios-nrpe-plugin':
