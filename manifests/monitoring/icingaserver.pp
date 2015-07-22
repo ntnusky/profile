@@ -4,7 +4,7 @@ class profile::monitoring::icingaserver {
   $icingaweb2_db_password = hiera('profile::monitoring::icingaweb2_db_password')
   #$icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
-  class { '::apache': 
+  class { '::apache':
     mpm_module => 'prefork',
   }
   include ::apache::mod::rewrite
@@ -33,8 +33,22 @@ class profile::monitoring::icingaserver {
     db_user                       => 'icinga2',
     db_password                   => $icinga_db_password,
     server_install_nagios_plugins => false,
-    install_mail_utils_package    => true,
+    install_mail_utils_package    => false,
   }
+  package { 'heirloom-mailx':
+    ensure => latest,
+  }
+#
+# manual edits: replace last line of
+# scripts/mail-service-notification.sh
+# /usr/bin/printf "%b" "$template" | mail -s "$NOTIFICATIONTYPE - $HOSTDISPLAYNAME - $SERVICEDISPLAYNAME is $SERVICESTATE" -S smtp=smtp://smtp.hig.no -S from="icinga2-monitor@skyhigh.hig.no" $USEREMAIL
+# scripts/mail-host-notification.sh
+# /usr/bin/printf "%b" "$template" | mail -s "$NOTIFICATIONTYPE - $HOSTDISPLAYNAME is $HOSTSTATE" -S smtp=smtp://smtp.hig.no -S from="icinga2-monitor@skyhigh.hig.no" $USEREMAIL
+#
+# should create icinga2::object::user and usergroup, have edited email in conf.d/users.conf for now
+# when creating these, again need to solve the problem with removing the default installed icingaadmin
+# same as linux-servers vs linux_servers
+#
   icinga2::object::idomysqlconnection { 'mysql_connection':
     target_dir       => '/etc/icinga2/features-enabled',
     target_file_name => 'ido-mysql.conf',
@@ -50,50 +64,50 @@ class profile::monitoring::icingaserver {
   Icinga2::Object::Host <<| |>>
 
   icinga2::object::apply_service_to_host { 'check_load':
-    display_name => 'Load from nrpe',
-    check_command => 'nrpe',
-    vars => {
-      nrpe_command => 'check_load',
-    },
-    assign_where => '"linux_servers" in host.groups',
-    ignore_where => 'host.name == "localhost"',
-    target_dir => '/etc/icinga2/objects/applys'
+    display_name   => 'Load from nrpe',
+    check_command  => 'nrpe',
+    vars           => {
+                        nrpe_command => 'check_load',
+                      },
+    assign_where   => '"linux_servers" in host.groups',
+    ignore_where   => 'host.name == "localhost"',
+    target_dir     => '/etc/icinga2/objects/applys'
   }
   icinga2::object::apply_service_to_host { 'check_swap':
-    display_name => 'Swap from nrpe',
-    check_command => 'nrpe',
-    vars => {
-      nrpe_command => 'check_swap',
-    },
-    assign_where => '"linux_servers" in host.groups',
-    ignore_where => 'host.name == "localhost"',
-    target_dir => '/etc/icinga2/objects/applys'
+    display_name   => 'Swap from nrpe',
+    check_command  => 'nrpe',
+    vars           => {
+                        nrpe_command => 'check_swap',
+                      },
+    assign_where   => '"linux_servers" in host.groups',
+    ignore_where   => 'host.name == "localhost"',
+    target_dir     => '/etc/icinga2/objects/applys'
   }
   icinga2::object::apply_service_to_host { 'check_disk':
-    display_name => 'Disk from nrpe',
-    check_command => 'nrpe',
-    vars => {
-      nrpe_command => 'check_disk',
-    },
-    assign_where => '"linux_servers" in host.groups',
-    ignore_where => 'host.name == "localhost"',
-    target_dir => '/etc/icinga2/objects/applys'
+    display_name   => 'Disk from nrpe',
+    check_command  => 'nrpe',
+    vars           => {
+                        nrpe_command => 'check_disk',
+                      },
+    assign_where   => '"linux_servers" in host.groups',
+    ignore_where   => 'host.name == "localhost"',
+    target_dir     => '/etc/icinga2/objects/applys'
   }
   icinga2::object::apply_service_to_host { 'check_hpacucli':
-    display_name => 'hpacucli from nrpe',
-    check_command => 'nrpe',
-    vars => {
-      nrpe_command => 'check_hpacucli',
-    },
-    assign_where => '"linux_servers" in host.groups',
-    ignore_where => 'regex("(localhost|compute0(4|5))", host.name)',
-    target_dir => '/etc/icinga2/objects/applys'
+    display_name   => 'hpacucli from nrpe',
+    check_command  => 'nrpe',
+    vars           => {
+                        nrpe_command => 'check_hpacucli',
+                      },
+    assign_where   => '"linux_servers" in host.groups',
+    ignore_where   => 'regex("(localhost|compute0(4|5))", host.name)',
+    target_dir     => '/etc/icinga2/objects/applys'
   }
   package { 'nagios-nrpe-plugin':
     ensure => latest,
-  }  
+  }
 
-  class { 
+  class {
 # should initiate the db and the webuser here, db=icingaweb2,table=icingaweb_user,{name=data,active=1,password_hash=...}
     '::icingaweb2':
       admin_users         => 'data',

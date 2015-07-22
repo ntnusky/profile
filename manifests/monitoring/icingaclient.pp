@@ -5,13 +5,13 @@ class profile::monitoring::icingaclient {
     ipv4_address     => $::ipaddress_em1, # should be fqdn reverse lookup instead
     groups           => [['linux_servers',],],
     vars             => {
-                         os     => 'linux',
-                         distro => $::operatingsystem,
+                          os     => 'linux',
+                          distro => $::operatingsystem,
                         },
     target_dir       => '/etc/icinga2/objects/hosts',
-    target_file_name => "${fqdn}.conf",
+    target_file_name => "${::fqdn}.conf",
   }
-  class { 'icinga2::nrpe':
+  class { '::icinga2::nrpe':
     nrpe_allowed_hosts => ['172.17.1.12','127.0.0.1'],
   }
   icinga2::nrpe::command { 'check_load':
@@ -28,11 +28,11 @@ class profile::monitoring::icingaclient {
   }
   sudo::conf { 'nagios':
     content => 'nagios ALL=(ALL) NOPASSWD: /usr/lib/nagios/plugins/',
-  } 
-  if($::bios_vendor == "HP") {
+  }
+  if($::bios_vendor == 'HP') {
     file { '/usr/lib/nagios/plugins/check_hpacucli':
       ensure => file,
-      mode   => '755',
+      mode   => '0755',
       source => 'puppet:///modules/profile/icingaplugins/check_hpacucli.py',
     } ->
     icinga2::nrpe::command { 'check_hpacucli':
