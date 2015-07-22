@@ -3,24 +3,12 @@ class profile::monitoring::icingaserver {
   $icinga_db_password = hiera('profile::monitoring::icinga_db_password')
   $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
-#  include '::apache'
-#  include '::apache::mod::prefork'
-#  include '::apache::mod::php'
-#  apache::mod { 'rewrite': }
-
-class { 'apache': 
+  class { '::apache': 
     mpm_module => 'prefork',
-}
-include apache::mod::rewrite
-include apache::mod::prefork
-include apache::mod::php
-
-#  class { '::apache':
-#    ??????? php med prefork slik at vi unngår worker mod, sjekk med apache2ctl -M | grep php at den er enablet, evn dpkg-reconfigure
-#  }
-
-#  icingaweb2::mod::deployment for å få setup dialogen ???????
-#finner heller ingen database i mysql, kanksje deployment lager den og ????????
+  }
+  include ::apache::mod::rewrite
+  include ::apache::mod::prefork
+  include ::apache::mod::php
 
   class { '::mysql::server':
     root_password => $mysql_password,
@@ -28,6 +16,11 @@ include apache::mod::php
   mysql::db { 'icinga2_data':
     user     => 'icinga2',
     password => $icinga_db_password,
+    host     => 'localhost',
+  }
+  mysql::db { 'icingaweb2':
+    user     => 'icingaweb2',
+    password => 'icingaweb2',
     host     => 'localhost',
   }
   
@@ -109,10 +102,14 @@ include apache::mod::php
   }
   class { 
     '::icingaweb2':
+      ido_db_name         => 'icinga2_data',
+      ido_db_pass         => $icinga_db_password,
+      ido_db_user         => 'icinga2',
       manage_apache_vhost => true;
-    '::icingaweb2::mod::deployment': # Dette burde være setup modulen! snodige greier...
-      auth_token => '1914a82d7da612be',
-      web_root   => '/etc/icingaweb2';
+    
+#    '::icingaweb2::mod::deployment': # Dette burde være setup modulen! snodige greier...
+#      auth_token => '1914a82d7da612be',
+#      web_root   => '/etc/icingaweb2';
   }
 # after this, have to do:
 # ln -s /usr/share/icingaweb2/modules/setup /etc/icingaweb2/enabledModules/
