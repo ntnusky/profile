@@ -104,7 +104,7 @@ class profile::monitoring::icingaserver {
   class { 
 # should initiate the db and the webuser here, db=icingaweb2,table=icingaweb_user,{name=data,active=1,password_hash=...}
     '::icingaweb2':
-      admin_users         => 'data'
+      admin_users         => 'data',
       ido_db_name         => 'icinga2_data',
       ido_db_pass         => $icinga_db_password,
       ido_db_user         => 'icinga2',
