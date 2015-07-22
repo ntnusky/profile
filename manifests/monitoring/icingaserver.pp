@@ -2,7 +2,7 @@ class profile::monitoring::icingaserver {
   $mysql_password = hiera('profile::monitoring::mysql_password')
   $icinga_db_password = hiera('profile::monitoring::icinga_db_password')
   $icingaweb2_db_password = hiera('profile::monitoring::icingaweb2_db_password')
-  $icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
+  #$icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
   class { '::apache': 
     mpm_module => 'prefork',
@@ -93,14 +93,6 @@ class profile::monitoring::icingaserver {
     ensure => latest,
   }  
 
-  package { 'icinga2-classicui':
-    ensure => latest,
-  } ->
-  htpasswd { 'icingaadmin':
-    username    => 'icingaadmin',
-    cryptpasswd => ht_crypt("${icingaadmin_password}",'bD'),
-    target      => '/etc/icinga2-classicui/htpasswd.users',
-  }
   class { 
 # should initiate the db and the webuser here, db=icingaweb2,table=icingaweb_user,{name=data,active=1,password_hash=...}
     '::icingaweb2':
