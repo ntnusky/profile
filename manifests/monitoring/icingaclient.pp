@@ -26,9 +26,14 @@ class profile::monitoring::icingaclient {
     nrpe_plugin_name => 'check_disk',
     nrpe_plugin_args => '-w 50% -c 20%',
   }
+
+  class { 'sudo':
+    manage_sudoersd => false,
+  }
   sudo::conf { 'nagios':
     content => 'nagios ALL=(ALL) NOPASSWD: /usr/lib/nagios/plugins/',
   }
+
   if($::bios_vendor == 'HP') {
     file { '/usr/lib/nagios/plugins/check_hpacucli':
       ensure => file,
