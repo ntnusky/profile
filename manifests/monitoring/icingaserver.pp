@@ -49,6 +49,8 @@ class profile::monitoring::icingaserver {
 # when creating these, again need to solve the problem with removing the default installed icingaadmin
 # same as linux-servers vs linux_servers
 #
+# have manually removed Warning from state in service notification /etc/icinga2/conf.d/templates.conf
+#
   icinga2::object::idomysqlconnection { 'mysql_connection':
     target_dir       => '/etc/icinga2/features-enabled',
     target_file_name => 'ido-mysql.conf',

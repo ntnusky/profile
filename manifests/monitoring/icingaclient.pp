@@ -7,13 +7,11 @@ class profile::monitoring::icingaclient {
     vars             => {
                           os           => 'linux',
                           distro       => $::operatingsystem,
-                          notification => {
-                                            mail => 'groups = [ "icingaadmin" ]',
-                                          },
+    # will enable this when moving to puppet-icinga2 1.0.0 (major refactoring)
+    #                      notification => {
+    #                                        mail => 'groups = [ "icingaadmin" ]',
+    #                                      },
                         },
-#    notification => {
-#                      mail => '{ groups = [ "icingaadmins" ] }' 
-#                    },
     target_dir       => '/etc/icinga2/objects/hosts',
     target_file_name => "${::fqdn}.conf",
   }
