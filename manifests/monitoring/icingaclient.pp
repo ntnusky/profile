@@ -7,10 +7,13 @@ class profile::monitoring::icingaclient {
     vars             => {
                           os           => 'linux',
                           distro       => $::operatingsystem,
-                          notification => {
-                                            mail => 'groups = [ "icingaadmin" ]',
-                                          },
+#                          notification => {
+#                                            mail => 'groups = [ "icingaadmin" ]',
+#                                          },
                         },
+    notification => {
+                      mail => '{ groups = [ "icingaadmins" ] }' 
+                    },
     target_dir       => '/etc/icinga2/objects/hosts',
     target_file_name => "${::fqdn}.conf",
   }
