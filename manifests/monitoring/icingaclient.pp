@@ -5,8 +5,11 @@ class profile::monitoring::icingaclient {
     ipv4_address     => $::ipaddress_em1, # should be fqdn reverse lookup instead
     groups           => [['linux_servers',],],
     vars             => {
-                          os     => 'linux',
-                          distro => $::operatingsystem,
+                          os           => 'linux',
+                          distro       => $::operatingsystem,
+                          notification => {
+                                            mail => 'groups = [ "icingaadmin" ]',
+                                          },
                         },
     target_dir       => '/etc/icinga2/objects/hosts',
     target_file_name => "${::fqdn}.conf",
