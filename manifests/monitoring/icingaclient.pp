@@ -1,8 +1,11 @@
 class profile::monitoring::icingaclient {
 
+  $management_if = hiera("profile::interfaces::management")
+  $management_ip = getvar("::ipaddress_${management_if}")
+
   @@icinga2::object::host { $::fqdn:
     display_name     => $::fqdn,
-    ipv4_address     => $::ipaddress_em1, # should be fqdn reverse lookup instead
+    ipv4_address     => $management_ip,
     groups           => [['linux_servers',],],
     vars             => {
                           os           => 'linux',
