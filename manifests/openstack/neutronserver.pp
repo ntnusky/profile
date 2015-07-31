@@ -39,16 +39,16 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron':
-    verbose               => true,
-    core_plugin           => 'ml2',
-    allow_overlapping_ips => true,
-    service_plugins       => $service_plugins,
+    verbose                 => true,
+    core_plugin             => 'ml2',
+    allow_overlapping_ips   => true,
+    service_plugins         => $service_plugins,
 	dhcp_agents_per_network => 2,
-    before                => Anchor["profile::openstack::neutron::end"],
-    require               => Anchor["profile::openstack::neutron::begin"],
-    rabbit_password       => $rabbit_pass,
-    rabbit_user           => $rabbit_user,
-    rabbit_host           => $rabbit_ip,
+    before                  => Anchor['profile::openstack::neutron::end'],
+    require                 => Anchor['profile::openstack::neutron::begin'],
+    rabbit_password         => $rabbit_pass,
+    rabbit_user             => $rabbit_user,
+    rabbit_host             => $rabbit_ip,
   }
   
   class { 'neutron::db::mysql' :
@@ -98,7 +98,12 @@ class profile::openstack::neutronserver {
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
-  
+# quick fix for dns since dnsmasq_dns_servers is not a class parameter:
+# edit manually:
+# dnsmasq_dns_servers = 128.39.243.10,128.39.243.11 
+# and also set debug = True to trigger service restart since this will
+# get puppet to set it back to false
+ 
   # Configure nova notifications system
   class { '::neutron::server::notifications':
     nova_admin_password    => $nova_password,
