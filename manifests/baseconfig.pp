@@ -50,7 +50,7 @@ class profile::baseconfig {
     key_server => 'pgp.mit.edu',
   } ->
   package { 'puppet':
-    ensure => '3.8.1-1puppetlabs1',
+    ensure => '3.8.4-1puppetlabs1',
   } ->
   ini_setting { "Puppet Start":
     ensure  => present,
