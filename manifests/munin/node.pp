@@ -4,6 +4,6 @@ class profile::munin::node {
 
   class {'::munin::node':
     bind_address => $management_ip,
-	allow => "172.17.1.11",
+	allow => ["172.17.1.11"],
   }
 }
