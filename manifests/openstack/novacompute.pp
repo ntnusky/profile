@@ -67,7 +67,10 @@ class profile::openstack::novacompute {
   class { '::nova::compute::libvirt':
     libvirt_virt_type => $nova_libvirt_type,
     vncserver_listen  => $management_ip,
-	libvirt_cpu_mode => "Penryn",
+	libvirt_cpu_mode => "custom",
+  }
+  nova_config {
+    'libvirt/cpu_model':   value => 'Penryn';
   }
 
   class { '::nova::compute::rbd':
