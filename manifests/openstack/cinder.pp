@@ -66,6 +66,7 @@ class profile::openstack::cinder {
     keystone_password  => $keystone_password,
     keystone_auth_host => $keystone_ip,
     enabled            => true,
+	default_volume_type => "Normal",
   }
 
   class { '::cinder::scheduler':
