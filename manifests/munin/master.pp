@@ -1,3 +1,5 @@
 class profile::munin::master {
-	include ::munin::master
+  class{ '::munin::master':
+    graph_strategy => 'cron',
+  }
 }
