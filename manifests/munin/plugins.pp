@@ -1,5 +1,4 @@
 define setMuninIf {
-    notify { "C${name}":}
   munin::plugin { "if_${name}":
     ensure => link,
 	target => 'if_',
@@ -12,9 +11,7 @@ define setMuninIf {
 
 class profile::munin::plugins {
   $interfacesToConfigure = hiera("profile::interfaces", false)
-  notify { 'A':}
   if($interfacesToConfigure) {
-    notify { 'B':}
     setMuninIf { $interfacesToConfigure: }
   }
 
