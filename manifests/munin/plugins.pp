@@ -1,4 +1,4 @@
-class profile::munin::node {
+class profile::munin::plugins {
   munin::plugin { 'apt':
     ensure => link,
   }
