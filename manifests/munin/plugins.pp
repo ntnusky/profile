@@ -27,6 +27,7 @@ class profile::munin::plugins {
   munin::plugin { 'df':
     ensure => link,
 	config => ['env.warning 80', 'env.critical 90'],
+	config_label => 'df*',
   }
   munin::plugin { 'df_inode':
     ensure => link,
