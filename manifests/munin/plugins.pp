@@ -2,10 +2,12 @@ define setMuninIf {
   munin::plugin { "if_${name}":
     ensure => link,
 	target => 'if_',
+	config => ['user root'],
   }
   munin::plugin { "if_err_${name}":
     ensure => link,
 	target => 'if_err_',
+	config => ['user nobody'],
   }
 }
 
@@ -17,12 +19,14 @@ class profile::munin::plugins {
 
   munin::plugin { 'apt':
     ensure => link,
+	config => ['user root'],
   }
   munin::plugin { 'cpu':
     ensure => link,
   }
   munin::plugin { 'df':
     ensure => link,
+	config => ['env.warning 80', 'env.critical 90'],
   }
   munin::plugin { 'df_inode':
     ensure => link,
