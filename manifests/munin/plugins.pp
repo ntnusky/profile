@@ -1,10 +1,10 @@
 define setMuninIf {
-  munin::plugin { if_$name:
-    ensure => 'link,
+  munin::plugin { "if_${name}:
+    ensure => link,
 	target => 'if_'
   }
-  munin::plugin { if_err_$name:
-    ensure => 'link,
+  munin::plugin { "if_err_${name}":
+    ensure => link,
 	target => 'if_err_'
   }
 }
