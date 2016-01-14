@@ -67,7 +67,7 @@ class profile::munin::snmp {
   }
 
   munin::master::node_definition { 'gw.skyhgih':
-    address => 'gw.skyhgih2',
+    address => 'gw.skyhigh',
     config  => ['use_node_name no'],
   }
 }
