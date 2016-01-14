@@ -1,4 +1,4 @@
-class profile::munin::snmp {
+class profile::munin::plugin::snmp {
   munin::plugin { 'snmp_gw.skyhigh_if_1':
     ensure => link,
 	target => '/usr/share/munin/plugins/snmp__if_',
