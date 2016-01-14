@@ -24,29 +24,14 @@ class profile::munin::snmp {
 	target => '/usr/share/munin/plugins/snmp__if_',
 	config => ['env.community skyhigh'],
   }
-  munin::plugin { 'snmp_gw.skyhigh_if_err_6':
-    ensure => link,
-	target => '/usr/share/munin/plugins/snmp__if_err_',
-	config => ['env.community skyhigh'],
-  }
   munin::plugin { 'snmp_gw.skyhigh_if_7':
     ensure => link,
 	target => '/usr/share/munin/plugins/snmp__if_',
 	config => ['env.community skyhigh'],
   }
-  munin::plugin { 'snmp_gw.skyhigh_if_err_7':
-    ensure => link,
-	target => '/usr/share/munin/plugins/snmp__if_err_',
-	config => ['env.community skyhigh'],
-  }
   munin::plugin { 'snmp_gw.skyhigh_if_8':
     ensure => link,
 	target => '/usr/share/munin/plugins/snmp__if_',
-	config => ['env.community skyhigh'],
-  }
-  munin::plugin { 'snmp_gw.skyhigh_if_err_8':
-    ensure => link,
-	target => '/usr/share/munin/plugins/snmp__if_err_',
 	config => ['env.community skyhigh'],
   }
 
