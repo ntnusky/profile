@@ -66,7 +66,7 @@ class profile::munin::snmp {
 	config => ['env.community skyhigh'],
   }
 
-  munin::master::node_definition { 'gw.skyhgih':
+  munin::master::node_definition { 'gw.skyhigh':
     address => 'gw.skyhigh',
     config  => ['use_node_name no'],
   }
