@@ -8,8 +8,6 @@ class profile::munin::node {
     bind_address => $management_ip,
 	allow => ["172.17.1.12"],
 	purge_configs => true,
-  } ->
-  service { 'munin-node':
-    ensure => 'running',
+	service_ensure => true,
   }
 }
