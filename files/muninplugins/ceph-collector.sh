@@ -17,7 +17,7 @@ fi
 j=598
 while [[ 1 -eq 1 ]]; do
   i=1
-  data=$(ceph-collect.sh $pool)
+  data=$(/usr/local/sbin/ceph-collect.sh $pool)
   for value in $data; do
     #echo ${values[$i]} $value
     echo $value >> $path/ceph-$pool-${values[$i]}

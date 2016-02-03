@@ -21,7 +21,7 @@ fi
 
 if [[ ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null ]]
 then
-  ceph-collector.sh $pool &
+  /usr/local/sbin/ceph-collector.sh $pool &
   echo "iops.value 0"
 else
   totRead=0
