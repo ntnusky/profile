@@ -27,7 +27,7 @@ class profile::munin::plugin::ceph {
   }
   
   # Install the munin plugins
-  file { '/usr/share/munin/plugins/ceph_traffic_'
+  file { '/usr/share/munin/plugins/ceph_traffic_':
     ensure => file,
 	mode => 755,
 	owner => root,
