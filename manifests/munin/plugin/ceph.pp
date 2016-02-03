@@ -41,4 +41,35 @@ class profile::munin::plugin::ceph {
 	group => root,
     source => 'puppet:///modules/profile/muninplugins/ceph_iops_',
   }
+
+  munin::plugin { "ceph_traffic_volumes":
+    ensure => link,
+	target => 'ceph_traffic_',
+	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+  }
+  munin::plugin { "ceph_traffic_rbd":
+    ensure => link,
+	target => 'ceph_traffic_',
+	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+  }
+  munin::plugin { "ceph_traffic_images":
+    ensure => link,
+	target => 'ceph_traffic_',
+	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+  }
+  munin::plugin { "ceph_iops_volumes":
+    ensure => link,
+	target => 'ceph_iops_',
+	require => File['/usr/share/munin/plugins/ceph_iops_'],
+  }
+  munin::plugin { "ceph_iops_rbd":
+    ensure => link,
+	target => 'ceph_iops_',
+	require => File['/usr/share/munin/plugins/ceph_iops_'],
+  }
+  munin::plugin { "ceph_iops_images":
+    ensure => link,
+	target => 'ceph_iops_',
+	require => File['/usr/share/munin/plugins/ceph_iops_'],
+  }
 }
