@@ -20,7 +20,7 @@ if [[ $1 == "config" ]]; then
 fi
 
 ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null
-if [[ $? ]]
+if [[ $? -eq 1 ]]
 then
   /usr/local/sbin/ceph-collector.sh $pool &
   echo "iops.value 0"
