@@ -1,0 +1,28 @@
+#!/bin/bash
+
+path="/run/shm/cephmon"
+
+[[ $0 =~ ([^_]*)$ ]]
+pool=$BASH_REMATCH
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH $pool IOPS"
+  echo "graph_category ceph"
+  echo "graph_vlabel IOPS"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Ceph IOPS for the \"$pool\" pool"
+  echo "iops.label IOPS"
+  echo "iops.info Average IOPS for the \"$pool\" pool"
+  exit 0
+fi
+
+totiops=0
+i=0
+
+for line in $(tail -n 300 "$path/ceph-$pool-iops"); do
+  totiops=$((totiops+ line))
+  ((i++))
+done
+
+echo "iops.value $(($totiops/$i))"
