@@ -19,22 +19,28 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-totRead=0
-i=0
-
-for line in $(tail -n 300 "$path/ceph-$pool-read"); do
-  totRead=$((totRead + line))
-  ((i++))
-done
-
-echo "read.value $(($totRead/$i))"
-
-totWrite=0
-i=0
-
-for line in $(tail -n 300 "$path/ceph-$pool-write"); do
-  totWrite=$((totWrite + line))
-  ((i++))
-done
-
-echo "write.value $(($totWrite/$i))"
+if [[ ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null ]]
+then
+  ceph-collector.sh $pool &
+  echo "iops.value 0"
+else
+  totRead=0
+  i=0
+  
+  for line in $(tail -n 300 "$path/ceph-$pool-read"); do
+    totRead=$((totRead + line))
+    ((i++))
+  done
+  
+  echo "read.value $(($totRead/$i))"
+  
+  totWrite=0
+  i=0
+  
+  for line in $(tail -n 300 "$path/ceph-$pool-write"); do
+    totWrite=$((totWrite + line))
+    ((i++))
+  done
+  
+  echo "write.value $(($totWrite/$i))"
+fi

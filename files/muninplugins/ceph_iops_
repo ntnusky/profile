@@ -17,12 +17,19 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-totiops=0
-i=0
 
-for line in $(tail -n 300 "$path/ceph-$pool-iops"); do
-  totiops=$((totiops+ line))
-  ((i++))
-done
+if [[ ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null ]]
+then
+  ceph-collector.sh $pool &
+  echo "iops.value 0"
+else
+  totiops=0
+  i=0
 
-echo "iops.value $(($totiops/$i))"
+  for line in $(tail -n 300 "$path/ceph-$pool-iops"); do
+    totiops=$((totiops+ line))
+    ((i++))
+  done
+  
+  echo "iops.value $(($totiops/$i))"
+fi
