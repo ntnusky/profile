@@ -25,4 +25,20 @@ class profile::munin::plugin::ceph {
 	group => root,
     source => 'puppet:///modules/profile/muninplugins/ceph-collect.sh',
   }
+  
+  # Install the munin plugins
+  file { '/usr/share/munin/plugins/ceph_traffic_'
+    ensure => file,
+	mode => 755,
+	owner => root,
+	group => root,
+    source => 'puppet:///modules/profile/muninplugins/ceph_traffic_',
+  }
+  file { '/usr/share/munin/plugins/ceph_iops_':
+    ensure => file,
+	mode => 755,
+	owner => root,
+	group => root,
+    source => 'puppet:///modules/profile/muninplugins/ceph_iops_',
+  }
 }
