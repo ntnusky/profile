@@ -46,30 +46,36 @@ class profile::munin::plugin::ceph {
     ensure => link,
 	target => 'ceph_traffic_',
 	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+	config => ['user root'],
   }
   munin::plugin { "ceph_traffic_rbd":
     ensure => link,
 	target => 'ceph_traffic_',
 	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+	config => ['user root'],
   }
   munin::plugin { "ceph_traffic_images":
     ensure => link,
 	target => 'ceph_traffic_',
 	require => File['/usr/share/munin/plugins/ceph_traffic_'],
+	config => ['user root'],
   }
   munin::plugin { "ceph_iops_volumes":
     ensure => link,
 	target => 'ceph_iops_',
 	require => File['/usr/share/munin/plugins/ceph_iops_'],
+	config => ['user root'],
   }
   munin::plugin { "ceph_iops_rbd":
     ensure => link,
 	target => 'ceph_iops_',
 	require => File['/usr/share/munin/plugins/ceph_iops_'],
+	config => ['user root'],
   }
   munin::plugin { "ceph_iops_images":
     ensure => link,
 	target => 'ceph_iops_',
 	require => File['/usr/share/munin/plugins/ceph_iops_'],
+	config => ['user root'],
   }
 }
