@@ -2,7 +2,7 @@ class profile::munin::plugin::nova {
   $admin_ip = hiera("profile::api::keystone::admin::ip")
   $admin_token = hiera("profile::keystone::admin_token")
   $admin_pass = hiera("profile::keystone::admin_password")
-  $admin_url = "http://${admin_ip}:5000/v2.0/",
+  $admin_url = "http://${admin_ip}:5000/v2.0/"
   
 
   munin::plugin { 'nova_cpu':
