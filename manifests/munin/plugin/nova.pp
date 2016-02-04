@@ -17,7 +17,7 @@ class profile::munin::plugin::nova {
 
   munin::plugin { 'nova_ram':
     ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/nova_cpu',
+    source => 'puppet:///modules/profile/muninplugins/nova_ram',
 	config => [ 'user nova',
 	  "env.OS_TENANT_NAME admin",
 	  "env.OS_USERNAME $admin_token",
@@ -27,7 +27,7 @@ class profile::munin::plugin::nova {
 
   munin::plugin { 'nova_disk':
     ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/nova_cpu',
+    source => 'puppet:///modules/profile/muninplugins/nova_disk',
 	config => [ 'user nova',
 	  "env.OS_TENANT_NAME admin",
 	  "env.OS_USERNAME $admin_token",
