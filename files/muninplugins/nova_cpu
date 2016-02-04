@@ -20,7 +20,7 @@ totalCPU=0
 enabledCPU=0
 usedCPU=0
 
-for node in $(nova service-list | grep " nova " | awk '{ print $4";"$8}'); do 
+for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
   [[ $node =~ (.*)\;(.*) ]]
   nodename=${BASH_REMATCH[1]}
   nodestatus=${BASH_REMATCH[2]}
