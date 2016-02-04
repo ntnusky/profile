@@ -1,0 +1,44 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Nova CPU summary"
+  echo "graph_category openstack"
+  echo "graph_vlabel VCPU"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of available, enabled and allocated CPU's"
+  echo "total.label Total"
+  echo "total.info Total CPU's available"
+  echo "enabled.label Enabled"
+  echo "enabled.info Total CPU's on enabled hosts"
+  echo "used.label Allocated"
+  echo "used.info Allocated CPU's"
+  exit 0
+fi
+
+totalCPU=0
+enabledCPU=0
+usedCPU=0
+
+for node in $(nova service-list | grep " nova " | awk '{ print $4";"$8}'); do 
+  [[ $node =~ (.*)\;(.*) ]]
+  nodename=${BASH_REMATCH[1]}
+  nodestatus=${BASH_REMATCH[2]}
+  
+  total=$(nova host-describe $nodename | grep total)
+  used=$(nova host-describe $nodename | grep used_now)
+   
+  tCPU=$(echo "$total" | awk '{print $6}')
+  uCPU=$(echo "$used" | awk '{print $6}')
+  
+  ((usedCPU += $uCPU))
+  ((totalCPU += $tCPU))
+  
+  if [[ $nodestatus == "enabled" ]]; then
+    ((enabledCPU += $tCPU))
+  fi
+done
+
+echo "total.value $totalCPU"
+echo "enabled.value $enabledCPU"
+echo "used.value $usedCPU"

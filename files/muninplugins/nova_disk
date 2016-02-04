@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Nova RAM summary"
+  echo "graph_category openstack"
+  echo "graph_vlabel RAM"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of available, enabled and allocated RAM"
+  echo "used.label GB Disk"
+  echo "used.info Allocated disk for VM's"
+  exit 0
+fi
+
+usedDisk=0
+
+for node in $(nova service-list | grep " nova " | awk '{ print $4";"$8}'); do 
+  [[ $node =~ (.*)\;(.*) ]]
+  nodename=${BASH_REMATCH[1]}
+  nodestatus=${BASH_REMATCH[2]}
+  
+  used=$(nova host-describe $nodename | grep used_now)
+   
+  uDisk=$(echo "$used" | awk '{print $10}')
+  
+  ((usedDisk += $uDisk))
+done
+
+echo used.value $usedDisk
