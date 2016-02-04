@@ -8,7 +8,7 @@ class profile::munin::plugin::nova {
   munin::plugin { 'nova_cpu':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/nova_cpu',
-	config => [
+	config => [ 'user nova',
 	  "env.OS_TENANT_NAME admin",
 	  "env.OS_USERNAME $admin_token",
 	  "env.OS_PASSWORD $admin_pass",
@@ -18,7 +18,7 @@ class profile::munin::plugin::nova {
   munin::plugin { 'nova_ram':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/nova_cpu',
-	config => [
+	config => [ 'user nova',
 	  "env.OS_TENANT_NAME admin",
 	  "env.OS_USERNAME $admin_token",
 	  "env.OS_PASSWORD $admin_pass",
@@ -28,7 +28,7 @@ class profile::munin::plugin::nova {
   munin::plugin { 'nova_disk':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/nova_cpu',
-	config => [
+	config => [ 'user nova',
 	  "env.OS_TENANT_NAME admin",
 	  "env.OS_USERNAME $admin_token",
 	  "env.OS_PASSWORD $admin_pass",
