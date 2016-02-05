@@ -34,4 +34,14 @@ class profile::munin::plugin::nova {
 	  "env.OS_PASSWORD $admin_pass",
 	  "env.OS_AUTH_URL $admin_url"],
   }
+
+  munin::plugin { 'nova_servers':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/nova_servers',
+	config => [ 'user nova',
+	  "env.OS_TENANT_NAME admin",
+	  "env.OS_USERNAME $admin_token",
+	  "env.OS_PASSWORD $admin_pass",
+	  "env.OS_AUTH_URL $admin_url"],
+  }
 }

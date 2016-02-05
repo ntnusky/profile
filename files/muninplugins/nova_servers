@@ -1,0 +1,30 @@
+#!/bin/bash
+
+tenants=$(keystone tenant-list | egrep [0-9a-f]{32} | grep -v 'services' | awk '{print $2";"$4}')
+if [[ $1 == "config" ]]; then
+  echo "graph_title Tenant servers."
+  echo "graph_category openstack"
+  echo "graph_vlabel # of servers"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Number of VM's ran by tenant."
+
+  for t in $tenants; do
+    [[ $t =~ (.*)\;(.*) ]]
+    id=${BASH_REMATCH[1]}
+    name=${BASH_REMATCH[2]}
+    echo ${id}.label $name
+    echo ${id}.info Servers owned by $name
+  done
+
+  exit 0
+fi
+
+for tenant in $(nova usage-list | egrep [0-9a-f]{32} | awk '{print $2";"$4}');
+do
+  [[ $tenant =~ (.*)\;(.*) ]]
+  id=${BASH_REMATCH[1]}
+  num=${BASH_REMATCH[2]}
+  
+  echo "${id}.value $num"
+done
