@@ -9,6 +9,11 @@ class profile::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_osd',
 	config => ['user root'],
   }
+  munin::plugin { 'ceph_usage':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/ceph_usage',
+	config => ['user root'],
+  }
 
   # Install the collector scripts for the ceph plugins
   file { '/usr/local/sbin/ceph-collector.sh':

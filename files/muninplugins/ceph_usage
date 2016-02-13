@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH Storage usage"
+  echo "graph_category ceph"
+  echo "graph_vlabel Bytes"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Storage size of each ceph pool"
+  
+  for pool in $(ceph osd pool ls); do
+    echo ${pool}.label $pool
+    echo ${pool}.info Disk space used by the $pool pool.
+  done
+  exit 0
+fi
+
+data=$(ceph df)
+
+for pool in $(ceph osd pool ls); do
+  i=$( echo "$data" | grep $pool | awk '{ print $6 }')
+  
+  echo ${pool}.value $(($i * 8 * 1024 * 1024))
+done
