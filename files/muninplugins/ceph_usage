@@ -15,10 +15,10 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-data=$(ceph df)
+data=$(rados df)
 
 for pool in $(ceph osd pool ls); do
-  i=$( echo "$data" | grep $pool | awk '{ print $6 }')
+  i=$( echo "$data" | grep $pool | awk '{ print $2 }')
   
-  echo ${pool}.value $(($i * 8 * 1024 * 1024))
+  echo ${pool}.value $(($i * 1024))
 done
