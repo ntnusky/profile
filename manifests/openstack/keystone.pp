@@ -3,6 +3,7 @@ class profile::openstack::keystone {
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
   $mysql_ip = hiera("profile::mysql::ip")
   $vrrp_password 	= hiera("profile::keepalived::vrrp_password")
+  $token_flush_host = hiera("profile::keystone::tokenflush::host")
 
   $region = hiera("profile::region")
   $admin_ip = hiera("profile::api::keystone::admin::ip")
@@ -20,6 +21,19 @@ class profile::openstack::keystone {
   $database_connection = "mysql://keystone:${password}@${mysql_ip}/keystone"
   
   include ::profile::openstack::repo
+
+  if($::hostname == $token_flush_host) {
+    file { '/usr/local/bin/keystone-token-flush.sh':
+      ensure => file,
+      source => 'puppet:///modules/profile/openstack/keystone-token-flush.sh',
+	  mode => 555,
+	}
+	cron { token-flush:
+      command => "/usr/local/bin/keystone-token-flush.sh",
+      user    => root,
+      minute  => [10,40],
+    }
+  }
  
   Anchor["profile::keepalived::end"] ->
 
