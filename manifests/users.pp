@@ -19,4 +19,5 @@ class profile::users {
   
   include ::profile::users::eigil
   include ::profile::users::erikh
+  include ::profile::users::larserik
 }
