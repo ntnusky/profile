@@ -31,11 +31,15 @@ class profile::baseconfig {
     ensure => 'latest',
   }
 
-  if($::fqdn != $mysql_master) {
-    package { 'nmap':
-      ensure => 'latest',
-	}
-  }
+  # This check were supposed to not install nmap on the galera master, as the
+  # galera module ensures namp is installed on this node. It did not work as
+  # intended, and should be fixed at some point if one want nmap on all nodes.
+  #
+  #if($::fqdn != $mysql_master) {
+  #  package { 'nmap':
+  #    ensure => 'latest',
+  #    }
+  #}
   
   include ::keystone::client
   include ::cinder::client
