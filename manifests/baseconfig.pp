@@ -3,6 +3,8 @@ define setDHCP {
   $address = hiera("profile::interfaces::${name}::address", false)
   $netmask = hiera("profile::interfaces::${name}::netmask", "255.255.255.0")
 
+  $mysql_master = hiera("profile::mysqlcluster::master")
+
   network::interface{ $name:
     method  => $method,
     address => $address,
@@ -22,12 +24,17 @@ class profile::baseconfig {
     'gdisk',
     'htop',
     'iperf3',
-    'nmap',
     'pwgen',
     'sysstat',
     'vim'
   ] :
     ensure => 'latest',
+  }
+
+  if($::fqdn != $mysql_master) {
+    package { 'nmap':
+      ensure => 'latest',
+	}
   }
   
   include ::keystone::client
