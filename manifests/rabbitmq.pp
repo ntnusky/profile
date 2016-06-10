@@ -10,6 +10,11 @@ class profile::rabbitmq {
   $secret     = hiera("profile::rabbitmq::rabbitsecret")
   $ctrlnodes  = hiera("controller::names")
 
+  apt_key { 'rabbitmq-release-key':
+    ensure => 'present',
+    id     => '6B73A36E6026DFCA',
+	source => 'https://bintray.com/rabbitmq/Keys/download_file?file_path=rabbitmq-release-signing-key.asc',
+  }->
   class { '::rabbitmq': 
     erlang_cookie     => $secret,
     wipe_db_on_cookie_change => true,
