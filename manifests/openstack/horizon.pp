@@ -4,7 +4,6 @@ class profile::openstack::horizon {
   $horizon_allowed_hosts = hiera("profile::horizon::allowed_hosts")
   $horizon_server_aliases = hiera("profile::horizon::server_aliases")
   $controller_api = hiera("controller::api::addresses")
-  $apache_key = hiera("profile::horizon::apache_key")
   $server_name = hiera("profile::horizon::server_name")
 
   $horizon_ip = hiera("profile::api::horizon::public::ip")
@@ -14,6 +13,9 @@ class profile::openstack::horizon {
 
   $if_public = hiera("profile::interfaces::public")
   
+  $ssl_key = hiera("profile::horizon::ssl_key")
+  $ssl_cert = hiera("profile::horizon::ssl_cert")
+  $ssl_ca = hiera("profile::horizon::ssl_ca")
 
   anchor { "profile::openstack::horizon::begin" : 
     require => [ Anchor["profile::mysqlcluster::end"], 
@@ -23,15 +25,15 @@ class profile::openstack::horizon {
 
   file { '/etc/ssl/private/horizon.key':
     ensure  => file,
-    content => "${apache_key}",
+    content => "${ssl_key}",
   } ->
   file { '/etc/ssl/certs/horizon.crt':
     ensure => file,
-    source => 'puppet:///modules/profile/keys/certs/horizon.crt',
+    content => "${ssl_cert}",
   } ->
-  file { '/etc/ssl/certs/DigiCertCA.crt':
+  file { '/etc/ssl/certs/CA.crt':
     ensure => file,
-    source => 'puppet:///modules/profile/keys/certs/DigiCertCA.crt',
+    content => "${ssl_ca}",
   } ->
   class { '::horizon':
     allowed_hosts   => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_allowed_hosts),
@@ -42,7 +44,7 @@ class profile::openstack::horizon {
     servername      => $server_name,
     horizon_cert    => '/etc/ssl/certs/horizon.crt',
     horizon_key     => '/etc/ssl/private/horizon.key',
-    horizon_ca      => '/etc/ssl/certs/DigiCertCA.crt',
+    horizon_ca      => '/etc/ssl/certs/CA.crt',
   }
 
   keepalived::vrrp::script { 'check_horizon':
