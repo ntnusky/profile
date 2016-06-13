@@ -19,6 +19,7 @@ class profile::mysqlcluster {
     vendor_type         => "mariadb",
     root_password       => $rootpassword,
     local_ip            => $management_ip,
+    configure_firewall  => false,
     override_options    => {
       'mysqld' => {
         'port' => '3306',
