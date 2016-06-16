@@ -1,6 +1,7 @@
 class profile::openstack::novacompute {
   $nova_public_api = hiera("profile::api::nova::public::ip")
   $nova_libvirt_type = hiera("profile::nova::libvirt_type")
+  $nova_libvirt_model = hiera("profile::nova::libvirt_model")
   $nova_key = hiera("profile::ceph::nova_key")
   $nova_uuid = hiera("profile::ceph::nova_uuid")
   
@@ -70,7 +71,7 @@ class profile::openstack::novacompute {
 	libvirt_cpu_mode => "custom",
   }
   nova_config {
-    'libvirt/cpu_model':   value => 'Penryn';
+    'libvirt/cpu_model':   value => $nova_libvirt_model;
   }
 
   class { '::nova::compute::rbd':
