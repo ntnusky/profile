@@ -4,13 +4,6 @@ class profile::monitoring::icingaserver {
   $icingaweb2_db_password = hiera('profile::monitoring::icingaweb2_db_password')
   #$icingaadmin_password = hiera('profile::monitoring::icingaadmin_password')
 
-  class { '::apache':
-    mpm_module => 'prefork',
-  }
-  include ::apache::mod::rewrite
-  include ::apache::mod::prefork
-  include ::apache::mod::php
-
   class { '::mysql::server':
     root_password => $mysql_password,
   } ->
