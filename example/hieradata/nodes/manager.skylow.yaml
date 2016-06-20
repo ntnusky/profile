@@ -1,0 +1,6 @@
+---
+profile::interfaces:
+ - 'eth2'
+
+profile::interfaces::eth2::method: 'dhcp'
+profile::interfaces::management: 'eth2'

@@ -3,6 +3,8 @@ define setDHCP {
   $address = hiera("profile::interfaces::${name}::address", false)
   $netmask = hiera("profile::interfaces::${name}::netmask", "255.255.255.0")
 
+  $mysql_master = hiera("profile::mysqlcluster::master")
+
   network::interface{ $name:
     method  => $method,
     address => $address,
@@ -22,13 +24,22 @@ class profile::baseconfig {
     'gdisk',
     'htop',
     'iperf3',
-    'nmap',
     'pwgen',
     'sysstat',
     'vim'
   ] :
     ensure => 'latest',
   }
+
+  # This check were supposed to not install nmap on the galera master, as the
+  # galera module ensures namp is installed on this node. It did not work as
+  # intended, and should be fixed at some point if one want nmap on all nodes.
+  #
+  #if($::fqdn != $mysql_master) {
+  #  package { 'nmap':
+  #    ensure => 'latest',
+  #    }
+  #}
   
   include ::keystone::client
   include ::cinder::client
@@ -51,7 +62,7 @@ class profile::baseconfig {
     key_server => 'pgp.mit.edu',
   } ->
   package { 'puppet':
-    ensure => '3.8.4-1puppetlabs1',
+    ensure => '3.8.7-1puppetlabs1',
   } ->
   ini_setting { "Puppet Start":
     ensure  => present,

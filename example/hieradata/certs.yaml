@@ -1,0 +1,12 @@
+---
+profile::horizon::ssl_key: |
+  -----BEGIN PRIVATE KEY-----
+  -----END PRIVATE KEY-----
+
+profile::horizon::ssl_cert: |
+  -----BEGIN CERTIFICATE-----
+  -----END CERTIFICATE-----
+
+profile::horizon::ssl_ca: |
+  -----BEGIN CERTIFICATE-----
+  -----END CERTIFICATE-----

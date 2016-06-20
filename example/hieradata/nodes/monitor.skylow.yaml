@@ -1,0 +1,19 @@
+--- 
+profile::interfaces:
+ - 'eth2'
+
+profile::interfaces::eth2::method: 'dhcp'
+profile::interfaces::management: 'eth2'
+
+profile::keys::logstash: |
+  -----BEGIN RSA PRIVATE KEY-----
+  -----END RSA PRIVATE KEY-----
+
+profile::keys::nginx: |
+  -----BEGIN PRIVATE KEY-----
+  -----END PRIVATE KEY-----
+
+profile::monitoring::icinga_db_password: '<pwgen>'
+profile::monitoring::mysql_password: '<pwgen>'
+profile::monitoring::icingaadmin_password: '<pwgen>'
+
