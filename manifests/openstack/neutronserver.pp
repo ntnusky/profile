@@ -84,12 +84,12 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::server':
-    auth_password     => $neutron_password,
-    auth_uri          => "http://${keystone_ip}:5000/",
-    connection        => $database_connection,
-    sync_db           => true,
-    before            => Anchor["profile::openstack::neutron::end"],
-    require           => Anchor["profile::openstack::neutron::begin"],
+    auth_password       => $neutron_password,
+    auth_uri            => "http://${keystone_ip}:5000/",
+    database_connection => $database_connection,
+    sync_db             => true,
+    before              => Anchor["profile::openstack::neutron::end"],
+    require             => Anchor["profile::openstack::neutron::begin"],
   }
   
   class { '::neutron::agents::dhcp':
