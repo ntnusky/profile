@@ -1,5 +1,4 @@
 class profile::openstack::repo(
-  $release = 'juno',
 ){
   if $::osfamily == 'Debian' {
     if $::operatingsystem == 'Ubuntu' {
