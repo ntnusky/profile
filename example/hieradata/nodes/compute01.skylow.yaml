@@ -1,0 +1,15 @@
+--- 
+profile::interfaces:
+ - 'eth2'
+ - 'eth0'
+ - 'eth3'
+
+profile::interfaces::eth2::method: 'dhcp'
+profile::interfaces::eth3::method: 'manual'
+profile::interfaces::eth0::method: 'static'
+profile::interfaces::eth0::address: '172.17.2.51'
+profile::interfaces::eth0::netmask: '255.255.255.0'
+
+profile::interfaces::management: 'eth2'
+profile::interfaces::storage: 'eth0'
+profile::interfaces::tenant: 'eth3'
