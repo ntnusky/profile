@@ -42,7 +42,7 @@ class profile::openstack::glance {
   
   class { '::glance::api':
     keystone_password   => $password,
-    auth_uri            => "http://${keystone_ip}:5000/"
+    auth_uri            => "http://${keystone_ip}:5000/",
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     database_connection => $database_connection,
@@ -69,7 +69,7 @@ class profile::openstack::glance {
   class { '::glance::registry':
     keystone_password   => $password,
     database_connection => $database_connection,
-    auth_uri            => "http://${keystone_ip}:5000/"
+    auth_uri            => "http://${keystone_ip}:5000/",
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     before              => Anchor['profile::openstack::glance::end'],

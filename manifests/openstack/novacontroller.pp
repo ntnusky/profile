@@ -72,7 +72,7 @@ class profile::openstack::novacontroller {
   class { 'nova::api':
     admin_password                       => $nova_password,
     api_bind_address                     => $nova_public_ip,
-    auth_uri                             => "http://${$keystone_ip}:5000/"
+    auth_uri                             => "http://${$keystone_ip}:5000/",
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db		=> $sync_db,
     before              => Anchor["profile::openstack::novacontroller::end"],
