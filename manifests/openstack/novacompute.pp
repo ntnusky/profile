@@ -35,7 +35,6 @@ class profile::openstack::novacompute {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
-    mysql_module        => '2.2',
   }
 
   exec { "/usr/bin/ceph osd pool create volumes 4096" :
@@ -62,16 +61,14 @@ class profile::openstack::novacompute {
   }
 
   ceph_config {
-      'client.nova/key':              value => $nova_key;
+    'client.nova/key':              value => $nova_key;
   }
 
   class { '::nova::compute::libvirt':
-    libvirt_virt_type => $nova_libvirt_type,
-    vncserver_listen  => $management_ip,
-	libvirt_cpu_mode => "custom",
-  }
-  nova_config {
-    'libvirt/cpu_model':   value => $nova_libvirt_model;
+    libvirt_virt_type  => $nova_libvirt_type,
+    vncserver_listen   => $management_ip,
+    libvirt_cpu_mode   => 'custom',
+    libvirt_cpu_model  => $nova_libvirt_model,
   }
 
   class { '::nova::compute::rbd':

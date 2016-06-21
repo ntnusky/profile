@@ -42,7 +42,6 @@ class profile::openstack::cinder {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
-    mysql_module        => '2.2',
   }
   
   class  { '::cinder::keystone::auth':
@@ -73,7 +72,6 @@ class profile::openstack::cinder {
   }
 
   class { '::cinder::scheduler':
-    scheduler_driver => 'cinder.scheduler.simple.SimpleScheduler',
     enabled          => true,
   }
   
