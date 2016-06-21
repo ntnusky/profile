@@ -86,9 +86,9 @@ class profile::openstack::glance {
   
   class  { '::glance::keystone::auth':
     password         => $password,
-    public_address   => $public_ip,
-    admin_address    => $admin_ip,
-    internal_address => $admin_ip,
+	public_url       => "http://${public_ip}:9292"
+	internal_url     => "http://${admin_ip}:9292"
+	admin_url        => "http://${admin_ip}:9292"
     region           => $region,
     before           => Anchor['profile::openstack::glance::end'],
     require          => Anchor['profile::openstack::glance::begin'],
