@@ -72,7 +72,6 @@ class profile::openstack::cinder {
   }
 
   class { '::cinder::scheduler':
-    scheduler_driver => 'cinder.scheduler.simple.SimpleScheduler',
     enabled          => true,
   }
   
