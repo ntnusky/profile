@@ -66,9 +66,9 @@ class profile::openstack::neutronserver {
 
   class { '::neutron::keystone::auth':
     password         => $neutron_password,
-	public_url       => "http://${public_ip}:9696"
-	internal_url     => "http://${admin_ip}:9696"
-	admin_url        => "http://${admin_ip}:9696"
+	public_url       => "http://${public_ip}:9696",
+	internal_url     => "http://${admin_ip}:9696",
+	admin_url        => "http://${admin_ip}:9696",
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
     region           => $region,
