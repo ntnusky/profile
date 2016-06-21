@@ -6,7 +6,7 @@ class profile::openstack::heat {
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
   $keystone_ip = hiera("profile::api::keystone::public::ip")
-  $keystone_ip = hiera("profile::api::keystone::admin::ip")
+  $keystone_ip_admin = hiera("profile::api::keystone::admin::ip")
   $auth_encryption_key = hiera("profile::heat::auth_encryption_key")
   $vrrp_password = hiera("profile::keepalived::vrrp_password")
   $region = hiera("profile::region")
