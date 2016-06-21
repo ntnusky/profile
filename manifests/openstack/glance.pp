@@ -71,7 +71,6 @@ class profile::openstack::glance {
     auth_host           => $admin_ip,
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
-    mysql_module        => '2.2',
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
   }
