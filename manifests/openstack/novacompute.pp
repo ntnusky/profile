@@ -35,7 +35,6 @@ class profile::openstack::novacompute {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
-    mysql_module        => '2.2',
   }
 
   exec { "/usr/bin/ceph osd pool create volumes 4096" :
