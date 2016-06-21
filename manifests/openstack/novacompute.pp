@@ -68,7 +68,7 @@ class profile::openstack::novacompute {
     libvirt_virt_type  => $nova_libvirt_type,
     vncserver_listen   => $management_ip,
     libvirt_cpu_mode   => "custom",
-    libvirt_cpu_model' => $nova_libvirt_model;
+    libvirt_cpu_model' => $nova_libvirt_model,
   }
 
   class { '::nova::compute::rbd':
