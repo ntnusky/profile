@@ -107,6 +107,7 @@ profile::nova::keystone::password: '<pwgen>'
 profile::nova::libvirt_type: 'kvm'
 profile::nova::libvirt_model: 'core2duo'
 profile::nova::sync_db: false
+profile::nova::dns: '129.241.0.200,129.241.0.201'
 
 profile::neutron::keystone::password: '<pwgen>'
 profile::neutron::service_plugins:

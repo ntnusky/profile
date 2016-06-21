@@ -17,6 +17,7 @@ class profile::openstack::neutronserver {
   $service_plugins = hiera("profile::neutron::service_plugins")
   $neutron_vrrp_pass = hiera("profile::neutron::vrrp_pass")
   $nova_metadata_secret = hiera("profile::nova::sharedmetadataproxysecret")
+  $dns_servers = hiera("profile::nova::dns")
 
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
@@ -98,11 +99,10 @@ class profile::openstack::neutronserver {
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
-# quick fix for dns since dnsmasq_dns_servers is not a class parameter:
-# edit manually:
-# dnsmasq_dns_servers = 128.39.243.10,128.39.243.11 
-# and also set debug = True to trigger service restart since this will
-# get puppet to set it back to false
+
+  neutron_dhcp_agent_config {
+    'DEFAULT/dnsmasq_dns_servers': value => $dns_servers;
+  }
  
   # Configure nova notifications system
   class { '::neutron::server::notifications':
