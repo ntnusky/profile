@@ -94,8 +94,9 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::agents::dhcp':
-    #enabled        => false,
-    #manage_service => false,
+    #enabled            => false,
+    #manage_service     => false,
+	dnsmasq_dns_servers => $dns_servers,
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
