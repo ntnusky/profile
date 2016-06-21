@@ -33,9 +33,9 @@ class profile::openstack::heat {
 
   class  { '::heat::keystone::auth':
     password         => $password,
-    public_address   => $public_ip,
-    admin_address    => $admin_ip,
-    internal_address => $admin_ip,
+	public_url       => "http://${public_ip}:8004/v1/%(tenant_id)s",
+	internal_url     => "http://${admin_ip}:8004/v1/%(tenant_id)s",
+	admin_url        => "http://${admin_ip}:8004/v1/%(tenant_id)s",
     region           => $region,
   }
 

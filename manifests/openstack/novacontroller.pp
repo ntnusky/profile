@@ -37,9 +37,15 @@ class profile::openstack::novacontroller {
   
   class { '::nova::keystone::auth':
     password         => $nova_password,
-    public_address   => $nova_public_ip,
-    admin_address    => $nova_admin_ip,
-    internal_address => $nova_admin_ip,
+	public_url       => "http://${nova_public_ip}:8774/v2/%(tenant_id)s",
+	internal_url     => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
+	admin_url        => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
+	public_url_v3    => "http://${nova_public_ip}:8774/v3",
+	internal_url_v3  => "http://${nova_admin_ip}:8774/v3",
+	admin_url_v3     => "http://${nova_admin_ip}:8774/v3",
+	ec2_public_url   => "http://${nova_public_ip}:8773/services/Cloud",
+	ec2_internal_url => "http://${nova_admin_ip}:8773/services/Cloud",
+	ec2_admin_url    => "http://${nova_admin_ip}:8773/services/Admin",
     region           => $region,
     before           => Anchor["profile::openstack::novacontroller::end"],
     require          => Anchor["profile::openstack::novacontroller::begin"],

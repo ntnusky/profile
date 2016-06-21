@@ -17,6 +17,7 @@ class profile::openstack::neutronserver {
   $service_plugins = hiera("profile::neutron::service_plugins")
   $neutron_vrrp_pass = hiera("profile::neutron::vrrp_pass")
   $nova_metadata_secret = hiera("profile::nova::sharedmetadataproxysecret")
+  $dns_servers = hiera("profile::nova::dns")
 
   $vlan_low = hiera("profile::neutron::vlan_low")
   $vlan_high = hiera("profile::neutron::vlan_high")
@@ -66,9 +67,9 @@ class profile::openstack::neutronserver {
 
   class { '::neutron::keystone::auth':
     password         => $neutron_password,
-    public_address   => $public_ip,
-    admin_address    => $admin_ip,
-    internal_address => $admin_ip,
+	public_url       => "http://${public_ip}:9696",
+	internal_url     => "http://${admin_ip}:9696",
+	admin_url        => "http://${admin_ip}:9696",
     before           => Anchor["profile::openstack::neutron::end"],
     require          => Anchor["profile::openstack::neutron::begin"],
     region           => $region,
@@ -84,12 +85,12 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::server':
-    auth_password     => $neutron_password,
-    auth_uri          => "http://${keystone_ip}:5000/",
-    connection        => $database_connection,
-    sync_db           => true,
-    before            => Anchor["profile::openstack::neutron::end"],
-    require           => Anchor["profile::openstack::neutron::begin"],
+    auth_password       => $neutron_password,
+    auth_uri            => "http://${keystone_ip}:5000/",
+    database_connection => $database_connection,
+    sync_db             => true,
+    before              => Anchor["profile::openstack::neutron::end"],
+    require             => Anchor["profile::openstack::neutron::begin"],
   }
   
   class { '::neutron::agents::dhcp':
@@ -98,11 +99,10 @@ class profile::openstack::neutronserver {
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
-# quick fix for dns since dnsmasq_dns_servers is not a class parameter:
-# edit manually:
-# dnsmasq_dns_servers = 128.39.243.10,128.39.243.11 
-# and also set debug = True to trigger service restart since this will
-# get puppet to set it back to false
+
+  neutron_dhcp_agent_config {
+    'DEFAULT/dnsmasq_dns_servers': value => $dns_servers;
+  }
  
   # Configure nova notifications system
   class { '::neutron::server::notifications':
