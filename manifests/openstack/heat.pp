@@ -6,6 +6,7 @@ class profile::openstack::heat {
   $rabbit_user = hiera("profile::rabbitmq::rabbituser")
   $rabbit_pass = hiera("profile::rabbitmq::rabbitpass")
   $keystone_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_ip = hiera("profile::api::keystone::admin::ip")
   $auth_encryption_key = hiera("profile::heat::auth_encryption_key")
   $vrrp_password = hiera("profile::keepalived::vrrp_password")
   $region = hiera("profile::region")
@@ -43,13 +44,12 @@ class profile::openstack::heat {
     database_connection => $database_connection,
     verbose             => $verbose,
     debug               => $debug,
-#    region_name         => $region, # probably uncomment this when Kilo
+    region_name         => $region, # probably uncomment this when Kilo
     rabbit_password     => $rabbit_pass,
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
     auth_uri            => "http://${keystone_ip}:5000/v2.0",
-#    identity_uri        => "http://${keystone_ip}:35357", # this replace keystone_host in Kilo
-    keystone_host       => $keystone_ip,
+    identity_uri        => "http://${keystone_ip_admin}:35357", 
     keystone_tenant     => 'services',
     keystone_user       => 'heat',
     keystone_password   => $password,
