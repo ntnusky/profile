@@ -101,10 +101,6 @@ class profile::openstack::neutronserver {
     require        => Anchor["profile::openstack::neutron::begin"],
   }
 
-  neutron_dhcp_agent_config {
-    'DEFAULT/dnsmasq_dns_servers': value => $dns_servers;
-  }
- 
   # Configure nova notifications system
   class { '::neutron::server::notifications':
     nova_admin_password    => $nova_password,
