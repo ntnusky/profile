@@ -72,10 +72,11 @@ class profile::openstack::novacompute {
   }
 
   class { '::nova::compute::rbd':
-    libvirt_rbd_user    => 'nova',
+    libvirt_rbd_user        => 'nova',
     libvirt_images_rbd_pool => 'volumes',
     libvirt_rbd_secret_uuid => $nova_uuid,
-    require              => Ceph::Key['client.nova'],
+    require                 => Ceph::Key['client.nova'],
+    manage_ceph_client      => false,
   }
 
   class { '::nova::migration::libvirt':
@@ -85,7 +86,7 @@ class profile::openstack::novacompute {
     secret        => $nova_key,
     cap_mon       => 'allow r',
     cap_osd       => 'allow class-read object_prefix rbd_children, allow rwx pool=volumes, allow rx pool=images',
-	inject        => true,
+    inject        => true,
   }
 
   file { '/etc/libvirt/qemu.conf':
