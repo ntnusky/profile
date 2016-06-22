@@ -1,7 +1,8 @@
 class profile::openstack::novacontroller {
   $mysql_password = hiera("profile::mysql::novapass")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
-  $keystone_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_public_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_admin_ip = hiera("profile::api::keystone::admin::ip")
   $mysql_ip = hiera("profile::mysql::ip")
   $controllers = hiera("controller::management::addresses")
 
@@ -81,8 +82,8 @@ class profile::openstack::novacontroller {
   class { 'nova::api':
     admin_password                       => $nova_password,
     api_bind_address                     => $nova_public_ip,
-    auth_uri                             => "http://${keystone_ip}:5000/",
-    identity_uri                         => "http://${keystone_ip}:35357/",
+    auth_uri                             => "http://${keystone_public_ip}:5000/",
+    identity_uri                         => "http://${keystone_admin_ip}:35357/",
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db		                         => $sync_db,
     before              => Anchor["profile::openstack::novacontroller::end"],
@@ -91,11 +92,11 @@ class profile::openstack::novacontroller {
   }
   
   class { 'nova::network::neutron':
-    neutron_admin_password    => $neutron_password,
-    neutron_url               => "http://${neutron_admin_ip}:9696",
-    neutron_auth_url    => "http://${keystone_ip}:35357/v2.0",
-    before              => Anchor["profile::openstack::novacontroller::end"],
-    require             => Anchor["profile::openstack::novacontroller::begin"],
+    neutron_admin_password => $neutron_password,
+    neutron_url            => "http://${neutron_admin_ip}:9696",
+    neutron_auth_url       => "http://${keystone_admin_ip}:35357/v3",
+    before                 => Anchor["profile::openstack::novacontroller::end"],
+    require                => Anchor["profile::openstack::novacontroller::begin"],
   }
   
   class { 'nova::vncproxy':

@@ -9,7 +9,7 @@ class profile::openstack::novacompute {
   $memcache_ip = hiera("profile::memcache::ip")
 
   $mysql_password = hiera("profile::mysql::novapass")
-  $keystone_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_ip = hiera("profile::api::keystone::admin::ip")
   $mysql_ip = hiera("profile::mysql::ip")
 
   $region = hiera("profile::region")
@@ -47,7 +47,7 @@ class profile::openstack::novacompute {
   class { '::nova::network::neutron':
     neutron_admin_password => $neutron_password,
     neutron_region_name    => $region,
-    neutron_admin_auth_url => "http://${keystone_ip}:35357/v2.0",
+    neutron_auth_url       => "http://${keystone_ip}:35357/v3",
     neutron_url            => "http://${neutron_ip}:9696",
     vif_plugging_is_fatal  => false,
     vif_plugging_timeout   => '0',
