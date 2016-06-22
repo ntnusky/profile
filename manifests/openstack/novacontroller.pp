@@ -27,7 +27,7 @@ class profile::openstack::novacontroller {
   $management_if = hiera("profile::interfaces::management")
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
-  $api_database_connection =  "mysql://nova:${mysql_password}@${mysql_ip}/nova_api"
+  $api_database_connection =  "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
   $sync_db = hiera("profile::nova::sync_db")
   
   include ::profile::openstack::repo
