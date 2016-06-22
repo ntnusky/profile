@@ -37,15 +37,21 @@ class profile::openstack::keystone {
  
   Anchor["profile::keepalived::end"] ->
 
-  anchor { "profile::openstack::keystone::begin" : } ->
+  anchor { "profile::openstack::keystone::begin" : 
+    require => [
+      Anchor["profile::keepalived::end"],
+      Anchor['profile::mysqlcluster::end']
+    ],
+  }
 
   class { "::keystone::db::mysql":
     user          => 'keystone',
     password      => $password,
     allowed_hosts => $allowed_hosts,
     dbname        => 'keystone',
-    require       => Anchor['profile::mysqlcluster::end'],
-  } ->
+    require       => Anchor['profile::openstack::keystone::begin'],
+    before        => Anchor['profile::openstack::keystone::end'],
+  }
 
   class { '::keystone':
     admin_token         => $admin_token,
@@ -54,24 +60,32 @@ class profile::openstack::keystone {
     debug               => $debug,
     enabled             => true,
     admin_bind_host     => "0.0.0.0",
-  } ->
+    require             => Anchor['profile::openstack::keystone::begin'],
+    before              => Anchor['profile::openstack::keystone::end'],
+  } 
    
   class { '::keystone::roles::admin':
     email        => $admin_email,
     password     => $admin_pass,
     admin_tenant => 'admin',
-  } ->
+    require      => Class['::keystone'],
+    before       => Anchor['profile::openstack::keystone::end'],
+  } 
   
   class { 'keystone::endpoint':
     public_url   => "http://${public_ip}:5000",
     admin_url    => "http://${admin_ip}:35357",
     internal_url => "http://${admin_ip}:5000",
     region       => $region,
-  } ->
+    require      => Class['::keystone'],
+    before       => Anchor['profile::openstack::keystone::end'],
+  } 
   
   keepalived::vrrp::script { 'check_keystone':
-    script => '/usr/bin/killall -0 keystone-all',
-  } ->
+    script   => '/usr/bin/killall -0 keystone-all',
+    before   => Anchor['profile::openstack::keystone::end'],
+    require  => Anchor['profile::openstack::keystone::begin'],
+  }
 
   keepalived::vrrp::instance { 'admin-keystone':
     interface         => $management_if,
@@ -84,7 +98,9 @@ class profile::openstack::keystone {
       "${admin_ip}/32",	
     ],
     track_script      => 'check_keystone',
-  } ->
+    before            => Anchor['profile::openstack::keystone::end'],
+    require           => Anchor['profile::openstack::keystone::begin'],
+  }
 
   keepalived::vrrp::instance { 'public-keystone':
     interface         => $public_if,
@@ -97,7 +113,9 @@ class profile::openstack::keystone {
       "${public_ip}/32",	
     ],
     track_script      => 'check_keystone',
-  } ->
+    before            => Anchor['profile::openstack::keystone::end'],
+    require           => Anchor['profile::openstack::keystone::begin'],
+  }
   
   anchor { "profile::openstack::keystone::end" : }
 }
