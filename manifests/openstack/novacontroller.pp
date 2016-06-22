@@ -97,7 +97,7 @@ class profile::openstack::novacontroller {
   
   class { [
     'nova::scheduler',
-    'nova::objectstore',
+    #'nova::objectstore',
     'nova::cert',
     'nova::consoleauth',
     'nova::conductor'
