@@ -103,8 +103,9 @@ class profile::openstack::neutronserver {
   # Configure nova notifications system
   class { '::neutron::server::notifications':
     nova_admin_password    => $nova_password,
-    nova_auth_url          => "http://${keystone_admin_ip}:35357",
-    nova_region_name       => $region,
+    auth_url               => "http://${keystone_admin_ip}:35357",
+    region_name            => $region,
+	nova_url               => "http://${nova_public_ip}:8774/v2",
     before                 => Anchor["profile::openstack::neutron::end"],
     require                => Class["::nova::keystone::auth"],
   }
