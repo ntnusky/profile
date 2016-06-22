@@ -58,6 +58,13 @@ class profile::openstack::novacontroller {
     require          => Anchor['profile::openstack::novacontroller::begin'],
   }
   
+  class { 'nova::db::mysql_api' :
+    password         => $mysql_password,
+    allowed_hosts    => $allowed_hosts,
+    before           => Anchor['profile::openstack::novacontroller::end'],
+    require          => Anchor['profile::openstack::novacontroller::begin'],
+  }
+  
   class { 'nova':
     database_connection => $database_connection,
     rabbit_userid       => $rabbit_user,
