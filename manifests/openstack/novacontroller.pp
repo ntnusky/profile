@@ -81,9 +81,10 @@ class profile::openstack::novacontroller {
   class { 'nova::api':
     admin_password                       => $nova_password,
     api_bind_address                     => $nova_public_ip,
-    auth_uri                             => "http://${$keystone_ip}:5000/",
+    auth_uri                             => "http://${keystone_ip}:5000/",
+    identity_uri                         => "http://${keystone_ip}:35357/",
     neutron_metadata_proxy_shared_secret => $nova_secret,
-    sync_db		=> $sync_db,
+    sync_db		                         => $sync_db,
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
     enabled		=> true,
@@ -92,7 +93,7 @@ class profile::openstack::novacontroller {
   class { 'nova::network::neutron':
     neutron_admin_password    => $neutron_password,
     neutron_url               => "http://${neutron_admin_ip}:9696",
-    neutron_admin_auth_url    => "http://${keystone_ip}:35357/v2.0",
+    neutron_auth_url    => "http://${keystone_ip}:35357/v2.0",
     before              => Anchor["profile::openstack::novacontroller::end"],
     require             => Anchor["profile::openstack::novacontroller::begin"],
   }
