@@ -6,6 +6,7 @@ class profile::openstack::glance {
   $rabbit_ip = hiera("profile::rabbitmq::ip")
 
   $region = hiera("profile::region")
+  $keystone_ip = hiera("profile::api::keystone::public::ip")
   $admin_ip = hiera("profile::api::glance::admin::ip")
   $public_ip = hiera("profile::api::glance::public::ip")
   $vrrp_password = hiera("profile::keepalived::vrrp_password")
@@ -41,7 +42,7 @@ class profile::openstack::glance {
   
   class { '::glance::api':
     keystone_password   => $password,
-    auth_host           => $admin_ip,
+    auth_uri            => "http://${keystone_ip}:5000/",
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     database_connection => $database_connection,
@@ -68,7 +69,7 @@ class profile::openstack::glance {
   class { '::glance::registry':
     keystone_password   => $password,
     database_connection => $database_connection,
-    auth_host           => $admin_ip,
+    auth_uri            => "http://${keystone_ip}:5000/",
     keystone_tenant     => 'services',
     keystone_user       => 'glance',
     before              => Anchor['profile::openstack::glance::end'],

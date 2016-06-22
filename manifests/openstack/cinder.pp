@@ -52,6 +52,9 @@ class profile::openstack::cinder {
 	public_url_v2    => "http://${public_ip}:8776/v2/%(tenant_id)s",
 	internal_url_v2  => "http://${admin_ip}:8776/v2/%(tenant_id)s",
 	admin_url_v2     => "http://${admin_ip}:8776/v2/%(tenant_id)s",
+	public_url_v3    => "http://${public_ip}:8776/v3/%(tenant_id)s",
+	internal_url_v3  => "http://${admin_ip}:8776/v3/%(tenant_id)s",
+	admin_url_v3     => "http://${admin_ip}:8776/v3/%(tenant_id)s",
     region           => $region,
     before           => Anchor['profile::openstack::cinder::end'],
     require          => Anchor['profile::openstack::cinder::begin'],
@@ -65,9 +68,9 @@ class profile::openstack::cinder {
   }
   
   class { '::cinder::api':
-    keystone_password  => $keystone_password,
-    keystone_auth_host => $keystone_ip,
-    enabled            => true,
+    keystone_password   => $keystone_password,
+    auth_uri            => "http://${keystone_ip}:5000/",
+    enabled             => true,
 	default_volume_type => "Normal",
   }
 

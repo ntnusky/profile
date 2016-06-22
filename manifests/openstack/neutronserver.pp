@@ -3,7 +3,8 @@ class profile::openstack::neutronserver {
   $neutron_password = hiera("profile::neutron::keystone::password")
   $nova_password = hiera("profile::nova::keystone::password")
   $allowed_hosts = hiera("profile::mysql::allowed_hosts")
-  $keystone_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_public_ip = hiera("profile::api::keystone::public::ip")
+  $keystone_admin_ip = hiera("profile::api::keystone::admin::ip")
   $mysql_ip = hiera("profile::mysql::ip")
 
   $region = hiera("profile::region")
@@ -76,17 +77,15 @@ class profile::openstack::neutronserver {
   }
 
   class { '::neutron::agents::metadata':
-    auth_password => $neutron_password,
     shared_secret => $nova_metadata_secret,
-    auth_url      => "http://${keystone_ip}:35357/v2.0",
-    auth_region   => $region,
     metadata_ip   => $admin_ip,
     enabled       => true,
   }
   
   class { '::neutron::server':
     auth_password       => $neutron_password,
-    auth_uri            => "http://${keystone_ip}:5000/",
+    auth_uri            => "http://${keystone_public_ip}:5000/",
+    auth_url            => "http://${keystone_admin_ip}:35357/",
     database_connection => $database_connection,
     sync_db             => true,
     before              => Anchor["profile::openstack::neutron::end"],
@@ -94,24 +93,21 @@ class profile::openstack::neutronserver {
   }
   
   class { '::neutron::agents::dhcp':
-    #enabled        => false,
-    #manage_service => false,
+    #enabled            => false,
+    #manage_service     => false,
+	dnsmasq_dns_servers => $dns_servers,
     before         => Anchor["profile::openstack::neutron::end"],
     require        => Anchor["profile::openstack::neutron::begin"],
   }
 
-  neutron_dhcp_agent_config {
-    'DEFAULT/dnsmasq_dns_servers': value => $dns_servers;
-  }
- 
   # Configure nova notifications system
   class { '::neutron::server::notifications':
-    nova_admin_password    => $nova_password,
-    nova_admin_auth_url    => "http://${keystone_ip}:35357/v2.0",
-    nova_region_name       => $region,
-    nova_url               => "http://${nova_public_ip}:8774/v2",
-    before                 => Anchor["profile::openstack::neutron::end"],
-    require                => Class["::nova::keystone::auth"],
+    password       => $nova_password,
+    auth_url       => "http://${keystone_admin_ip}:35357",
+    region_name    => $region,
+	nova_url       => "http://${nova_public_ip}:8774/v2",
+    before         => Anchor["profile::openstack::neutron::end"],
+    require        => Class["::nova::keystone::auth"],
   }
 
   # This plugin configures Neutron for OVS on the server
