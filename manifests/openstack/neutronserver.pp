@@ -102,12 +102,12 @@ class profile::openstack::neutronserver {
 
   # Configure nova notifications system
   class { '::neutron::server::notifications':
-    nova_admin_password    => $nova_password,
-    auth_url               => "http://${keystone_admin_ip}:35357",
-    region_name            => $region,
-	nova_url               => "http://${nova_public_ip}:8774/v2",
-    before                 => Anchor["profile::openstack::neutron::end"],
-    require                => Class["::nova::keystone::auth"],
+    password       => $nova_password,
+    auth_url       => "http://${keystone_admin_ip}:35357",
+    region_name    => $region,
+	nova_url       => "http://${nova_public_ip}:8774/v2",
+    before         => Anchor["profile::openstack::neutron::end"],
+    require        => Class["::nova::keystone::auth"],
   }
 
   # This plugin configures Neutron for OVS on the server
