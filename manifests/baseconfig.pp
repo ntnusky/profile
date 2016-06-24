@@ -89,15 +89,17 @@ class profile::baseconfig {
     client_options => {
       'Host *' => {
         'HostbasedAuthentication' => 'yes',
-        'EnableSSHKeysign' => 'yes',
+        'EnableSSHKeysign'        => 'yes',
+        'HashKnownHosts'          => 'yes',
+        'SendEnv'                 => 'LANG LC_*',
       },
     },
   }
   exec {'shosts.equiv':
     command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
-	path    => '/bin:/usr/bin',
+    path    => '/bin:/usr/bin',
     require => Class['ssh::knownhosts'],
-  } 
+  }
 
 #  mount{'/fill':
 #    ensure => absent,
