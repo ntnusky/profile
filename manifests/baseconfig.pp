@@ -81,7 +81,22 @@ class profile::baseconfig {
   }
 
   class {'::ssh':
+    server_options => {
+      'Match User nova' => {
+        'HostbasedAuthentication' => 'yes',
+      },
+    },
+    client_options => {
+      'Host *' => {
+        'HostbasedAuthentication' => 'yes',
+        'EnableSSHKeysign' => 'yes',
+      },
+    },
   }
+  exec {'shosts.equiv':
+    command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
+    require => Class['ssh::knownhosts'],
+  } 
 
 #  mount{'/fill':
 #    ensure => absent,
