@@ -109,10 +109,15 @@ class profile::openstack::keystone {
     user_allow_update         => False,
     user_allow_delete         => False,
     use_tls                   => False,
-    identity_driver           => ldap,
+#    identity_driver           => ldap,
+    before                    => Anchor['profile::openstack::keystone::end'],
+    require                   => Anchor['profile::openstack::keystone::begin'],
   }
  
-  
+  keystone_domain_config { 
+    "${ldap_name}::identity/driver": value => 'ldap';
+  }
+
   keepalived::vrrp::script { 'check_keystone':
     script   => '/usr/bin/killall -0 keystone-all',
     before   => Anchor['profile::openstack::keystone::end'],
