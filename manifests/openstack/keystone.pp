@@ -19,7 +19,15 @@ class profile::openstack::keystone {
   $management_if = hiera("profile::interfaces::management")
 
   $database_connection = "mysql://keystone:${password}@${mysql_ip}/keystone"
-  
+
+  $ldap_name = hiera('profile::keystone::ldap_backend::name')
+  $ldap_url = hiera('profile::keystone::ldap_backend::url')
+  $ldap_user = hiera('profile::keystone::ldap_backend::user')
+  $ldap_password = hiera('profile::keystone::ldap_backend::password')
+  $ldap_suffix = hiera('profile::keystone::ldap_backend::suffix')
+  $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
+  $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter')
+   
   include ::profile::openstack::repo
 
   if($::hostname == $token_flush_host) {
@@ -56,10 +64,9 @@ class profile::openstack::keystone {
   class { '::keystone':
     admin_token         => $admin_token,
     database_connection => $database_connection,
-    verbose             => $verbose,
-    debug               => $debug,
     enabled             => true,
     admin_bind_host     => "0.0.0.0",
+    using_domain_config => true,
     require             => Anchor['profile::openstack::keystone::begin'],
     before              => Anchor['profile::openstack::keystone::end'],
   } 
@@ -79,7 +86,32 @@ class profile::openstack::keystone {
     region       => $region,
     require      => Class['::keystone'],
     before       => Anchor['profile::openstack::keystone::end'],
-  } 
+  }
+
+  keystone::ldap_backend { $ldap_name:
+    url                       => $ldap_url,
+    user                      => $ldap_user,
+    password                  => $ldap_password,
+    suffix                    => $ldap_suffix,
+    query_scope               => sub,
+    page_size                 => 1000, # MAYBE
+    user_tree_dn              => $ldap_user_tree_dn,
+    user_filter               => $ldap_user_filter,
+    user_objectclass          => person,
+    user_id_attribute         => sAMAccountName,
+    user_name_attribute       => sAMAccountName,
+    user_mail_attribute       => mail,
+    user_enabled_attribute    => userAccountControl,
+    user_enabled_mask         => 2,
+    user_enabled_default      => 512,
+    user_attribute_ignore     => ['password', 'tenant_id', 'tenants'],
+    user_allow_create         => False,
+    user_allow_update         => False,
+    user_allow_delete         => False,
+    use_tls                   => False,
+    identity_driver           => ldap,
+  }
+ 
   
   keepalived::vrrp::script { 'check_keystone':
     script   => '/usr/bin/killall -0 keystone-all',
