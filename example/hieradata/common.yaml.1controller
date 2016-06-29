@@ -94,6 +94,14 @@ profile::keystone::admin_email: "post@localhost"
 profile::keystone::admin_password: '<pwgen>'
 profile::keystone::tokenflush::host: 'controller01'
 
+profile::keystone::ldap_backend::name: '<AD NetBIOS name>'
+profile::keystone::ldap_backend::url: 'ldap://<domain-FQDN>'
+profile::keystone::ldap_backend::user: '<DN for LDAP bind user>'
+profile::keystone::ldap_backend::password: '<password for LDAP bind user>'
+profile::keystone::ldap_backend::suffix: '<DN of domain-FQDN> (i.e DC=example,DC=com)'
+profile::keystone::ldap_backend::user_tree_dn: '<DN for user OU>'
+profile::keystone::ldap_backend::user_filter: '[optional] <ldap user filter>'
+
 profile::nova::sharedmetadataproxysecret: '<pwgen>'
 profile::nova::keystone::password: '<pwgen>'
 profile::nova::libvirt_type: 'kvm'

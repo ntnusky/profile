@@ -46,6 +46,7 @@ class profile::baseconfig {
   include ::nova::client
   include ::neutron::client
   include ::glance::client
+  include ::profile::openstack::repo
 
   class { '::ntp':
     servers   => [ 'ntp.hig.no'],
