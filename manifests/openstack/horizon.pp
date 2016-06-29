@@ -36,15 +36,17 @@ class profile::openstack::horizon {
     content => "${ssl_ca}",
   } ->
   class { '::horizon':
-    allowed_hosts   => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_allowed_hosts),
-    server_aliases  => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_server_aliases),
-    secret_key      => $django_secret,
-    cache_server_ip => $memcache_ip,
-    listen_ssl      => true,
-    servername      => $server_name,
-    horizon_cert    => '/etc/ssl/certs/horizon.crt',
-    horizon_key     => '/etc/ssl/private/horizon.key',
-    horizon_ca      => '/etc/ssl/certs/CA.crt',
+    allowed_hosts                => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_allowed_hosts),
+    server_aliases               => concat(['127.0.0.1', $::fqdn, $horizon_ip ], $controller_api, $horizon_server_aliases),
+    secret_key                   => $django_secret,
+    cache_server_ip              => $memcache_ip,
+    listen_ssl                   => true,
+    servername                   => $server_name,
+    horizon_cert                 => '/etc/ssl/certs/horizon.crt',
+    horizon_key                  => '/etc/ssl/private/horizon.key',
+    horizon_ca                   => '/etc/ssl/certs/CA.crt',
+    keystone_multidomain_support => true,
+#   keystone_default_domain      => $ldap_name,
   }
 
   keepalived::vrrp::script { 'check_horizon':
