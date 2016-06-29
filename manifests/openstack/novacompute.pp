@@ -83,15 +83,13 @@ class profile::openstack::novacompute {
 
   class { '::nova::migration::libvirt':
     live_migration_flag =>
-      'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,\
-VIR_MIGRATE_TUNNELLED',
+      'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_TUNNELLED',
   }
 
   ceph::key { 'client.nova':
     secret        => $nova_key,
     cap_mon       => 'allow r',
-    cap_osd       => 'allow class-read object_prefix rbd_children, \
-allow rwx pool=volumes, allow rx pool=images',
+    cap_osd       => 'allow class-read object_prefix rbd_children,allow rwx pool=volumes, allow rx pool=images',
     inject        => true,
   }
 
