@@ -66,6 +66,15 @@ class profile::openstack::neutronserver {
 #    'DEFAULT/min_l3_agents_per_router': value => '2';
 #  }
 
+  # Enable IPv6 prefix delegation for IPv6 support
+  neutron_config {
+    'DEFAULT/ipv6_pd_enabled': value => 'True';
+  }
+
+  package { 'dibbler-client':
+    ensure => 'latest',
+  }
+
   class { '::neutron::keystone::auth':
     password         => $neutron_password,
 	public_url       => "http://${public_ip}:9696",
