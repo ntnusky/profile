@@ -1,3 +1,5 @@
+# This definition collects interface configuration from hiera, and configures
+# the interface according to these settings.
 define setDHCP {
   $method = hiera("profile::interfaces::${name}::method")
   $address = hiera("profile::interfaces::${name}::address", false)
@@ -12,6 +14,8 @@ define setDHCP {
   }
 }
 
+# This class provides basic configuration of our hosts. Sets up NTP, installs
+# some base utilities, configures networking and so fort.
 class profile::baseconfig {
   if($::bios_vendor == 'HP') {
     include ::hpacucli
@@ -25,6 +29,7 @@ class profile::baseconfig {
     'htop',
     'iperf3',
     'pwgen',
+    'qemu-utils',
     'sysstat',
     'vim'
   ] :
