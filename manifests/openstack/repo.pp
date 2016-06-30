@@ -1,14 +1,13 @@
+# This class sets up the openstack repositories.
 class profile::openstack::repo(
 ){
   if $::osfamily == 'Debian' {
     if $::operatingsystem == 'Ubuntu' {
       class { '::openstack_extras::repo::debian::ubuntu':
-        release         => $release,
         package_require => true,
       }
     } elsif $::operatingsystem == 'Debian' {
       class { '::openstack_extras::repo::debian::debian':
-        release         => $release,
         package_require => true,
       }
     } else {
@@ -16,7 +15,6 @@ class profile::openstack::repo(
     }
   } elsif $::osfamily == 'RedHat' {
       class { '::openstack_extras::repo::redhat::redhat':
-        release => $release
       }
   } else {
       fail("Operating system family ${::osfamily} is not supported.")
