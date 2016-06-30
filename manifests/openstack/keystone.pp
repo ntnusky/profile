@@ -91,32 +91,33 @@ class profile::openstack::keystone {
   }
 
   keystone::ldap_backend { $ldap_name:
-    url                       => $ldap_url,
-    user                      => $ldap_user,
-    password                  => $ldap_password,
-    suffix                    => $ldap_suffix,
-    query_scope               => sub,
-    page_size                 => 1000, # MAYBE
-    user_tree_dn              => $ldap_user_tree_dn,
-    user_filter               => $ldap_user_filter,
-    user_objectclass          => person,
-    user_id_attribute         => sAMAccountName,
-    user_name_attribute       => sAMAccountName,
-    user_mail_attribute       => mail,
-    user_enabled_attribute    => userAccountControl,
-    user_enabled_mask         => 2,
-    user_enabled_default      => 512,
-    user_attribute_ignore     => ['password', 'tenant_id', 'tenants'],
-    user_allow_create         => False,
-    user_allow_update         => False,
-    user_allow_delete         => False,
-    use_tls                   => False,
-    before                    => Anchor['profile::openstack::keystone::end'],
-    require                   => Anchor['profile::openstack::keystone::begin'],
+    url                    => $ldap_url,
+    user                   => $ldap_user,
+    password               => $ldap_password,
+    suffix                 => $ldap_suffix,
+    query_scope            => sub,
+    page_size              => 1000,
+    user_tree_dn           => $ldap_user_tree_dn,
+    user_filter            => $ldap_user_filter,
+    user_objectclass       => person,
+    user_id_attribute      => sAMAccountName,
+    user_name_attribute    => sAMAccountName,
+    user_mail_attribute    => mail,
+    user_enabled_attribute => userAccountControl,
+    user_enabled_mask      => 2,
+    user_enabled_default   => 512,
+    user_attribute_ignore  => ['password', 'tenant_id', 'tenants'],
+    user_allow_create      => False,
+    user_allow_update      => False,
+    user_allow_delete      => False,
+    use_tls                => False,
+    before                 => Anchor['profile::openstack::keystone::end'],
+    require                => Anchor['profile::openstack::keystone::begin'],
   }
 
   keystone_domain_config {
-    "${ldap_name}::identity/driver": value => 'ldap';
+    "${ldap_name}::identity/driver":     value => 'ldap';
+    "${ldap_name}::identity/list_limit": value => '100';
   }
 
   keystone_domain { $ldap_name:
@@ -125,9 +126,9 @@ class profile::openstack::keystone {
   }
 
   keepalived::vrrp::script { 'check_keystone':
-    script   => '/usr/bin/killall -0 keystone-all',
-    before   => Anchor['profile::openstack::keystone::end'],
-    require  => Anchor['profile::openstack::keystone::begin'],
+    script  => '/usr/bin/killall -0 keystone-all',
+    before  => Anchor['profile::openstack::keystone::end'],
+    require => Anchor['profile::openstack::keystone::begin'],
   }
 
   keepalived::vrrp::instance { 'admin-keystone':
