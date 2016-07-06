@@ -33,7 +33,7 @@ class profile::baseconfig {
     'sysstat',
     'vim'
   ] :
-    ensure => 'latest',
+    ensure => 'present',
   }
 
   # This check were supposed to not install nmap on the galera master, as the
