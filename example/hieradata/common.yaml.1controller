@@ -44,8 +44,9 @@ profile::api::neutron::public::ip: '172.16.0.104'
 profile::api::neutron::admin::ip: '172.17.1.104'
 profile::api::neutron::vrrp::id: 53
 profile::api::neutron::vrrp::priority: 100
-nova::vncproxy::common::vncproxy_host: '172.16.0.105'
-nova::vncproxy::public_port: '<NAT-port>'
+nova::vncproxy::common::vncproxy_host: '<public horizon FQDN>'
+nova::vncproxy::common::vncproxy_port: '<NAT-port>'
+nova::vncproxy::host: '172.16.0.105'
 profile::api::nova::public::ip: '172.16.0.105'
 profile::api::nova::admin::ip: '172.17.1.105'
 profile::api::nova::vrrp::id: 54
