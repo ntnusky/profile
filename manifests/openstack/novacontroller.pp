@@ -34,7 +34,6 @@ class profile::openstack::novacontroller {
   $db_con = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $api_db_con = "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
   $sync_db = hiera('profile::nova::sync_db')
-  $novncproxy_base_url = "http://${vnc_proxy_public_name}:${vnc_proxy_public_port}/vnc_auto.html"
 
   include ::profile::openstack::repo
 
@@ -116,10 +115,11 @@ class profile::openstack::novacontroller {
     before  => Anchor['profile::openstack::novacontroller::end'],
     require => Anchor['profile::openstack::novacontroller::begin'],
     enabled => true,
-  } ->
+  }
 
-  nova_config {
-    'vnc/novncproxy_base_url': value => $novncproxy_base_url;
+  class { 'nova::vncproxy::common':
+    vncproxy_host => $vnc_proxy_public_name,
+    vncproxy_port => $vnc_proxy_public_port,
   }
 
   class { [
