@@ -21,6 +21,8 @@ class profile::openstack::novacontroller {
   $vrpri = hiera('profile::api::nova::vrrp::priority')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $vnc_proxy_ip = hiera('nova::vncproxy::common::vncproxy_host')
+  $vnc_proxy_public_name = hiera('profile::horizon::server_name')
+  $vnc_proxy_public_port = hiera('nova::vncproxy::public_port')
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
@@ -32,6 +34,7 @@ class profile::openstack::novacontroller {
   $db_con = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $api_db_con = "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
   $sync_db = hiera('profile::nova::sync_db')
+  $novncproxy_base_url = "http://${vnc_proxy_public_name}:${vnc_proxy_public_port}/vnc_auto.html"
 
   include ::profile::openstack::repo
 
@@ -56,17 +59,17 @@ class profile::openstack::novacontroller {
   }
 
   class { 'nova::db::mysql' :
-    password         => $mysql_password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::novacontroller::end'],
-    require          => Anchor['profile::openstack::novacontroller::begin'],
+    password      => $mysql_password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::novacontroller::end'],
+    require       => Anchor['profile::openstack::novacontroller::begin'],
   }
 
   class { 'nova::db::mysql_api' :
-    password         => $mysql_password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::novacontroller::end'],
-    require          => Anchor['profile::openstack::novacontroller::begin'],
+    password      => $mysql_password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::novacontroller::end'],
+    require       => Anchor['profile::openstack::novacontroller::begin'],
   }
 
   class { 'nova':
@@ -113,6 +116,10 @@ class profile::openstack::novacontroller {
     before  => Anchor['profile::openstack::novacontroller::end'],
     require => Anchor['profile::openstack::novacontroller::begin'],
     enabled => true,
+  } ->
+
+  nova_config {
+    'vnc/novncproxy_base_url': value => $novncproxy_base_url;
   }
 
   class { [
@@ -121,9 +128,9 @@ class profile::openstack::novacontroller {
     'nova::consoleauth',
     'nova::conductor'
   ]:
-    before   => Anchor['profile::openstack::novacontroller::end'],
-    require  => Anchor['profile::openstack::novacontroller::begin'],
-    enabled  => true,
+    before  => Anchor['profile::openstack::novacontroller::end'],
+    require => Anchor['profile::openstack::novacontroller::begin'],
+    enabled => true,
   }
 
   keepalived::vrrp::script { 'check_nova':
