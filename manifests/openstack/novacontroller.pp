@@ -113,6 +113,8 @@ class profile::openstack::novacontroller {
   class { 'nova::vncproxy::common':
     vncproxy_host => $vnc_proxy_public_name,
     vncproxy_port => $vnc_proxy_public_port,
+    before        => Anchor['profile::openstack::novacontroller::end'],
+    require       => Anchor['profile::openstack::novacontroller::begin'],
   } ->
 
   class { 'nova::vncproxy':
