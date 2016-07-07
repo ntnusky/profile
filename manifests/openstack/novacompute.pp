@@ -82,10 +82,10 @@ class profile::openstack::novacompute {
   }
 
   class { '::nova::migration::libvirt':
-    live_migration_flag =>
+    live_migration_flag  =>
       'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE',
-	block_migration_flag =>
-	  'VIR_MIGRATE_UNDEFINE_SOURCE, VIR_MIGRATE_PEER2PEER, VIR_MIGRATE_LIVE, VIR_MIGRATE_NON_SHARED_INC',
+    block_migration_flag =>
+      'VIR_MIGRATE_UNDEFINE_SOURCE, VIR_MIGRATE_PEER2PEER, VIR_MIGRATE_LIVE, VIR_MIGRATE_NON_SHARED_INC',
   }
 
   ceph::key { 'client.nova':
