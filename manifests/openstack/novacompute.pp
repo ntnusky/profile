@@ -89,7 +89,7 @@ class profile::openstack::novacompute {
   ceph::key { 'client.nova':
     secret        => $nova_key,
     cap_mon       => 'allow r',
-    cap_osd       => 'allow class-read object_prefix rbd_children,allow rwx pool=volumes, allow rx pool=images',
+    cap_osd       => 'allow class-read object_prefix rbd_children,allow rwx pool=volumes, allow rwx pool=images',
     inject        => true,
   }
 
