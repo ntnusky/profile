@@ -67,10 +67,10 @@ class profile::openstack::novacompute {
   }
 
   class { '::nova::compute::libvirt':
-    libvirt_virt_type  => $nova_libvirt_type,
-    vncserver_listen   => $management_ip,
-    libvirt_cpu_mode   => 'custom',
-    libvirt_cpu_model  => $nova_libvirt_model,
+    libvirt_virt_type => $nova_libvirt_type,
+    vncserver_listen  => $management_ip,
+    libvirt_cpu_mode  => 'custom',
+    libvirt_cpu_model => $nova_libvirt_model,
   }
 
   class { '::nova::compute::rbd':
@@ -83,14 +83,14 @@ class profile::openstack::novacompute {
 
   class { '::nova::migration::libvirt':
     live_migration_flag =>
-      'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE,VIR_MIGRATE_TUNNELLED',
+      'VIR_MIGRATE_UNDEFINE_SOURCE,VIR_MIGRATE_PEER2PEER,VIR_MIGRATE_LIVE',
   }
 
   ceph::key { 'client.nova':
-    secret        => $nova_key,
-    cap_mon       => 'allow r',
-    cap_osd       => 'allow class-read object_prefix rbd_children,allow rwx pool=volumes, allow rwx pool=images',
-    inject        => true,
+    secret  => $nova_key,
+    cap_mon => 'allow r',
+    cap_osd => 'allow class-read object_prefix rbd_children,allow rwx pool=volumes, allow rwx pool=images',
+    inject  => true,
   }
 
   file { '/etc/libvirt/qemu.conf':
