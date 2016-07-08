@@ -20,7 +20,7 @@ class profile::openstack::novacontroller {
   $vrid = hiera('profile::api::nova::vrrp::id')
   $vrpri = hiera('profile::api::nova::vrrp::priority')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $vnc_proxy_ip = hiera('nova::vncproxy::common::vncproxy_host')
+  $vnc_proxy_ip = hiera('nova::vncproxy::host')
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
@@ -56,17 +56,17 @@ class profile::openstack::novacontroller {
   }
 
   class { 'nova::db::mysql' :
-    password         => $mysql_password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::novacontroller::end'],
-    require          => Anchor['profile::openstack::novacontroller::begin'],
+    password      => $mysql_password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::novacontroller::end'],
+    require       => Anchor['profile::openstack::novacontroller::begin'],
   }
 
   class { 'nova::db::mysql_api' :
-    password         => $mysql_password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::novacontroller::end'],
-    require          => Anchor['profile::openstack::novacontroller::begin'],
+    password      => $mysql_password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::novacontroller::end'],
+    require       => Anchor['profile::openstack::novacontroller::begin'],
   }
 
   class { 'nova':
@@ -107,8 +107,8 @@ class profile::openstack::novacontroller {
     require                =>
       Anchor['profile::openstack::novacontroller::begin'],
   }
-
-  class { 'nova::vncproxy':
+  
+    class { 'nova::vncproxy':
     host    => $vnc_proxy_ip,
     before  => Anchor['profile::openstack::novacontroller::end'],
     require => Anchor['profile::openstack::novacontroller::begin'],
@@ -121,9 +121,9 @@ class profile::openstack::novacontroller {
     'nova::consoleauth',
     'nova::conductor'
   ]:
-    before   => Anchor['profile::openstack::novacontroller::end'],
-    require  => Anchor['profile::openstack::novacontroller::begin'],
-    enabled  => true,
+    before  => Anchor['profile::openstack::novacontroller::end'],
+    require => Anchor['profile::openstack::novacontroller::begin'],
+    enabled => true,
   }
 
   keepalived::vrrp::script { 'check_nova':
