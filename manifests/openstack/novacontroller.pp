@@ -130,7 +130,7 @@ class profile::openstack::novacontroller {
   nova_config {
     'cache/enabled':          value => true;
     'cache/backend':          value => 'oslo_cache.memcache_pool';
-    'cache/memcache_servers': value => $memcache_ip;
+    'cache/memcache_servers': value => "${memcache_ip}:11211";
   }
 
   keepalived::vrrp::script { 'check_nova':
