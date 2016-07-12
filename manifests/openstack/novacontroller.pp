@@ -21,6 +21,7 @@ class profile::openstack::novacontroller {
   $vrpri = hiera('profile::api::nova::vrrp::priority')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $vnc_proxy_ip = hiera('nova::vncproxy::host')
+  $memcache_ip = hiera('profile::memcache::ip')
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
@@ -108,7 +109,7 @@ class profile::openstack::novacontroller {
       Anchor['profile::openstack::novacontroller::begin'],
   }
   
-    class { 'nova::vncproxy':
+  class { 'nova::vncproxy':
     host    => $vnc_proxy_ip,
     before  => Anchor['profile::openstack::novacontroller::end'],
     require => Anchor['profile::openstack::novacontroller::begin'],
@@ -124,6 +125,12 @@ class profile::openstack::novacontroller {
     before  => Anchor['profile::openstack::novacontroller::end'],
     require => Anchor['profile::openstack::novacontroller::begin'],
     enabled => true,
+  }
+
+  nova_config {
+    'cache/enabled':          value => true;
+    'cache/backend':          value => 'oslo_cache.memcache_pool';
+    'cache/memcache_servers': value => "${memcache_ip}:11211";
   }
 
   keepalived::vrrp::script { 'check_nova':
