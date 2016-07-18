@@ -33,7 +33,7 @@ class profile::openstack::glance {
     ],
   }
 
-  exec { '/usr/bin/ceph osd pool create images 4096' :
+  exec { '/usr/bin/ceph osd pool create images 128' :
     unless  => '/usr/bin/ceph osd pool get images size',
     before  => Anchor['profile::openstack::glance::end'],
     require => [

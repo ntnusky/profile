@@ -39,7 +39,7 @@ class profile::openstack::novacompute {
     rabbit_password     => $rabbit_pass,
   }
 
-  exec { '/usr/bin/ceph osd pool create volumes 4096' :
+  exec { '/usr/bin/ceph osd pool create volumes 512' :
     unless  => '/usr/bin/ceph osd pool get volumes size',
     require => Anchor['profile::ceph::client::end'],
   }
