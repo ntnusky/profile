@@ -30,14 +30,17 @@ class profile::openstack::horizon {
   file { '/etc/ssl/private/horizon.key':
     ensure  => file,
     content => $ssl_key,
+    notify  => Service['httpd'],
   } ->
   file { '/etc/ssl/certs/horizon.crt':
     ensure  => file,
     content => $ssl_cert,
+    notify  => Service['httpd'],
   } ->
   file { '/etc/ssl/certs/CA.crt':
     ensure  => file,
     content => $ssl_ca,
+    notify  => Service['httpd'],
   } ->
   class { '::horizon':
     allowed_hosts                => concat(['127.0.0.1', $::fqdn, $horizon_ip ],
