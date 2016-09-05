@@ -116,7 +116,6 @@ class profile::openstack::keystone {
   }
 
   keystone_domain_config {
-    "${ldap_name}::identity/driver":     value => 'ldap';
     "${ldap_name}::identity/list_limit": value => '100';
   }
 
