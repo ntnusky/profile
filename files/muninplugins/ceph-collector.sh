@@ -7,7 +7,7 @@ else
   pool=$1
 fi
 
-values=("" "read" "write" "iops")
+values=("" "read" "write" "iopsR" "iopsW")
 path="/run/shm/cephmon"
 
 if [[ ! -d $path ]]; then
