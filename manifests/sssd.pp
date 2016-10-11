@@ -6,6 +6,7 @@ class profile::sssd {
   $dc = hiera('profile::sssd::domaincontroller')
   $binduser = hiera('profile::sssd::binduser')
   $pwhash = hiera('profile::sssd::passwordhash')
+  $userfilter = hiera('profile::keystone::ldap_backend::user_filter')
 
   class {'::sssd':
     config => {
@@ -21,7 +22,7 @@ class profile::sssd {
       },
       'pam'  => {
       },
-      "domain/${ldapdomain}" => {
+      "domain/${ldapdomain}"        => {
         'debug_level'               => '0x400',
         'enumerate'                 => false,
         'case_sensitive'            => false,
@@ -35,7 +36,8 @@ class profile::sssd {
         'ldap_id_use_start_tls'     => true,
         'ldap_schema'               => 'ad',
         'ldap_id_mapping'           => true,
-        'ldap_access_filter'        => "memberof=CN=Domain Users,CN=Users,${ldapdomaindn}",
+        'ldap_access_filter'        => $userfilter,
+        'ldap_page_size'            => 1000,
         'ldap_referrals'            => false,
         'ldap_user_search_base'     => "ou=Brukere,${ldapdomaindn}",
         'ldap_user_objectsid'       => 'objectSid',
