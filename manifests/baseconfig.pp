@@ -69,7 +69,6 @@ class profile::baseconfig {
   } ->
   package { 'puppet':
     ensure => '3.8.7-1puppetlabs1',
-    before => Exec['shosts.equiv'],
   } ->
   ini_setting { 'Puppet Start':
     ensure  => present,
@@ -80,12 +79,7 @@ class profile::baseconfig {
   } ->
   service { 'puppet':
     ensure => 'running',
-  }
-
-  $interfacesToConfigure = hiera('profile::interfaces', false)
-  if($interfacesToConfigure) {
-    setDHCP { $interfacesToConfigure: }
-  }
+  } ->
 
   class {'::ssh':
     server_options => {
@@ -102,10 +96,16 @@ class profile::baseconfig {
       },
     },
   }
+  
   exec {'shosts.equiv':
     command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
     path    => '/bin:/usr/bin',
-    require => [ Class['ssh::knownhosts'], Package['puppet'] ],
+    require => Class['ssh::knownhosts'],
+  }
+
+  $interfacesToConfigure = hiera('profile::interfaces', false)
+  if($interfacesToConfigure) {
+    setDHCP { $interfacesToConfigure: }
   }
 
 #  mount{'/fill':
