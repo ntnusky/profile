@@ -22,8 +22,11 @@ fi
 ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null
 if [[ $? -eq 1 ]]
 then
-  /usr/local/sbin/ceph-collector.sh $pool &
-  echo "iops.value 0"
+  # Cannot start process here, as it is killed by muning. Needs to be started
+  # elsewhere. Cron maybe? For now, just return -1
+  #/usr/local/sbin/ceph-collector.sh $pool &
+  echo "read.value -1"
+  echo "write.value -1"
 else
   totRead=0
   i=0

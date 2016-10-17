@@ -54,8 +54,8 @@ class profile::baseconfig {
   include ::profile::openstack::repo
 
   class { '::ntp':
-    servers   => [ 'ntp.hig.no'],
-    restrict  => [
+    servers  => [ 'ntp.hig.no'],
+    restrict => [
       'default kod nomodify notrap nopeer noquery',
       '-6 default kod nomodify notrap nopeer noquery',
     ],
@@ -79,12 +79,7 @@ class profile::baseconfig {
   } ->
   service { 'puppet':
     ensure => 'running',
-  }
-
-  $interfacesToConfigure = hiera('profile::interfaces', false)
-  if($interfacesToConfigure) {
-    setDHCP { $interfacesToConfigure: }
-  }
+  } ->
 
   class {'::ssh':
     server_options => {
@@ -100,11 +95,17 @@ class profile::baseconfig {
         'SendEnv'                 => 'LANG LC_*',
       },
     },
-  }
+  } ->
+
   exec {'shosts.equiv':
     command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
     path    => '/bin:/usr/bin',
     require => Class['ssh::knownhosts'],
+  }
+
+  $interfacesToConfigure = hiera('profile::interfaces', false)
+  if($interfacesToConfigure) {
+    setDHCP { $interfacesToConfigure: }
   }
 
 #  mount{'/fill':

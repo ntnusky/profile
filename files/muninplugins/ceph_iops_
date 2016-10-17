@@ -12,8 +12,10 @@ if [[ $1 == "config" ]]; then
   echo "graph_args -l 0"
   echo "graph_scale yes"
   echo "graph_info Ceph IOPS for the \"$pool\" pool"
-  echo "iops.label IOPS"
-  echo "iops.info Average IOPS for the \"$pool\" pool"
+  echo "read.label IOPS Read"
+  echo "read.info Average IOPS read for the \"$pool\" pool"
+  echo "write.label IOPS Write"
+  echo "write.info Average IOPS written for the \"$pool\" pool"
   exit 0
 fi
 
@@ -21,16 +23,29 @@ fi
 ps aux | grep -v grep | grep "ceph-collector.sh $pool" > /dev/null
 if [[ $? -eq 1 ]]
 then
-  /usr/local/sbin/ceph-collector.sh $pool &
-  echo "iops.value 0"
+  # Cannot start process here, as it is killed by muning. Needs to be started
+  # elsewhere. Cron maybe? For now, just return -1
+  #/usr/local/sbin/ceph-collector.sh $pool &
+  echo "read.value -1"
+  echo "write.value -1"
 else
-  totiops=0
+  totiopsR=0
   i=0
 
-  for line in $(tail -n 300 "$path/ceph-$pool-iops"); do
-    totiops=$((totiops+ line))
+  for line in $(tail -n 300 "$path/ceph-$pool-iopsR"); do
+    totiopsR=$((totiopsR+ line))
     ((i++))
   done
   
-  echo "iops.value $(($totiops/$i))"
+  echo "read.value $(($totiopsR/$i))"
+
+  totiopsW=0
+  i=0
+
+  for line in $(tail -n 300 "$path/ceph-$pool-iopsW"); do
+    totiopsW=$((totiopsW+ line))
+    ((i++))
+  done
+  
+  echo "write.value $(($totiopsW/$i))"
 fi
