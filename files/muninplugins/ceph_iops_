@@ -26,8 +26,8 @@ then
   # Cannot start process here, as it is killed by muning. Needs to be started
   # elsewhere. Cron maybe? For now, just return -1
   #/usr/local/sbin/ceph-collector.sh $pool &
-  echo "read.value -1"
-  echo "write.value -1"
+  echo "read.value U"
+  echo "write.value U"
 else
   totiopsR=0
   i=0
