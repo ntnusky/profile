@@ -80,7 +80,7 @@ class profile::baseconfig {
   } ->
   service { 'puppet':
     ensure => 'running',
-  } ->
+  }
 
   if ($::puppetversion > '3.5.0') {
     class {'::ssh':
