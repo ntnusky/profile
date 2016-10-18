@@ -69,7 +69,6 @@ class profile::baseconfig {
   } ->
   package { 'puppet':
     ensure => '3.8.7-1puppetlabs1',
-    before => Class['::ssh'],
   } ->
   ini_setting { 'Puppet Start':
     ensure  => present,
