@@ -141,7 +141,7 @@ profile::monitoring::data_password: '<pwgen>'
 
 # sssd settings
 profile::sssd::domain: '<domain FQDN>'
-profile::sssd::domaindn: '<DN of domain>'
 profile::sssd::domaincontroller: '<specific domain controller>'
+profile::sssd::group_base: '<DN for group OU>'
 profile::sssd::binduser: '<DN for LDAP bind user>'
 profile::sssd::passwordhash: '<sssd_obfuscate>'

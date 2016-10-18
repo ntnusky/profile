@@ -2,11 +2,13 @@
 
 class profile::sssd {
   $ldapdomain = hiera('profile::sssd::domain')
-  $ldapdomaindn = hiera('profile::sssd::domaindn')
+  $ldapdomaindn = hiera('profile::keystone::ldap_backend::suffix')
   $dc = hiera('profile::sssd::domaincontroller')
   $binduser = hiera('profile::sssd::binduser')
   $pwhash = hiera('profile::sssd::passwordhash')
   $userfilter = hiera('profile::keystone::ldap_backend::user_filter')
+  $userbase = hiera('profile::keystone::ldap_backend::user_tree_dn')
+  $groupbase = hiera('profile::sssd::group_base')
 
   class {'::sssd':
     config => {
@@ -39,9 +41,9 @@ class profile::sssd {
         'ldap_access_filter'        => $userfilter,
         'ldap_page_size'            => 1000,
         'ldap_referrals'            => false,
-        'ldap_user_search_base'     => "ou=Brukere,${ldapdomaindn}",
+        'ldap_user_search_base'     => $userbase,
         'ldap_user_objectsid'       => 'objectSid',
-        'ldap_group_search_base'    => "ou=Grupper,${ldapdomaindn}",
+        'ldap_group_search_base'    => $groupbase,
         'ldap_user_object_class'    => 'user',
         'ldap_user_name'            => 'sAMAccountName',
         'ldap_user_gecos'           => 'displayName',
