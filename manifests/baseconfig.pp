@@ -97,12 +97,12 @@ class profile::baseconfig {
         },
       },
     }
-  }
 
-  exec {'shosts.equiv':
-    command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
-    path    => '/bin:/usr/bin',
-    require => Class['ssh::knownhosts'],
+    exec {'shosts.equiv':
+      command => 'cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \'{print $1}\' | sed -e \'s/,/\n/g\' > /etc/ssh/shosts.equiv',
+      path    => '/bin:/usr/bin',
+      require => Class['ssh::knownhosts'],
+    }
   }
 
   $interfacesToConfigure = hiera('profile::interfaces', false)
