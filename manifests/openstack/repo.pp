@@ -3,8 +3,10 @@ class profile::openstack::repo(
 ){
   if $::osfamily == 'Debian' {
     if $::operatingsystem == 'Ubuntu' {
-      class { '::openstack_extras::repo::debian::ubuntu':
-        package_require => true,
+      if $::lsbdistcodename == 'trusty' {
+        class { '::openstack_extras::repo::debian::ubuntu':
+          package_require => true,
+        }
       }
     } elsif $::operatingsystem == 'Debian' {
       class { '::openstack_extras::repo::debian::debian':
