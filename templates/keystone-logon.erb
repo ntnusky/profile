@@ -1,8 +1,8 @@
 #!/bin/bash
-DBHOST=<%= scope.function_hiera(['profile::mysql::ip']) -%>
-DBPORT=<%= scope.function_hiera(['profile::access::db_port']) -%>
-DBUSER=<%= scope.function_hiera(['profile::access::db_user']) -%>
-DBPASSWORD=<%= scope.function_hiera(['profile::access::db_password']) -%>
+DBHOST=<%= scope.function_hiera(['profile::mysql::ip']) %>
+DBPORT=<%= scope.function_hiera(['profile::access::db_port']) %>
+DBUSER=<%= scope.function_hiera(['profile::access::db_user']) %>
+DBPASSWORD=<%= scope.function_hiera(['profile::access::db_password']) %>
 VIEWNAME="v_project_roles_per_user" 
 VIEWCOLUMN="project_roles"
 OS_USERNAME=${USER}
