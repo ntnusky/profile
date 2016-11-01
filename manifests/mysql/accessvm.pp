@@ -13,6 +13,8 @@ class profile::mysql::accessvm {
   $accessuser = hiera('profile::access::db_user')
   $accesspw = hiera('profile::access::db_password')
 
+  Anchor['profile::openstack::keystone::end'] ->
+
   mysql::db { 'keystone':
     user     => 'root',
     password => $pw,
