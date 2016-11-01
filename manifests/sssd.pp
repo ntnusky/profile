@@ -10,6 +10,13 @@ class profile::sssd {
   $userbase = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $groupbase = hiera('profile::sssd::group_base')
 
+  file {'/usr/local/bin/keystone-logon':
+    ensure  => file,
+    owner   => 'root',
+    mode    => '0755',
+    content => template('profile/keystone-logon.erb'),
+  }
+
   class {'::sssd':
     config => {
       'sssd' => {
@@ -50,7 +57,7 @@ class profile::sssd {
         'ldap_group_object_class'   => 'group',
         'ldap_group_name'           => 'sAMAccountName',
         'override_homedir'          => '/home/%u',
-        'override_shell'            => '/bin/bash',
+        'override_shell'            => '/usr/local/bin/keystone-logon',
         'override_gid'              => 100,
         'ldap_uri'                  => "ldaps://${dc}",
         'ldap_default_bind_dn'      => $binduser,

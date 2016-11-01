@@ -153,3 +153,8 @@ profile::sssd::domaincontroller: '<specific domain controller>'
 profile::sssd::group_base: '<DN for group OU>'
 profile::sssd::binduser: '<DN for LDAP bind user>'
 profile::sssd::passwordhash: '<sssd_obfuscate>'
+
+## sssd keystone-logon variables
+profile::access::db_port: '3306'
+profile::access::db_user: '<DBUSER for keyston-logon script>'
+profile::access::db_password: '<pwgen>'
