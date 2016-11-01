@@ -1,4 +1,10 @@
 # Defines LDAP authentication via AD with sssd
+#
+# == parameters
+# [*shell*]
+#  (Optional) Default shell for users.
+#  (string value)
+#  Defaults to /bin/bash
 
 class profile::sssd::ldap (
   $shell = '/bin/bash'
