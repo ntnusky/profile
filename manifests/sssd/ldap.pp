@@ -1,6 +1,9 @@
 # Defines LDAP authentication via AD with sssd
 
-class profile::sssd::ldap {
+class profile::sssd::ldap (
+  $shell = '/bin/bash'
+) {
+
   $ldapdomain = hiera('profile::sssd::domain')
   $ldapdomaindn = hiera('profile::keystone::ldap_backend::suffix')
   $dc = hiera('profile::sssd::domaincontroller')
@@ -9,7 +12,6 @@ class profile::sssd::ldap {
   $userfilter = hiera('profile::keystone::ldap_backend::user_filter')
   $userbase = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $groupbase = hiera('profile::sssd::group_base')
-  $shell = '/bin/bash'
 
   class {'::sssd':
     config => {
