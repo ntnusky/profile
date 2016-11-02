@@ -19,11 +19,20 @@ class profile::mysql::accessvm {
                                   -D keystone \
                                   -e \"${sql}\" 2> /dev/null"
 
+  $check_view = "/usr/bin/mysql -N -s -r -h ${host} \
+                                -uroot \
+                                -p${pw} \
+                                -D keystone \
+                                -e \"show tables;\" \
+                                | grep v_project_roles_per_user"
+
   Anchor['profile::openstack::keystone::end'] ->
 
   exec { 'create_view':
     command => $mysqlcommand,
     user    => 'root',
+    unless  => $check_view,
+
   } ->
 
   mysql_user { "${accessuser}@%":
