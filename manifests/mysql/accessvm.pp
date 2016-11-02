@@ -25,12 +25,16 @@ class profile::mysql::accessvm {
     user => 'root',
   } ->
 
+  mysql_user { "'${accessuser}'@'172.16.%.%'":
+    ensure        => present,
+    password_hash => mysql_password($accesspw),
+  } ->
+
   mysql_grant { "${accessuser}@172.16.%.%/keystone.v_project_roles_per_user":
     ensure     => present,
     options    => ['GRANT'],
     privileges => ['SELECT'],
     table      => 'keystone.v_project_roles_per_user',
     user       => "${accessuser}@172.16.%.%",
-    password   => $accesspw,
   }
 }
