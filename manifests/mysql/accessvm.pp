@@ -21,8 +21,9 @@ class profile::mysql::accessvm {
 
   Anchor['profile::openstack::keystone::end'] ->
 
-  exec { $mysqlcommand:
-    user => 'root',
+  exec { 'create_view':
+    command => $mysqlcommand,
+    user    => 'root',
   } ->
 
   mysql_user { "${accessuser}@%":
@@ -32,7 +33,6 @@ class profile::mysql::accessvm {
 
   mysql_grant { "${accessuser}@%/keystone.v_project_roles_per_user":
     ensure     => 'present',
-    options    => ['GRANT'],
     privileges => ['SELECT'],
     table      => 'keystone.v_project_roles_per_user',
     user       => "${accessuser}@%",
