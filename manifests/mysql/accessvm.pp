@@ -5,7 +5,7 @@
 class profile::mysql::accessvm {
   $host = hiera('profile::mysql::ip')
   $pw = hiera('profile::mysqlcluster::root_password')
-  $sql = 'CREATE VIEW v_project_roles_per_user AS \
+  $sql = 'CREATE OR REPLACE VIEW v_project_roles_per_user AS \
           SELECT u.local_id AS username, count(p.name) AS project_roles \
           FROM project as p INNER JOIN assignment as a ON a.target_ID = p.id \
           INNER JOIN id_mapping u ON u.public_id = a.actor_id \
@@ -13,13 +13,16 @@ class profile::mysql::accessvm {
   $accessuser = hiera('profile::access::db_user')
   $accesspw = hiera('profile::access::db_password')
 
+  $mysqlcommand = "/usr/bin/mysql -h ${host} \
+                                  -u root \
+                                  -p ${pw} \
+                                  -D keystone \
+                                  -e ${sql} 2> /dev/null"
+
   Anchor['profile::openstack::keystone::end'] ->
 
-  mysql::db { 'keystone':
-    user     => 'root',
-    password => $pw,
-    host     => $host,
-    sql      => $sql,
+  exec { $mysqlcommand:
+    user => 'root',
   } ->
 
   mysql_grant { "${accessuser}@172.16.%.%/keystone.v_project_roles_per_user":
