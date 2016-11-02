@@ -14,8 +14,8 @@ class profile::mysql::accessvm {
   $accesspw = hiera('profile::access::db_password')
 
   $mysqlcommand = "/usr/bin/mysql -h ${host} \
-                                  -u root \
-                                  -p ${pw} \
+                                  -uroot \
+                                  -p${pw} \
                                   -D keystone \
                                   -e \"${sql}\" 2> /dev/null"
 
