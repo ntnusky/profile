@@ -9,10 +9,6 @@ class profile::sssd::accessvm {
     content => template('profile/keystone-logon.erb'),
   }
 
-  package { 'mysql-client':
-    ensure => present,
-  }
-
   class { 'profile::sssd::ldap':
     shell => '/usr/local/bin/keystone-logon',
   }
