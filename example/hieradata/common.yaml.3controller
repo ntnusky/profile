@@ -21,6 +21,9 @@ controller::storage::addresses:
   - '172.17.2.22'
   - '172.17.2.23'
 
+monitor::management::addresses:
+  - '172.17.1.12'
+
 # Network declarations
 profile::networks::public: "172.16.0.0/16"
 
