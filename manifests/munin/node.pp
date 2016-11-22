@@ -2,7 +2,7 @@
 class profile::munin::node {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
-  $monitor_ip    = hiera('controller::api::addresses')
+  $monitor_ip    = hiera('monitor::management::addresses')
 
   include ::profile::munin::plugins
 
