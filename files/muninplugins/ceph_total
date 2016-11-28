@@ -49,7 +49,7 @@ if [ "$1" = "config" ]; then
   echo 'graph_category ceph'
   echo 'graph_vlabel Bytes'
   echo 'graph_info CEPH cluster capacity'
-  #echo 'graph_args --base 1000 -l 0'
+  echo 'graph_args -l 0'
 
   CAPACITY=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $1}')
   CAPACITYU=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $2}')
