@@ -13,6 +13,9 @@ controller::management::addresses:
 controller::storage::addresses:
   - '172.17.2.21'
 
+monitor::management::addresses:
+  - '172.17.1.12'
+
 # Network declarations
 profile::networks::public: "172.16.0.0/16"
 
@@ -141,7 +144,12 @@ profile::monitoring::data_password: '<pwgen>'
 
 # sssd settings
 profile::sssd::domain: '<domain FQDN>'
-profile::sssd::domaindn: '<DN of domain>'
 profile::sssd::domaincontroller: '<specific domain controller>'
+profile::sssd::group_base: '<DN for group OU>'
 profile::sssd::binduser: '<DN for LDAP bind user>'
 profile::sssd::passwordhash: '<sssd_obfuscate>'
+
+## sssd keystone-logon variables
+profile::access::db_port: '3306'
+profile::access::db_user: '<DBUSER for keyston-logon script>'
+profile::access::db_password: '<pwgen>'

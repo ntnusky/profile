@@ -1,0 +1,18 @@
+#!/bin/bash
+DBHOST=<%= scope.function_hiera(['profile::mysql::ip']) %>
+DBPORT=<%= scope.function_hiera(['profile::access::db_port']) %>
+DBUSER=<%= scope.function_hiera(['profile::access::db_user']) %>
+DBPASSWORD=<%= scope.function_hiera(['profile::access::db_password']) %>
+VIEWNAME="v_project_roles_per_user" 
+VIEWCOLUMN="project_roles"
+OS_USERNAME=${USER}
+
+echo "Checking if ${OS_USERNAME} has access to any projects in OpenStack..."
+projects=$(mysql -N -s -r -h ${DBHOST} -P ${DBPORT} -u${DBUSER} -p${DBPASSWORD} -e "SELECT ${VIEWCOLUMN} from keystone.${VIEWNAME} WHERE username = '${OS_USERNAME}'" 2> /dev/null)
+
+if [ ! -z "$projects" ] && [ $projects -gt 0 ]; then
+	echo "Access granted - you have permissions on one or more projects in OpenStack - have fun"
+	/bin/bash
+else
+	echo "Access denied - BYE BYE"
+fi
