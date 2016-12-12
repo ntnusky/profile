@@ -31,7 +31,8 @@ class profile::baseconfig {
     'pwgen',
     'qemu-utils',
     'sysstat',
-    'vim'
+    'vim',
+    'ethtool'
   ] :
     ensure => 'present',
   }
