@@ -181,7 +181,7 @@ class profile::openstack::neutronserver {
     virtual_ipaddress => [
       "${admin_ip}/32",
     ],
-    track_script      => 'check_keystone',
+    track_script      => 'check_neutron',
   } ->
 
   keepalived::vrrp::instance { 'public-neutron':
@@ -195,7 +195,7 @@ class profile::openstack::neutronserver {
     virtual_ipaddress => [
       "${public_ip}/32",
     ],
-    track_script      => 'check_keystone',
+    track_script      => 'check_neutron',
   }
 
 #  cs_primitive { 'neutron_public_ip':
