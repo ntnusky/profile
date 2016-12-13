@@ -17,8 +17,8 @@ class profile::mysqlcluster {
     location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.0/ubuntu',
     repos      => 'main',
     release    => $::lsbdistcodename,
-    key        => '199369E5404BD5FC7D2FE43BCBCB082A1BB943DB',
-    key_server => 'keys.gnupg.net',
+    key        => 'F1656F24C74CD1D8',
+    key_server => 'keyserver.ubuntu.com',
   } ->
 
   class { '::galera' :
