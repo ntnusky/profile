@@ -69,7 +69,7 @@ class profile::openstack::keystone {
     enabled             => true,
     admin_bind_host     => '0.0.0.0',
     using_domain_config => true,
-    service_provider    => 'systemd',
+    service_provider    => 'systemctl,
     require             => Anchor['profile::openstack::keystone::begin'],
     before              => Anchor['profile::openstack::keystone::end'],
   }
