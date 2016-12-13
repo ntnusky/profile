@@ -25,6 +25,8 @@ class profile::mysqlcluster {
     galera_servers      => $servers,
     galera_master       => $master,
     galera_package_name => 'galera-3',
+    mysql_package_name  => 'mariadb-galera-server-10.0',
+    client_package_name => 'mariadb-client-10.0',
     status_password     => $statuspassword,
     vendor_type         => 'mariadb',
     root_password       => $rootpassword,
