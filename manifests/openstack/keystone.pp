@@ -102,6 +102,7 @@ class profile::openstack::keystone {
   class { '::keystone::wsgi::apache':
     servername       => $public_ip,
     servername_admin => $admin_ip,
+    ssl              => false,
   }
 
   keystone::ldap_backend { $ldap_name:
