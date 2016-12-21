@@ -94,7 +94,7 @@ class profile::openstack::neutronserver {
   }
 
   class { '::neutron::keystone::authtoken':
-    password          => $eutron_password,
+    password          => $neutron_password,
     auth_url          => "http://${keystone_admin_ip}:35357/",
     auth_uri          => "http://${keystone_public_ip}:5000/",
     memcached_servers => $memcached_ip,
