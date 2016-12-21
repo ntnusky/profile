@@ -5,7 +5,6 @@ class profile::openstack::repo(
     if $::operatingsystem == 'Ubuntu' {
       class { '::openstack_extras::repo::debian::ubuntu':
         package_require => true,
-        }
       }
     } elsif $::operatingsystem == 'Debian' {
       class { '::openstack_extras::repo::debian::debian':
