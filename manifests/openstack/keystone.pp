@@ -69,6 +69,7 @@ class profile::openstack::keystone {
     admin_token             => $admin_token,
     admin_password          => $admin_pass,
     database_connection     => $database_connection,
+    debug                   => true,
     enabled                 => true,
     admin_bind_host         => '0.0.0.0',
     admin_endpoint          => "http://${admin_ip}:35357/",
