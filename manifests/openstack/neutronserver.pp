@@ -159,7 +159,6 @@ class profile::openstack::neutronserver {
       Anchor['profile::openstack::neutron::end'],
     require                          =>
       Anchor['profile::openstack::neutron::begin'],
-    allow_automatic_l3agent_failover => true,
     ha_enabled                       => true,
     ha_vrrp_auth_password            => $neutron_vrrp_pass,
   }
