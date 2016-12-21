@@ -35,6 +35,8 @@ class profile::openstack::neutronserver {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
 
+  $memcached_ip = hiera('profile::memcache::ip')
+
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
 
   include ::profile::openstack::repo
@@ -91,6 +93,14 @@ class profile::openstack::neutronserver {
     region       => $region,
   }
 
+  class { '::neutron::keystone::authtoken':
+    password          => $eutron_password,
+    auth_url          => "http://${keystone_admin_ip}:35357/",
+    auth_uri          => "http://${keystone_public_ip}:5000/",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
+  }
+
   class { '::neutron::agents::metadata':
     shared_secret => $nova_metadata_secret,
     metadata_ip   => $admin_ip,
@@ -98,9 +108,6 @@ class profile::openstack::neutronserver {
   }
 
   class { '::neutron::server':
-    auth_password                    => $neutron_password,
-    auth_uri                         => "http://${keystone_public_ip}:5000/",
-    auth_url                         => "http://${keystone_admin_ip}:35357/",
     database_connection              => $database_connection,
     sync_db                          => true,
     allow_automatic_l3agent_failover => true,
