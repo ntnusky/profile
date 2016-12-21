@@ -99,6 +99,11 @@ class profile::openstack::keystone {
     before       => Anchor['profile::openstack::keystone::end'],
   }
 
+  class { '::keystone::wsgi::apache':
+    servername       => $public_ip,
+    servername_admin => $admin_ip,
+  }
+
   keystone::ldap_backend { $ldap_name:
     url                    => $ldap_url,
     user                   => $ldap_user,
