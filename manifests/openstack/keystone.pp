@@ -65,11 +65,13 @@ class profile::openstack::keystone {
 
   class { '::keystone':
     admin_token         => $admin_token,
+    admin_password      => $admin_pass,
     database_connection => $database_connection,
     enabled             => true,
     admin_bind_host     => '0.0.0.0',
+    admin_endpoint      => "http://${admin_ip}:35357/",
+    public_endpoint     => "http://${public_ip}:5000/",
     using_domain_config => true,
-    service_provider    => 'systemd',
     require             => Anchor['profile::openstack::keystone::begin'],
     before              => Anchor['profile::openstack::keystone::end'],
   }
