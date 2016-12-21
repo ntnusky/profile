@@ -23,6 +23,7 @@ profile::interfaces::storage: 'em3'
 profile::interfaces::tenant: 'em2'
 
 profile::nova::sync_db: true
+profile::keystone::enable_fernet_setup: true
 
 profile::api::horizon::vrrp::priority: 130
 profile::api::keystone::vrrp::priority: 140

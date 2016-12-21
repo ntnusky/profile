@@ -106,6 +106,7 @@ profile::keystone::admin_token: "ADMIN"
 profile::keystone::admin_email: "post@localhost"
 profile::keystone::admin_password: '<pwgen>'
 profile::keystone::tokenflush::host: 'controller01'
+profile::keystone::enable_fernet_setup: false
 
 profile::keystone::ldap_backend::name: '<AD NetBIOS name>'
 profile::keystone::ldap_backend::url: 'ldap://<domain-FQDN>'
