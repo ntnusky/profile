@@ -71,6 +71,8 @@ class profile::openstack::cinder {
     require          => Anchor['profile::openstack::cinder::begin'],
   }
 
+  class { '::ciner::db::sync': }
+
   class { '::cinder::api':
     keystone_password   => $keystone_password,
     auth_uri            => "http://${keystone_ip}:5000/",
