@@ -71,7 +71,7 @@ class profile::openstack::cinder {
     require          => Anchor['profile::openstack::cinder::begin'],
   }
 
-  class { '::ciner::db::sync': }
+  class { '::cinder::db::sync': }
 
   class { '::cinder::api':
     keystone_password   => $keystone_password,
