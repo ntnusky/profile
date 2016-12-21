@@ -75,7 +75,7 @@ class profile::openstack::keystone {
     public_endpoint         => "http://${public_ip}:5000/",
     token_provider          => 'fernet',
     enable_fernet_setup     => $fernet_setup,
-    enabel_credential_setup => true,
+    enable_credential_setup => true,
     using_domain_config     => true,
     require                 => Anchor['profile::openstack::keystone::begin'],
     before                  => Anchor['profile::openstack::keystone::end'],
