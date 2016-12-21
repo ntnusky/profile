@@ -30,6 +30,8 @@ class profile::openstack::keystone {
   $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter')
 
+  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
+
   include ::profile::openstack::repo
 
   if($::hostname == $token_flush_host) {
@@ -64,16 +66,19 @@ class profile::openstack::keystone {
   }
 
   class { '::keystone':
-    admin_token         => $admin_token,
-    admin_password      => $admin_pass,
-    database_connection => $database_connection,
-    enabled             => true,
-    admin_bind_host     => '0.0.0.0',
-    admin_endpoint      => "http://${admin_ip}:35357/",
-    public_endpoint     => "http://${public_ip}:5000/",
-    using_domain_config => true,
-    require             => Anchor['profile::openstack::keystone::begin'],
-    before              => Anchor['profile::openstack::keystone::end'],
+    admin_token             => $admin_token,
+    admin_password          => $admin_pass,
+    database_connection     => $database_connection,
+    enabled                 => true,
+    admin_bind_host         => '0.0.0.0',
+    admin_endpoint          => "http://${admin_ip}:35357/",
+    public_endpoint         => "http://${public_ip}:5000/",
+    token_provider          => 'fernet',
+    enable_fernet_setup     => $fernet_setup,
+    enabel_credential_setup => true,
+    using_domain_config     => true,
+    require                 => Anchor['profile::openstack::keystone::begin'],
+    before                  => Anchor['profile::openstack::keystone::end'],
   }
 
   class { '::keystone::roles::admin':
@@ -84,7 +89,7 @@ class profile::openstack::keystone {
     before       => Anchor['profile::openstack::keystone::end'],
   }
 
-  class { 'keystone::endpoint':
+  class { '::keystone::endpoint':
     public_url   => "http://${public_ip}:5000",
     admin_url    => "http://${admin_ip}:35357",
     internal_url => "http://${admin_ip}:5000",
