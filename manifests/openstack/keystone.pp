@@ -30,7 +30,7 @@ class profile::openstack::keystone {
   $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter')
 
-  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
+  #  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
 
   include ::profile::openstack::repo
 
