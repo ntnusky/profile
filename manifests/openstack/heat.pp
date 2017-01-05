@@ -42,6 +42,15 @@ class profile::openstack::heat {
     region           => $region,
   }
 
+  class { '::heat::keystone::auth_cfn':
+    password     => $password,
+    service_name => 'heat-cfn',
+    region       => $region,
+    public_url   => "http://${public_ip}:8000/v1",
+    internal_url => "http://${admin_ip}:8000/v1",
+    admin_url    => "http://${admin_ip}:8000/v1",
+  }
+
   class { '::heat':
     database_connection => $database_connection,
     region_name         => $region, # probably uncomment this when Kilo

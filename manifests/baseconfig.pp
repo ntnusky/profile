@@ -31,7 +31,12 @@ class profile::baseconfig {
     'pwgen',
     'qemu-utils',
     'sysstat',
-    'vim'
+    'vim',
+    'ethtool',
+    'iotop',
+    'atop',
+    'screen',
+    'locate'
   ] :
     ensure => 'present',
   }

@@ -35,6 +35,8 @@ class profile::openstack::neutronserver {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
 
+  $memcached_ip = hiera('profile::memcache::ip')
+
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
 
   include ::profile::openstack::repo
@@ -57,10 +59,10 @@ class profile::openstack::neutronserver {
   }
 
   class { 'neutron::db::mysql' :
-    password         => $password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::neutron::end'],
-    require          => Anchor['profile::openstack::neutron::begin'],
+    password      => $password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::neutron::end'],
+    require       => Anchor['profile::openstack::neutron::begin'],
   }
 
 #  neutron_config {
@@ -82,13 +84,21 @@ class profile::openstack::neutronserver {
   #}
 
   class { '::neutron::keystone::auth':
-    password         => $neutron_password,
-    public_url       => "http://${public_ip}:9696",
-    internal_url     => "http://${admin_ip}:9696",
-    admin_url        => "http://${admin_ip}:9696",
-    before           => Anchor['profile::openstack::neutron::end'],
-    require          => Anchor['profile::openstack::neutron::begin'],
-    region           => $region,
+    password     => $neutron_password,
+    public_url   => "http://${public_ip}:9696",
+    internal_url => "http://${admin_ip}:9696",
+    admin_url    => "http://${admin_ip}:9696",
+    before       => Anchor['profile::openstack::neutron::end'],
+    require      => Anchor['profile::openstack::neutron::begin'],
+    region       => $region,
+  }
+
+  class { '::neutron::keystone::authtoken':
+    password          => $neutron_password,
+    auth_url          => "http://${keystone_admin_ip}:35357/",
+    auth_uri          => "http://${keystone_public_ip}:5000/",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
   }
 
   class { '::neutron::agents::metadata':
@@ -98,13 +108,14 @@ class profile::openstack::neutronserver {
   }
 
   class { '::neutron::server':
-    auth_password       => $neutron_password,
-    auth_uri            => "http://${keystone_public_ip}:5000/",
-    auth_url            => "http://${keystone_admin_ip}:35357/",
-    database_connection => $database_connection,
-    sync_db             => true,
-    before              => Anchor['profile::openstack::neutron::end'],
-    require             => Anchor['profile::openstack::neutron::begin'],
+    database_connection              => $database_connection,
+    sync_db                          => true,
+    allow_automatic_l3agent_failover => true,
+    l3_ha                            => true,
+    min_l3_agents_per_router         => 2,
+    max_l3_agents_per_router         => 3,
+    before                           => Anchor['profile::openstack::neutron::end'],
+    require                          => Anchor['profile::openstack::neutron::begin'],
   }
 
   class { '::neutron::agents::dhcp':
@@ -117,20 +128,20 @@ class profile::openstack::neutronserver {
 
   # Configure nova notifications system
   class { '::neutron::server::notifications':
-    password       => $nova_password,
-    auth_url       => "http://${keystone_admin_ip}:35357",
-    region_name    => $region,
-    nova_url       => "http://${nova_public_ip}:8774/v2",
-    before         => Anchor['profile::openstack::neutron::end'],
-    require        => Class['::nova::keystone::auth'],
+    password    => $nova_password,
+    auth_url    => "http://${keystone_admin_ip}:35357",
+    region_name => $region,
+    nova_url    => "http://${nova_public_ip}:8774/v2",
+    before      => Anchor['profile::openstack::neutron::end'],
+    require     => Class['::nova::keystone::auth'],
   }
 
   # This plugin configures Neutron for OVS on the server
   # Agent
   class { '::neutron::agents::ml2::ovs':
-    bridge_mappings  => ['external:br-ex','physnet-vlan:br-vlan'],
-    before           => Anchor['profile::openstack::neutron::end'],
-    require          => Anchor['profile::openstack::neutron::begin'],
+    bridge_mappings => ['external:br-ex','physnet-vlan:br-vlan'],
+    before          => Anchor['profile::openstack::neutron::end'],
+    require         => Anchor['profile::openstack::neutron::begin'],
   }
 
   # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
@@ -148,7 +159,6 @@ class profile::openstack::neutronserver {
       Anchor['profile::openstack::neutron::end'],
     require                          =>
       Anchor['profile::openstack::neutron::begin'],
-    allow_automatic_l3agent_failover => true,
     ha_enabled                       => true,
     ha_vrrp_auth_password            => $neutron_vrrp_pass,
   }
@@ -177,7 +187,7 @@ class profile::openstack::neutronserver {
     virtual_ipaddress => [
       "${admin_ip}/32",
     ],
-    track_script      => 'check_keystone',
+    track_script      => 'check_neutron',
   } ->
 
   keepalived::vrrp::instance { 'public-neutron':
@@ -191,7 +201,7 @@ class profile::openstack::neutronserver {
     virtual_ipaddress => [
       "${public_ip}/32",
     ],
-    track_script      => 'check_keystone',
+    track_script      => 'check_neutron',
   }
 
 #  cs_primitive { 'neutron_public_ip':
