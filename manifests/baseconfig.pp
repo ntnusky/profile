@@ -32,7 +32,11 @@ class profile::baseconfig {
     'qemu-utils',
     'sysstat',
     'vim',
-    'ethtool'
+    'ethtool',
+    'iotop',
+    'atop',
+    'screen',
+    'locate'
   ] :
     ensure => 'present',
   }
