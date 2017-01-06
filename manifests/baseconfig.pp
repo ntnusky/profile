@@ -17,6 +17,7 @@ define setDHCP {
 # This class provides basic configuration of our hosts. Sets up NTP, installs
 # some base utilities, configures networking and so fort.
 class profile::baseconfig {
+  $environment = hiera('profile::puppet::environment')
   if($::bios_vendor == 'HP') {
     include ::hpacucli
   }
@@ -82,6 +83,17 @@ class profile::baseconfig {
       section => '',
       setting => 'START',
       value   => 'yes',
+    } ->
+    # This environment is not the one really used, as that is decided by
+    # foreman's ENC, but puppet gets really sad if this setting points to a
+    # non-existent environment. This setting might also get useful in the cases
+    # where an ENC  is not used.
+    ini_setting { 'Puppet environment':
+      ensure  => present,
+      path    => '/etc/puppet/puppet.conf',
+      section => 'agent',
+      setting => 'environment',
+      value   => $environment,
     } ->
     service { 'puppet':
       ensure => 'running',

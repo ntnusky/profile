@@ -3,6 +3,8 @@ profile::user::erikh::hash: ''
 profile::user::eigil::hash: ''
 profile::user::larserik::hash: ''
 
+profile::puppet::environment: 'environmentname'
+
 # Host settings
 controller::names:
   - 'controller01'
