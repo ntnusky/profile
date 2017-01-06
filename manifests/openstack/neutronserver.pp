@@ -75,13 +75,9 @@ class profile::openstack::neutronserver {
   neutron_config {
     'DEFAULT/ipv6_pd_enabled': value => 'True';
   }
-
-  # As the dibbler-client is not available in a new enough version for Ubuntu
-  # 14.04, it needs to be manually installed... 
-  #
-  #package { 'dibbler-client':
-  #  ensure => 'latest',
-  #}
+  package { 'dibbler-client':
+    ensure => 'present',
+  }
 
   class { '::neutron::keystone::auth':
     password     => $neutron_password,
