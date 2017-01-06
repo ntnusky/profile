@@ -52,13 +52,6 @@ class profile::baseconfig {
   #    }
   #}
 
-  include ::keystone::client
-  include ::cinder::client
-  include ::nova::client
-  include ::neutron::client
-  include ::glance::client
-  include ::profile::openstack::repo
-
   class { '::ntp':
     servers  => [ 'ntp.hig.no'],
     restrict => [
