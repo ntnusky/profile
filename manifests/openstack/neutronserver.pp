@@ -107,9 +107,9 @@ class profile::openstack::neutronserver {
     database_connection              => $database_connection,
     sync_db                          => true,
     allow_automatic_l3agent_failover => true,
-    l3_ha                            => true,
-    min_l3_agents_per_router         => 2,
-    max_l3_agents_per_router         => 3,
+    #l3_ha                            => true,
+    #min_l3_agents_per_router         => 2,
+    #max_l3_agents_per_router         => 3,
     before                           => Anchor['profile::openstack::neutron::end'],
     require                          => Anchor['profile::openstack::neutron::begin'],
   }
