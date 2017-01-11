@@ -23,21 +23,22 @@ class profile::baseconfig {
   }
 
   package { [
+    'atop',
     'bc',
+    'ethtool',
     'fio',
     'git',
     'gdisk',
     'htop',
+    'iotop',
     'iperf3',
+    'locate',
     'pwgen',
     'qemu-utils',
-    'sysstat',
-    'vim',
-    'ethtool',
-    'iotop',
-    'atop',
     'screen',
-    'locate'
+    'sysstat',
+    'tcpdump',
+    'vim',
   ] :
     ensure => 'present',
   }
@@ -87,6 +88,7 @@ class profile::baseconfig {
       section => 'agent',
       setting => 'environment',
       value   => $environment,
+      notify  => Service['puppet'],
     } ->
     service { 'puppet':
       ensure => 'running',
