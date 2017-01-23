@@ -54,7 +54,7 @@ class profile::rabbitmq {
   }
 
   exec { 'rabbitmq-systemd-reload':
-    command     => '/usr/bin/systemctl daemon-reload',
+    command     => '/bin/systemctl daemon-reload',
     notify      => Service['rabbitmq-server'],
     refreshonly => true,
   }
