@@ -36,6 +36,13 @@ class profile::rabbitmq {
     before               => Anchor['profile::rabbitmq::end'],
   }
 
+  file { '/etc/systemd/system/rabbitmq-server.service.d':
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
   ini_setting { 'Rabbit files':
     ensure  => present,
     path    => '/etc/systemd/system/rabbitmq-server.service.d/limits.conf',
@@ -43,6 +50,7 @@ class profile::rabbitmq {
     setting => 'LimitNOFILE',
     value   => '300000',
     notify  => Service['rabbitmq-server'],
+    require => File['/etc/systemd/system/rabbitmq-server.service.d'],
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
