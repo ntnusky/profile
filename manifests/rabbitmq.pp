@@ -46,11 +46,17 @@ class profile::rabbitmq {
   ini_setting { 'Rabbit files':
     ensure  => present,
     path    => '/etc/systemd/system/rabbitmq-server.service.d/limits.conf',
-    section => 'Servuce',
+    section => 'Service',
     setting => 'LimitNOFILE',
     value   => '300000',
-    notify  => Service['rabbitmq-server'],
+    notify  => Exec['rabbitmq-systemd-reload'],
     require => File['/etc/systemd/system/rabbitmq-server.service.d'],
+  }
+
+  exec { 'rabbitmq-systemd-reload':
+    command     => '/usr/bin/systemctl daemon-reload',
+    notify      => Service['rabbitmq-server'],
+    refreshonly => true,
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
