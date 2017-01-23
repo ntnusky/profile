@@ -43,7 +43,6 @@ class profile::rabbitmq {
     setting => 'LimitNOFILE',
     value   => '300000',
     notify  => Service['rabbitmq-server'],
-    require => Class['rabbitmq'],
   }
 
   keepalived::vrrp::script { 'check_rabbitmq':
