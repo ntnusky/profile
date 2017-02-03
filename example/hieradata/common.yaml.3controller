@@ -26,6 +26,8 @@ controller::storage::addresses:
 monitor::management::addresses:
   - '172.17.1.12'
 
+profile::munin::url: 'munin.domain.tld'
+
 # Network declarations
 profile::networks::public: "172.16.0.0/16"
 
