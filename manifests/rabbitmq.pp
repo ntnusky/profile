@@ -36,6 +36,24 @@ class profile::rabbitmq {
     before               => Anchor['profile::rabbitmq::end'],
   }
 
+  munin::plugin { 'rabbit_fd':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/rabbit_fd',
+    config => ['user root'],
+  }
+
+  munin::plugin { 'rabbit_processes':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/rabbit_processes',
+    config => ['user root'],
+  }
+
+  munin::plugin { 'rabbit_memory':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/rabbit_memory',
+    config => ['user root'],
+  }
+
   file { '/etc/systemd/system/rabbitmq-server.service.d':
     ensure => directory,
     owner  => 'root',
@@ -48,7 +66,7 @@ class profile::rabbitmq {
     path    => '/etc/systemd/system/rabbitmq-server.service.d/limits.conf',
     section => 'Service',
     setting => 'LimitNOFILE',
-    value   => '300000',
+    value   => '16384',
     notify  => Exec['rabbitmq-systemd-reload'],
     require => File['/etc/systemd/system/rabbitmq-server.service.d'],
   }
