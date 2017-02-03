@@ -6,6 +6,10 @@ class profile::apache {
     confd_dir     => '/etc/apache2/conf-enabled'
   }
 
+  package { 'libcgi-pm-perl':
+    ensure => present,
+  }
+
   apache::vhost { "${::fqdn} http":
     servername    => $::fqdn,
     port          => '80',
