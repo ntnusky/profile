@@ -1,5 +1,7 @@
+# This class installs a munin master, and configures an apache virtual host for
+# it.
 class profile::munin::master {
-  require profile::apache
+  require profile::services::apache
 
   $munin_url = hiera('profile::munin::url')
 

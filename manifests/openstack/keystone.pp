@@ -32,6 +32,8 @@ class profile::openstack::keystone {
 
   #  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
 
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
   include ::profile::openstack::repo
 
   if($::hostname == $token_flush_host) {
@@ -47,12 +49,8 @@ class profile::openstack::keystone {
     }
   }
 
-  Anchor['profile::keepalived::end'] ->
-
   anchor { 'profile::openstack::keystone::begin' :
     require => [
-      Anchor['profile::keepalived::end'],
-      Anchor['profile::mysqlcluster::end']
     ],
   }
 

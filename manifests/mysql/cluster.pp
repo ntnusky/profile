@@ -1,17 +1,20 @@
 # Configuring galera and maraidb cluster
-class profile::mysqlcluster {
+class profile::mysql::cluster {
+  # Keepalived settings
+  $vrrp_password = hiera('profile::keepalived::vrrp_password')
+  $vrid = hiera('profile::mysql::vrrp::id')
+  $vrpri = hiera('profile::mysql::vrrp::priority')
+  
+  $mysql_ip = hiera('profile::mysql::ip')
   $servers = hiera('controller::management::addresses')
   $master  = hiera('profile::mysqlcluster::master')
   $rootpassword = hiera('profile::mysqlcluster::root_password')
   $statuspassword = hiera('profile::mysqlcluster::status_password')
-  $bind_ip = hiera('profile::mysql::ip')
 
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
 
-  #include ::haproxy
-
-  anchor { 'profile::mysqlcluster::start' : } ->
+  require profile::services::keepalived
 
   apt::source { 'galera_mariadb':
     location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.0/ubuntu',
@@ -20,7 +23,7 @@ class profile::mysqlcluster {
     key        => 'F1656F24C74CD1D8',
     key_server => 'keyserver.ubuntu.com',
     notify     => Exec['apt_update'],
-  } ->
+  }
 
   class { '::galera' :
     galera_servers      => $servers,
@@ -37,13 +40,16 @@ class profile::mysqlcluster {
     override_options    => {
       'mysqld' => {
         'port'            => '3306',
-        'bind-address'    => $bind_ip,
+        'bind-address'    => $mysql_ip,
         'max_connections' => '1000',
       }
     },
-  }->
+    require             => Apt::Source['galera_mariadb'],
+  }
+
   mysql_user { "root@${master}":
-    ensure     => 'absent',
+    ensure  => 'absent',
+    require => Class['::galera'],
   }->
   mysql_user { 'root@%':
     ensure        => 'present',
@@ -62,28 +68,23 @@ class profile::mysqlcluster {
     privileges => ['SELECT'],
     table      => 'mysql.user',
     user       => 'haproxy_check@%',
-  }->
-
-#  ::haproxy::listen { 'mysql-cluster':
-#    collect_exported => false,
-#   mode      => 'tcp',
-#    ipaddress    => '*',
-#    ports      => '3306',
-#    options       => {
-#      'option'  => [ 'tcplog',
-#                   'mysql-check user haproxy_check'],
-#      'balance' => 'roundrobin',
-#    }
-#  }->
-  anchor { 'profile::mysqlcluster::end' : }
-
-#  ::Haproxy::Balancermember <<| listening_service == 'mysql-cluster' |>>
-#
-#  @@::haproxy::balancermember { $::fqdn:
-#    listening_service => 'mysql-cluster',
-#    server_names      => $::hostname,
-#    ipaddresses       => $::ipaddress_eth1,
-#    ports             => '3307',
-#    options           => 'check',
-#  }
+  }
+  
+  keepalived::vrrp::script { 'check_mysql':
+    script => '/usr/bin/killall -0 mysqld',
+  }
+  
+  # Define the virtual addresses
+  keepalived::vrrp::instance { 'management-database':
+    interface         => $management_if,
+    state             => 'MASTER',
+    virtual_router_id => $vrid,
+    priority          => $vrpri,
+    auth_type         => 'PASS',
+    auth_pass         => $vrrp_password,
+    virtual_ipaddress => [
+      "${mysql_ip}/32",
+    ],
+    track_script      => 'check_mysql',
+  }
 }

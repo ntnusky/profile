@@ -1,9 +1,9 @@
 # This class installs and configures a simple apache webserver, and configures a
 # vhost for the fqdn of the host
-class profile::apache {
+class profile::services::apache {
   class { '::apache':
-    mpm_module    => 'prefork',
-    confd_dir     => '/etc/apache2/conf-enabled'
+    mpm_module => 'prefork',
+    confd_dir  => '/etc/apache2/conf-enabled'
   }
 
   package { 'libcgi-pm-perl':

@@ -34,23 +34,24 @@ class profile::openstack::novacontroller {
   $api_db_con = "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
   $sync_db = hiera('profile::nova::sync_db')
 
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
   include ::profile::openstack::repo
 
   anchor { 'profile::openstack::novacontroller::begin' :
-    require => [ Anchor['profile::mysqlcluster::end'], ],
   }
 
   class { '::nova::keystone::auth':
-    password         => $nova_password,
-    public_url       => "http://${nova_public_ip}:8774/v2/%(tenant_id)s",
-    internal_url     => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
-    admin_url        => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
-    public_url_v3    => "http://${nova_public_ip}:8774/v3",
-    internal_url_v3  => "http://${nova_admin_ip}:8774/v3",
-    admin_url_v3     => "http://${nova_admin_ip}:8774/v3",
-    region           => $region,
-    before           => Anchor['profile::openstack::novacontroller::end'],
-    require          => Anchor['profile::openstack::novacontroller::begin'],
+    password        => $nova_password,
+    public_url      => "http://${nova_public_ip}:8774/v2/%(tenant_id)s",
+    internal_url    => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
+    admin_url       => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
+    public_url_v3   => "http://${nova_public_ip}:8774/v3",
+    internal_url_v3 => "http://${nova_admin_ip}:8774/v3",
+    admin_url_v3    => "http://${nova_admin_ip}:8774/v3",
+    region          => $region,
+    before          => Anchor['profile::openstack::novacontroller::end'],
+    require         => Anchor['profile::openstack::novacontroller::begin'],
   }
 
   class { 'nova::db::mysql' :

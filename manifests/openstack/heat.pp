@@ -20,9 +20,9 @@ class profile::openstack::heat {
   $management_if = hiera('profile::interfaces::management')
   $database_connection = "mysql://heat:${password}@${mysql_ip}/heat"
 
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
   include ::profile::openstack::repo
-
-  Anchor['profile::keepalived::end'] ->
 
   anchor { 'profile::openstack::heat::begin' : } ->
 
@@ -31,15 +31,14 @@ class profile::openstack::heat {
     password      => $password,
     allowed_hosts => $allowed_hosts,
     dbname        => 'heat',
-    require       => Anchor['profile::mysqlcluster::end'],
   } ->
 
   class  { '::heat::keystone::auth':
-    password         => $password,
-    public_url       => "http://${public_ip}:8004/v1/%(tenant_id)s",
-    internal_url     => "http://${admin_ip}:8004/v1/%(tenant_id)s",
-    admin_url        => "http://${admin_ip}:8004/v1/%(tenant_id)s",
-    region           => $region,
+    password     => $password,
+    public_url   => "http://${public_ip}:8004/v1/%(tenant_id)s",
+    internal_url => "http://${admin_ip}:8004/v1/%(tenant_id)s",
+    admin_url    => "http://${admin_ip}:8004/v1/%(tenant_id)s",
+    region       => $region,
   }
 
   class { '::heat::keystone::auth_cfn':

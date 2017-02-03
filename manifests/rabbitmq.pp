@@ -11,9 +11,10 @@ class profile::rabbitmq {
   $secret     = hiera('profile::rabbitmq::rabbitsecret')
   $ctrlnodes  = hiera('controller::names')
 
+  require ::profile::services::keepalived
+
   $rabbitUrl = 'https://bintray.com/rabbitmq/Keys/download_file'
   $rabbitArg = 'file_path=rabbitmq-release-signing-key.asc'
-
   apt_key { 'rabbitmq-release-key':
     ensure => 'present',
     id     => '0A9AF2115F4687BD29803A206B73A36E6026DFCA',

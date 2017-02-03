@@ -24,11 +24,12 @@ class profile::openstack::glance {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
 
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
   include ::profile::openstack::repo
 
   anchor { 'profile::openstack::glance::begin' :
     require => [
-      Anchor['profile::mysqlcluster::end'],
       Anchor['profile::ceph::monitor::end'],
     ],
   }
@@ -66,10 +67,9 @@ class profile::openstack::glance {
   }
 
   class { 'glance::backend::rbd' :
-    rbd_store_user      => 'glance',
-    #rbd_store_ceph_conf => '/etc/ceph/ceph.client.glance.keyring',
-    before              => Ceph::Key['client.glance'],
-    require             => Anchor['profile::openstack::glance::begin'],
+    rbd_store_user => 'glance',
+    before         => Ceph::Key['client.glance'],
+    require        => Anchor['profile::openstack::glance::begin'],
   }
 
   class { '::glance::registry':
@@ -91,20 +91,20 @@ class profile::openstack::glance {
   }
 
   class  { '::glance::keystone::auth':
-    password         => $password,
-    public_url       => "http://${public_ip}:9292",
-    internal_url     => "http://${admin_ip}:9292",
-    admin_url        => "http://${admin_ip}:9292",
-    region           => $region,
-    before           => Anchor['profile::openstack::glance::end'],
-    require          => Anchor['profile::openstack::glance::begin'],
+    password     => $password,
+    public_url   => "http://${public_ip}:9292",
+    internal_url => "http://${admin_ip}:9292",
+    admin_url    => "http://${admin_ip}:9292",
+    region       => $region,
+    before       => Anchor['profile::openstack::glance::end'],
+    require      => Anchor['profile::openstack::glance::begin'],
   }
 
   class { 'glance::db::mysql' :
-    password         => $password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::glance::end'],
-    require          => Anchor['profile::openstack::glance::begin'],
+    password      => $password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::glance::end'],
+    require       => Anchor['profile::openstack::glance::begin'],
   }
   keepalived::vrrp::script { 'check_glance':
     script  => '/usr/bin/killall -0 glance-api',
@@ -125,7 +125,6 @@ class profile::openstack::glance {
     track_script      => 'check_glance',
     before            => Anchor['profile::openstack::glance::end'],
     require           => Anchor['profile::openstack::glance::begin'],
-    notify            => Service['keepalived'],
   }
 
   keepalived::vrrp::instance { 'public-glance':
@@ -141,17 +140,16 @@ class profile::openstack::glance {
     track_script      => 'check_glance',
     before            => Anchor['profile::openstack::glance::end'],
     require           => Anchor['profile::openstack::glance::begin'],
-    notify            => Service['keepalived'],
   }
 
   ceph::key { 'client.glance':
-    secret        => $glance_key,
-    cap_mon       => 'allow r',
-    cap_osd       =>
+    secret  => $glance_key,
+    cap_mon => 'allow r',
+    cap_osd =>
       'allow class-read object_prefix rbd_children, allow rwx pool=images',
-    inject        => true,
-    before        => Anchor['profile::openstack::glance::end'],
-    require       => Anchor['profile::openstack::glance::begin'],
+    inject  => true,
+    before  => Anchor['profile::openstack::glance::end'],
+    require => Anchor['profile::openstack::glance::begin'],
   }
 
   anchor { 'profile::openstack::glance::end' : }

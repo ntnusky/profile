@@ -5,8 +5,6 @@ define setDHCP {
   $address = hiera("profile::interfaces::${name}::address", false)
   $netmask = hiera("profile::interfaces::${name}::netmask", '255.255.255.0')
 
-  $mysql_master = hiera('profile::mysqlcluster::master')
-
   network::interface{ $name:
     method  => $method,
     address => $address,
@@ -27,9 +25,9 @@ class profile::baseconfig::networking {
   # interface than where the default gateway lives due to many interfaces on the
   # nodes.
   sysctl::value { 'net.ipv4.conf.all.rp_filter':
-    value => "0",
+    value => '0',
   }
   sysctl::value { 'net.ipv4.conf.default.rp_filter':
-    value => "0",
+    value => '0',
   }
 }
