@@ -20,7 +20,6 @@ class profile::openstack::neutronagent {
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
 
-  require ::profile::services::rabbitmq
   require ::profile::openstack::repo
 
   anchor{ 'profile::openstack::neutronagent::begin' : }

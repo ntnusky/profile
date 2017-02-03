@@ -27,7 +27,6 @@ class profile::openstack::novacompute {
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
 
-  require ::profile::services::rabbitmq
   require ::profile::openstack::repo
 
   class { '::nova':
