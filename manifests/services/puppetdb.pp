@@ -1,4 +1,5 @@
-class profile::puppetdb {
+# Installs and configures puppetdb on the manager.
+class profile::services::puppetdb {
 
   class { '::java':
     distribution => 'jre',
