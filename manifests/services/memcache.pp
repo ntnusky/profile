@@ -13,7 +13,7 @@ class profile::services::memcache {
   require profile::services::keepalived
   
   class { 'memcached':
-    listen_ip => $memcacheip,
+    listen_ip => $memcache_ip,
     tcp_port  => '11211',
     udp_port  => '11211',
   }
