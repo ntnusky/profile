@@ -34,9 +34,10 @@ class profile::openstack::novacontroller {
   $api_db_con = "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
   $sync_db = hiera('profile::nova::sync_db')
 
+  require ::profile::services::rabbitmq
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
-  include ::profile::openstack::repo
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::novacontroller::begin' :
   }

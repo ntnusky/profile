@@ -21,7 +21,7 @@ class profile::openstack::horizon {
 
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
-  include ::profile::openstack::repo
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::horizon::begin' :
     require => [

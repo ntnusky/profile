@@ -24,9 +24,10 @@ class profile::openstack::glance {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
 
+  require ::profile::services::rabbitmq
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
-  include ::profile::openstack::repo
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::glance::begin' :
     require => [

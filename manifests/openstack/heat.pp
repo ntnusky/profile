@@ -20,9 +20,10 @@ class profile::openstack::heat {
   $management_if = hiera('profile::interfaces::management')
   $database_connection = "mysql://heat:${password}@${mysql_ip}/heat"
 
+  require ::profile::services::rabbitmq
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
-  include ::profile::openstack::repo
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::heat::begin' : } ->
 
