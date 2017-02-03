@@ -1,24 +1,10 @@
-# This definition collects interface configuration from hiera, and configures
-# the interface according to these settings.
-define setDHCP {
-  $method = hiera("profile::interfaces::${name}::method")
-  $address = hiera("profile::interfaces::${name}::address", false)
-  $netmask = hiera("profile::interfaces::${name}::netmask", '255.255.255.0')
-
-  network::interface{ $name:
-    method  => $method,
-    address => $address,
-    netmask => $netmask,
-  }
-}
-
 # This class configures the network interfaces of a node based on data from
 # hiera.
 class profile::baseconfig::networking {
   # Configure interfaces as instructed in hiera.
   $interfacesToConfigure = hiera('profile::interfaces', false)
   if($interfacesToConfigure) {
-    setDHCP { $interfacesToConfigure: }
+    profile::baseconfig::configureinterface { $interfacesToConfigure: }
   }
 
   # Disable the rp filter, as the return traffic ofthen arrives on another
