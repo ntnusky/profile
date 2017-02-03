@@ -71,6 +71,8 @@ profile::rabbitmq::vrrp::id: 56
 profile::rabbitmq::vrrp::priority: 100
 profile::mysql::vrrp::id: 50
 profile::mysql::vrrp::priority: 100
+profile::memcache::vrrp::id: 59
+profile::memcache::vrrp::priority: 100
 profile::memcache::ip: '172.17.1.107'
 profile::mysql::ip: '172.17.1.108'
 

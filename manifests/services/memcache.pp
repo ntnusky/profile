@@ -3,8 +3,8 @@
 class profile::services::memcache {
   # Variables for keepalived
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $vrid = hiera('profile::mysql::vrrp::id')
-  $vrpri = hiera('profile::mysql::vrrp::priority')
+  $vrid = hiera('profile::memcache::vrrp::id')
+  $vrpri = hiera('profile::memcache::vrrp::priority')
   $management_if = hiera('profile::interfaces::management')
   
   # Memcache IP

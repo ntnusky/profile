@@ -31,3 +31,4 @@ profile::api::neutron::vrrp::priority: 130
 profile::api::nova::vrrp::priority: 140
 profile::rabbitmq::vrrp::priority: 150
 profile::mysql::vrrp::priority: 130
+profile::memcache::vrrp::priority: 130
