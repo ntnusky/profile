@@ -66,6 +66,10 @@ class profile::openstack::novacompute {
     'client.nova/key':              value => $nova_key;
   }
 
+  user { 'nova':
+    shell       => '/bin/bash',
+  }
+
   class { '::nova::compute::libvirt':
     libvirt_virt_type => $nova_libvirt_type,
     vncserver_listen  => $management_ip,
