@@ -1,12 +1,13 @@
 # Creates user 'larserik'
 define profile::baseconfig::createuser {
   $uid = hiera("profile::user::${name}::uid")
+  $ensure = hiera("profile::user::${name}::ensure")
   $groups = hiera("profile::user::${name}::groups")
   $hash = hiera("profile::user::${name}::hash")
   $keys = hiera("profile::user::${name}::keys", false)
 
   user { $name:
-    ensure     => present,
+    ensure     => $ensure,
     gid        => 'users',
     require    => Group['users'],
     groups     => $groups,
