@@ -17,7 +17,6 @@ class profile::baseconfig::packages {
     'iotop',
     'iperf3',
     'locate',
-    'nmap',
     'pwgen',
     'qemu-utils',
     'screen',
