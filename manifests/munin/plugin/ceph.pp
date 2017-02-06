@@ -77,7 +77,7 @@ class profile::munin::plugin::ceph {
   service { 'cephcollectorRBD':
     ensure   => running,
     enable   => true,
-    provicer => 'systemd',
+    provider => 'systemd',
     require  => [
       File['/lib/systemd/system/cephcollectorRBD.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
@@ -87,7 +87,7 @@ class profile::munin::plugin::ceph {
   service { 'cephcollectorVolumes':
     ensure   => running,
     enable   => true,
-    provicer => 'systemd',
+    provider => 'systemd',
     require  => [
       File['/lib/systemd/system/cephcollectorVolumes.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
@@ -97,7 +97,7 @@ class profile::munin::plugin::ceph {
   service { 'cephcollectorImages':
     ensure   => running,
     enable   => true,
-    provicer => 'systemd',
+    provider => 'systemd',
     require  => [
       File['/lib/systemd/system/cephcollectorImages.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
