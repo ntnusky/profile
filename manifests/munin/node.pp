@@ -5,6 +5,7 @@ class profile::munin::node {
   $monitor_ip    = hiera('monitor::management::addresses')
 
   include ::profile::munin::plugins
+  include ::profile::munin::plugin::puppet
 
   class {'::munin::node':
     bind_address   => $management_ip,

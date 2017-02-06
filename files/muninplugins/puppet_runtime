@@ -1,0 +1,23 @@
+#! /usr/bin/python
+import sys
+import yaml
+
+statusfile = open('/var/lib/puppet/state/last_run_summary.yaml', 'r')
+y = yaml.load(statusfile)
+
+if('config' in sys.argv):
+  print("graph_title Puppet runtime")
+  print("graph_category puppet")
+  print("graph_vlabel Seconds")
+  print("graph_args -l 0 --base 1000")
+  print("graph_scale yes")
+  print("graph_info Runtime of last puppet run.")
+  print("configret.label Config Retrieval")
+  print("configret.info Number of seconds used for config retrieval during" + \
+      "last puppet run.")
+  print("total.label Total")
+  print("total.info Number of seconds elapsed during last puppet run")
+  sys.exit(0)
+
+print("total.value %s" % y['time']['total'])
+print("configret.value %s" % y['time']['config_retrieval'])
