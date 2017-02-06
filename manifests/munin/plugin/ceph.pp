@@ -81,6 +81,7 @@ class profile::munin::plugin::ceph {
     require  => [
       File['/lib/systemd/system/cephcollectorRBD.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
+      Exec['ceph-systemd-reload'],
     ],
   }
 
@@ -91,6 +92,7 @@ class profile::munin::plugin::ceph {
     require  => [
       File['/lib/systemd/system/cephcollectorVolumes.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
+      Exec['ceph-systemd-reload'],
     ],
   }
 
@@ -101,6 +103,7 @@ class profile::munin::plugin::ceph {
     require  => [
       File['/lib/systemd/system/cephcollectorImages.service'],
       File['/usr/local/sbin/ceph-collector.sh'],
+      Exec['ceph-systemd-reload'],
     ],
   }
 
