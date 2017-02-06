@@ -1,6 +1,6 @@
 # Adds an ssh-key for a user.
 define profile::baseconfig::createkey (
-  String $username,
+  $username,
 ) {
   $key = hiera("profile::user::${username}::key::${name}")
 
