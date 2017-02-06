@@ -1,0 +1,49 @@
+---
+# Openstack settings.
+profile::region: 'RegionName'
+
+# Cinder
+profile::cinder::keystone::password: '<pwgen>'
+
+# Heat
+profile::heat::auth_encryption_key: '<pwgen>'
+
+# Horizon
+profile::horizon::django_secret: '<pwgen>'
+profile::horizon::server_name: 'sky.domain.loc'
+profile::horizon::allowed_hosts:
+ - "1.2.3.4"
+ - "sky.domain.loc"
+profile::horizon::server_aliases:
+ - "1.2.3.4"
+ - "sky.domain.loc"
+
+# Keystone
+profile::keystone::admin_token: "ADMIN"
+profile::keystone::admin_email: "post@localhost"
+profile::keystone::admin_password: '<pwgen>'
+profile::keystone::tokenflush::host: 'controller01'
+
+profile::keystone::ldap_backend::name: '<AD NetBIOS name>'
+profile::keystone::ldap_backend::url: 'ldap://<domain-FQDN>'
+profile::keystone::ldap_backend::user: '<DN for LDAP bind user>'
+profile::keystone::ldap_backend::password: '<password for LDAP bind user>'
+profile::keystone::ldap_backend::suffix: '<DN of domain-FQDN> (i.e DC=example,DC=com)'
+profile::keystone::ldap_backend::user_tree_dn: '<DN for user OU>'
+profile::keystone::ldap_backend::user_filter: '[optional] <ldap user filter>'
+
+# Nova
+profile::nova::sharedmetadataproxysecret: '<pwgen>'
+profile::nova::keystone::password: '<pwgen>'
+profile::nova::libvirt_type: 'kvm'
+profile::nova::libvirt_model: 'core2duo'
+profile::nova::sync_db: false
+profile::nova::dns: '129.241.0.200,129.241.0.201'
+
+# Neutron
+profile::neutron::keystone::password: '<pwgen>'
+profile::neutron::service_plugins:
+  - 'router'
+profile::neutron::vrrp_pass: '<pwgen>'
+profile::neutron::vlan_low: <VLAN-ID>
+profile::neutron::vlan_high: <VLAN-ID>

@@ -1,0 +1,13 @@
+---
+:backends:
+  - yaml
+:yaml:
+  :datadir: /etc/puppet/hieradata
+:hierarchy:
+  - "nodes/%{::clientcert}"
+  - certs
+  - infrastructure
+  - networking
+  - openstack
+  - users
+  - common

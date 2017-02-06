@@ -1,0 +1,65 @@
+---
+# Host settings
+controller::names:
+  - 'controller01'
+  - 'controller02'
+  - 'controller03'
+controller::api::addresses:
+  - '172.16.0.21'
+  - '172.16.0.22'
+  - '172.16.0.23'
+controller::management::addresses:
+  - '172.17.1.21'
+  - '172.17.1.22'
+  - '172.17.1.23'
+controller::storage::addresses:
+  - '172.17.2.21'
+  - '172.17.2.22'
+  - '172.17.2.23'
+
+monitor::management::addresses:
+  - '172.17.1.12'
+
+# Network declarations
+profile::networks::public: "172.16.0.0/16"
+
+# VIP configurations
+profile::api::horizon::public::ip: '172.16.0.101'
+profile::api::horizon::vrrp::id: 55
+profile::api::horizon::vrrp::priority: 100
+profile::api::keystone::public::ip: '172.16.0.102'
+profile::api::keystone::admin::ip: '172.17.1.102'
+profile::api::keystone::vrrp::id: 51
+profile::api::keystone::vrrp::priority: 100
+profile::api::glance::public::ip: '172.16.0.103'
+profile::api::glance::admin::ip: '172.17.1.103'
+profile::api::glance::vrrp::id: 52
+profile::api::glance::vrrp::priority: 100
+profile::api::neutron::public::ip: '172.16.0.104'
+profile::api::neutron::admin::ip: '172.17.1.104'
+profile::api::neutron::vrrp::id: 53
+profile::api::neutron::vrrp::priority: 100
+nova::vncproxy::common::vncproxy_host: '<public horizon FQDN>'
+nova::vncproxy::common::vncproxy_port: '<NAT-port>'
+nova::vncproxy::host: '172.16.0.105'
+profile::api::nova::public::ip: '172.16.0.105'
+profile::api::nova::admin::ip: '172.17.1.105'
+profile::api::nova::vrrp::id: 54
+profile::api::nova::vrrp::priority: 100
+profile::api::cinder::public::ip: '172.16.0.109'
+profile::api::cinder::admin::ip: '172.17.1.109'
+profile::api::cinder::vrrp::id: 57
+profile::api::cinder::vrrp::priority: 100
+profile::api::heat::public::ip: '172.16.0.110'
+profile::api::heat::admin::ip: '172.17.1.110'
+profile::api::heat::vrrp::id: 58
+profile::api::heat::vrrp::priority: 100
+profile::rabbitmq::ip: '172.17.1.106'
+profile::rabbitmq::vrrp::id: 56
+profile::rabbitmq::vrrp::priority: 100
+profile::mysql::vrrp::id: 50
+profile::mysql::vrrp::priority: 100
+profile::memcache::vrrp::id: 59
+profile::memcache::vrrp::priority: 100
+profile::memcache::ip: '172.17.1.107'
+profile::mysql::ip: '172.17.1.108'

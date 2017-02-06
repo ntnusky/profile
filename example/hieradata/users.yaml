@@ -1,0 +1,15 @@
+---
+profile::users:
+ - 'user1'
+ - 'user2'
+
+profile::user::user1::uid: 800
+profile::user::user1::groups:
+ - 'sudo'
+profile::user::user1::hash: '$6$passwordhash'
+profile::user::user1::keys:
+ - 'mykey@host'
+profile::user::user1::key::mykey@host: '<ssh public key>'
+
+profile::user::user2::uid: 801
+profile::user::user2::ensure: 'absent'

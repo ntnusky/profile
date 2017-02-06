@@ -1,0 +1,35 @@
+---
+profile::puppet::environment: 'environmentname'
+
+# Misc infrastructure settings
+profile::keepalived::configure_firewall: false
+profile::keepalived::vrrp_password: '<pwgen>'
+
+profile::mysqlcluster::master: 'controller01.domain.name'
+profile::mysqlcluster::root_password: '<pwgen>'
+profile::mysqlcluster::status_password: '<pwgen>'
+
+profile::rabbitmq::rabbituser: 'rabbit'
+profile::rabbitmq::rabbitpass: '<pwgen>'
+profile::rabbitmq::rabbitsecret: '<pwgen>'
+
+# Database settings
+profile::mysql::allowed_hosts:
+  - "172.17.1.%"
+profile::mysql::keystonepass: '<pwgen>'
+profile::mysql::glancepass: '<pwgen>'
+profile::mysql::neutronpass: '<pwgen>'
+profile::mysql::novapass: '<pwgen>'
+profile::mysql::cinderpass: '<pwgen>'
+profile::mysql::heatpass: '<pwgen>'
+ 
+# Ceph cluster settings:
+profile::ceph::fsid: '<uuidgen>'
+profile::ceph::replicas: 3
+profile::ceph::journal::size: 15800
+profile::ceph::admin_key: 'ceph-key'
+profile::ceph::monitor_key: 'ceph-key'
+profile::ceph::osd_bootstrap_key: 'ceph-key'
+profile::ceph::glance_key: 'ceph-key'
+profile::ceph::nova_key: 'ceph-key'
+profile::ceph::nova_uuid: '<uuidgen>'
