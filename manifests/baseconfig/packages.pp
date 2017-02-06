@@ -5,6 +5,10 @@ class profile::baseconfig::packages {
     include ::hpacucli
   }
 
+  if($::bios_vendor == 'Dell Inc.') {
+    include ::srvadmin
+  }
+
   # Install a range of useful tools.
   package { [
     'atop',
