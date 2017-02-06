@@ -8,7 +8,7 @@ class profile::baseconfig::packages {
   # Install a range of useful tools.
   # Should we use: ensure_packages(['ksh','openssl'], {'ensure' => 'present'})
   # so that we can include nmap.
-  ensure_packages ( [
+  package { [
     'atop',
     'bc',
     'ethtool',
@@ -26,9 +26,9 @@ class profile::baseconfig::packages {
     'sysstat',
     'tcpdump',
     'vim',
-  ], {
+  ] :
     ensure => 'present',
-  })
+  }
 
   # Install our homemade administration scripts
   file { '/usr/ntnusky':
