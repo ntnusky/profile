@@ -6,6 +6,8 @@ class profile::baseconfig::packages {
   }
 
   # Install a range of useful tools.
+  # Should we use: ensure_packages(['ksh','openssl'], {'ensure' => 'present'})
+  # so that we can include nmap.
   package { [
     'atop',
     'bc',
@@ -17,6 +19,7 @@ class profile::baseconfig::packages {
     'iotop',
     'iperf3',
     'locate',
+    'nmap',
     'pwgen',
     'qemu-utils',
     'screen',
