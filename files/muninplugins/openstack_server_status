@@ -1,0 +1,43 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_args -l 0"
+  echo "graph_vlabel VM's"
+  echo "graph_title Number of VM's with a certain status"
+  echo "graph_category openstack"
+  echo "graph_info This graph shows how many vm's exists with certain states"
+  echo "graph_order active shutoff paused suspended error build other"
+  echo "active.label Active"
+  echo "active.draw AREA"
+  echo "active.info Active VM's"
+  echo "shutoff.label Shutoff"
+  echo "shutoff.draw STACK"
+  echo "shutoff.info VM's which are shut down" 
+  echo "paused.label Paused"
+  echo "paused.draw STACK"
+  echo "paused.info VM's which are paused" 
+  echo "suspended.label Suspended"
+  echo "suspended.draw STACK"
+  echo "suspended.info VM's which are suspended" 
+  echo "error.label Error"
+  echo "error.draw STACK"
+  echo "error.info VM's which have failed in some way" 
+  echo "build.label Build"
+  echo "build.draw STACK"
+  echo "build.info VM's currently being built." 
+  echo "other.label Other"
+  echo "other.draw STACK"
+  echo "other.info VM's in another state than the ones listed"
+  exit 0
+fi
+
+openstack server list --all -c Status -f value > /tmp/munin-openstack-states
+
+echo "active.value $(cat /tmp/munin-openstack-states | grep -c ACTIVE)"
+echo "shutoff.value $(cat /tmp/munin-openstack-states | grep -c SHUTOFF)"
+echo "paused.value $(cat /tmp/munin-openstack-states | grep -c PAUSED)"
+echo "suspended.value $(cat /tmp/munin-openstack-states | grep -c SUSPENDED)"
+echo "error.value $(cat /tmp/munin-openstack-states | grep -c ERROR)"
+echo "build.value $(cat /tmp/munin-openstack-states | grep -c BUILD)"
+echo "other.value $(cat /tmp/munin-openstack-states | \
+        egrep -v -c "(ACTIVE|SHUTOFF|PAUSED|SUSPENDED|ERROR|BUILD)" )"

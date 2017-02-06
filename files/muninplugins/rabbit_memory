@@ -110,6 +110,7 @@ if [[ $1 == "config" ]]; then
   echo "system.label Other systems"
   echo "system.draw STACK"
   echo "system.info Memory used by other system"
+  exit 0
 fi
 
 echo "creaders.value $connection_readers"

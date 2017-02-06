@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Openstack projects"
+  echo "graph_category openstack"
+  echo "graph_vlabel Number of projects"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of projects"
+  echo "projects.label projects"
+  echo "projects.info Number of projects"
+  exit 0
+fi
+
+echo "used.value $(openstack project list -f value | wc -l)"

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Nova CPU summary"
+  echo "graph_category openstack"
+  echo "graph_vlabel VCPU"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of available, allocated CPU's"
+  echo "total.label Total"
+  echo "total.info Total CPU's available"
+  echo "used.label Allocated"
+  echo "used.info Allocated CPU's"
+  exit 0
+fi
+
+eval $(openstack hypervisor stats show -f shell)
+
+echo "total.value $vcpus"
+echo "used.value $vcpus_used"
