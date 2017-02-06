@@ -5,4 +5,5 @@ class profile::baseconfig {
   include ::profile::baseconfig::packages
   include ::profile::baseconfig::puppet
   include ::profile::baseconfig::ssh
+  include ::profile::baseconfig::users
 }
