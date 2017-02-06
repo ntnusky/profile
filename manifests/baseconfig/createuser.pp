@@ -17,18 +17,20 @@ define profile::baseconfig::createuser {
     managehome => true,
     password   => $hash,
   }
-  
-  file { "/home/${name}/.ssh":
-    ensure  => 'directory',
-    owner   => $name,
-    group   => 'users',
-    mode    => '0700',
-    require => User[$name],
-  }
 
-  if($keys) {
-    ::profile::baseconfig::createkey { $keys:
-      username => $name,
+  if ( $ensure == 'present' ) {
+    file { "/home/${name}/.ssh":
+      ensure  => 'directory',
+      owner   => $name,
+      group   => 'users',
+      mode    => '0700',
+      require => User[$name],
+    }
+  
+    if($keys) {
+      ::profile::baseconfig::createkey { $keys:
+        username => $name,
+      }
     }
   }
 }
