@@ -24,6 +24,7 @@ class profile::baseconfig::packages {
     'pwgen',
     'qemu-utils',
     'screen',
+    'sl',
     'sysstat',
     'tcpdump',
     'vim',
