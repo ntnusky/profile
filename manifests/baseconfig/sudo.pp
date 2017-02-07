@@ -2,8 +2,8 @@
 class profile::baseconfig::sudo {
   class { '::sudo': }
   
-  sudo::conf { 'insult':
+  sudo::conf { 'insults':
     priority => 10,
-    content  => 'Defaults	insult',
+    content  => 'Defaults	insults',
   }
 }
