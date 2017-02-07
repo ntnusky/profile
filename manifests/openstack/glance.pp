@@ -153,5 +153,11 @@ class profile::openstack::glance {
     require => Anchor['profile::openstack::glance::begin'],
   }
 
+  sudo::conf { 'glance_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/glance_sudoers',
+    sudo_file_name => 'glance_sudoers',
+  }
+
   anchor { 'profile::openstack::glance::end' : }
 }

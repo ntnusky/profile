@@ -5,6 +5,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::packages
   include ::profile::baseconfig::puppet
   include ::profile::baseconfig::ssh
+  include ::profile::baseconfig::sudo
 
   # This is a properly ugly way to ensure that the hosts dont lose their
   # arp-entry for the gateway.

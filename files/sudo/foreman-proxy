@@ -1,0 +1,3 @@
+foreman-proxy ALL = (root) NOPASSWD : /usr/bin/puppet cert *
+foreman-proxy ALL = (root) NOPASSWD : /usr/bin/puppet kick *
+Defaults:foreman-proxy !requiretty

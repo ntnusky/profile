@@ -170,4 +170,10 @@ class profile::openstack::neutronserver {
     ],
     track_script      => 'check_neutron',
   }
+
+  sudo::conf { 'neutron_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/neutron_sudoers',
+    sudo_file_name => 'neutron_sudoers',
+  }
 }

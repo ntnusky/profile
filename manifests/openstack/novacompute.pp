@@ -108,6 +108,12 @@ class profile::openstack::novacompute {
     notify => Service['libvirt'],
   }
 
+  sudo::conf { 'nova_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/nova_sudoers',
+    sudo_file_name => 'nova_sudoers',
+  }
+
   Package['libvirt'] -> File['/etc/libvirt/qemu.conf']
 }
 

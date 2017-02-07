@@ -140,5 +140,11 @@ class profile::openstack::cinder {
     require => Anchor['profile::openstack::cinder::begin'],
   }
 
+  sudo::conf { 'cinder_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/cinder_sudoers',
+    sudo_file_name => 'cinder_sudoers',
+  }
+
   anchor { 'profile::openstack::cinder::end' : }
 }

@@ -164,5 +164,11 @@ class profile::openstack::novacontroller {
     before            => Anchor['profile::openstack::novacontroller::end'],
   }
 
+  sudo::conf { 'nova_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/nova_sudoers',
+    sudo_file_name => 'nova_sudoers',
+  }
+
   anchor { 'profile::openstack::novacontroller::end' : }
 }

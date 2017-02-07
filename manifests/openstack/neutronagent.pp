@@ -26,10 +26,10 @@ class profile::openstack::neutronagent {
   anchor{ 'profile::openstack::neutronagent::end' : }
 
   class { '::neutron::agents::ml2::ovs':
-    enabled          => true,
-    bridge_mappings  => ['physnet-vlan:br-vlan'],
-    before           => Anchor['profile::openstack::neutronagent::end'],
-    require          => Anchor['profile::openstack::neutronagent::begin'],
+    enabled         => true,
+    bridge_mappings => ['physnet-vlan:br-vlan'],
+    before          => Anchor['profile::openstack::neutronagent::end'],
+    require         => Anchor['profile::openstack::neutronagent::begin'],
   }
 
   class { '::neutron::plugins::ml2':
@@ -75,5 +75,11 @@ class profile::openstack::neutronagent {
     database_connection => $database_connection,
     before              => Anchor['profile::openstack::neutronagent::end'],
     require             => Anchor['profile::openstack::neutronagent::begin'],
+  }
+
+  sudo::conf { 'neutron_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/neutron_sudoers',
+    sudo_file_name => 'neutron_sudoers',
   }
 }
