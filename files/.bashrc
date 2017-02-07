@@ -98,5 +98,5 @@ fi
 #    . /etc/bash_completion
 #fi
 
-PATH="${PATH}:/usr/ntnusky/tools/"
+PATH="${PATH}:/usr/ntnusky/tools/:/usr/games"
 export PATH
