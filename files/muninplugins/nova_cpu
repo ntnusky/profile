@@ -16,29 +16,32 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-totalCPU=0
-enabledCPU=0
-usedCPU=0
-
-for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
-  [[ $node =~ (.*)\;(.*) ]]
-  nodename=${BASH_REMATCH[1]}
-  nodestatus=${BASH_REMATCH[2]}
-  
-  total=$(nova host-describe $nodename | grep total)
-  used=$(nova host-describe $nodename | grep used_now)
-   
-  tCPU=$(echo "$total" | awk '{print $6}')
-  uCPU=$(echo "$used" | awk '{print $6}')
-  
-  ((usedCPU += $uCPU))
-  ((totalCPU += $tCPU))
-  
-  if [[ $nodestatus == "enabled" ]]; then
-    ((enabledCPU += $tCPU))
-  fi
-done
-
-echo "total.value $totalCPU"
-echo "enabled.value $enabledCPU"
-echo "used.value $usedCPU"
+#totalCPU=0
+#enabledCPU=0
+#usedCPU=0
+#
+#for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
+#  [[ $node =~ (.*)\;(.*) ]]
+#  nodename=${BASH_REMATCH[1]}
+#  nodestatus=${BASH_REMATCH[2]}
+#  
+#  total=$(nova host-describe $nodename | grep total)
+#  used=$(nova host-describe $nodename | grep used_now)
+#   
+#  tCPU=$(echo "$total" | awk '{print $6}')
+#  uCPU=$(echo "$used" | awk '{print $6}')
+#  
+#  ((usedCPU += $uCPU))
+#  ((totalCPU += $tCPU))
+#  
+#  if [[ $nodestatus == "enabled" ]]; then
+#    ((enabledCPU += $tCPU))
+#  fi
+#done
+#
+#echo "total.value $totalCPU"
+#echo "enabled.value $enabledCPU"
+#echo "used.value $usedCPU"
+echo "total.value U"
+echo "enabled.value U"
+echo "used.value U"

@@ -12,18 +12,19 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-usedDisk=0
-
-for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
-  [[ $node =~ (.*)\;(.*) ]]
-  nodename=${BASH_REMATCH[1]}
-  nodestatus=${BASH_REMATCH[2]}
-  
-  used=$(nova host-describe $nodename | grep used_now)
-   
-  uDisk=$(echo "$used" | awk '{print $10}')
-  
-  ((usedDisk += $uDisk))
-done
-
-echo used.value $(($usedDisk * 1024 * 1024 * 1024))
+#usedDisk=0
+#
+#for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
+#  [[ $node =~ (.*)\;(.*) ]]
+#  nodename=${BASH_REMATCH[1]}
+#  nodestatus=${BASH_REMATCH[2]}
+#  
+#  used=$(nova host-describe $nodename | grep used_now)
+#   
+#  uDisk=$(echo "$used" | awk '{print $10}')
+#  
+#  ((usedDisk += $uDisk))
+#done
+#
+#echo used.value $(($usedDisk * 1024 * 1024 * 1024))
+echo "used.value U"
