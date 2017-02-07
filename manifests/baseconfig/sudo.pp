@@ -1,7 +1,7 @@
 # This class starts to configure sudo
 class profile::baseconfig::sudo {
-  class { 'sudo': }
-
+  class { '::sudo': }
+  
   sudo::conf { 'root':
     priority => 10,
     content  => 'root  ALL=(ALL:ALL) ALL',
