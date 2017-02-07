@@ -4,6 +4,6 @@ class profile::baseconfig::sudo {
   
   sudo::conf { 'insult':
     priority => 10,
-    content  => 'Defaults insult',
+    content  => 'Defaults	insult',
   }
 }
