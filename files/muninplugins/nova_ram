@@ -16,29 +16,32 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-totalRAM=0
-enabledRAM=0
-usedRAM=0
-
-for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
-  [[ $node =~ (.*)\;(.*) ]]
-  nodename=${BASH_REMATCH[1]}
-  nodestatus=${BASH_REMATCH[2]}
-  
-  total=$(nova host-describe $nodename | grep total)
-  used=$(nova host-describe $nodename | grep used_now)
-   
-  tRAM=$(echo "$total" | awk '{print $8}')
-  uRAM=$(echo "$used" | awk '{print $8}')
-  
-  ((usedRAM += $uRAM))
-  ((totalRAM += $tRAM))
-  
-  if [[ $nodestatus == "enabled" ]]; then
-    ((enabledRAM += $tRAM))
-  fi
-done
-
-echo used.value $(($usedRAM * 1024 * 1024))
-echo total.value $(($totalRAM * 1024 * 1024))
-echo enabled.value $(($enabledRAM * 1024 * 1024))
+#totalRAM=0
+#enabledRAM=0
+#usedRAM=0
+#
+#for node in $(nova service-list | grep " nova " | awk '{ print $6";"$10}'); do 
+#  [[ $node =~ (.*)\;(.*) ]]
+#  nodename=${BASH_REMATCH[1]}
+#  nodestatus=${BASH_REMATCH[2]}
+#  
+#  total=$(nova host-describe $nodename | grep total)
+#  used=$(nova host-describe $nodename | grep used_now)
+#   
+#  tRAM=$(echo "$total" | awk '{print $8}')
+#  uRAM=$(echo "$used" | awk '{print $8}')
+#  
+#  ((usedRAM += $uRAM))
+#  ((totalRAM += $tRAM))
+#  
+#  if [[ $nodestatus == "enabled" ]]; then
+#    ((enabledRAM += $tRAM))
+#  fi
+#done
+#
+#echo used.value $(($usedRAM * 1024 * 1024))
+#echo total.value $(($totalRAM * 1024 * 1024))
+#echo enabled.value $(($enabledRAM * 1024 * 1024))
+echo "total.value U"
+echo "enabled.value U"
+echo "used.value U"

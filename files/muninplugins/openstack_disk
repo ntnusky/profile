@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Nova Disk summary"
+  echo "graph_category openstack"
+  echo "graph_vlabel Bytes of disk"
+  echo "graph_args -l 0 --base 1000"
+  echo "graph_scale yes"
+  echo "graph_info Amount of available and allocated Disk"
+  echo "used.label Allocated"
+  echo "used.info Allocated disk"
+  exit 0
+fi
+
+eval $(openstack hypervisor stats show -f shell)
+
+echo "used.value $(($local_gb_used * 1000 * 1000 * 1000))"

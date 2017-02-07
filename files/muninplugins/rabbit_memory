@@ -1,0 +1,131 @@
+#!/bin/bash
+
+for line in $(rabbitmqctl status | grep memory, -A 17); do
+  if [[ $line =~ total,([0-9]+) ]]; then
+    total=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ connection_readers,([0-9]+) ]]; then
+    connection_readers=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ connection_writers,([0-9]+) ]]; then
+    connection_writers=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ connection_channels,([0-9]+) ]]; then
+    connection_channels=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ connection_other,([0-9]+) ]]; then
+    connection_other=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ queue_procs,([0-9]+) ]]; then
+    queue_procs=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ queue_slave_procs,([0-9]+) ]]; then
+    queue_slave_procs=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ plugins,([0-9]+) ]]; then
+    plugins=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ other_proc,([0-9]+) ]]; then
+    other_proc=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ mnesia,([0-9]+) ]]; then
+    mnesia=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ mgmt_db,([0-9]+) ]]; then
+    mgmt_db=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ msg_index,([0-9]+) ]]; then
+    msg_index=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ other_ets,([0-9]+) ]]; then
+    other_ets=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ binary,([0-9]+) ]]; then
+    binary=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ code,([0-9]+) ]]; then
+    code=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ atom,([0-9]+) ]]; then
+    atom=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ other_system,([0-9]+) ]]; then
+    other_system=${BASH_REMATCH[1]}
+  fi
+done
+
+if [[ $1 == "config" ]]; then
+  echo "graph_args --base 1024 -l 0"
+  echo "graph_vlabel Bytes"
+  echo "graph_title Rabbitmq Memory usage"
+  echo "graph_category rabbitmq"
+  echo "graph_info This graph shows what rabbit uses memory for"
+  echo -n "graph_order creaders cwriters cchannels cother qprocs qslave"
+  echo "plugins other mnesia mgmt msg otherets binary code atom system"
+  echo "creaders.label Connection Readers"
+  echo "creaders.draw AREA"
+  echo "creaders.info Memory used by connection readers"
+  echo "cwriters.label Connection Writers"
+  echo "cwriters.draw STACK"
+  echo "cwriters.info Memory used by connection writers"
+  echo "cchannels.label Connection Channels"
+  echo "cchannels.draw STACK"
+  echo "cchannels.info Memory used by Connection Channels"
+  echo "cother.label Connection Other"
+  echo "cother.draw STACK"
+  echo "cother.info Memory used by Connection Other"
+  echo "qprocs.label Queue processes"
+  echo "qprocs.draw STACK"
+  echo "qprocs.info Memory used by queue processes"
+  echo "qslave.label Queue slave processes"
+  echo "qslave.draw STACK"
+  echo "qslave.info Memory used by queue slave processes"
+  echo "plugins.label Plugins"
+  echo "plugins.draw STACK"
+  echo "plugins.info Memory used by plugins"
+  echo "other.label Other processes"
+  echo "other.draw STACK"
+  echo "other.info Memory used by Other processes"
+  echo "mnesia.label Mnesia"
+  echo "mnesia.draw STACK"
+  echo "mnesia.info Memory used by Mnesia"
+  echo "mgmt.label Management db"
+  echo "mgmt.draw STACK"
+  echo "mgmt.info Memory used by management db"
+  echo "msg.label Message index"
+  echo "msg.draw STACK"
+  echo "msg.info Memory used by message index"
+  echo "otherets.label Other ets"
+  echo "otherets.draw STACK"
+  echo "otherets.info Memory used by other ets"
+  echo "binary.label Binary"
+  echo "binary.draw STACK"
+  echo "binary.info Memory used by Binary"
+  echo "code.label Code"
+  echo "code.draw STACK"
+  echo "code.info Memory used by Code"
+  echo "atom.label atom"
+  echo "atom.draw STACK"
+  echo "atom.info Memory used by Atom"
+  echo "system.label Other systems"
+  echo "system.draw STACK"
+  echo "system.info Memory used by other system"
+  exit 0
+fi
+
+echo "creaders.value $connection_readers"
+echo "cwriters.value $connection_writers"
+echo "cchannels.value $connection_channels"
+echo "cother.value $connection_other"
+echo "qprocs.value $queue_procs"
+echo "qslave.value $queue_slave_procs"
+echo "plugins.value $plugins"
+echo "other.value $other_proc"
+echo "mnesia.value $mnesia"
+echo "mgmt.value $mgmt_db"
+echo "msg.value $msg_index"
+echo "otherets.value $other_ets"
+echo "binary.value $binary"
+echo "code.value $code"
+echo "atom.value $atom"
+echo "system.value $other_system"

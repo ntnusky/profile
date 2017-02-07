@@ -6,6 +6,83 @@ class profile::munin::plugin::nova {
   $admin_pass = hiera('profile::keystone::admin_password')
   $admin_url = "http://${admin_ip}:5000/v2.0/"
 
+  munin::plugin { 'openstack_projects':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_projects',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_server_status':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_server_status',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_floatingip':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_floatingip',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_cpu':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_cpu',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_disk':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_disk',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_hypervisors':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_hypervisors',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
+  munin::plugin { 'openstack_ram':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_ram',
+    config => [ 'user nova',
+      'env.OS_TENANT_NAME admin',
+      "env.OS_USERNAME ${admin_token}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+    ],
+  }
+
   munin::plugin { 'nova_cpu':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/nova_cpu',
@@ -38,15 +115,4 @@ class profile::munin::plugin::nova {
       "env.OS_AUTH_URL ${admin_url}",
     ],
   }
-
-#  munin::plugin { 'nova_servers':
-#    ensure => present,
-#    source => 'puppet:///modules/profile/muninplugins/nova_servers',
-#    config => [ 'user nova',
-#      "env.OS_TENANT_NAME admin",
-#      "env.OS_USERNAME ${admin_token}",
-#      "env.OS_PASSWORD ${admin_pass}",
-#      "env.OS_AUTH_URL ${admin_url}"
-#    ],
-#  }
 }

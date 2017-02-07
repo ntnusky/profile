@@ -27,7 +27,7 @@ class profile::openstack::novacompute {
 
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
 
-  include ::profile::openstack::repo
+  require ::profile::openstack::repo
 
   class { '::nova':
     database_connection => $database_connection,
@@ -66,6 +66,10 @@ class profile::openstack::novacompute {
     'client.nova/key':              value => $nova_key;
   }
 
+  user { 'nova':
+    shell       => '/bin/bash',
+  }
+
   class { '::nova::compute::libvirt':
     libvirt_virt_type => $nova_libvirt_type,
     vncserver_listen  => $management_ip,
@@ -102,6 +106,12 @@ class profile::openstack::novacompute {
     group  => 'root',
     mode   => '0644',
     notify => Service['libvirt'],
+  }
+
+  sudo::conf { 'nova_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/nova_sudoers',
+    sudo_file_name => 'nova_sudoers',
   }
 
   Package['libvirt'] -> File['/etc/libvirt/qemu.conf']

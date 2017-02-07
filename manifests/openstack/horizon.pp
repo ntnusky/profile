@@ -19,11 +19,12 @@ class profile::openstack::horizon {
   $ssl_cert = hiera('profile::horizon::ssl_cert')
   $ssl_ca = hiera('profile::horizon::ssl_ca')
 
-  include ::profile::openstack::repo
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::horizon::begin' :
     require => [
-      Anchor['profile::mysqlcluster::end'],
       Anchor['profile::ceph::monitor::end'],
     ],
     before  => Class['::horizon'],

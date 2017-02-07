@@ -28,11 +28,13 @@ class profile::openstack::cinder {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
 
-  include ::profile::openstack::repo
+  require ::profile::services::rabbitmq
+  require ::profile::mysql::cluster
+  require ::profile::services::keepalived
+  require ::profile::openstack::repo
 
   anchor { 'profile::openstack::cinder::begin' :
     require => [
-      Anchor['profile::mysqlcluster::end'],
       Anchor['profile::ceph::monitor::end'],
     ],
   }
@@ -49,26 +51,26 @@ class profile::openstack::cinder {
   }
 
   class  { '::cinder::keystone::auth':
-    password         => $keystone_password,
-    public_url       => "http://${public_ip}:8776/v1/%(tenant_id)s",
-    internal_url     => "http://${admin_ip}:8776/v1/%(tenant_id)s",
-    admin_url        => "http://${admin_ip}:8776/v1/%(tenant_id)s",
-    public_url_v2    => "http://${public_ip}:8776/v2/%(tenant_id)s",
-    internal_url_v2  => "http://${admin_ip}:8776/v2/%(tenant_id)s",
-    admin_url_v2     => "http://${admin_ip}:8776/v2/%(tenant_id)s",
-    public_url_v3    => "http://${public_ip}:8776/v3/%(tenant_id)s",
-    internal_url_v3  => "http://${admin_ip}:8776/v3/%(tenant_id)s",
-    admin_url_v3     => "http://${admin_ip}:8776/v3/%(tenant_id)s",
-    region           => $region,
-    before           => Anchor['profile::openstack::cinder::end'],
-    require          => Anchor['profile::openstack::cinder::begin'],
+    password        => $keystone_password,
+    public_url      => "http://${public_ip}:8776/v1/%(tenant_id)s",
+    internal_url    => "http://${admin_ip}:8776/v1/%(tenant_id)s",
+    admin_url       => "http://${admin_ip}:8776/v1/%(tenant_id)s",
+    public_url_v2   => "http://${public_ip}:8776/v2/%(tenant_id)s",
+    internal_url_v2 => "http://${admin_ip}:8776/v2/%(tenant_id)s",
+    admin_url_v2    => "http://${admin_ip}:8776/v2/%(tenant_id)s",
+    public_url_v3   => "http://${public_ip}:8776/v3/%(tenant_id)s",
+    internal_url_v3 => "http://${admin_ip}:8776/v3/%(tenant_id)s",
+    admin_url_v3    => "http://${admin_ip}:8776/v3/%(tenant_id)s",
+    region          => $region,
+    before          => Anchor['profile::openstack::cinder::end'],
+    require         => Anchor['profile::openstack::cinder::begin'],
   }
 
   class { '::cinder::db::mysql' :
-    password         => $password,
-    allowed_hosts    => $allowed_hosts,
-    before           => Anchor['profile::openstack::cinder::end'],
-    require          => Anchor['profile::openstack::cinder::begin'],
+    password      => $password,
+    allowed_hosts => $allowed_hosts,
+    before        => Anchor['profile::openstack::cinder::end'],
+    require       => Anchor['profile::openstack::cinder::begin'],
   }
 
   class { '::cinder::db::sync': }
@@ -111,7 +113,6 @@ class profile::openstack::cinder {
     track_script      => 'check_cinder',
     before            => Anchor['profile::openstack::cinder::end'],
     require           => Anchor['profile::openstack::cinder::begin'],
-    notify            => Service['keepalived'],
   }
 
   keepalived::vrrp::instance { 'public-cinder':
@@ -127,17 +128,22 @@ class profile::openstack::cinder {
     track_script      => 'check_cinder',
     before            => Anchor['profile::openstack::cinder::end'],
     require           => Anchor['profile::openstack::cinder::begin'],
-    notify            => Service['keepalived'],
   }
 
   ceph::key { 'client.cinder':
-    secret        => $ceph_key,
-    cap_mon       => 'allow r',
-    cap_osd       =>
+    secret  => $ceph_key,
+    cap_mon => 'allow r',
+    cap_osd =>
       'allow class-read object_prefix rbd_children, allow rwx pool=cinder',
-    inject        => true,
-    before        => Anchor['profile::openstack::cinder::end'],
-    require       => Anchor['profile::openstack::cinder::begin'],
+    inject  => true,
+    before  => Anchor['profile::openstack::cinder::end'],
+    require => Anchor['profile::openstack::cinder::begin'],
+  }
+
+  sudo::conf { 'cinder_sudoers':
+    ensure         => 'present',
+    source         => 'puppet:///modules/profile/sudo/cinder_sudoers',
+    sudo_file_name => 'cinder_sudoers',
   }
 
   anchor { 'profile::openstack::cinder::end' : }

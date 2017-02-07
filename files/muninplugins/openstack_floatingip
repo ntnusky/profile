@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Floating IP's"
+  echo "graph_category openstack"
+  echo "graph_vlabel IP's"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of allocated and used Floating IP's"
+  echo "allocated.label Allocated"
+  echo "allocated.info Number of allocated IP's"
+  echo "used.label Used"
+  echo "used.info Number of used IP's"
+  exit 0
+fi
+
+openstack ip floating list -f value > /tmp/munin-floating.txt
+
+echo "allocated.value $(cat /tmp/munin-floating.txt | wc -l)"
+echo "used.value $(cat /tmp/munin-floating.txt | grep -v None -c)"
