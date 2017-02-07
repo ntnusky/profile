@@ -2,16 +2,8 @@
 class profile::baseconfig::sudo {
   class { '::sudo': }
   
-  sudo::conf { 'root':
+  sudo::conf { 'insult':
     priority => 10,
-    content  => 'root  ALL=(ALL:ALL) ALL',
-  }
-  sudo::conf { 'admin':
-    priority => 10,
-    content  => '%admin ALL=(ALL) ALL',
-  }
-  sudo::conf { 'sudo':
-    priority => 10,
-    content  => '%sudo ALL=(ALL:ALL) ALL',
+    content  => 'Defaults insult',
   }
 }
