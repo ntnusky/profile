@@ -3,7 +3,7 @@
 
 class profile::baseconfig::packages {
 
-  $basepackages = hiera('profile::baseconfig::packages')
+  $basepackages = hiera_array('profile::baseconfig::packages')
 
   # If it is an HP machine, install hpacucli.
   if($::bios_vendor == 'HP') {
@@ -15,31 +15,9 @@ class profile::baseconfig::packages {
   }
 
   # Install a range of useful tools.
-  package { $basepackages:
+  package { $basepackages :
     ensure => 'present',
   }
-
-  # package { [
-  #  'atop',
-  #  'bc',
-  #  'ethtool',
-  #  'fio',
-  #  'git',
-  #  'gdisk',
-  #  'htop',
-  #  'iotop',
-  #  'iperf3',
-  #  'locate',
-  #  'pwgen',
-  #  'qemu-utils',
-  #  'screen',
-  #  'sl',
-  #  'sysstat',
-  #  'tcpdump',
-  #  'vim',
-  #] :
-  #  ensure => 'present',
-  #}
 
   # Install our homemade administration scripts
   file { '/usr/ntnusky':
