@@ -1,0 +1,6 @@
+---
+profile::baseconfig::packages:
+  - 'your'
+  - 'packages'
+  - 'here'
+  - 'will be installed on every role'
