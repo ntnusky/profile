@@ -23,11 +23,11 @@ class profile::baseconfig::packages {
   if ($::lsbdistcodename == 'trusty') {
     apt::ppa { 'ppa:brightbox/ruby-ng':
       require => Package['software-properties-common'],
-      #  before  => Package['ruby2.3'],
+      before  => Package['ruby2.3'],
     }
-    #package { 'ruby2.3':
-    #  ensure => 'present',
-    #}
+    package { 'ruby2.3':
+      ensure => 'present',
+    }
   }
 
   # Install our homemade administration scripts
