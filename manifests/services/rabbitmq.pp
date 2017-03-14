@@ -84,6 +84,9 @@ class profile::services::rabbitmq {
     refreshonly => true,
   }
 
+  # Include rabbitmq configuration for sensu
+  include ::profile::services::rabbitmq::sensu
+
   # Configure keepalived
   keepalived::vrrp::script { 'check_rabbitmq':
     script =>

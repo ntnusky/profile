@@ -1,8 +1,6 @@
 # Creates rabbitmq user and vhost for sensu
 class profile::services::rabbitmq::sensu {
 
-  require ::profile::services::rabbitmq
-
   $sensurabbitpass = hiera('profile::sensu::rabbit_password')
 
   rabbitmq_user { 'sensu':
