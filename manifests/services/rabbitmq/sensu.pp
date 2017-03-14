@@ -14,9 +14,9 @@ class profile::services::rabbitmq::sensu {
   }
 
   rabbitmq_user_permissions { 'sensu@/sensu':
-    configure_permissions => '.*',
-    write_permission      => '.*',
-    read_permission       => '.*',
-    provider              => 'rabbitmqctl',
+    configure_permission => '.*',
+    write_permission     => '.*',
+    read_permission      => '.*',
+    provider             => 'rabbitmqctl',
   }
 }
