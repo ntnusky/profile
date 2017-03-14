@@ -1,5 +1,10 @@
 # This class installs varios basic tools.
+
+
 class profile::baseconfig::packages {
+
+  $basepackages = hiera_array('profile::baseconfig::packages')
+
   # If it is an HP machine, install hpacucli.
   if($::bios_vendor == 'HP') {
     include ::hpacucli
@@ -10,25 +15,7 @@ class profile::baseconfig::packages {
   }
 
   # Install a range of useful tools.
-  package { [
-    'atop',
-    'bc',
-    'ethtool',
-    'fio',
-    'git',
-    'gdisk',
-    'htop',
-    'iotop',
-    'iperf3',
-    'locate',
-    'pwgen',
-    'qemu-utils',
-    'screen',
-    'sl',
-    'sysstat',
-    'tcpdump',
-    'vim',
-  ] :
+  package { $basepackages :
     ensure => 'present',
   }
 
