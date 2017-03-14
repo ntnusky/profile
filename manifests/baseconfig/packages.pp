@@ -21,7 +21,7 @@ class profile::baseconfig::packages {
 
   # Install ruby2.3 on Ubuntu 14.04
   if ($::lsbdistcodename == 'trusty') {
-    apt::ppa { 'ppa:brightbox/ruby-ng' }
+    apt::ppa { 'ppa:brightbox/ruby-ng': }
   }
 
   # Install our homemade administration scripts
