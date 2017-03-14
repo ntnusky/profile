@@ -8,7 +8,7 @@ class profile::services::rabbitmq::sensu {
     password => $sensurabbitpass,
     provider => 'rabbitmqctl',
   } ->
-  rabbitmq_vhost { 'sensu':
+  rabbitmq_vhost { '/sensu':
     ensure => 'present',
   } ->
   rabbitmq_user_permissions { 'sensu@/sensu':
