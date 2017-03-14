@@ -1,5 +1,5 @@
 # Install and configure sensu-server and dashboard
-class ::profile::sensu::server: {
+class profile::sensu::server: {
   require ::profile::services::redis
 
   $rabbithost = hiera('profile::rabbitmq::ip')
