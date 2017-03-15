@@ -21,7 +21,6 @@ class profile::sensu::server {
     use_embedded_ruby           => true,
     api_bind                    => '127.0.0.1',
     sensu_plugin_provider       => 'sensu_gem',
-    plugins_dir                 => 'puppet:///modules/profile/sensuplugins',
   }
 
   sensu::handler { 'default':
@@ -47,7 +46,7 @@ class profile::sensu::server {
     },
   }
 
-  sensu::plugin { 'mailer':
+  sensu::plugin { 'sensu-plugin-mailer':
     type => 'package'
   }
 
