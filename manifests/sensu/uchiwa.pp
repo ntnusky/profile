@@ -9,7 +9,7 @@ class profile::sensu::uchiwa {
 
   class { '::uchiwa':
     user                => 'sensu',
-    password            => $password,
+    pass                => $password,
     install_repo        => false,
     sensu_api_endpoints => [{
       name    => $api_name,
