@@ -13,13 +13,14 @@ class profile::sensu::server {
   $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
 
   class { '::sensu':
-    rabbitmq_host         => $rabbithost,
-    rabbitmq_password     => $sensurabbitpass,
-    server                => true,
-    api                   => true,
-    use_embedded_ruby     => true,
-    api_bind              => '127.0.0.1',
-    sensu_plugin_provider => 'sensu_gem',
+    rabbitmq_host               => $rabbithost,
+    rabbitmq_password           => $sensurabbitpass,
+    rabbitmq_reconnect_on_error => true,
+    server                      => true,
+    api                         => true,
+    use_embedded_ruby           => true,
+    api_bind                    => '127.0.0.1',
+    sensu_plugin_provider       => 'sensu_gem',
   }
 
   sensu::handler { 'default':
