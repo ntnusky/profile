@@ -36,7 +36,6 @@ class profile::sensu::server {
   sensu::handler { 'mailer':
     type    => 'pipe',
     command => 'handler-mailer.rb',
-    source  => 'puppet:///modules/profile/sensu/handlers/handler-mailer.rb',
     config  => {
       admin_gui    => $sensu_url,
       mail_from    => $mail_from,
