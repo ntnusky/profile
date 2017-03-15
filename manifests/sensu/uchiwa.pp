@@ -33,12 +33,10 @@ class profile::sensu::uchiwa {
       {
         'path'         => '/',
         'url'          => 'http://127.0.0.1:3000/',
-        'reverse_urls' => 'http://127.0.0.1:3000/',
       },
       {
         'path'         => '/socket.io/1/websocket',
         'url'          => 'ws://127.0.0.1:3000/socket.io/1/websocket',
-        'reverse_urls' => 'ws://127.0.0.1:3000/socket.io/1/websocket',
       },
       {
         'path' => '/socket.io/',
