@@ -46,7 +46,7 @@ class profile::sensu::server {
     },
   }
 
-  sensu::plugin { 'sensu-plugin-mailer':
+  sensu::plugin { 'sensu-plugins-mailer':
     type => 'package'
   }
 
