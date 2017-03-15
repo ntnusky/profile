@@ -2,6 +2,8 @@
 class profile::sensu::client {
   $rabbithost = hiera('profile::rabbitmq::ip')
   $sensurabbitpass = hiera('profile::sensu::rabbit_password')
+  $mgmt_nic = hiera('profile::interfaces::management')
+  $client_ip = getvar("::ipaddress_${mgmt_nic}")
 
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
@@ -10,6 +12,7 @@ class profile::sensu::client {
     server                      => false,
     api                         => false,
     client                      => true,
+    client_address              => $client_ip,
     sensu_plugin_provider       => 'sensu_gem',
     subscriptions               => [ 'all' ],
   }
