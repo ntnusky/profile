@@ -50,5 +50,6 @@ class profile::sensu::server {
     type => 'package'
   }
 
+  include ::profile::sensu::plugins
   include ::profile::sensu::uchiwa
 }
