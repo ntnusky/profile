@@ -13,8 +13,8 @@ class profile::sensu::uchiwa {
     install_repo        => false,
     sensu_api_endpoints => [{
       name    => $api_name,
-      host    => '127.0.0.1',
-      port    => 4567,
+      user    => '',
+      pass    => '',
       timeout => 10,
     }],
   }
@@ -23,27 +23,27 @@ class profile::sensu::uchiwa {
   include ::apache::mod::proxy_html
 
   apache::vhost { "${uchiwa_url} http":
-    servername           => $uchiwa_url,
-    serveraliases        => [$uchiwa_url],
-    port                 => 80,
-    docroot              => false,
-    manage_docroot       => false,
-    proxy_preserve_host  => true,
-    proxy_pass           => [
+    servername          => $uchiwa_url,
+    serveraliases       => [$uchiwa_url],
+    port                => 80,
+    docroot             => false,
+    manage_docroot      => false,
+    proxy_preserve_host => true,
+    proxy_pass          => [
       {
-        'path'         => '/',
-        'url'          => 'http://127.0.0.1:3000/',
+        'path' => '/',
+        'url'  => 'http://127.0.0.1:3000/',
       },
       {
-        'path'         => '/socket.io/1/websocket',
-        'url'          => 'ws://127.0.0.1:3000/socket.io/1/websocket',
+        'path' => '/socket.io/1/websocket',
+        'url'  => 'ws://127.0.0.1:3000/socket.io/1/websocket',
       },
       {
         'path' => '/socket.io/',
         'url'  => 'http://127.0.0.1:3000/socket.io/',
       },
     ],
-    custom_fragment      => '
+    custom_fragment     => '
     ProxyHTMLEnable On
     ProxyHTMLURLMap http://127.0.0.1:3000/ /',
   }
