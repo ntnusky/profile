@@ -47,5 +47,9 @@ class profile::sensu::server {
     },
   }
 
+  sensu::plugin { 'mailer':
+    type => 'package'
+  }
+
   include ::profile::sensu::uchiwa
 }
