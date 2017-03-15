@@ -28,7 +28,7 @@ class profile::sensu::uchiwa {
     port                 => 80,
     docroot              => false,
     manage_docroot       => false,
-    proxy_preserver_host => true,
+    proxy_preserve_host  => true,
     proxy_pass           => [
       {
         'path'         => '/',
