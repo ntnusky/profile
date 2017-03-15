@@ -21,6 +21,7 @@ class profile::sensu::server {
     use_embedded_ruby           => true,
     api_bind                    => '127.0.0.1',
     sensu_plugin_provider       => 'sensu_gem',
+    subscriptions               => 'all',
   }
 
   sensu::handler { 'default':

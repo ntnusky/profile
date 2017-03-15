@@ -11,6 +11,7 @@ class profile::sensu::client {
     api                         => false,
     client                      => true,
     sensu_plugin_provider       => 'sensu_gem',
+    subscriptions               => [ 'all' ],
   }
 
   include ::profile::sensu::plugins
