@@ -46,5 +46,5 @@ class profile::sensu::server {
     },
   }
 
-  # Her skal uchiwa
+  include ::profile::sensu::uchiwa
 }
