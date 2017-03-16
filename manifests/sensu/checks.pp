@@ -8,4 +8,4 @@ class profile::sensu::checks {
       -I :::disk.mountpoints|all:::',
     subscribers => [ 'all' ],
   }
-
+}
