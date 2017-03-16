@@ -12,6 +12,12 @@ class profile::sensu::server {
   $smtp_port = hiera('profile::sensu::mailer::smtp_port')
   $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
 
+  if ( $::is_virtual ) {
+    $subscriptions = [ 'all' ]
+  } else {
+    $subscriptions = [ 'all', 'physical-servers' ]
+  }
+
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
     rabbitmq_password           => $sensurabbitpass,
@@ -21,7 +27,7 @@ class profile::sensu::server {
     use_embedded_ruby           => true,
     api_bind                    => '127.0.0.1',
     sensu_plugin_provider       => 'sensu_gem',
-    subscriptions               => 'all',
+    subscriptions               => $subscriptions,
   }
 
   sensu::handler { 'default':
