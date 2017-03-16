@@ -14,6 +14,7 @@ class profile::sensu::client {
     client                      => true,
     client_address              => $client_ip,
     sensu_plugin_provider       => 'sensu_gem',
+    use_embedded_ruby           => true,
     subscriptions               => [ 'all' ],
   }
 
