@@ -11,4 +11,10 @@ class profile::sensu::checks {
     standalone  => false,
     subscribers => [ 'all'],
   }
+
+  sensu::check { 'memory':
+    command     => 'check-memory-percent.rb -w :::memory.warning|85::: -c :::memory.critical|90:::',
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
 }
