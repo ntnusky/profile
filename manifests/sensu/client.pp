@@ -5,7 +5,7 @@ class profile::sensu::client {
   $mgmt_nic = hiera('profile::interfaces::management','ens3')
   $client_ip = getvar("::ipaddress_${mgmt_nic}")
 
-  if ( $::is_virtual == false ) {
+  if ( $::is_virtual == 'true' ) {
     $subscriptions = [ 'all' ]
   } else {
     $subscriptions = [ 'all', 'physical-servers' ]
