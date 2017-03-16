@@ -19,7 +19,7 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'general-hw-error':
-    command     => 'check-hardware-fail.rb'
+    command     => 'check-hardware-fail.rb',
     standalone  => false,
     subscribers => [ 'physical-servers' ],
   }
