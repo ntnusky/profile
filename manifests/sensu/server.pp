@@ -12,7 +12,7 @@ class profile::sensu::server {
   $smtp_port = hiera('profile::sensu::mailer::smtp_port')
   $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
 
-  if ( $::is_virtual ) {
+  if ( $::is_virtual == false ) {
     $subscriptions = [ 'all' ]
   } else {
     $subscriptions = [ 'all', 'physical-servers' ]
