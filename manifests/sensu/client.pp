@@ -5,6 +5,12 @@ class profile::sensu::client {
   $mgmt_nic = hiera('profile::interfaces::management','ens3')
   $client_ip = getvar("::ipaddress_${mgmt_nic}")
 
+  if ( $::is_virtual ) {
+    $subscriptions = [ 'all' ]
+  } else {
+    $subscriptions = [ 'all', 'physical-servers' ]
+  }
+
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
     rabbitmq_password           => $sensurabbitpass,
@@ -15,7 +21,7 @@ class profile::sensu::client {
     client_address              => $client_ip,
     sensu_plugin_provider       => 'sensu_gem',
     use_embedded_ruby           => true,
-    subscriptions               => [ 'all' ],
+    subscriptions               => $subscriptions,
   }
 
   include ::profile::sensu::plugins
