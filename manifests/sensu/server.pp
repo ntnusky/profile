@@ -14,12 +14,12 @@ class profile::sensu::server {
   $subs_from_client_conf = hiera('sensu::subscriptions','')
 
   if ( $::is_virtual == 'true' ) {
-    $subscriptions = [ 'all' ]
+    $subs = [ 'all' ]
   } else {
-    $subscriptions = [ 'all', 'physical-servers' ]
+    $subs = [ 'all', 'physical-servers' ]
   }
 
-  concat($subscriptions, $subs_from_client_conf)
+  $subscriptions = concat($subs, $subs_from_client_conf)
 
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
