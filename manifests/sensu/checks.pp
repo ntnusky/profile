@@ -1,8 +1,6 @@
 # Sensu check definitions
 class profile::sensu::checks {
 
-  $mysqlpw = hiera('profile::mysqlcluster::status_password')
-
   sensu::check { 'diskspace':
     command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -I :::disk.mountpoints|all:::',
     standalone  => false,
@@ -34,11 +32,8 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'mysql-status':
-    command     => "check-mysql-status.rb -h localhost -d mysql -u clustercheck -p :::dbpass::: --check status",
+    command     => "check-mysql-status.rb -h localhost -d mysql -u clustercheck -p :::mysql.password::: --check status",
     standalone  => false,
     subscribers => [ 'mysql' ],
-    custom      => {
-      'dbpass' => $mysqlpw
-    },
   }
 }
