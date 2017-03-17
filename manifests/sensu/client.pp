@@ -12,7 +12,11 @@ class profile::sensu::client {
     $subs = [ 'all', 'physical-servers' ]
   }
 
-  $subscriptions = concat($subs, $subs_from_client_conf)
+  if ( $subs_from_client_conf != '' )  {
+    $subscriptions = concat($subs, $subs_from_client_conf)
+  } else {
+    $subscriptions = $subs
+  }
 
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
