@@ -4,12 +4,15 @@ class profile::sensu::client {
   $sensurabbitpass = hiera('profile::sensu::rabbit_password')
   $mgmt_nic = hiera('profile::interfaces::management','ens3')
   $client_ip = getvar("::ipaddress_${mgmt_nic}")
+  $subs_from_client_conf = hiera('sensu::subscriptions','')
 
   if ( $::is_virtual == 'true' ) {
     $subscriptions = [ 'all' ]
   } else {
     $subscriptions = [ 'all', 'physical-servers' ]
   }
+
+  concat($subscriptions, $subs_from_client_conf)
 
   class { '::sensu':
     rabbitmq_host               => $rabbithost,

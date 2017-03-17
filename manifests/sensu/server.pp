@@ -11,12 +11,15 @@ class profile::sensu::server {
   $smtp_address = hiera('profile::sensu::mailer::smtp_address')
   $smtp_port = hiera('profile::sensu::mailer::smtp_port')
   $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
+  $subs_from_client_conf = hiera('sensu::subscriptions','')
 
   if ( $::is_virtual == 'true' ) {
     $subscriptions = [ 'all' ]
   } else {
     $subscriptions = [ 'all', 'physical-servers' ]
   }
+
+  concat($subscriptions, $subs_from_client_conf)
 
   class { '::sensu':
     rabbitmq_host               => $rabbithost,
