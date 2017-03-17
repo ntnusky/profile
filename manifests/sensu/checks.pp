@@ -38,7 +38,7 @@ class profile::sensu::checks {
     standalone  => false,
     subscribers => [ 'mysql' ],
     custom      => {
-      'dpbass' => $mysqlpw
+      'dbpass' => $mysqlpw
     },
   }
 }
