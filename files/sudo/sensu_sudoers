@@ -1,0 +1,2 @@
+Defaults:sensu secure_path="/opt/sensu/embedded/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+sensu ALL=(ALL) NOPASSWD: /opt/sensu/embedded/bin/check*.rb *
