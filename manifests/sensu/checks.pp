@@ -35,7 +35,7 @@ class profile::sensu::checks {
 
   sensu::check { 'mysql-status':
     command     => "check-mysql-status.rb -h localhost -d mysql -u clustercheck -p ${mysqlpw} --check status",
-    standadlone => false,
+    standalone => false,
     subscribers => [ 'mysql' ],
   }
 }
