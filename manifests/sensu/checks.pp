@@ -23,4 +23,10 @@ class profile::sensu::checks {
     standalone  => false,
     subscribers => [ 'physical-servers' ],
   }
+
+  sensu::check { 'ceph-health':
+    command     => 'sudo check-ceph.rb -d',
+    standalone  => false,
+    subscribers => [ 'roundrobin:ceph' ],
+  }
 }
