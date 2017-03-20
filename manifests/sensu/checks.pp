@@ -32,7 +32,9 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'mysql-status':
-    command     => "check-mysql-status.rb -h localhost -d mysql -u clustercheck -p :::mysql.password::: --check status",
+    aggregate   => 'galera-cluster',
+    command     => 'check-mysql-status.rb -h localhost -d mysql -u clustercheck -p :::mysql.password::: --check status',
+    handle      => false,
     standalone  => false,
     subscribers => [ 'mysql' ],
   }
