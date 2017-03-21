@@ -12,8 +12,9 @@ class profile::baseconfig::packages {
 
   if($::bios_vendor == 'Dell Inc.') {
     include ::srvadmin
+    include ::hwraid
+
     $megaclipackages = [ 'megacli', 'mpt-status' ]
-    class { '::hwraid' }
     package { $megaclipackages :
       ensure  => 'present',
       require => Class['::hwraid'],
