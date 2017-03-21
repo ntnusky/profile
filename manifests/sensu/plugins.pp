@@ -6,4 +6,9 @@ class profile::sensu::plugins {
   sensu::plugin { $baseplugins:
     type => 'package',
   }
+
+  sensu::plugin { 'plugins':
+    name => 'puppet:///modules/profile/files/sensuplugins',
+    type => 'directory',
+  }
 }
