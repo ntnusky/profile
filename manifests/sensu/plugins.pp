@@ -10,6 +10,6 @@ class profile::sensu::plugins {
   sensu::plugin { 'plugins':
     name         => 'puppet:///modules/profile/files/sensuplugins',
     type         => 'directory',
-    install_path => '/etc/sensu/plugins/extra
+    install_path => '/etc/sensu/plugins/extra',
   }
 }
