@@ -74,5 +74,6 @@ class profile::sensu::server {
 
   include ::profile::sensu::checks
   include ::profile::sensu::plugins
+  include ::profile::sensu::plugin::http
   include ::profile::sensu::uchiwa
 }
