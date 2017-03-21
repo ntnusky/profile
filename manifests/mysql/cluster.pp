@@ -15,6 +15,7 @@ class profile::mysql::cluster {
   $management_ip = getvar("::ipaddress_${management_if}")
 
   require profile::services::keepalived
+  include ::profile::sensu::plugin::mysql
 
   apt::source { 'galera_mariadb':
     location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.0/ubuntu',
