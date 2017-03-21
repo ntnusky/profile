@@ -58,10 +58,18 @@ class profile::sensu::server {
       smtp_port    => $smtp_port,
       smtp_domain  => $smtp_domain,
     },
+    filters => [ 'state-change-only' ],
   }
 
   sensu::plugin { 'sensu-plugins-mailer':
     type => 'package'
+  }
+
+  sensu::filter { 'state-change-only':
+    negate     => false,
+    attributes => {
+      occurences => "eval: value == 1 || ':::action:::' == 'resolve'",
+    },
   }
 
   include ::profile::sensu::checks
