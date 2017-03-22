@@ -1,6 +1,13 @@
 # Sensu check definitions
 class profile::sensu::checks {
 
+  $keystone_api = hiera('profile::api::keystone::public::ip')
+  $nova_api = hiera ('profile::api::nova::public::ip')
+  $neutron_api = hiera('profile::api::neutron::public::ip')
+  $cinder_api = hiera('profile::api::cinder::public::ip')
+  $glance_api = hiera('profile::api::glance::public::ip')
+  $heat_api = hiera('profile::api::heat::public::ip')
+
   # Base checks for all hosts
   sensu::check { 'diskspace':
     command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -I :::disk.mountpoints|all:::',
@@ -72,5 +79,42 @@ class profile::sensu::checks {
     command     => 'check-rabbitmq-queue-drain-time.rb -w :::rabbitmq.queuewarn|180::: -c :::rabbitmq.queuecrit|360:::',
     standalone  => false,
     subscribers => [ 'rabbitmq' ],
+  }
+
+  # Openstack API checks
+  sensu::check { 'openstack-identityv3-api':
+    command     => "check-http.rb -u http://${keystone_api}:5000/v3",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-identity-api':
+    command     => "check-http.rb -u http://${keystone_api}:5000/v2.0",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-network-api':
+    command     => "check-http.rb -u http://${neutron_api}:9696/v2.0 --response-code 401",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-image-api':
+    command     => "check-http.rb -u http://${glance_api}:9292/v2 --response-code 401",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-orchestration-api':
+    command     => "check-http.rb -u http://${heat_api}:8004/v1 --response-code 401",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-volumev3-api':
+    command     => "check-http.rb -u http://${cinder_api}:8776/v3 --response-code 401",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-compute-api':
+    command     => "check-http.rb -u http://${nova_api}:8774/v2.1/v3 --response-code 401",
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
   }
 }
