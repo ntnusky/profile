@@ -28,7 +28,7 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'check-raid':
-    command     => '/etc/sensu/plugins/extra/chech_raid.pl --noraid=OK',
+    command     => '/etc/sensu/plugins/extra/check_raid.pl --noraid=OK',
     standalone  => false,
     subscribers => [ 'physical-servers' ],
   }
