@@ -27,11 +27,17 @@ class profile::sensu::checks {
     subscribers => [ 'physical-servers' ],
   }
 
-  sensu::check { 'cciss-raid-health':
-    command     => '/etc/sensu/plugins/extra/check_cciss.sh -v -p',
+  sensu::check { 'check-raid':
+    command     => '/etc/sensu/plugins/extra/chech_raid.pl --noraid=OK',
     standalone  => false,
-    subscribers => [ 'cciss' ],
+    subscribers => [ 'physical-servers' ],
   }
+
+    #  sensu::check { 'cciss-raid-health':
+    #command     => '/etc/sensu/plugins/extra/check_cciss.sh -v -p',
+    #standalone  => false,
+    #subscribers => [ 'cciss' ],
+    #}
 
   # Ceph checks
   sensu::check { 'ceph-health':

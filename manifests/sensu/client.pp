@@ -29,6 +29,7 @@ class profile::sensu::client {
     sensu_plugin_provider       => 'sensu_gem',
     use_embedded_ruby           => true,
     subscriptions               => $subscriptions,
+    purge                       => true,
   }
 
   include ::profile::sensu::plugins

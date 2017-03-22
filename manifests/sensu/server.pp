@@ -35,6 +35,7 @@ class profile::sensu::server {
     api_bind                    => '127.0.0.1',
     sensu_plugin_provider       => 'sensu_gem',
     subscriptions               => $subscriptions,
+    purge                       => true,
   }
 
   sensu::handler { 'default':
