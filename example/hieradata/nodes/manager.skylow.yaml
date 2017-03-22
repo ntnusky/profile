@@ -4,3 +4,8 @@ profile::interfaces:
 
 profile::interfaces::eth2::method: 'dhcp'
 profile::interfaces::management: 'eth2'
+
+sensu::client_custom:
+  'load':
+    warning: "x,y,z"
+    critical: "x,y,z"

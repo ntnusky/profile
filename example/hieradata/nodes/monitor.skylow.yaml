@@ -17,3 +17,10 @@ profile::monitoring::icinga_db_password: '<pwgen>'
 profile::monitoring::mysql_password: '<pwgen>'
 profile::monitoring::icingaadmin_password: '<pwgen>'
 
+sensu:subscriptions:
+  - 'os-api-checks'
+
+sensu::client_custom:
+  'load':
+    warning: "x,y,z"
+    critical: "x,y,z"

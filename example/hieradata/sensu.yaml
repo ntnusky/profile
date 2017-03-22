@@ -1,0 +1,27 @@
+---
+profile::sensu::rabbit_password: '<pwgen>'
+profile::sensu::mailer::url: 'http://<fqdn to sensu server>'
+profile::sensu::mailer::mail_from: 'sensu@<example.com>'
+profile::sensu::mailer::mail_to:
+  - 'notify.me@example.com'
+  - 'notify.me.to@example.com'
+profile::sensu::mailer::smtp_address: 'MYSMTPSERVER.example.com'
+profile::sensu::mailer::smtp_port: 25
+profile::sensu::mailer::smtp_domain: 'example.com'
+profile::sensu::uchiwa::password: '<pwgen>'
+profile::sensu::uchiwa::fqdn: '<fqdn to sensu server>'
+
+profile::sensu::plugins:
+  - 'sensu-plugins-disk-checks'
+  - 'sensu-plugins-load-checks'
+  - 'sensu-plugins-memory-checks'
+  - 'sensu-plugins-process-checks'
+  - 'sensu-plugins-hardware'
+  - 'sensu-plugins-ntp'
+  - 'other'
+  - 'plugins'
+
+sensu::redact:
+  - 'password'
+  - 'pass'
+  - 'pw'
