@@ -122,6 +122,6 @@ class profile::sensu::checks {
   sensu::check { 'openstack-floating-ip':
     command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u http://${keystone_api}:5000/v3 -s :::os.floating-subnet::: -w :::os.floating-warn|100::: -c :::os.floating-critical|50:::",
     standalone  => false,
-    subscribers => [ 'os-infra-checks '],
+    subscribers => [ 'os-infra-checks'],
   }
 }
