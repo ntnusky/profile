@@ -36,10 +36,8 @@ if [ -z $critical ]; then
   critical=50
 fi
 
-total=
-netmask=
-#total=$(openstack floating ip list -f value | wc -l)
-#netmask=$(openstack subnet show $subnet -f value -c cidr | cut -d'/' -f2)
+total=$(openstack ip floating list -f value | wc -l)
+netmask=$(openstack subnet show $subnet -f value -c cidr | cut -d'/' -f2)
 
 if [ ! -z $total ] && [ ! -z $netmask ]; then
   poolsize=$(getPoolSize $netmask)
