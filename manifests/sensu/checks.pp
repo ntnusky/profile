@@ -40,12 +40,6 @@ class profile::sensu::checks {
     subscribers => [ 'physical-servers' ],
   }
 
-    #  sensu::check { 'cciss-raid-health':
-    #command     => '/etc/sensu/plugins/extra/check_cciss.sh -v -p',
-    #standalone  => false,
-    #subscribers => [ 'cciss' ],
-    #}
-
   # Ceph checks
   sensu::check { 'ceph-health':
     command     => 'sudo check-ceph.rb -d',
