@@ -17,7 +17,6 @@ profile::sensu::plugins:
   - 'sensu-plugins-memory-checks'
   - 'sensu-plugins-process-checks'
   - 'sensu-plugins-hardware'
-  - 'sensu-plugins-ntp'
   - 'other'
   - 'plugins'
 
