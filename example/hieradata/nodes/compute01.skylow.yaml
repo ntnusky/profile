@@ -13,3 +13,8 @@ profile::interfaces::eth0::netmask: '255.255.255.0'
 profile::interfaces::management: 'eth2'
 profile::interfaces::storage: 'eth0'
 profile::interfaces::tenant: 'eth3'
+
+sensu::client_custom:
+  'load':
+    warning: "x,y,z"
+    critical: "x,y,z"

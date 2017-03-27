@@ -38,6 +38,7 @@ class profile::openstack::novacontroller {
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
   require ::profile::openstack::repo
+  include ::profile::munin::plugin::nova
 
   anchor { 'profile::openstack::novacontroller::begin' :
   }
