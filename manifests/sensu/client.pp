@@ -2,7 +2,7 @@
 class profile::sensu::client {
   $rabbithost = hiera('profile::rabbitmq::ip')
   $sensurabbitpass = hiera('profile::sensu::rabbit_password')
-  $mgmt_nic = hiera('profile::interfaces::management','ens3')
+  $mgmt_nic = hiera('profile::interfaces::management')
   $client_ip = getvar("::ipaddress_${mgmt_nic}")
   $subs_from_client_conf = hiera('sensu::subscriptions','')
 
