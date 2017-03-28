@@ -69,7 +69,7 @@ class profile::sensu::server {
   sensu::filter { 'state-change-only':
     negate     => false,
     attributes => {
-      occurences => "eval: value == 1 || ':::action:::' == 'resolve'",
+      occurrences => "eval: value == 1 || ':::action:::' == 'resolve'",
     },
   }
 
