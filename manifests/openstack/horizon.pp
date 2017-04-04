@@ -61,6 +61,9 @@ class profile::openstack::horizon {
     horizon_ca                   => '/etc/ssl/certs/CA.crt',
     keystone_multidomain_support => true,
 #   keystone_default_domain      => $ldap_name,
+    neutron_options              => {
+      enable_firewall => true,
+    },
   }
 
   keepalived::vrrp::script { 'check_horizon':
