@@ -19,7 +19,7 @@ class profile::openstack::neutronserver {
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $service_plugins = hiera('profile::neutron::service_plugins')
-  #  $service_providers = hiera('profile::neutron::service_providers')
+  $service_providers = hiera('profile::neutron::service_providers')
   $neutron_vrrp_pass = hiera('profile::neutron::vrrp_pass')
   $nova_metadata_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $dns_servers = hiera('profile::nova::dns')
