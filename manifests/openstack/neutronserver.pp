@@ -141,10 +141,8 @@ class profile::openstack::neutronserver {
     driver  => $fw_driver,
   }
 
-  neutron_config {
+  neutron_fwaas_service_config {
     'fwaas/agent_version': value => 'v2';
-    'fwaas/driver' :       value => $fw_driver;
-    'fwaas/enabled':       value => 'True';
   }
 
   neutron_l3_agent_config {
