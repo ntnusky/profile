@@ -77,6 +77,10 @@ class profile::openstack::neutronagent {
     require             => Anchor['profile::openstack::neutronagent::begin'],
   }
 
+  neutron_l3_agent_config {
+    'AGENT/extensions': value => 'fwaas';
+  }
+
   sudo::conf { 'neutron_sudoers':
     ensure         => 'present',
     source         => 'puppet:///modules/profile/sudo/neutron_sudoers',

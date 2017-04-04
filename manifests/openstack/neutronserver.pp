@@ -38,6 +38,8 @@ class profile::openstack::neutronserver {
   $memcached_ip = hiera('profile::memcache::ip')
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
+  $fw_provider = 'FIREWALL:Iptables:neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver:default'
+  $fw_driver = 'neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas_v2.IptablesFwaasDriver'
 
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
@@ -130,6 +132,22 @@ class profile::openstack::neutronserver {
   class { '::neutron::agents::l3':
     ha_enabled            => true,
     ha_vrrp_auth_password => $neutron_vrrp_pass,
+  }
+
+  class { '::neutron::services::fwaas':
+    enabled => true,
+    driver  => $fw_driver,
+  }
+
+  neutron_config {
+    'service_providers/service_provider': value => $fw_provider;
+    'fwaas/agent_version':                value => 'v2';
+    'fwaas/driver' :                      value => 'iptables';
+    'fwaas/enabled':                      value => 'True';
+  }
+
+  neutron_l3_agent_config {
+    'AGENT/extensions': value => 'fwaas';
   }
 
   vs_port { $external_if:
