@@ -102,7 +102,6 @@ class profile::openstack::neutronserver {
     sync_db                          => true,
     allow_automatic_l3agent_failover => true,
     service_providers                => $service_providers,
-    ensure_fwaas_package             => true,
   }
 
   class { '::neutron::agents::dhcp':
