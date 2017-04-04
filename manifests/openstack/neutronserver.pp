@@ -40,7 +40,7 @@ class profile::openstack::neutronserver {
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   #$fw_driver = 'neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas_v2.IptablesFwaasDriver'
-  $fw_driver = 'iptables'
+  $fw_driver = 'iptables_v2'
 
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
@@ -143,7 +143,7 @@ class profile::openstack::neutronserver {
 
   neutron_config {
     'fwaas/agent_version': value => 'v2';
-    'fwaas/driver' :       value => 'iptables';
+    'fwaas/driver' :       value => $fw_driver;
     'fwaas/enabled':       value => 'True';
   }
 
