@@ -78,7 +78,7 @@ class profile::openstack::neutronagent {
   }
 
   neutron_l3_agent_config {
-    'AGENT/extensions': value => 'fwaas';
+    'AGENT/extensions': value => 'fwaas_v2';
   }
 
   sudo::conf { 'neutron_sudoers':
