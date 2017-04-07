@@ -1,6 +1,7 @@
 # This class installs and configures puppet.
 class profile::baseconfig::puppet {
   $environment = hiera('profile::puppet::environment')
+  $configtimeout = hiera('profile:puppet::configtimeout', '3m')
 
   # If we are running on ubuntu 14.04, add the puppet repos to get puppet 3.8.
   if ($::lsbdistcodename == 'trusty') {
@@ -12,7 +13,7 @@ class profile::baseconfig::puppet {
       before     => Package['puppet'],
     }
   }
-  
+
   package { 'puppet':
     ensure => 'present',
   }
@@ -37,6 +38,16 @@ class profile::baseconfig::puppet {
     setting => 'environment',
     value   => $environment,
     notify  => Service['puppet'],
+    require => Package['puppet'],
+  }
+
+  # This is to avoid ENC timeouts on nodes with hilarious amounts of facts...
+  ini_setting { 'Puppet configtimeout':
+    ensure  => 'present',
+    path    => '/etc/puppet/puppet.conf',
+    section => 'agent',
+    setting => 'configtimeout',
+    value   => $configtimeout,
     require => Package['puppet'],
   }
 
