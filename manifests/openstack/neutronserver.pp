@@ -20,6 +20,7 @@ class profile::openstack::neutronserver {
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $service_plugins = hiera('profile::neutron::service_plugins')
   $service_providers = hiera('profile::neutron::service_providers')
+  $fw_driver = hiera('profile::neutron::fwaas_driver')
   $neutron_vrrp_pass = hiera('profile::neutron::vrrp_pass')
   $nova_metadata_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $dns_servers = hiera('profile::nova::dns')
@@ -39,8 +40,6 @@ class profile::openstack::neutronserver {
   $memcached_ip = hiera('profile::memcache::ip')
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
-  $fw_driver = 'neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver'
-  #$fw_driver = 'iptables_v2'
 
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
