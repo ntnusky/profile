@@ -19,6 +19,8 @@ class profile::openstack::neutronserver {
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $service_plugins = hiera('profile::neutron::service_plugins')
+  $service_providers = hiera('profile::neutron::service_providers')
+  $fw_driver = hiera('profile::neutron::fwaas_driver')
   $neutron_vrrp_pass = hiera('profile::neutron::vrrp_pass')
   $nova_metadata_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $dns_servers = hiera('profile::nova::dns')
@@ -99,6 +101,7 @@ class profile::openstack::neutronserver {
     database_connection              => $database_connection,
     sync_db                          => true,
     allow_automatic_l3agent_failover => true,
+    service_providers                => $service_providers,
   }
 
   class { '::neutron::agents::dhcp':
@@ -130,6 +133,19 @@ class profile::openstack::neutronserver {
   class { '::neutron::agents::l3':
     ha_enabled            => true,
     ha_vrrp_auth_password => $neutron_vrrp_pass,
+  }
+
+  class { '::neutron::services::fwaas':
+    enabled => true,
+    driver  => $fw_driver,
+  }
+
+  neutron_fwaas_service_config {
+    'fwaas/agent_version': value => 'v1';
+  }
+
+  neutron_l3_agent_config {
+    'AGENT/extensions': value => 'fwaas';
   }
 
   vs_port { $external_if:

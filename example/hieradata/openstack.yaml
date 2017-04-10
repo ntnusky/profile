@@ -44,6 +44,10 @@ profile::nova::dns: '129.241.0.200,129.241.0.201'
 profile::neutron::keystone::password: '<pwgen>'
 profile::neutron::service_plugins:
   - 'router'
+  - 'firewall'
+profile::neutron::service_providers:
+ - 'FIREWALL:Iptables:neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver:default'
+profile::neutron::fwaas_driver: 'neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver'
 profile::neutron::vrrp_pass: '<pwgen>'
 profile::neutron::vlan_low: <VLAN-ID>
 profile::neutron::vlan_high: <VLAN-ID>
