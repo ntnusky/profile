@@ -6,9 +6,11 @@ class profile::openstack::glance {
   $mysql_ip = hiera('profile::mysql::ip')
   $glance_key = hiera('profile::ceph::glance_key')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
+  $memcached_ip = hiera('profile::memcache::ip')
 
   $region = hiera('profile::region')
-  $keystone_ip = hiera('profile::api::keystone::public::ip')
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $admin_ip = hiera('profile::api::glance::admin::ip')
   $public_ip = hiera('profile::api::glance::public::ip')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
@@ -49,10 +51,10 @@ class profile::openstack::glance {
   }
 
   class { '::glance::api':
-    keystone_password     => $password,
-    auth_uri              => "http://${keystone_ip}:5000/",
-    keystone_tenant       => 'services',
-    keystone_user         => 'glance',
+    #keystone_password     => $password,
+    #auth_uri              => "http://${keystone_ip}:5000/",
+    #keystone_tenant       => 'services',
+    #keystone_user         => 'glance',
     database_connection   => $database_connection,
     registry_host         => $management_ip,
     os_region_name        => $region,
@@ -61,6 +63,16 @@ class profile::openstack::glance {
     known_stores          => ['glance.store.rbd.Store'],
     show_image_direct_url => true,
     pipeline              => 'keystone',
+  }
+
+  class { '::glance::api::authtoken':
+    password          => $password,
+    auth_url          => "http://${keystone_admin_ip}:35357",
+    auth_uri          => "http://${keystone_public_ip}:5000",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
+    before            => Anchor['profile::openstack::glance::end'],
+    require           => Anchor['profile::openstack::glance::begin'],
   }
 
   ceph_config {
@@ -74,13 +86,23 @@ class profile::openstack::glance {
   }
 
   class { '::glance::registry':
-    keystone_password   => $password,
+    #keystone_password   => $password,
     database_connection => $database_connection,
-    auth_uri            => "http://${keystone_ip}:5000/",
-    keystone_tenant     => 'services',
-    keystone_user       => 'glance',
+    #auth_uri            => "http://${keystone_ip}:5000/",
+    #keystone_tenant     => 'services',
+    #keystone_user       => 'glance',
     before              => Anchor['profile::openstack::glance::end'],
     require             => Anchor['profile::openstack::glance::begin'],
+  }
+
+  class { '::glance::reigstry::authtoken':
+    password          => $password,
+    auth_url          => "http://${keystone_admin_ip}:35357",
+    auth_uri          => "http://${keystone_public_ip}:5000",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
+    before            => Anchor['profile::openstack::glance::end'],
+    require           => Anchor['profile::openstack::glance::begin'],
   }
 
   class { '::glance::notify::rabbitmq':
