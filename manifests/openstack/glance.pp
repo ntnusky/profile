@@ -51,7 +51,7 @@ class profile::openstack::glance {
   }
 
   class { '::glance::api':
-    #keystone_password     => $password,
+    keystone_password     => $password,
     #auth_uri              => "http://${keystone_ip}:5000/",
     #keystone_tenant       => 'services',
     #keystone_user         => 'glance',
