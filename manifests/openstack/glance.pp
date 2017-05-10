@@ -96,7 +96,7 @@ class profile::openstack::glance {
     require             => Anchor['profile::openstack::glance::begin'],
   }
 
-  class { '::glance::reigstry::authtoken':
+  class { '::glance::registry::authtoken':
     password          => $password,
     auth_url          => "http://${keystone_admin_ip}:35357",
     auth_uri          => "http://${keystone_public_ip}:5000",
