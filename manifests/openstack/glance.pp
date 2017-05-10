@@ -85,7 +85,7 @@ class profile::openstack::glance {
     require        => Anchor['profile::openstack::glance::begin'],
   }
 
-  class { '::glance::registry':
+  class { 'glance::registry':
     #keystone_password   => $password,
     database_connection => $database_connection,
     #auth_uri            => "http://${keystone_ip}:5000/",
@@ -95,7 +95,7 @@ class profile::openstack::glance {
     require             => Anchor['profile::openstack::glance::begin'],
   }
 
-  class { '::glance::reigstry::authtoken':
+  class { 'glance::reigstry::authtoken':
     password          => $password,
     auth_url          => "http://${keystone_admin_ip}:35357",
     auth_uri          => "http://${keystone_public_ip}:5000",
@@ -105,7 +105,7 @@ class profile::openstack::glance {
     require           => Anchor['profile::openstack::glance::begin'],
   }
 
-  class { '::glance::notify::rabbitmq':
+  class { 'glance::notify::rabbitmq':
     rabbit_password => $rabbit_pass,
     rabbit_userid   => $rabbit_user,
     rabbit_host     => $rabbit_ip,
@@ -113,7 +113,7 @@ class profile::openstack::glance {
     require         => Anchor['profile::openstack::glance::begin'],
   }
 
-  class  { '::glance::keystone::auth':
+  class  { 'glance::keystone::auth':
     password     => $password,
     public_url   => "http://${public_ip}:9292",
     internal_url => "http://${admin_ip}:9292",
