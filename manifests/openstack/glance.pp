@@ -50,7 +50,7 @@ class profile::openstack::glance {
     'DEFAULT/default_store': value => 'rbd';
   }
 
-  class { '::glance::api':
+  class { 'glance::api':
     keystone_password     => $password,
     #auth_uri              => "http://${keystone_ip}:5000/",
     #keystone_tenant       => 'services',
@@ -65,7 +65,7 @@ class profile::openstack::glance {
     pipeline              => 'keystone',
   }
 
-  class { '::glance::api::authtoken':
+  class { 'glance::api::authtoken':
     password          => $password,
     auth_url          => "http://${keystone_admin_ip}:35357",
     auth_uri          => "http://${keystone_public_ip}:5000",
