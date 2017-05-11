@@ -30,8 +30,8 @@ class profile::openstack::keystone {
   $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter')
 
-  $credential_keys = hiera('profile::keystone::credential_keys')
-  $fernet_keys = hiera('profile::keystone::fernet_keys')
+  #$credential_keys = hiera('profile::keystone::credential_keys')
+  #$fernet_keys = hiera('profile::keystone::fernet_keys')
   #  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
 
   require ::profile::mysql::cluster
@@ -74,11 +74,11 @@ class profile::openstack::keystone {
     admin_bind_host         => '0.0.0.0',
     admin_endpoint          => "http://${admin_ip}:35357/",
     public_endpoint         => "http://${public_ip}:5000/",
-    token_provider          => 'fernet',
+    token_provider          => 'uuid',
     enable_fernet_setup     => true,
     enable_credential_setup => true,
-    credential_keys         => $credential_keys,
-    fernet_keys             => $fernet_keys,
+    #credential_keys         => $credential_keys,
+    #fernet_keys             => $fernet_keys,
     using_domain_config     => true,
     require                 => Anchor['profile::openstack::keystone::begin'],
     before                  => Anchor['profile::openstack::keystone::end'],
