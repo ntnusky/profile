@@ -70,7 +70,7 @@ class profile::openstack::heat {
     #identity_uri       => "http://${keystone_ip_admin}:35357",
     #keystone_tenant    => 'services',
     #keystone_user      => 'heat',
-    #keystone_password  => $password,
+    keystone_password  => $password,
   }
 
   class { 'heat::engine':
