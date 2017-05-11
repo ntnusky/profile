@@ -7,6 +7,7 @@ class profile::openstack::cinder {
   $mysql_ip = hiera('profile::mysql::ip')
   $ceph_key = hiera('profile::ceph::nova_key')
   $ceph_uuid = hiera('profile::ceph::nova_uuid')
+  $memcached_ip = hiera('profile::memcache::ip')
 
   $region = hiera('profile::region')
   $keystone_ip = hiera('profile::api::keystone::public::ip')
@@ -48,16 +49,18 @@ class profile::openstack::cinder {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
+    enable_v1_api       => false,
+    enable_v2_api       => false,
   }
 
   class  { '::cinder::keystone::auth':
     password        => $keystone_password,
-    public_url      => "http://${public_ip}:8776/v1/%(tenant_id)s",
-    internal_url    => "http://${admin_ip}:8776/v1/%(tenant_id)s",
-    admin_url       => "http://${admin_ip}:8776/v1/%(tenant_id)s",
-    public_url_v2   => "http://${public_ip}:8776/v2/%(tenant_id)s",
-    internal_url_v2 => "http://${admin_ip}:8776/v2/%(tenant_id)s",
-    admin_url_v2    => "http://${admin_ip}:8776/v2/%(tenant_id)s",
+    #public_url      => "http://${public_ip}:8776/v1/%(tenant_id)s",
+    #internal_url    => "http://${admin_ip}:8776/v1/%(tenant_id)s",
+    #admin_url       => "http://${admin_ip}:8776/v1/%(tenant_id)s",
+    #public_url_v2   => "http://${public_ip}:8776/v2/%(tenant_id)s",
+    #internal_url_v2 => "http://${admin_ip}:8776/v2/%(tenant_id)s",
+    #admin_url_v2    => "http://${admin_ip}:8776/v2/%(tenant_id)s",
     public_url_v3   => "http://${public_ip}:8776/v3/%(tenant_id)s",
     internal_url_v3 => "http://${admin_ip}:8776/v3/%(tenant_id)s",
     admin_url_v3    => "http://${admin_ip}:8776/v3/%(tenant_id)s",
@@ -77,9 +80,17 @@ class profile::openstack::cinder {
 
   class { '::cinder::api':
     keystone_password   => $keystone_password,
-    auth_uri            => "http://${keystone_ip}:5000/",
+    #auth_uri           => "http://${keystone_ip}:5000/",
+    auth_strategy       => '',
     enabled             => true,
     default_volume_type => 'Normal',
+  }
+
+  class { '::cinder::keystone::authtoken':
+    auth_url          => "http://${keystone_admin_ip}:35357",
+    auth_uri          => "http://${keystone_ip}:5000",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
   }
 
   class { '::cinder::scheduler':
