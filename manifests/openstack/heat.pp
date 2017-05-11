@@ -61,7 +61,7 @@ class profile::openstack::heat {
 
   class { '::heat':
     database_connection => $database_connection,
-    region_name         => $region, # probably uncomment this when Kilo
+    region_name         => $region,
     rabbit_password     => $rabbit_pass,
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
@@ -71,7 +71,6 @@ class profile::openstack::heat {
     keystone_user       => 'heat',
     keystone_password   => $password,
     memcached_servers   => $memcached_ip,
-    region_name         => $region,
   }
 
   class { 'heat::engine':
