@@ -49,8 +49,6 @@ class profile::openstack::cinder {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
-    enable_v1_api       => false,
-    enable_v2_api       => false,
   }
 
   class  { '::cinder::keystone::auth':
