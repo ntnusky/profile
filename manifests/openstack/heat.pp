@@ -9,6 +9,7 @@ class profile::openstack::heat {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
   $keystone_ip = hiera('profile::api::keystone::public::ip')
   $keystone_ip_admin = hiera('profile::api::keystone::admin::ip')
+  $memcached_ip = hiera('profile::memcache::ip')
   $auth_encryption_key = hiera('profile::heat::auth_encryption_key')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $region = hiera('profile::region')
@@ -57,11 +58,19 @@ class profile::openstack::heat {
     rabbit_password     => $rabbit_pass,
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
-    auth_uri            => "http://${keystone_ip}:5000/v2.0",
-    identity_uri        => "http://${keystone_ip_admin}:35357",
-    keystone_tenant     => 'services',
-    keystone_user       => 'heat',
-    keystone_password   => $password,
+    auth_strategy       => '',
+    #auth_uri           => "http://${keystone_ip}:5000/v2.0",
+    #identity_uri       => "http://${keystone_ip_admin}:35357",
+    #keystone_tenant    => 'services',
+    #keystone_user      => 'heat',
+    #keystone_password  => $password,
+  }
+
+  class { '::heat::keystone::authtoken':
+    auth_url          => "http://${keystone_ip_admin}:35357/",
+    auth_uri          => "http://${keystone_ip}:5000/",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
   }
 
   class { 'heat::engine':
