@@ -81,6 +81,7 @@ class profile::openstack::cinder {
   class { '::cinder::api':
     keystone_password   => $keystone_password,
     #auth_uri           => "http://${keystone_ip}:5000/",
+    keystone_enabled    => false,
     auth_strategy       => '',
     enabled             => true,
     default_volume_type => 'Normal',
