@@ -52,12 +52,12 @@ class profile::openstack::heat {
     admin_url    => "http://${admin_ip}:8000/v1",
   }
 
-  class { '::heat::keystone::authtoken':
-    auth_url          => "http://${keystone_ip_admin}:35357/",
-    auth_uri          => "http://${keystone_ip}:5000/",
-    memcached_servers => $memcached_ip,
-    region_name       => $region,
-  }
+  #  class { '::heat::keystone::authtoken':
+  #  auth_url          => "http://${keystone_ip_admin}:35357/",
+  #  auth_uri          => "http://${keystone_ip}:5000/",
+  #  memcached_servers => $memcached_ip,
+  #  region_name       => $region,
+  #}
 
   class { '::heat':
     database_connection => $database_connection,
@@ -65,12 +65,13 @@ class profile::openstack::heat {
     rabbit_password     => $rabbit_pass,
     rabbit_userid       => $rabbit_user,
     rabbit_host         => $rabbit_ip,
-    auth_strategy       => '',
-    #auth_uri           => "http://${keystone_ip}:5000/v2.0",
-    #identity_uri       => "http://${keystone_ip_admin}:35357",
-    #keystone_tenant    => 'services',
-    #keystone_user      => 'heat',
-    keystone_password  => $password,
+    auth_uri            => "http://${keystone_ip}:5000/",
+    identity_uri        => "http://${keystone_ip_admin}:35357",
+    keystone_tenant     => 'services',
+    keystone_user       => 'heat',
+    keystone_password   => $password,
+    memcached_servers   => $memcached_ip,
+    region_name         => $region,
   }
 
   class { 'heat::engine':
