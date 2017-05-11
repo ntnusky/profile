@@ -52,6 +52,13 @@ class profile::openstack::heat {
     admin_url    => "http://${admin_ip}:8000/v1",
   }
 
+  class { '::heat::keystone::authtoken':
+    auth_url          => "http://${keystone_ip_admin}:35357/",
+    auth_uri          => "http://${keystone_ip}:5000/",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
+  } ->
+
   class { '::heat':
     database_connection => $database_connection,
     region_name         => $region, # probably uncomment this when Kilo
@@ -64,13 +71,6 @@ class profile::openstack::heat {
     #keystone_tenant    => 'services',
     #keystone_user      => 'heat',
     #keystone_password  => $password,
-  }
-
-  class { '::heat::keystone::authtoken':
-    auth_url          => "http://${keystone_ip_admin}:35357/",
-    auth_uri          => "http://${keystone_ip}:5000/",
-    memcached_servers => $memcached_ip,
-    region_name       => $region,
   }
 
   class { 'heat::engine':
