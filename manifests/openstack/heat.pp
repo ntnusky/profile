@@ -57,7 +57,7 @@ class profile::openstack::heat {
     auth_uri          => "http://${keystone_ip}:5000/",
     memcached_servers => $memcached_ip,
     region_name       => $region,
-  } ->
+  }
 
   class { '::heat':
     database_connection => $database_connection,
