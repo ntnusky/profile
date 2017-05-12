@@ -65,6 +65,7 @@ class profile::openstack::horizon {
     keystone_multidomain_support => true,
     keystone_default_domain      => $ldap_name,
     keystone_url                 => "http://${keystone_ip}:5000",
+    session_timeout              => 7200,
     neutron_options              => {
       enable_firewall => true,
     },
