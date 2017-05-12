@@ -62,7 +62,7 @@ class profile::openstack::horizon {
     horizon_cert                 => '/etc/ssl/certs/horizon.crt',
     horizon_key                  => '/etc/ssl/private/horizon.key',
     horizon_ca                   => '/etc/ssl/certs/CA.crt',
-    keystone_multidomain_support => false,
+    keystone_multidomain_support => true,
     keystone_default_domain      => $ldap_name,
     keystone_url                 => "http://${keystone_ip}:5000",
     neutron_options              => {
