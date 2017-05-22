@@ -10,8 +10,15 @@ class profile::ceph::monitor {
   $replicas =  hiera('profile::ceph::replicas', undef)
   $journal_size =  hiera('profile::ceph::journal::size', 10000)
 
-  include ::profile::munin::plugin::ceph
-  include ::profile::sensu::plugin::ceph
+  $installMunin = hiera('profile::munin::install', true)
+  if($installMunin) {
+    include ::profile::munin::plugin::ceph
+  }
+
+  $installSensu = hiera('profile::sensu::install', true)
+  if ($installSensu) {
+    include ::profile::sensu::plugin::ceph
+  }
 
   class { 'ceph::repo': }->
   class { 'ceph':

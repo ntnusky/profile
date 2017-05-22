@@ -28,7 +28,11 @@ class profile::openstack::novacompute {
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
 
   require ::profile::openstack::repo
-  include ::profile::munin::plugin::compute
+
+  $installMunin = hiera('profile::munin::install', true)
+  if($installMunin) {
+    include ::profile::munin::plugin::compute
+  }
 
   class { '::nova':
     database_connection => $database_connection,

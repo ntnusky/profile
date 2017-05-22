@@ -45,20 +45,23 @@ class profile::services::rabbitmq {
   }
 
   # Install munin plugins for monitoring.
-  munin::plugin { 'rabbit_fd':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/rabbit_fd',
-    config => ['user root'],
-  }
-  munin::plugin { 'rabbit_processes':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/rabbit_processes',
-    config => ['user root'],
-  }
-  munin::plugin { 'rabbit_memory':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/rabbit_memory',
-    config => ['user root'],
+  $installMunin = hiera('profile::munin::install', true)
+  if($installMunin) {
+    munin::plugin { 'rabbit_fd':
+      ensure => present,
+      source => 'puppet:///modules/profile/muninplugins/rabbit_fd',
+      config => ['user root'],
+    }
+    munin::plugin { 'rabbit_processes':
+      ensure => present,
+      source => 'puppet:///modules/profile/muninplugins/rabbit_processes',
+      config => ['user root'],
+    }
+    munin::plugin { 'rabbit_memory':
+      ensure => present,
+      source => 'puppet:///modules/profile/muninplugins/rabbit_memory',
+      config => ['user root'],
+    }
   }
 
   # Configure rabbitmq to be alowed more than 1024 file descriptors using
@@ -85,8 +88,11 @@ class profile::services::rabbitmq {
   }
 
   # Include rabbitmq configuration for sensu. And the plugin
-  include ::profile::services::rabbitmq::sensu
-  include ::profile::sensu::plugin::rabbitmq
+  $installSensu = hiera('profile::sensu::install', true)
+  if ($installSensu) {
+    include ::profile::services::rabbitmq::sensu
+    include ::profile::sensu::plugin::rabbitmq
+  }
 
   # Configure keepalived
   keepalived::vrrp::script { 'check_rabbitmq':
