@@ -4,10 +4,16 @@ define profile::baseconfig::createkey (
 ) {
   $key = hiera("profile::user::${username}::key::${name}")
 
+  if($username == 'root') {
+    $homedir = '/root'
+  } else {
+    $homedir = '/home/${username}'
+  }
+
   ssh_authorized_key { $name:
     user    => $username,
     type    => 'ssh-rsa',
     key     => $key,
-    require => File["/home/${username}/.ssh"],
+    require => File["${homedir}/.ssh"],
   }
 }

@@ -6,9 +6,14 @@ class profile::baseconfig {
   include ::profile::baseconfig::puppet
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
-  include ::profile::munin::node
 
-  if ($::hostname != 'monitor') {
+  $installMunin = hiera('profile::munin::install', true)
+  if($installMunin) {
+    include ::profile::munin::node
+  }
+
+  $installSensu = hiera('profile::sensu::install', true)
+  if ($::hostname != 'monitor' and $installSensu) {
     include ::profile::sensu::client
   }
 
