@@ -41,6 +41,8 @@ class profile::openstack::neutronserver {
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
 
+  $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
+
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
   require ::profile::openstack::repo
@@ -116,18 +118,32 @@ class profile::openstack::neutronserver {
     nova_url    => "http://${nova_public_ip}:8774/v2",
   }
 
-  # This plugin configures Neutron for OVS on the server
-  # Agent
-  class { '::neutron::agents::ml2::ovs':
-    bridge_mappings => ['external:br-ex','physnet-vlan:br-vlan'],
+  if($tenant_network_strategy == 'vlan') {
+    # This plugin configures Neutron for OVS on the server
+    # Agent
+    class { '::neutron::agents::ml2::ovs':
+      bridge_mappings => ['external:br-ex','physnet-vlan:br-vlan'],
+    }
+
+    # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
+    class { '::neutron::plugins::ml2':
+      type_drivers         => ['vlan', 'flat'],
+      tenant_network_types => ['vlan'],
+      mechanism_drivers    => ['openvswitch'],
+      network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
+    }
   }
 
-  # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
-  class { '::neutron::plugins::ml2':
-    type_drivers         => ['vlan', 'flat'],
-    tenant_network_types => ['vlan'],
-    mechanism_drivers    => ['openvswitch'],
-    network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
+  if($tenant_network_strategy == 'vxlan') {
+    class { '::neutron::agents::ml2::ovs':
+      bridge_mappings => ['external:br-ex'],
+      tunnel_types => ['vxlan'],
+    }
+    class { '::neutron::plugins::ml2':
+      type_drivers         => ['vxlan', 'flat'],
+      tenant_network_types => ['vxlan'],
+      mechanism_drivers    => ['openvswitch'],
+    }
   }
 
   class { '::neutron::agents::l3':
