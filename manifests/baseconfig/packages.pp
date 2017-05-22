@@ -17,7 +17,10 @@ class profile::baseconfig::packages {
     $megaclipackages = [ 'megacli', 'mpt-status' ]
     package { $megaclipackages :
       ensure  => 'present',
-      require => Class['::hwraid'],
+      require => [
+        Class['::hwraid'],
+        Class['::srvadmin'],
+      ]
     }
   }
 
