@@ -25,7 +25,7 @@ class profile::mysql::cluster {
     location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.1/ubuntu',
     repos      => 'main',
     release    => $::lsbdistcodename,
-    key        => 'F1656F24C74CD1D8',
+    key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
     key_server => 'keyserver.ubuntu.com',
     notify     => Exec['apt_update'],
   }
