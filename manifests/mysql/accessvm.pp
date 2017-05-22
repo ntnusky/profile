@@ -10,40 +10,42 @@ class profile::mysql::accessvm {
           FROM project as p INNER JOIN assignment as a ON a.target_ID = p.id \
           INNER JOIN id_mapping u ON u.public_id = a.actor_id \
           GROUP BY username;"
-  $accessuser = hiera('profile::access::db_user')
-  $accesspw = hiera('profile::access::db_password')
+  $accessuser = hiera('profile::access::db_user', false)
+  $accesspw = hiera('profile::access::db_password', false)
 
-  $mysqlcommand = "/usr/bin/mysql -h ${host} \
+  if($accessuser) {
+    $mysqlcommand = "/usr/bin/mysql -h ${host} \
+                                    -uroot \
+                                    -p${pw} \
+                                    -D keystone \
+                                    -e \"${sql}\" 2> /dev/null"
+  
+    $check_view = "/usr/bin/mysql -N -s -r -h ${host} \
                                   -uroot \
                                   -p${pw} \
                                   -D keystone \
-                                  -e \"${sql}\" 2> /dev/null"
-
-  $check_view = "/usr/bin/mysql -N -s -r -h ${host} \
-                                -uroot \
-                                -p${pw} \
-                                -D keystone \
-                                -e \"show tables;\" \
-                                | grep v_project_roles_per_user"
-
-  Anchor['profile::openstack::keystone::end'] ->
-
-  exec { 'create_view':
-    command => $mysqlcommand,
-    user    => 'root',
-    unless  => $check_view,
-
-  } ->
-
-  mysql_user { "${accessuser}@%":
-    ensure        => 'present',
-    password_hash => mysql_password($accesspw),
-  } ->
-
-  mysql_grant { "${accessuser}@%/keystone.v_project_roles_per_user":
-    ensure     => 'present',
-    privileges => ['SELECT'],
-    table      => 'keystone.v_project_roles_per_user',
-    user       => "${accessuser}@%",
+                                  -e \"show tables;\" \
+                                  | grep v_project_roles_per_user"
+  
+    Anchor['profile::openstack::keystone::end'] ->
+  
+    exec { 'create_view':
+      command => $mysqlcommand,
+      user    => 'root',
+      unless  => $check_view,
+  
+    } ->
+  
+    mysql_user { "${accessuser}@%":
+      ensure        => 'present',
+      password_hash => mysql_password($accesspw),
+    } ->
+  
+    mysql_grant { "${accessuser}@%/keystone.v_project_roles_per_user":
+      ensure     => 'present',
+      privileges => ['SELECT'],
+      table      => 'keystone.v_project_roles_per_user',
+      user       => "${accessuser}@%",
+    }
   }
 }
