@@ -18,7 +18,7 @@ class profile::mysql::cluster {
   include ::profile::sensu::plugin::mysql
 
   apt::source { 'galera_mariadb':
-    location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.0/ubuntu',
+    location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.1/ubuntu',
     repos      => 'main',
     release    => $::lsbdistcodename,
     key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
@@ -30,8 +30,8 @@ class profile::mysql::cluster {
     galera_servers      => $servers,
     galera_master       => $master,
     galera_package_name => 'galera-3',
-    mysql_package_name  => 'mariadb-galera-server-10.0',
-    client_package_name => 'mariadb-client-10.0',
+    mysql_package_name  => 'mariadb-galera-server-10.1',
+    client_package_name => 'mariadb-client-10.1',
     status_password     => $statuspassword,
     vendor_type         => 'mariadb',
     root_password       => $rootpassword,
