@@ -31,6 +31,7 @@ class profile::openstack::neutronagent {
     # This plugin configures Neutron for OVS on the server
     # Agent
     class { '::neutron::agents::ml2::ovs':
+      bridge_mappings => ['physnet-vlan:br-vlan'],
       enabled => true,
     }
 
@@ -54,8 +55,9 @@ class profile::openstack::neutronagent {
     $ifname = regsubst($tenant_if, '\.', '_', 'G')
 
     class { '::neutron::agents::ml2::ovs':
-      local_ip     => getvar("::ipaddress_${ifname}"),
-      tunnel_types => ['vxlan'],
+      local_ip        => getvar("::ipaddress_${ifname}"),
+      bridge_mappings => ['provider:br-provider'],
+      tunnel_types    => ['vxlan'],
     }
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vxlan', 'flat'],
