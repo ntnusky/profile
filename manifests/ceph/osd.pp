@@ -12,6 +12,7 @@ class profile::ceph::osd {
   $journal_size =  hiera('profile::ceph::journal::size', 10000)
 
   $cluster_network = hiera('profile::ceph::cluster_network', undef)
+  $public_network = hiera('profile::ceph::public_network', undef)
   
   $osds = hiera('profile::ceph::osds')
   
@@ -21,7 +22,8 @@ class profile::ceph::osd {
     mon_initial_members   => $controllernames,
     mon_host              => $controlleraddresses,
     osd_pool_default_size => $replicas,
-    cluster_network       => $cluster_network
+    public_network        => $public_network,
+    cluster_network       => $cluster_network,
   }
   ceph_config {
     'global/osd_journal_size': value => $journal_size;
