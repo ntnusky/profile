@@ -25,9 +25,6 @@ class profile::openstack::neutronserver {
   $nova_metadata_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $dns_servers = hiera('profile::nova::dns')
 
-  $vlan_low = hiera('profile::neutron::vlan_low')
-  $vlan_high = hiera('profile::neutron::vlan_high')
-
   $public_if = hiera('profile::interfaces::public')
   $management_if = hiera('profile::interfaces::management')
   $external_if = hiera('profile::interfaces::external')
@@ -119,6 +116,9 @@ class profile::openstack::neutronserver {
   }
 
   if($tenant_network_strategy == 'vlan') {
+    $vlan_low = hiera('profile::neutron::vlan_low')
+    $vlan_high = hiera('profile::neutron::vlan_high')
+
     # This plugin configures Neutron for OVS on the server
     # Agent
     class { '::neutron::agents::ml2::ovs':
@@ -132,17 +132,33 @@ class profile::openstack::neutronserver {
       mechanism_drivers    => ['openvswitch'],
       network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
     }
+    vs_port { $tenant_if:
+      ensure => present,
+      bridge => 'br-vlan',
+    }
   }
 
   if($tenant_network_strategy == 'vxlan') {
+    $vni_low = hiera('profile::neutron::vni_low')
+    $vni_high = hiera('profile::neutron::vni_high')
+
+    $ifname = regsubst($tenant_if, '.', '_', 'G')
+
     class { '::neutron::agents::ml2::ovs':
+      local_ip        => getvar("::ipaddress_${ifname}"),
       bridge_mappings => ['external:br-ex'],
-      tunnel_types => ['vxlan'],
+      tunnel_types    => ['vxlan'],
     }
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vxlan', 'flat'],
       tenant_network_types => ['vxlan'],
       mechanism_drivers    => ['openvswitch'],
+      vni_ranges           => "${vni_low}:${vni_high}"
+    }
+
+    vs_port { $tenant_if:
+      ensure => present,
+      bridge => 'br-tun',
     }
   }
 
@@ -167,10 +183,6 @@ class profile::openstack::neutronserver {
   vs_port { $external_if:
     ensure => present,
     bridge => 'br-ex',
-  }
-  vs_port { $tenant_if:
-    ensure => present,
-    bridge => 'br-vlan',
   }
 
   keepalived::vrrp::script { 'check_neutron':
