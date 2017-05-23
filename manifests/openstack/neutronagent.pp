@@ -38,7 +38,7 @@ class profile::openstack::neutronagent {
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vlan', 'flat'],
       tenant_network_types => ['vlan'],
-      mechanism_drivers    => ['openvswitch'],
+      mechanism_drivers    => ['openvswitch', 'l2population'],
       network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
     }
     vs_port { $tenant_if:
@@ -60,13 +60,13 @@ class profile::openstack::neutronagent {
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vxlan', 'flat'],
       tenant_network_types => ['vxlan'],
-      mechanism_drivers    => ['openvswitch'],
+      mechanism_drivers    => ['openvswitch', 'l2population'],
       vni_ranges           => "${vni_low}:${vni_high}"
     }
 
     vs_port { $tenant_if:
       ensure => present,
-      bridge => 'br-tun',
+      bridge => 'br-provider',
     }
   }
 
