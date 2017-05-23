@@ -18,6 +18,8 @@ class profile::openstack::novacompute {
   $nova_password = hiera('profile::nova::keystone::password')
   $neutron_password = hiera('profile::neutron::keystone::password')
 
+  $glance_ip = hiera('profile::api::glance::admin::ip')
+
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
 
@@ -36,8 +38,7 @@ class profile::openstack::novacompute {
 
   class { '::nova':
     database_connection => $database_connection,
-    glance_api_servers  =>
-      join([join($controller_management_addresses, ':9292,'),''], ':9292'),
+    glance_api_servers  => "${glance_ip}:9292",
     memcached_servers   => ["${memcache_ip}:11211"],
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
