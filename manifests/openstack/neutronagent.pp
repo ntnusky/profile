@@ -13,37 +13,61 @@ class profile::openstack::neutronagent {
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
-  $vlan_low = hiera('profile::neutron::vlan_low')
-  $vlan_high = hiera('profile::neutron::vlan_high')
 
   $tenant_if = hiera('profile::interfaces::tenant')
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
+  $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
 
   require ::profile::openstack::repo
 
   anchor{ 'profile::openstack::neutronagent::begin' : }
   anchor{ 'profile::openstack::neutronagent::end' : }
 
-  class { '::neutron::agents::ml2::ovs':
-    enabled         => true,
-    bridge_mappings => ['physnet-vlan:br-vlan'],
-    before          => Anchor['profile::openstack::neutronagent::end'],
-    require         => Anchor['profile::openstack::neutronagent::begin'],
+  if($tenant_network_strategy == 'vlan') {
+    $vlan_low = hiera('profile::neutron::vlan_low')
+    $vlan_high = hiera('profile::neutron::vlan_high')
+
+    # This plugin configures Neutron for OVS on the server
+    # Agent
+    class { '::neutron::agents::ml2::ovs':
+      enabled => true,
+    }
+
+    # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
+    class { '::neutron::plugins::ml2':
+      type_drivers         => ['vlan', 'flat'],
+      tenant_network_types => ['vlan'],
+      mechanism_drivers    => ['openvswitch'],
+      network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
+    }
+    vs_port { $tenant_if:
+      ensure => present,
+      bridge => 'br-vlan',
+    }
   }
 
-  class { '::neutron::plugins::ml2':
-    type_drivers         => ['vlan', 'flat'],
-    tenant_network_types => ['vlan'],
-    mechanism_drivers    => ['openvswitch'],
-    network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
-    before               => Anchor['profile::openstack::neutronagent::end'],
-    require              => Anchor['profile::openstack::neutronagent::begin'],
-  }
+  if($tenant_network_strategy == 'vxlan') {
+    $vni_low = hiera('profile::neutron::vni_low')
+    $vni_high = hiera('profile::neutron::vni_high')
 
-  vs_port { $tenant_if:
-    ensure => present,
-    bridge => 'br-vlan',
+    $ifname = regsubst($tenant_if, '.', '_', 'G')
+
+    class { '::neutron::agents::ml2::ovs':
+      local_ip     => getvar("::ipaddress_${ifname}"),
+      tunnel_types => ['vxlan'],
+    }
+    class { '::neutron::plugins::ml2':
+      type_drivers         => ['vxlan', 'flat'],
+      tenant_network_types => ['vxlan'],
+      mechanism_drivers    => ['openvswitch'],
+      vni_ranges           => "${vni_low}:${vni_high}"
+    }
+
+    vs_port { $tenant_if:
+      ensure => present,
+      bridge => 'br-tun',
+    }
   }
 
   class { '::neutron':
