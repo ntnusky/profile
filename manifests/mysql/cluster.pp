@@ -22,7 +22,7 @@ class profile::mysql::cluster {
   }
 
   apt::source { 'galera_mariadb':
-    location   => 'http://mirror.aarnet.edu.au/pub/MariaDB/repo/10.0/ubuntu',
+    location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
     repos      => 'main',
     release    => $::lsbdistcodename,
     key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
