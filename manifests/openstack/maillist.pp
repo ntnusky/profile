@@ -9,7 +9,7 @@ class profile::openstack::maillist {
   }
 
   cron { 'maillist':
-    command => '/usr/local/bin/generateMailList.sh',
+    command => '/usr/local/bin/generateMailList.sh 2>&1 /dev/null',
     user    => 'root',
     hour    => '*/2',
   }
