@@ -180,9 +180,18 @@ class profile::openstack::neutronserver {
     'AGENT/extensions': value => 'fwaas';
   }
 
-  vs_port { $external_if:
-    ensure => present,
-    bridge => 'br-ex',
+  if($external_if == 'vlan') {
+    $if = hiera('profile::interfaces::external::parentif')
+    $id = hiera('profile::interfaces::external::vlanid')
+
+    if ! defined(Profile::Infrastructure::Vlanbridge[$parentif]) {
+      ::profile::infrastructure::vlanbridge { $if }
+    }
+  } else {
+    vs_port { $external_if:
+      ensure => present,
+      bridge => 'br-ex',
+    }
   }
 
   keepalived::vrrp::script { 'check_neutron':
