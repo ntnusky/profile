@@ -185,7 +185,7 @@ class profile::openstack::neutronserver {
     $id = hiera('profile::interfaces::external::vlanid')
 
     if ! defined(Profile::Infrastructure::Vlanbridge[$parentif]) {
-      ::profile::infrastructure::vlanbridge { $if }
+      ::profile::infrastructure::vlanbridge { $if : }
     }
   } else {
     vs_port { $external_if:
