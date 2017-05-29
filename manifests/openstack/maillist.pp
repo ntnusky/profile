@@ -12,5 +12,6 @@ class profile::openstack::maillist {
     command => '/usr/local/bin/generateMailList.sh 2>&1 /dev/null',
     user    => 'root',
     hour    => '*/2',
+    minute  => '00',
   }
 }
