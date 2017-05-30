@@ -184,9 +184,22 @@ class profile::openstack::neutronserver {
     $if = hiera('profile::interfaces::external::parentif')
     $id = hiera('profile::interfaces::external::vlanid')
 
-    if ! defined(Profile::Infrastructure::Vlanbridge[$parentif]) {
+    if ! defined(Profile::Infrastructure::Vlanbridge[$if]) {
       ::profile::infrastructure::vlanbridge { $if : }
     }
+
+    file { '/usr/local/bin/addPatch.sh':
+      ensure => file,
+      source => 'puppet:///modules/profile/vswitch/addPatch.sh',
+      mode   => '0555',
+    }
+
+    exec { "/usr/local/bin/addPatch.sh br-vlan-${if} br-ex 1526" :
+      unless => "/usr/local/bin/addPatch.sh br-vlan-${if} br-ex 1526 --verify",
+      path   => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      require => File['/usr/local/bin/addPatch.sh'],
+    }
+
   } else {
     vs_port { $external_if:
       ensure => present,
