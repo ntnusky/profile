@@ -198,7 +198,7 @@ class profile::openstack::neutronserver {
       unless  => "/usr/local/bin/addPatch.sh br-vlan-${if} br-ex 1526 --verify",
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       require => [
-        File['/usr/local/bin/addPatch.sh']
+        File['/usr/local/bin/addPatch.sh'],
         Profile::Infrastructure::Vlanbridge[$if],
       ],
     }
