@@ -56,6 +56,7 @@ if [[ $exists -eq 0 ]]; then
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl add-port $src $srcPort
     exists=1
+    STATUS=$ALLOK
   fi
 fi
 # Verify that the port is of the correct type
@@ -64,6 +65,7 @@ if [[ $exists -eq 1 && $(ovs-vsctl get interface $srcPort type) != "patch" ]]; t
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $srcPort type=patch
+    STATUS=$ALLOK
   fi
 fi
 # Verify that the port is connected to the correct peer
@@ -73,6 +75,7 @@ if [[ $exists -eq 1 && \
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $srcPort options:peer=$dstPort
+    STATUS=$ALLOK
   fi
 fi
 # Verify that the port is attached to the correct VLAN (if applicable)
@@ -82,6 +85,7 @@ if [[ $exists -eq 1 && $vlan -ne 0 && \
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set port $srcPort tag=$vlan
+    STATUS=$ALLOK
   fi
 fi
 
@@ -93,6 +97,7 @@ if [[ $exists -eq 0 ]]; then
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl add-port $dst $dstPort
     exists=1
+    STATUS=$ALLOK
   fi
 fi
 # Verify that the port is of the correct type
@@ -101,6 +106,7 @@ if [[ $exists -eq 1 && $(ovs-vsctl get interface $dstPort type) != "patch" ]]; t
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $dstPort type=patch
+    STATUS=$ALLOK
   fi
 fi
 # Verify that the port is connected to the correct peer
@@ -110,6 +116,7 @@ if [[ $exists -eq 1 && \
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $dstPort options:peer=$srcPort
+    STATUS=$ALLOK
   fi
 fi
 
