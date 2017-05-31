@@ -41,8 +41,8 @@ class profile::openstack::neutronserver {
   $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
 
   if($_tenant_if == 'vlan') {
-    $tenant_parent = hiera('profile::interfaces::external::parentif')
-    $tenant_vlan = hiera('profile::interfaces::external::vlanid')
+    $tenant_parent = hiera('profile::interfaces::tenant::parentif')
+    $tenant_vlan = hiera('profile::interfaces::tenant::vlanid')
     $tenant_if = "br-vlan-${tenant_parent}"
   } else {
     $tenant_if = $_tenant_if
