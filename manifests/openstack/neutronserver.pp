@@ -167,7 +167,7 @@ class profile::openstack::neutronserver {
     $vni_high = hiera('profile::neutron::vni_high')
 
 
-    if defined($::ipaddress_br_provider) {
+    if defined('$::ipaddress_br_provider') {
       class { '::neutron::agents::ml2::ovs':
         local_ip        => $::ipaddress_br_provider,
         bridge_mappings => ['external:br-ex', 'provider:br-provider'],
