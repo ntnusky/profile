@@ -166,10 +166,13 @@ class profile::openstack::neutronserver {
     $vni_low = hiera('profile::neutron::vni_low')
     $vni_high = hiera('profile::neutron::vni_high')
 
-    class { '::neutron::agents::ml2::ovs':
-      local_ip        => $::ipaddress_br_provider,
-      bridge_mappings => ['external:br-ex', 'provider:br-provider'],
-      tunnel_types    => ['vxlan'],
+
+    if defined($::ipaddress_br_provider) {
+      class { '::neutron::agents::ml2::ovs':
+        local_ip        => $::ipaddress_br_provider,
+        bridge_mappings => ['external:br-ex', 'provider:br-provider'],
+        tunnel_types    => ['vxlan'],
+      }
     }
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vxlan', 'flat'],
