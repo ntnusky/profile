@@ -14,12 +14,20 @@ class profile::openstack::neutronagent {
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
 
-  $tenant_if = hiera('profile::interfaces::tenant')
+  $_tenant_if = hiera('profile::interfaces::tenant')
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
   $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
 
   require ::profile::openstack::repo
+
+  if($_tenant_if == 'vlan') {
+    $tenant_parent = hiera('profile::interfaces::tenant::parentif')
+    $tenant_vlan = hiera('profile::interfaces::tenant::vlanid')
+    $tenant_if = "br-vlan-${tenant_parent}"
+  } else {
+    $tenant_if = $_tenant_if
+  }
 
   anchor{ 'profile::openstack::neutronagent::begin' : }
   anchor{ 'profile::openstack::neutronagent::end' : }
@@ -66,9 +74,25 @@ class profile::openstack::neutronagent {
       vni_ranges           => "${vni_low}:${vni_high}"
     }
 
-    vs_port { $tenant_if:
-      ensure => present,
-      bridge => 'br-provider',
+    if($_tenant_if == 'vlan') {
+      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
+        ::profile::infrastructure::vlanbridge { $tenant_parent : }
+      }
+
+      $unless_args = "br-provider ${tenant_vlan} --verify"
+      exec { "/usr/local/bin/addPatch.sh ${tenant_if} br-provider ${tenant_vlan}" :
+        unless  => "/usr/local/bin/addPatch.sh ${tenant_if} ${unless_args}",
+        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+        require => [
+          File['/usr/local/bin/addPatch.sh'],
+          Profile::Infrastructure::Vlanbridge[$tenant_parent],
+        ],
+      }
+    } else {
+      vs_port { $tenant_if:
+        ensure => present,
+        bridge => 'br-provider',
+      }
     }
   }
 
