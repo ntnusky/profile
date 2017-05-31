@@ -12,7 +12,7 @@ class profile::mysql::cluster {
   $statuspassword = hiera('profile::mysqlcluster::status_password')
 
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = getvar("::ipaddress_${management_if}")
+  $management_ip = hiera("profile::interfaces::${management_if}::address")
 
   require profile::services::keepalived
   
