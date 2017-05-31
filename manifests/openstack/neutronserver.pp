@@ -29,6 +29,7 @@ class profile::openstack::neutronserver {
   $management_if = hiera('profile::interfaces::management')
   $external_if = hiera('profile::interfaces::external')
   $_tenant_if = hiera('profile::interfaces::tenant')
+  $mtu = hiera('profile::neutron::mtu', undef)
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
