@@ -5,6 +5,7 @@ class profile::openstack::neutronagent {
   $mysql_ip = hiera('profile::mysql::ip')
   $neutron_pass = hiera('profile::neutron::keystone::password')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
+  $mtu = hiera('profile::neutron::mtu', undef)
 
   $region = hiera('profile::region')
   $admin_ip = hiera('profile::api::neutron::admin::ip')
@@ -111,6 +112,7 @@ class profile::openstack::neutronagent {
     rabbit_password       => $rabbit_pass,
     rabbit_user           => $rabbit_user,
     rabbit_host           => $rabbit_ip,
+    global_physnet_mtu    => $mtu,
   }
 
 #  class { '::neutron::keystone::auth':

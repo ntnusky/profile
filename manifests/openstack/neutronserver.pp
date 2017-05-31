@@ -61,6 +61,7 @@ class profile::openstack::neutronserver {
     rabbit_password         => $rabbit_pass,
     rabbit_user             => $rabbit_user,
     rabbit_host             => $rabbit_ip,
+    global_physnet_mtu      => $mtu,
   }
 
   class { 'neutron::db::mysql' :
