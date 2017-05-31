@@ -80,6 +80,10 @@ class profile::openstack::neutronagent {
       vni_ranges           => "${vni_low}:${vni_high}"
     }
 
+    vs_bridge { 'br-provider':
+      ensure => present,
+    }
+
     if($_tenant_if == 'vlan') {
       if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
         ::profile::infrastructure::vlanbridge { $tenant_parent : }
