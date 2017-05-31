@@ -166,10 +166,8 @@ class profile::openstack::neutronserver {
     $vni_low = hiera('profile::neutron::vni_low')
     $vni_high = hiera('profile::neutron::vni_high')
 
-    $ifname = regsubst($tenant_if, '\.', '_', 'G')
-
     class { '::neutron::agents::ml2::ovs':
-      local_ip        => getvar("::ipaddress_${ifname}"),
+      local_ip        => getvar("::ipaddress_br_provider"),
       bridge_mappings => ['external:br-ex', 'provider:br-provider'],
       tunnel_types    => ['vxlan'],
     }
