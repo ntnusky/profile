@@ -40,7 +40,7 @@ class profile::openstack::neutronagent {
     # Agent
     class { '::neutron::agents::ml2::ovs':
       bridge_mappings => ['physnet-vlan:br-vlan'],
-      enabled => true,
+      enabled         => true,
     }
 
     # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
@@ -60,10 +60,8 @@ class profile::openstack::neutronagent {
     $vni_low = hiera('profile::neutron::vni_low')
     $vni_high = hiera('profile::neutron::vni_high')
 
-    $ifname = regsubst($tenant_if, '\.', '_', 'G')
-
     class { '::neutron::agents::ml2::ovs':
-      local_ip        => getvar("::ipaddress_${ifname}"),
+      local_ip        => $::ipaddress_br_provider,
       bridge_mappings => ['provider:br-provider'],
       tunnel_types    => ['vxlan'],
     }
