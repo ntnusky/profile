@@ -32,6 +32,12 @@ class profile::openstack::neutronagent {
   anchor{ 'profile::openstack::neutronagent::begin' : }
   anchor{ 'profile::openstack::neutronagent::end' : }
 
+  file { '/usr/local/bin/addPatch.sh':
+    ensure => file,
+    source => 'puppet:///modules/profile/vswitch/addPatch.sh',
+    mode   => '0555',
+  }
+
   if($tenant_network_strategy == 'vlan') {
     $vlan_low = hiera('profile::neutron::vlan_low')
     $vlan_high = hiera('profile::neutron::vlan_high')
