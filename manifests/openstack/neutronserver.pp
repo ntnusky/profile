@@ -141,8 +141,8 @@ class profile::openstack::neutronserver {
       network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
     }
     if($_tenant_if == 'vlan') {
-      if ! defined(Profile::Infrastructure::Vlanbridge[$if]) {
-        ::profile::infrastructure::vlanbridge { $if : }
+      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
+        ::profile::infrastructure::vlanbridge { $tenant_parent : }
       }
 
       $unless_args = "br-vlan ${tenant_vlan} --verify"
@@ -151,7 +151,7 @@ class profile::openstack::neutronserver {
         path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         require => [
           File['/usr/local/bin/addPatch.sh'],
-          Profile::Infrastructure::Vlanbridge[$if],
+          Profile::Infrastructure::Vlanbridge[$tenant_parent],
         ],
       }
     } else {
@@ -179,8 +179,8 @@ class profile::openstack::neutronserver {
     }
 
     if($_tenant_if == 'vlan') {
-      if ! defined(Profile::Infrastructure::Vlanbridge[$if]) {
-        ::profile::infrastructure::vlanbridge { $if : }
+      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
+        ::profile::infrastructure::vlanbridge { $tenant_parent : }
       }
 
       $unless_args = "br-provider ${tenant_vlan} --verify"
@@ -189,7 +189,7 @@ class profile::openstack::neutronserver {
         path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
         require => [
           File['/usr/local/bin/addPatch.sh'],
-          Profile::Infrastructure::Vlanbridge[$if],
+          Profile::Infrastructure::Vlanbridge[$tenant_parent],
         ],
       }
     } else {
