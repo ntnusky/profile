@@ -154,6 +154,7 @@ class profile::openstack::neutronserver {
         require => [
           File['/usr/local/bin/addPatch.sh'],
           Profile::Infrastructure::Vlanbridge[$tenant_parent],
+          Class['::neutron::agents::ml2::ovs'],
         ],
       }
     } else {
@@ -195,7 +196,7 @@ class profile::openstack::neutronserver {
         require => [
           File['/usr/local/bin/addPatch.sh'],
           Profile::Infrastructure::Vlanbridge[$tenant_parent],
-          Class['neutron::agents::ml2::ovs'],
+          Class['::neutron::agents::ml2::ovs'],
         ],
       }
     } else {
@@ -245,7 +246,7 @@ class profile::openstack::neutronserver {
       require => [
         File['/usr/local/bin/addPatch.sh'],
         Profile::Infrastructure::Vlanbridge[$if],
-        Class['neutron::agents::ml2::ovs'],
+        Class['::neutron::agents::ml2::ovs'],
       ],
     }
 
