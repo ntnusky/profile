@@ -41,6 +41,8 @@ class profile::openstack::neutronserver {
 
   $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
 
+  require ::vswitch::ovs
+
   if($_tenant_if == 'vlan') {
     $tenant_parent = hiera('profile::interfaces::tenant::parentif')
     $tenant_vlan = hiera('profile::interfaces::tenant::vlanid')
@@ -154,7 +156,6 @@ class profile::openstack::neutronserver {
         require => [
           File['/usr/local/bin/addPatch.sh'],
           Profile::Infrastructure::Vlanbridge[$tenant_parent],
-          Class['::neutron::agents::ml2::ovs'],
         ],
       }
     } else {
@@ -196,7 +197,6 @@ class profile::openstack::neutronserver {
         require => [
           File['/usr/local/bin/addPatch.sh'],
           Profile::Infrastructure::Vlanbridge[$tenant_parent],
-          Class['::neutron::agents::ml2::ovs'],
         ],
       }
     } else {
@@ -246,7 +246,6 @@ class profile::openstack::neutronserver {
       require => [
         File['/usr/local/bin/addPatch.sh'],
         Profile::Infrastructure::Vlanbridge[$if],
-        Class['::neutron::agents::ml2::ovs'],
       ],
     }
 
