@@ -1,0 +1,46 @@
+#!/bin/bash
+
+LOCALFILE="/var/www/html/skyhigh-mail.txt"
+TODAY=$(date +%F)
+AUTH_HOST=<%= scope.function_hiera(['profile::api::keystone::admin::ip']) %>
+OS_PASSWORD=<%= scope.function_hiera(['profile::keystone::admin_password']) %>
+OS_AUTH_URL="http://${AUTH_HOST}:5000/v3"
+OSCMD="openstack --os-username admin --os-password $OS_PASSWORD --os-project-name admin --os-auth-url $OS_AUTH_URL --os-identity-api-version 3"
+
+declare -a mails=()
+
+# Fetch a list of uniqe users with a project role
+users=$($OSCMD role assignment list -f value -c User | sort | uniq | egrep '\w{64}')
+
+# Exit if we didn't get any users
+if [[ -z $users ]]; then
+	echo "[ERROR] Encountered problems while connecting to keystone, or no users with active roles!"
+	exit 1
+fi
+
+# Iterate through the users to find e-mail
+for user in $users; do
+	details=$($OSCMD user show $user -f value -c email -c name)
+	if [[ -z $details ]]; then
+		echo "[WARNING] Found a deactivated user, skipping..."
+		echo "-----------------------------------------"
+	else
+		# A student may not have e-mail exposed in AD, but we know that all students
+		# have <username>@stud.ntnu.no
+		if [[ $details =~ @ ]]; then
+			mail=$(echo $details | cut -d' ' -f1)
+		else
+			echo "[WARNING] No mail address in AD, assuming student..."
+			mail="${details}@stud.ntnu.no"
+  	fi
+		echo "Found $mail"
+		mails=("${mails[@]}" "$mail")
+		echo "-----------------------------------------"
+	fi
+done
+
+if [ -f $LOCALFILE ]; then
+	mv $LOCALFILE{,-$TODAY}
+fi
+
+echo ${mails[@]} | tr ' ' '\n' | sort | uniq > $LOCALFILE

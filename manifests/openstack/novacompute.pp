@@ -34,7 +34,6 @@ class profile::openstack::novacompute {
     database_connection => $database_connection,
     glance_api_servers  =>
       join([join($controller_management_addresses, ':9292,'),''], ':9292'),
-    memcached_servers   => ["${memcache_ip}:11211"],
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
@@ -48,12 +47,12 @@ class profile::openstack::novacompute {
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
 
   class { '::nova::network::neutron':
-    neutron_admin_password => $neutron_password,
-    neutron_region_name    => $region,
-    neutron_auth_url       => "http://${keystone_ip}:35357/v3",
-    neutron_url            => "http://${neutron_ip}:9696",
-    vif_plugging_is_fatal  => false,
-    vif_plugging_timeout   => '0',
+    neutron_password      => $neutron_password,
+    neutron_region_name   => $region,
+    neutron_auth_url      => "http://${keystone_ip}:35357/v3",
+    neutron_url           => "http://${neutron_ip}:9696",
+    vif_plugging_is_fatal => false,
+    vif_plugging_timeout  => '0',
   }
 
   class { '::nova::compute':

@@ -30,6 +30,8 @@ class profile::openstack::keystone {
   $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter')
 
+  #$credential_keys = hiera('profile::keystone::credential_keys')
+  #$fernet_keys = hiera('profile::keystone::fernet_keys')
   #  $fernet_setup = hiera('profile::keystone::enable_fernet_setup')
 
   require ::profile::mysql::cluster
@@ -75,6 +77,8 @@ class profile::openstack::keystone {
     token_provider          => 'uuid',
     enable_fernet_setup     => true,
     enable_credential_setup => true,
+    #credential_keys         => $credential_keys,
+    #fernet_keys             => $fernet_keys,
     using_domain_config     => true,
     require                 => Anchor['profile::openstack::keystone::begin'],
     before                  => Anchor['profile::openstack::keystone::end'],
@@ -119,10 +123,6 @@ class profile::openstack::keystone {
     user_enabled_attribute => userAccountControl,
     user_enabled_mask      => 2,
     user_enabled_default   => 512,
-    user_attribute_ignore  => ['password', 'tenant_id', 'tenants'],
-    user_allow_create      => False,
-    user_allow_update      => False,
-    user_allow_delete      => False,
     use_tls                => False,
     before                 => Anchor['profile::openstack::keystone::end'],
     require                => Anchor['profile::openstack::keystone::begin'],

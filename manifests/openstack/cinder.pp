@@ -7,6 +7,7 @@ class profile::openstack::cinder {
   $mysql_ip = hiera('profile::mysql::ip')
   $ceph_key = hiera('profile::ceph::nova_key')
   $ceph_uuid = hiera('profile::ceph::nova_uuid')
+  $memcached_ip = hiera('profile::memcache::ip')
 
   $region = hiera('profile::region')
   $keystone_ip = hiera('profile::api::keystone::public::ip')
@@ -77,9 +78,17 @@ class profile::openstack::cinder {
 
   class { '::cinder::api':
     keystone_password   => $keystone_password,
-    auth_uri            => "http://${keystone_ip}:5000/",
+    keystone_enabled    => false,
+    auth_strategy       => '',
     enabled             => true,
     default_volume_type => 'Normal',
+  }
+
+  class { '::cinder::keystone::authtoken':
+    auth_url          => "http://${keystone_admin_ip}:35357",
+    auth_uri          => "http://${keystone_ip}:5000",
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
   }
 
   class { '::cinder::scheduler':

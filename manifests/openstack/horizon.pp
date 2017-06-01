@@ -19,6 +19,9 @@ class profile::openstack::horizon {
   $ssl_cert = hiera('profile::horizon::ssl_cert')
   $ssl_ca = hiera('profile::horizon::ssl_ca')
 
+  $keystone_ip = hiera('profile::api::keystone::public::ip')
+  $ldap_name = hiera('profile::keystone::ldap_backend::name')
+
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
   require ::profile::openstack::repo
@@ -60,7 +63,9 @@ class profile::openstack::horizon {
     horizon_key                  => '/etc/ssl/private/horizon.key',
     horizon_ca                   => '/etc/ssl/certs/CA.crt',
     keystone_multidomain_support => true,
-#   keystone_default_domain      => $ldap_name,
+    keystone_default_domain      => $ldap_name,
+    keystone_url                 => "http://${keystone_ip}:5000",
+    session_timeout              => 7200,
     neutron_options              => {
       enable_firewall => true,
     },
