@@ -171,13 +171,20 @@ class profile::openstack::neutronserver {
     $vni_high = hiera('profile::neutron::vni_high')
 
 
+    # Make sure there always is an IP to bind to; even when it is not yet
+    # configured...
     if defined('$::ipaddress_br_provider') {
-      class { '::neutron::agents::ml2::ovs':
-        local_ip        => $::ipaddress_br_provider,
-        bridge_mappings => ['external:br-ex', 'provider:br-provider'],
-        tunnel_types    => ['vxlan'],
-      }
+      $local_ip = $::ipaddress_br_provider
+    } else {
+      $local_ip = '169.254.254.254'
     }
+
+    class { '::neutron::agents::ml2::ovs':
+      local_ip        => $::ipaddress_br_provider,
+      bridge_mappings => ['external:br-ex', 'provider:br-provider'],
+      tunnel_types    => ['vxlan'],
+    }
+
     class { '::neutron::plugins::ml2':
       type_drivers         => ['vxlan', 'flat'],
       tenant_network_types => ['vxlan'],
