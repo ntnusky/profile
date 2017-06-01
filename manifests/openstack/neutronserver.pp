@@ -180,7 +180,7 @@ class profile::openstack::neutronserver {
     }
 
     class { '::neutron::agents::ml2::ovs':
-      local_ip        => $::ipaddress_br_provider,
+      local_ip        => $local_ip,
       bridge_mappings => ['external:br-ex', 'provider:br-provider'],
       tunnel_types    => ['vxlan'],
     }
