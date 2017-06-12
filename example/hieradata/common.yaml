@@ -1,6 +1,11 @@
 ---
 profile::munin::url: 'munin.domain.tld'
 
+profile::munin::install: true
+profile::sensu::install: true
+
+profile::ntp::server: '<IP-to-NTP-server>'
+
 profile::monitoring::logstash_server: 'monitor.skylow:5000'
 profile::monitoring::kibana_vhost: 'kibana.monitor.skylow'
 profile::monitoring::data_password: '<pwgen>'

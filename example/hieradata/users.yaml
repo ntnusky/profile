@@ -3,6 +3,13 @@ profile::users:
  - 'user1'
  - 'user2'
 
+profile::user::root::keys:
+ - 'key1'
+ - 'key2'
+
+profile::user::root::key::key1: '<ssh-key>'
+profile::user::root::key::key2: '<ssh-key>'
+
 profile::user::user1::uid: 800
 profile::user::user1::groups:
  - 'sudo'
