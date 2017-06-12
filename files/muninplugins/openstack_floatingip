@@ -14,7 +14,7 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-openstack ip floating list -f value > /tmp/munin-floating.txt
+openstack floating ip list -f value > /tmp/munin-floating.txt
 
 echo "allocated.value $(cat /tmp/munin-floating.txt | wc -l)"
 echo "used.value $(cat /tmp/munin-floating.txt | grep -v None -c)"
