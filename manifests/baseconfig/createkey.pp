@@ -7,7 +7,7 @@ define profile::baseconfig::createkey (
   if($username == 'root') {
     $homedir = '/root'
   } else {
-    $homedir = '/home/${username}'
+    $homedir = "/home/${username}"
   }
 
   ssh_authorized_key { $name:
