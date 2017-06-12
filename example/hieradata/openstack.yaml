@@ -49,5 +49,20 @@ profile::neutron::service_providers:
  - 'FIREWALL:Iptables:neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver:default'
 profile::neutron::fwaas_driver: 'neutron_fwaas.services.firewall.drivers.linux.iptables_fwaas.IptablesFwaasDriver'
 profile::neutron::vrrp_pass: '<pwgen>'
-profile::neutron::vlan_low: <VLAN-ID>
-profile::neutron::vlan_high: <VLAN-ID>
+profile::neutron::mtu: 1550
+
+#
+# TENANT Networking:
+#  - Depending of the network type (vlan or vxlan) either vlan-id's or vni's
+#    needs to be supplied. Please see the following two examples:
+#
+profile::neutron::tenant::network::type: '<vxlan|vlan>'
+
+# EXAMPLE 1:
+#profile::neutron::tenant::network::type: 'vlan'
+#profile::neutron::vlan_low: <VLAN-ID>
+#profile::neutron::vlan_high: <VLAN-ID>
+# EXAMPLE 2:
+#profile::neutron::tenant::network::type: 'vxlan'
+#profile::neutron::vni_low: '65536'
+#profile::neutron::vni_high: '72000'
