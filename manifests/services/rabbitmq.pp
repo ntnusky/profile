@@ -21,13 +21,13 @@ class profile::services::rabbitmq {
   require ::profile::services::keepalived
 
   # Configure the correct repo, install rabbitmq and create users.
-  $rabbitUrl = 'https://bintray.com/rabbitmq/Keys/download_file'
-  $rabbitArg = 'file_path=rabbitmq-release-signing-key.asc'
-  apt_key { 'rabbitmq-release-key':
-    ensure => 'present',
-    id     => '0A9AF2115F4687BD29803A206B73A36E6026DFCA',
-    source => "${rabbitUrl}?${rabbitArg}",
-  }->
+  #$rabbitUrl = 'https://bintray.com/rabbitmq/Keys/download_file'
+  #$rabbitArg = 'file_path=rabbitmq-release-signing-key.asc'
+  #  apt_key { 'rabbitmq-release-key':
+  #  ensure => 'present',
+  #  id     => '0A9AF2115F4687BD29803A206B73A36E6026DFCA',
+  #  source => "${rabbitUrl}?${rabbitArg}",
+  #}->
   class { '::rabbitmq':
     erlang_cookie            => $secret,
     wipe_db_on_cookie_change => true,
