@@ -1,7 +1,7 @@
 # Installs and configures the neutron service on an openstack controller node
 # in the SkyHiGh architecture. This class installs both the API and the neutron
 # agents.
-class profile::openstack::neutronserver {
+class profile::openstack::neutron::controller {
   $service_plugins = hiera('profile::neutron::service_plugins')
   $mtu = hiera('profile::neutron::mtu', undef)
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')

@@ -1,5 +1,5 @@
 # This class installs the neutron agents needed on a compute-node.
-class profile::openstack::neutronagent {
+class profile::openstack::neutron::compute {
   $mtu = hiera('profile::neutron::mtu', undef)
   $rabbit_ip = hiera('profile::rabbitmq::ip')
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
