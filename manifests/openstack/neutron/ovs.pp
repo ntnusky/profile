@@ -6,15 +6,16 @@ class profile::openstack::neutron::ovs (
 ) {
   $external_networks = hiera_array('profile::neutron::external::networks', [])
 
-  $bridge_mappings = [ $tenant_mapping ]
-  
-  $external_networks.each |$net| {
+  $external = $external_networks.map |$net| {
     $bridge = hiera("profile::neutron::external::${net}::bridge")
-    concat($bridge_mappings, "${net}:${bridge}")
+    "${net}:${bridge}"
   }
+                   
+  $bridge_mappings = [ $tenant_mapping ]
+  $mappings = concat($bridge_mappings, $external)
 
   class { '::neutron::agents::ml2::ovs':
-    bridge_mappings => $bridge_mappings,
+    bridge_mappings => $mappings,
     local_ip        => $local_ip,
     tunnel_types    => $tunnel_types,
   }
