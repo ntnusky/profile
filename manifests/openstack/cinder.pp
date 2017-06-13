@@ -73,9 +73,8 @@ class profile::openstack::cinder {
     password          => $keystone_password,
     memcached_servers => $memcached_ip,
     region_name       => $region,
-  } ->
+  } 
   class { '::cinder::api':
-    keystone_password   => $keystone_password,
     keystone_enabled    => false,
     auth_strategy       => '',
     enabled             => true,
