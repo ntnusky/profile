@@ -123,7 +123,7 @@ class profile::openstack::keystone {
     user_enabled_attribute => userAccountControl,
     user_enabled_mask      => 2,
     user_enabled_default   => 512,
-    use_tls                => False,
+    use_tls                => false,
     before                 => Anchor['profile::openstack::keystone::end'],
     require                => Anchor['profile::openstack::keystone::begin'],
   }
