@@ -41,8 +41,6 @@ class profile::openstack::neutronserver {
 
   $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
 
-  require ::vswitch::ovs
-
   if($_tenant_if == 'vlan') {
     $tenant_parent = hiera('profile::interfaces::tenant::parentif')
     $tenant_vlan = hiera('profile::interfaces::tenant::vlanid')
@@ -145,19 +143,9 @@ class profile::openstack::neutronserver {
       network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
     }
     if($_tenant_if == 'vlan') {
-      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
-        ::profile::infrastructure::vlanbridge { $tenant_parent : }
-      }
-
-      $unless_args = "br-vlan ${tenant_vlan} --verify"
-      exec { "/usr/local/bin/addPatch.sh ${tenant_if} br-vlan {tenant_vlan}" :
-        unless  => "/usr/local/bin/addPatch.sh ${tenant_if} ${unless_args}",
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        require => [
-          File['/usr/local/bin/addPatch.sh'],
-          Profile::Infrastructure::Vlanbridge[$tenant_parent],
-        ],
-      }
+      $m1 = "${::hostname}: Module ${::module_name} Cannot use VLAN for tenant")
+      $m2 = "${m1} network when the host interface is a vlan itself."
+      fail($m2)
     } else {
       vs_port { $tenant_if:
         ensure => present,
@@ -193,18 +181,10 @@ class profile::openstack::neutronserver {
     }
 
     if($_tenant_if == 'vlan') {
-      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
-        ::profile::infrastructure::vlanbridge { $tenant_parent : }
-      }
-
-      $unless_args = "br-provider ${tenant_vlan} --verify"
-      exec { "/usr/local/bin/addPatch.sh ${tenant_if} br-provider ${tenant_vlan}" :
-        unless  => "/usr/local/bin/addPatch.sh ${tenant_if} ${unless_args}",
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        require => [
-          File['/usr/local/bin/addPatch.sh'],
-          Profile::Infrastructure::Vlanbridge[$tenant_parent],
-        ],
+      ::profile::infrastructure::ovs::patch {
+        $physical_if => $tenant_parent,
+        $vlan_id     => $tenant_vlan,
+        $ovs_bridge  => 'br-provider',
       }
     } else {
       vs_port { $tenant_if:
@@ -232,30 +212,15 @@ class profile::openstack::neutronserver {
     'AGENT/extensions': value => 'fwaas';
   }
 
-  file { '/usr/local/bin/addPatch.sh':
-    ensure => file,
-    source => 'puppet:///modules/profile/vswitch/addPatch.sh',
-    mode   => '0555',
-  }
-
   if($external_if == 'vlan') {
     $if = hiera('profile::interfaces::external::parentif')
     $id = hiera('profile::interfaces::external::vlanid')
 
-    if ! defined(Profile::Infrastructure::Vlanbridge[$if]) {
-      ::profile::infrastructure::vlanbridge { $if : }
+    ::profile::infrastructure::ovs::patch {
+      $physical_if => $if,
+      $vlan_id     => $id,
+      $ovs_bridge  => 'br-ex',
     }
-
-
-    exec { "/usr/local/bin/addPatch.sh br-vlan-${if} br-ex ${id}" :
-      unless  => "/usr/local/bin/addPatch.sh br-vlan-${if} br-ex ${id} --verify",
-      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      require => [
-        File['/usr/local/bin/addPatch.sh'],
-        Profile::Infrastructure::Vlanbridge[$if],
-      ],
-    }
-
   } else {
     vs_port { $external_if:
       ensure => present,

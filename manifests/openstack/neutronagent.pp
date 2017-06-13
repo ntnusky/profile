@@ -33,12 +33,6 @@ class profile::openstack::neutronagent {
   anchor{ 'profile::openstack::neutronagent::begin' : }
   anchor{ 'profile::openstack::neutronagent::end' : }
 
-  file { '/usr/local/bin/addPatch.sh':
-    ensure => file,
-    source => 'puppet:///modules/profile/vswitch/addPatch.sh',
-    mode   => '0555',
-  }
-
   if($tenant_network_strategy == 'vlan') {
     $vlan_low = hiera('profile::neutron::vlan_low')
     $vlan_high = hiera('profile::neutron::vlan_high')
@@ -82,18 +76,10 @@ class profile::openstack::neutronagent {
     }
 
     if($_tenant_if == 'vlan') {
-      if ! defined(Profile::Infrastructure::Vlanbridge[$tenant_parent]) {
-        ::profile::infrastructure::vlanbridge { $tenant_parent : }
-      }
-
-      $unless_args = "br-provider ${tenant_vlan} --verify"
-      exec { "/usr/local/bin/addPatch.sh ${tenant_if} br-provider ${tenant_vlan}" :
-        unless  => "/usr/local/bin/addPatch.sh ${tenant_if} ${unless_args}",
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        require => [
-          File['/usr/local/bin/addPatch.sh'],
-          Profile::Infrastructure::Vlanbridge[$tenant_parent],
-        ],
+      ::profile::infrastructure::ovs::patch {
+        $physical_if => $tenant_parent,
+        $vlan_id     => $tenant_vlan,
+        $ovs_bridge  => 'br-provider',
       }
     } else {
       vs_port { $tenant_if:
@@ -114,16 +100,6 @@ class profile::openstack::neutronagent {
     rabbit_host           => $rabbit_ip,
     global_physnet_mtu    => $mtu,
   }
-
-#  class { '::neutron::keystone::auth':
-#    password         => $neutron_pass,
-#    public_address   => $public_ip,
-#    admin_address    => $admin_ip,
-#    internal_address => $admin_ip,
-#    before           => Anchor['profile::openstack::neutronagent::end'],
-#    require          => Anchor['profile::openstack::neutronagent::begin'],
-#    region           => $region,
-#  }
 
   class { '::neutron::server':
     enabled             => false,
