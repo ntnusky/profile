@@ -76,19 +76,20 @@ class profile::openstack::cinder {
 
   class { '::cinder::db::sync': }
 
+
+  class { '::cinder::keystone::authtoken':
+    auth_url          => "http://${keystone_admin_ip}:35357",
+    auth_uri          => "http://${keystone_ip}:5000",
+    password          => $keystone_password,
+    memcached_servers => $memcached_ip,
+    region_name       => $region,
+  } ->
   class { '::cinder::api':
     keystone_password   => $keystone_password,
     keystone_enabled    => false,
     auth_strategy       => '',
     enabled             => true,
     default_volume_type => 'Normal',
-  }
-
-  class { '::cinder::keystone::authtoken':
-    auth_url          => "http://${keystone_admin_ip}:35357",
-    auth_uri          => "http://${keystone_ip}:5000",
-    memcached_servers => $memcached_ip,
-    region_name       => $region,
   }
 
   class { '::cinder::scheduler':
