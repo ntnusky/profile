@@ -5,6 +5,7 @@ class profile::services::erlang {
     repos      => 'contrib',
     key        => '434975BD900CCBE4F7EE1B1ED208507CA14F4FCA',
     key_source => 'https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc',
+    notify     => Exec['apt_update'],
     before     => Apt::Pin['erlang'],
   }
 
