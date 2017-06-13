@@ -138,7 +138,8 @@ class profile::openstack::neutronserver {
     $if = hiera('profile::interfaces::external::parentif')
     $id = hiera('profile::interfaces::external::vlanid')
 
-    ::profile::infrastructure::ovs::patch {
+    $n = "${if}-${id}-br-ex"
+    ::profile::infrastructure::ovs::patch { $n :
       physical_if => $if,
       vlan_id     => $id,
       ovs_bridge  => 'br-ex',
