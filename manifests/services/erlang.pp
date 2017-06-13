@@ -4,10 +4,11 @@ class profile::services::erlang {
     location   => 'https://packages.erlang-solutions.com/ubuntu',
     repos      => 'contrib',
     key_source => 'https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc',
-    before     => Package['erlang'],
+    before     => Apt::Pin['erlang'],
   }
 
-  package { 'erlang':
-    ensure => '1:19.3-1',
+  apt::pin { 'erlang':
+    packages => 'erlang*',
+    version  => '1:19.3-1',
   }
 }
