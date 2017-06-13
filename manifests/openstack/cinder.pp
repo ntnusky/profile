@@ -34,12 +34,6 @@ class profile::openstack::cinder {
   require ::profile::services::keepalived
   require ::profile::openstack::repo
 
-  anchor { 'profile::openstack::cinder::begin' :
-    require => [
-      Anchor['profile::ceph::monitor::end'],
-    ],
-  }
-
   ceph_config {
       'client.nova/key':              value => $ceph_key;
   }
@@ -63,15 +57,11 @@ class profile::openstack::cinder {
     internal_url_v3 => "http://${admin_ip}:8776/v3/%(tenant_id)s",
     admin_url_v3    => "http://${admin_ip}:8776/v3/%(tenant_id)s",
     region          => $region,
-    before          => Anchor['profile::openstack::cinder::end'],
-    require         => Anchor['profile::openstack::cinder::begin'],
   }
 
   class { '::cinder::db::mysql' :
     password      => $password,
     allowed_hosts => $allowed_hosts,
-    before        => Anchor['profile::openstack::cinder::end'],
-    require       => Anchor['profile::openstack::cinder::begin'],
   }
 
   class { '::cinder::db::sync': }
@@ -106,8 +96,6 @@ class profile::openstack::cinder {
 
   keepalived::vrrp::script { 'check_cinder':
     script  => '/usr/bin/killall -0 cinder-api',
-    before  => Anchor['profile::openstack::cinder::end'],
-    require => Anchor['profile::openstack::cinder::begin'],
   }
 
   keepalived::vrrp::instance { 'admin-cinder':
@@ -121,8 +109,6 @@ class profile::openstack::cinder {
       "${admin_ip}/32",
     ],
     track_script      => 'check_cinder',
-    before            => Anchor['profile::openstack::cinder::end'],
-    require           => Anchor['profile::openstack::cinder::begin'],
   }
 
   keepalived::vrrp::instance { 'public-cinder':
@@ -136,8 +122,6 @@ class profile::openstack::cinder {
       "${public_ip}/32",
     ],
     track_script      => 'check_cinder',
-    before            => Anchor['profile::openstack::cinder::end'],
-    require           => Anchor['profile::openstack::cinder::begin'],
   }
 
   ceph::key { 'client.cinder':
@@ -146,8 +130,6 @@ class profile::openstack::cinder {
     cap_osd =>
       'allow class-read object_prefix rbd_children, allow rwx pool=cinder',
     inject  => true,
-    before  => Anchor['profile::openstack::cinder::end'],
-    require => Anchor['profile::openstack::cinder::begin'],
   }
 
   sudo::conf { 'cinder_sudoers':
@@ -155,6 +137,4 @@ class profile::openstack::cinder {
     source         => 'puppet:///modules/profile/sudo/cinder_sudoers',
     sudo_file_name => 'cinder_sudoers',
   }
-
-  anchor { 'profile::openstack::cinder::end' : }
 }
