@@ -1,4 +1,5 @@
 ---
+profile::puppet::aptkey: '<puppet GPG key>'
 profile::munin::url: 'munin.domain.tld'
 
 profile::munin::install: true
