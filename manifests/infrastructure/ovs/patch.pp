@@ -21,6 +21,6 @@ define profile::infrastructure::ovs::patch (
   exec { "/usr/local/bin/addPatch.sh ${scriptArgs}":
     unless  => "/usr/local/bin/addPatch.sh ${scriptArgs} --verify",
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-    require => Profile::Infrastructure::Vlanbridge[$physical_if],
+    require => Profile::Infrastructure::Ovs::Bridge[$physical_if],
   }
 }
