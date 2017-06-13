@@ -2,13 +2,14 @@
 class profile::baseconfig::puppet {
   $environment = hiera('profile::puppet::environment')
   $configtimeout = hiera('profile:puppet::configtimeout', '3m')
+  $aptkey = hiera('profile::puppet::aptkey')
 
   # If we are running on ubuntu 14.04, add the puppet repos to get puppet 3.8.
   if ($::lsbdistcodename == 'trusty') {
     apt::source { 'puppetlabs':
       location   => 'http://apt.puppetlabs.com',
       repos      => 'main',
-      key        => '47B320EB4C7C375AA9DAE1A01054B7A24BD6EC30',
+      key        => $aptkey,
       key_server => 'pgp.mit.edu',
       before     => Package['puppet'],
     }
