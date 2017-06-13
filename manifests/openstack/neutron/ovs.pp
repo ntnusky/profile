@@ -10,7 +10,7 @@ class profile::openstack::neutron::ovs (
     $bridge = hiera("profile::neutron::external::${net}::bridge")
     "${net}:${bridge}"
   }
-                   
+
   $bridge_mappings = [ $tenant_mapping ]
   $mappings = concat($bridge_mappings, $external)
 

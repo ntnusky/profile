@@ -5,6 +5,7 @@ class profile::openstack::neutron::tenant::vlan {
   $vlan_high = hiera('profile::neutron::vlan_high')
 
   require ::profile::openstack::repo
+  require ::vswitch::ovs
 
   if($tenant_if == 'vlan') {
     $a = 'It is impossible to use a VLAN for tenant_if when using VLANs to'

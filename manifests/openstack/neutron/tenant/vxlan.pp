@@ -7,6 +7,7 @@ class profile::openstack::neutron::tenant::vxlan {
   $_tenant_if = hiera('profile::interfaces::tenant')
 
   require ::profile::openstack::repo
+  require ::vswitch::ovs
 
   $local_ip = pick($::ipaddress_br_provider, '169.254.254.254')
 
