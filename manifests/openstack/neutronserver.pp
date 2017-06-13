@@ -28,7 +28,6 @@ class profile::openstack::neutronserver {
   $public_if = hiera('profile::interfaces::public')
   $management_if = hiera('profile::interfaces::management')
   $external_if = hiera('profile::interfaces::external')
-  $_tenant_if = hiera('profile::interfaces::tenant')
   $mtu = hiera('profile::neutron::mtu', undef)
 
   $rabbit_user = hiera('profile::rabbitmq::rabbituser')
@@ -39,19 +38,11 @@ class profile::openstack::neutronserver {
 
   $database_connection = "mysql://neutron:${password}@${mysql_ip}/neutron"
 
-  $tenant_network_strategy = hiera('profile::neutron::tenant::network::type')
-
-  if($_tenant_if == 'vlan') {
-    $tenant_parent = hiera('profile::interfaces::tenant::parentif')
-    $tenant_vlan = hiera('profile::interfaces::tenant::vlanid')
-    $tenant_if = "br-vlan-${tenant_parent}"
-  } else {
-    $tenant_if = $_tenant_if
-  }
-
   require ::profile::mysql::cluster
   require ::profile::services::keepalived
   require ::profile::openstack::repo
+  include ::profile::openstack::neutron::sudo
+  include ::profile::openstack::neutron::tenant
 
   class { '::neutron':
     verbose                 => true,
@@ -125,75 +116,6 @@ class profile::openstack::neutronserver {
     nova_url    => "http://${nova_public_ip}:8774/v2",
   }
 
-  if($tenant_network_strategy == 'vlan') {
-    $vlan_low = hiera('profile::neutron::vlan_low')
-    $vlan_high = hiera('profile::neutron::vlan_high')
-
-    # This plugin configures Neutron for OVS on the server
-    # Agent
-    class { '::neutron::agents::ml2::ovs':
-      bridge_mappings => ['external:br-ex','physnet-vlan:br-vlan'],
-    }
-
-    # ml2 plugin with vxlan as ml2 driver and ovs as mechanism driver
-    class { '::neutron::plugins::ml2':
-      type_drivers         => ['vlan', 'flat'],
-      tenant_network_types => ['vlan'],
-      mechanism_drivers    => ['openvswitch', 'l2population'],
-      network_vlan_ranges  => ["physnet-vlan:${vlan_low}:${vlan_high}"],
-    }
-    if($_tenant_if == 'vlan') {
-      $m1 = "${::hostname}: Module ${::module_name} Cannot use VLAN for tenant")
-      $m2 = "${m1} network when the host interface is a vlan itself."
-      fail($m2)
-    } else {
-      vs_port { $tenant_if:
-        ensure => present,
-        bridge => 'br-vlan',
-      }
-    }
-  }
-
-  if($tenant_network_strategy == 'vxlan') {
-    $vni_low = hiera('profile::neutron::vni_low')
-    $vni_high = hiera('profile::neutron::vni_high')
-
-
-    # Make sure there always is an IP to bind to; even when it is not yet
-    # configured...
-    if defined('$::ipaddress_br_provider') {
-      $local_ip = $::ipaddress_br_provider
-    } else {
-      $local_ip = '169.254.254.254'
-    }
-
-    class { '::neutron::agents::ml2::ovs':
-      local_ip        => $local_ip,
-      bridge_mappings => ['external:br-ex', 'provider:br-provider'],
-      tunnel_types    => ['vxlan'],
-    }
-
-    class { '::neutron::plugins::ml2':
-      type_drivers         => ['vxlan', 'flat'],
-      tenant_network_types => ['vxlan'],
-      mechanism_drivers    => ['openvswitch', 'l2population'],
-      vni_ranges           => "${vni_low}:${vni_high}"
-    }
-
-    if($_tenant_if == 'vlan') {
-      ::profile::infrastructure::ovs::patch {
-        $physical_if => $tenant_parent,
-        $vlan_id     => $tenant_vlan,
-        $ovs_bridge  => 'br-provider',
-      }
-    } else {
-      vs_port { $tenant_if:
-        ensure => present,
-        bridge => 'br-provider',
-      }
-    }
-  }
-
   class { '::neutron::agents::l3':
     ha_enabled            => true,
     ha_vrrp_auth_password => $neutron_vrrp_pass,
@@ -256,11 +178,5 @@ class profile::openstack::neutronserver {
       "${public_ip}/32",
     ],
     track_script      => 'check_neutron',
-  }
-
-  sudo::conf { 'neutron_sudoers':
-    ensure         => 'present',
-    source         => 'puppet:///modules/profile/sudo/neutron_sudoers',
-    sudo_file_name => 'neutron_sudoers',
   }
 }
