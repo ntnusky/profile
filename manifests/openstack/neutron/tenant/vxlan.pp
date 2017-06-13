@@ -18,13 +18,10 @@ class profile::openstack::neutron::tenant::vxlan {
     $tenant_if = $_tenant_if
   }
 
-  Class { '::neutron::agents::ml2::ovs':
-    local_ip     => $local_ip,
-    tunnel_types => ['vxlan'],
-  }
-
   class { '::profile::openstack::neutron::ovs':
     tenant_mapping => 'provider:br-provider',
+    local_ip       => $local_ip,
+    tunnel_types   => ['vxlan'],
   }
 
   class { '::neutron::plugins::ml2':
@@ -35,10 +32,11 @@ class profile::openstack::neutron::tenant::vxlan {
   }
 
   if($_tenant_if == 'vlan') {
-    ::profile::infrastructure::ovs::patch {
-      $physical_if => $tenant_parent,
-      $vlan_id     => $tenant_vlan,
-      $ovs_bridge  => 'br-provider',
+    $n = "${tenant_parent}-${tenant_vlan}-br-provider"
+    ::profile::infrastructure::ovs::patch { $n :
+      physical_if => $tenant_parent,
+      vlan_id     => $tenant_vlan,
+      ovs_bridge  => 'br-provider',
     }
   } else {
     vs_port { $tenant_if:
