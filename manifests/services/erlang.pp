@@ -10,5 +10,6 @@ class profile::services::erlang {
   apt::pin { 'erlang':
     packages => 'erlang*',
     version  => '1:19.3-1',
+    priority => 1000,
   }
 }
