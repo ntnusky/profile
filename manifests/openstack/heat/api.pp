@@ -28,11 +28,11 @@ class profile::openstack::heat::api {
     admin_url    => "http://${heat_admin_ip}:8000/v1",
   }
 
-  class { 'heat::api':
+  class { '::heat::api':
     bind_host => $heat_public_ip,
   }
 
-  class { 'heat::api_cfn':
+  class { '::heat::api_cfn':
     bind_host => $heat_public_ip,
   }
 }
