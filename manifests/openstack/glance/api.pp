@@ -17,6 +17,8 @@ class profile::openstack::glance::api {
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
   require ::profile::openstack::repo
+  require ::profile::openstack::glance::database
+  require ::profile::openstack::glance::keepalived
 
   class { '::glance::api':
     keystone_password     => $mysql_pass,
@@ -43,5 +45,9 @@ class profile::openstack::glance::api {
     internal_url => "http://${glance_admin_ip}:9292",
     admin_url    => "http://${glance_admin_ip}:9292",
     region       => $region,
+  }
+
+  glance_api_config {
+    'DEFAULT/default_store': value => 'rbd';
   }
 }
