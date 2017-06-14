@@ -6,7 +6,7 @@ class profile::openstack::heat::engine {
   require ::profile::openstack::repo
   require ::profile::openstack::heat::base
 
-  class { 'heat::engine':
+  class { '::heat::engine':
     auth_encryption_key           => $auth_encryption_key,
     heat_metadata_server_url      => "http://${heat_public_ip}:8000",
     heat_waitcondition_server_url =>
