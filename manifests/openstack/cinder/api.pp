@@ -11,6 +11,7 @@ class profile::openstack::cinder::api {
   $memcached_ip = hiera('profile::memcache::ip')
 
   require ::profile::openstack::repo
+  require ::profile::openstack::cinder::database
 
   class  { '::cinder::keystone::auth':
     password        => $keystone_password,
