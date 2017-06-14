@@ -13,7 +13,7 @@ class profile::openstack::cinder::api {
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
   require ::profile::openstack::cinder::database
-  require ::profile::openstack::cinder::keepalived
+  contain ::profile::openstack::cinder::keepalived
 
   class  { '::cinder::keystone::auth':
     password        => $keystone_password,

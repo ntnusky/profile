@@ -10,7 +10,8 @@ class profile::openstack::glance::registry {
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
   require ::profile::openstack::repo
-  require ::profile::openstack::glance::ceph
+  contain ::profile::openstack::glance::ceph
+  require ::profile::openstack::glance::base
   require ::profile::openstack::glance::database
 
   class { '::glance::backend::rbd' :

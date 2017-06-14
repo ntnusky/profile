@@ -5,7 +5,7 @@ class profile::openstack::glance::base {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
 
   require ::profile::openstack::repo
-  require ::profile::openstack::glance::sudo
+  include ::profile::openstack::glance::sudo
 
   class { '::glance::notify::rabbitmq':
     rabbit_password => $rabbit_pass,

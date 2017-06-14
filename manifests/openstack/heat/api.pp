@@ -6,10 +6,10 @@ class profile::openstack::heat::api {
   $mysql_pass = hiera('profile::mysql::heatpass')
   $region = hiera('profile::region')
 
-  require ::profile::openstack::repo
   require ::profile::openstack::heat::database
   require ::profile::openstack::heat::base
-  require ::profile::openstack::heat::keepalived
+  contain ::profile::openstack::heat::keepalived
+  require ::profile::openstack::repo
 
   class  { '::heat::keystone::auth':
     password     => $mysql_pass,

@@ -12,7 +12,7 @@ class profile::openstack::horizon {
 
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
 
-  require ::profile::openstack::horizon::keepalived
+  contain ::profile::openstack::horizon::keepalived
   require ::profile::openstack::horizon::ssl
   require ::profile::openstack::repo
 

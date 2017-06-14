@@ -18,7 +18,7 @@ class profile::openstack::glance::api {
 
   require ::profile::openstack::repo
   require ::profile::openstack::glance::database
-  require ::profile::openstack::glance::keepalived
+  contain ::profile::openstack::glance::keepalived
 
   class { '::glance::api':
     keystone_password     => $mysql_pass,

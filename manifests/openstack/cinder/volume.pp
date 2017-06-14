@@ -5,7 +5,7 @@ class profile::openstack::cinder::volume {
 
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
-  require ::profile::openstack::cinder::ceph
+  contain ::profile::openstack::cinder::ceph
 
   class { '::cinder::volume': }
   class { '::cinder::volume::rbd':
