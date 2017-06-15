@@ -6,7 +6,6 @@ class profile::openstack::neutron::tenant::vxlan {
 
   require ::profile::openstack::repo
   require ::profile::openstack::neutron::base
-  include ::profile::openstack::neutron::ovs
   require ::vswitch::ovs
 
   # Make sure there is allways an IP available for tunnel endpoints, even if the

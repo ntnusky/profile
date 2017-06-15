@@ -6,7 +6,6 @@ class profile::openstack::neutron::tenant::vlan {
 
   require ::profile::openstack::repo
   require ::profile::openstack::neutron::base
-  include ::profile::openstack::neutron::ovs
   require ::vswitch::ovs
 
   if($tenant_if == 'vlan') {
