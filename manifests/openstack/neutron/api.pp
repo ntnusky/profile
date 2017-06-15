@@ -21,6 +21,10 @@ class profile::openstack::neutron::api {
   # Database connection string
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
+  require ::profile::openstack::neutron::base
+  contain ::profile::openstack::neutron::database
+  contain ::profile::openstack::neutron::keepalived
+
   # Configure the neutron API endpoint in keystone
   class { '::neutron::keystone::auth':
     password     => $neutron_password,

@@ -5,6 +5,8 @@ class profile::openstack::neutron::tenant::vlan {
   $vlan_high = hiera('profile::neutron::vlan_high')
 
   require ::profile::openstack::repo
+  require ::profile::openstack::neutron::base
+  include ::profile::openstack::neutron::ovs
   require ::vswitch::ovs
 
   if($tenant_if == 'vlan') {

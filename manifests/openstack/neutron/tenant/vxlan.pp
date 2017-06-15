@@ -1,14 +1,16 @@
-# Installs and configures the neutron service on an openstack controller node
-# in the SkyHiGh architecture. This class installs both the API and the neutron
-# agents.
+# Configures the neutron ml2 agent to use VXLAN for tenant traffic.
 class profile::openstack::neutron::tenant::vxlan {
   $vni_low = hiera('profile::neutron::vni_low')
   $vni_high = hiera('profile::neutron::vni_high')
   $_tenant_if = hiera('profile::interfaces::tenant')
 
   require ::profile::openstack::repo
+  require ::profile::openstack::neutron::base
+  include ::profile::openstack::neutron::ovs
   require ::vswitch::ovs
 
+  # Make sure there is allways an IP available for tunnel endpoints, even if the
+  # correct IP is not present yet.
   $local_ip = pick($::ipaddress_br_provider, '169.254.254.254')
 
   if($_tenant_if == 'vlan') {

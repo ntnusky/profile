@@ -4,6 +4,7 @@ class profile::openstack::neutron::external {
   $external_networks = hiera_array('profile::neutron::external::networks', [])
 
   require ::vswitch::ovs
+  require ::profile::openstack::neutron::ovs
 
   $external = $external_networks.each |$net| {
     $vlanid = hiera("profile::neutron::external::${net}::vlanid")

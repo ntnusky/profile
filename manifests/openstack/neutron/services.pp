@@ -2,6 +2,9 @@
 class profile::openstack::neutron::services {
   $fw_driver = hiera('profile::neutron::fwaas_driver')
 
+  require ::profile::openstack::neutron::base
+  require ::profile::openstack::repo
+
   class { '::neutron::services::fwaas':
     enabled => true,
     driver  => $fw_driver,

@@ -5,6 +5,7 @@ class profile::openstack::neutron::agents {
   $nova_metadata_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $dns_servers = hiera('profile::nova::dns')
 
+  require ::profile::openstack::neutron::base
   require ::profile::openstack::repo
 
   class { '::neutron::agents::metadata':

@@ -6,6 +6,9 @@ class profile::openstack::neutron::ovs (
 ) {
   $external_networks = hiera_array('profile::neutron::external::networks', [])
 
+  require ::profile::openstack::neutron::base
+  require ::profile::openstack::repo
+
   $external = $external_networks.map |$net| {
     $bridge = hiera("profile::neutron::external::${net}::bridge")
     "${net}:${bridge}"
