@@ -1,5 +1,7 @@
 # Basic nova configuration for compute nodes.
 class profile::openstack::nova::base::compute {
+  $mysql_password = hiera('profile::mysql::novapass')
+  $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $controller_management_addresses = hiera('controller::management::addresses')
 
