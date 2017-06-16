@@ -1,5 +1,4 @@
-# Installs and configures the horizon dashboard on an openstack controller node
-# in the SkyHiGh architecture
+# Installs and configures horizon
 class profile::openstack::horizon {
   $django_secret = hiera('profile::horizon::django_secret')
   $memcache_ip = hiera('profile::memcache::ip')
@@ -9,45 +8,14 @@ class profile::openstack::horizon {
   $server_name = hiera('profile::horizon::server_name')
 
   $horizon_ip = hiera('profile::api::horizon::public::ip')
-  $vrrp_password     = hiera('profile::keepalived::vrrp_password')
-  $vrid = hiera('profile::api::horizon::vrrp::id')
-  $vrpri = hiera('profile::api::horizon::vrrp::priority')
-
-  $if_public = hiera('profile::interfaces::public')
-
-  $ssl_key = hiera('profile::horizon::ssl_key')
-  $ssl_cert = hiera('profile::horizon::ssl_cert')
-  $ssl_ca = hiera('profile::horizon::ssl_ca')
-
   $keystone_ip = hiera('profile::api::keystone::public::ip')
+
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
 
-  require ::profile::mysql::cluster
-  require ::profile::services::keepalived
+  contain ::profile::openstack::horizon::keepalived
+  require ::profile::openstack::horizon::ssl
   require ::profile::openstack::repo
 
-  anchor { 'profile::openstack::horizon::begin' :
-    require => [
-      Anchor['profile::ceph::monitor::end'],
-    ],
-    before  => Class['::horizon'],
-  }
-
-  file { '/etc/ssl/private/horizon.key':
-    ensure  => file,
-    content => $ssl_key,
-    notify  => Service['httpd'],
-  } ->
-  file { '/etc/ssl/certs/horizon.crt':
-    ensure  => file,
-    content => $ssl_cert,
-    notify  => Service['httpd'],
-  } ->
-  file { '/etc/ssl/certs/CA.crt':
-    ensure  => file,
-    content => $ssl_ca,
-    notify  => Service['httpd'],
-  } ->
   class { '::horizon':
     allowed_hosts                => concat(['127.0.0.1', $::fqdn, $horizon_ip ],
       $controller_api, $horizon_allowed_hosts
@@ -69,22 +37,5 @@ class profile::openstack::horizon {
     neutron_options              => {
       enable_firewall => true,
     },
-  }
-
-  keepalived::vrrp::script { 'check_horizon':
-    script => '/usr/bin/killall -0 apache2',
-  }
-
-  keepalived::vrrp::instance { 'public-horizon':
-    interface         => $if_public,
-    state             => 'MASTER',
-    virtual_router_id => $vrid,
-    priority          => $vrpri,
-    auth_type         => 'PASS',
-    auth_pass         => $vrrp_password,
-    virtual_ipaddress => [
-      "${horizon_ip}/32",
-    ],
-    track_script      => 'check_horizon',
   }
 }
