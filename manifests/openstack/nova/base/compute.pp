@@ -18,6 +18,4 @@ class profile::openstack::nova::base::compute {
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
   }
-
-  nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
 }

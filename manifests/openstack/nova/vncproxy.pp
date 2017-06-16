@@ -4,7 +4,7 @@ class profile::openstack::nova::vncproxy {
 
   require ::profile::openstack::repo
 
-  class { 'nova::vncproxy':
+  class { '::nova::vncproxy':
     host    => $vnc_proxy_ip,
     enabled => true,
   }

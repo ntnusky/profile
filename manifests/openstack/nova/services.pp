@@ -6,10 +6,10 @@ class profile::openstack::nova::services {
   contain ::profile::openstack::nova::vncproxy
 
   class { [
-    'nova::scheduler',
-    'nova::cert',
-    'nova::consoleauth',
-    'nova::conductor'
+    '::nova::scheduler',
+    '::nova::cert',
+    '::nova::consoleauth',
+    '::nova::conductor'
   ]:
     enabled => true,
   }

@@ -16,7 +16,7 @@ class profile::openstack::nova::base {
   require ::profile::openstack::repo
   include ::profile::openstack::nova::sudo
 
-  class { 'nova':
+  class { '::nova':
     database_connection     => $db_con,
     api_database_connection => $api_db_con,
     rabbit_host             => $rabbit_ip,

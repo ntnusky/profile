@@ -7,7 +7,7 @@ class profile::openstack::nova::neutron {
 
   require ::profile::openstack::repo
 
-  class { 'nova::network::neutron':
+  class { '::nova::network::neutron':
     neutron_region_name   => $region,
     neutron_password      => $neutron_password,
     neutron_url           => "http://${neutron_admin_ip}:9696",
