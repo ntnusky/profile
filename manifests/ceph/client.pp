@@ -1,3 +1,5 @@
+# This class installs the ceph client, and configures to be able to use the ceph
+# cluster.
 class profile::ceph::client {
   $controllernames = join(hiera("controller::names"), ",")
   $controlleraddresses = join(hiera("controller::storage::addresses"), ",")
