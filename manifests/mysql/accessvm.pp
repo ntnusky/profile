@@ -13,34 +13,34 @@ class profile::mysql::accessvm {
   $accessuser = hiera('profile::access::db_user', false)
   $accesspw = hiera('profile::access::db_password', false)
 
+  require ::profile::openstack::keystone
+
   if($accessuser) {
     $mysqlcommand = "/usr/bin/mysql -h ${host} \
                                     -uroot \
                                     -p${pw} \
                                     -D keystone \
                                     -e \"${sql}\" 2> /dev/null"
-  
+
     $check_view = "/usr/bin/mysql -N -s -r -h ${host} \
                                   -uroot \
                                   -p${pw} \
                                   -D keystone \
                                   -e \"show tables;\" \
                                   | grep v_project_roles_per_user"
-  
-    Anchor['profile::openstack::keystone::end'] ->
-  
+
+
     exec { 'create_view':
       command => $mysqlcommand,
       user    => 'root',
       unless  => $check_view,
-  
     } ->
-  
+
     mysql_user { "${accessuser}@%":
       ensure        => 'present',
       password_hash => mysql_password($accesspw),
     } ->
-  
+
     mysql_grant { "${accessuser}@%/keystone.v_project_roles_per_user":
       ensure     => 'present',
       privileges => ['SELECT'],
