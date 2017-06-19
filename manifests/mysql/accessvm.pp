@@ -13,8 +13,6 @@ class profile::mysql::accessvm {
   $accessuser = hiera('profile::access::db_user', false)
   $accesspw = hiera('profile::access::db_password', false)
 
-  require ::profile::openstack::keystone
-
   if($accessuser) {
     $mysqlcommand = "/usr/bin/mysql -h ${host} \
                                     -uroot \
@@ -34,6 +32,7 @@ class profile::mysql::accessvm {
       command => $mysqlcommand,
       user    => 'root',
       unless  => $check_view,
+      require => Class['::Keystone'],
     } ->
 
     mysql_user { "${accessuser}@%":
