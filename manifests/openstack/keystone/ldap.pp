@@ -8,7 +8,7 @@ class profile::openstack::keystone::ldap {
   $ldap_user_tree_dn = hiera('profile::keystone::ldap_backend::user_tree_dn')
   $ldap_user_filter = hiera('profile::keystone::ldap_backend::user_filter',undef)
   $ldap_group_tree_dn = hiera('profile::keystone::ldap_backend::group_tree_dn')
-  $ldap_group_filter = hiera('profile::keystone::ldap_backen::group_filter',undef)
+  $ldap_group_filter = hiera('profile::keystone::ldap_backend::group_filter',undef)
 
   require ::profile::openstack::repo
 
