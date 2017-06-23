@@ -39,7 +39,8 @@ class profile::openstack::keystone::ldap {
   }
 
   keystone_domain_config {
-    "${ldap_name}::identity/list_limit": value => '100';
+    "${ldap_name}::identity/list_limit": value   => '100';
+    "${ldap_name}::ldap/group_ad_nesting": value => true;
   }
 
   keystone_domain { $ldap_name:
