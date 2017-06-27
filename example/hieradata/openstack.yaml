@@ -31,7 +31,8 @@ profile::keystone::ldap_backend::password: '<password for LDAP bind user>'
 profile::keystone::ldap_backend::suffix: '<DN of domain-FQDN> (i.e DC=example,DC=com)'
 profile::keystone::ldap_backend::user_tree_dn: '<DN for user OU>'
 profile::keystone::ldap_backend::user_filter: '[optional] <ldap user filter>'
-
+profile::keystone::ldap_backend::group_tree_dn: '<DN for group OU>'
+profile::keystone::ldap_backedn::group_filter: '[optional] <ldap group filter>'
 # Nova
 profile::nova::sharedmetadataproxysecret: '<pwgen>'
 profile::nova::keystone::password: '<pwgen>'
