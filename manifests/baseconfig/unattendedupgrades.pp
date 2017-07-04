@@ -1,9 +1,14 @@
 # Configure APT unattended upgrades
-class profile::baseconfig::unattendedupgrades {
-  $blacklist = hiera('profile::baseconfig::unattendedupgrades::blacklist', [])
+#
+# All parameters can be overridden in hiera , i.e:
+#  unattended_upgrades::blacklist:
+#   'vim'
+#   'openssl'
+#  unattended_upgrades::upgrade: 7
+#
 
+class profile::baseconfig::unattendedupgrades {
   class { '::unattended_upgrades':
-    blacklist     => $blacklist,
     minimal_steps => false,
   }
 }

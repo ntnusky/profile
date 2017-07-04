@@ -22,3 +22,15 @@ profile::sssd::passwordhash: '<sssd_obfuscate>'
 profile::access::db_port: '3306'
 profile::access::db_user: '<DBUSER for keyston-logon script>'
 profile::access::db_password: '<pwgen>'
+
+## APT unattended upgrades
+unattended_upgrades::blacklist:
+ - 'package'
+ - 'another-package'
+unattended_upgrades::upgrade: '<integer>' # Run upgrade every N days (defaults to 1 if not set)
+unattended_upgrades::origins:
+ - '${distro_id}:${distro_codename}'
+ - '${distro_id}:${distro_codename}-security'
+ - '${distro_id}:${distro_codename}-updates'
+# Every parameter in the unattended_upgrades class can be overridden like this
+unattended_upgrades::foo_param: 'value'
