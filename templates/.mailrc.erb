@@ -1,2 +1,0 @@
-set smtp=smtp://<%= scope.function_hiera(['profile::baseconfig::smtp_relay']) %>
-set from=root@<%= @hostname %>.<%= scope.function_hiera(['profile::baseconfig::maildomain']) %>

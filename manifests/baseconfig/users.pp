@@ -28,8 +28,16 @@ class profile::baseconfig::users {
     source => 'puppet:///modules/profile/.bashrc',
   }
 
-  $keys = hiera("profile::user::root::keys", false)
-  if($keys) { 
+  file { '/root/.mailrc':
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0400',
+    content => template('profile/mailrc.erb'),
+  }
+
+  $keys = hiera('profile::user::root::keys', false)
+  if($keys) {
     ::profile::baseconfig::createkey { $keys:
       username => 'root',
     }
