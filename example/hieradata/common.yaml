@@ -34,3 +34,6 @@ unattended_upgrades::origins:
  - '${distro_id}:${distro_codename}-updates'
 # Every parameter in the unattended_upgrades class can be overridden like this
 unattended_upgrades::foo_param: 'value'
+
+profile::baseconfig::smtp_relay: 'smtp.foo.edu'
+profile::baseconfig::maildomain: 'mydomain.foo'
