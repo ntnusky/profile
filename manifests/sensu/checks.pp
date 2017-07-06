@@ -7,8 +7,6 @@ class profile::sensu::checks {
   $cinder_api = hiera('profile::api::cinder::public::ip')
   $glance_api = hiera('profile::api::glance::public::ip')
   $heat_api = hiera('profile::api::heat::public::ip')
-  $rac_ip = hiera('profile::rac::ip')
-  $rac_password = hiera('profile::rac::password')
 
   # Base checks for all hosts
   sensu::check { 'diskspace':
@@ -49,7 +47,7 @@ class profile::sensu::checks {
 
   # Physical Dell Servers checks
   sensu::check { 'rac-system-event-log':
-    command     => "/etc/sensu/plugins/extra/check_rac_sel.sh -r ${rac_ip} -p ${rac_password}",
+    command     => "/etc/sensu/plugins/extra/check_rac_sel.sh -r :::rac.ip::: -p :::rac.password:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'dell-servers' ],
