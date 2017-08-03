@@ -9,6 +9,10 @@ class profile::openstack::nova::base::compute {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
 
+  $placement_password = hiera('profile::placement::keystone::password')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $region = hiera('profile::region')
+
   require ::profile::openstack::repo
   include ::profile::openstack::nova::sudo
 
@@ -19,5 +23,10 @@ class profile::openstack::nova::base::compute {
     rabbit_host         => $rabbit_ip,
     rabbit_userid       => $rabbit_user,
     rabbit_password     => $rabbit_pass,
+  }
+  class { '::nova::placement':
+    password       => $placement_password,
+    auth_url       => "http://${keystone_admin_ip}:35357/v3",
+    os_region_name => $region,
   }
 }
