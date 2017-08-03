@@ -49,7 +49,6 @@ class profile::openstack::nova::api {
   # Warning: This class is deprecated in Ocata
   class { '::nova::wsgi::apache':
     servername => $nova_public_ip,
-    bind_host  => $nova_public_ip,
     ssl        => false,
   }
 
