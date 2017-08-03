@@ -15,6 +15,7 @@ class profile::openstack::nova::api {
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
   contain ::profile::openstack::nova::keepalived
+  contain ::profile::openstack::nova::placement
   include ::profile::openstack::nova::munin::api
 
   class { '::nova::keystone::auth':
