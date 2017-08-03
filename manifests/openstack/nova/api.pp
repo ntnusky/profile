@@ -42,7 +42,15 @@ class profile::openstack::nova::api {
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db                              => $sync_db,
     sync_db_api                          => $sync_db,
-    enabled                              => true,
+    enabled                              => false,
+    service_name                         => 'httpd',
+  }
+
+  # Warning: This class is deprecated in Ocata
+  class { '::nova::wsgi::apache':
+    servername => $nova_public_ip,
+    bind_host  => $nova_public_ip,
+    ssl        => false,
   }
 
   nova_config {

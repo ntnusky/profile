@@ -3,7 +3,7 @@ class profile::openstack::nova::placement {
   $placement_password = hiera('profile::placement::keystone::password')
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $region = hiera('profile::region')
-  $nova_admin_ip = hiera('profile::api::nova::admin::ip')
+  $nova_public_ip = hiera('profile::api::nova::public::ip')
 
   class { '::nova::placement':
     password       => $placement_password,
@@ -13,14 +13,14 @@ class profile::openstack::nova::placement {
 
   class { '::nova::keystone::auth_placement':
     password     => $placement_password,
-    public_url   => "http://${nova_admin_ip}:8770/placement",
-    internal_url => "http://${nova_admin_ip}:8770/placement",
-    admin_url    => "http://${nova_admin_ip}:8770/placement",
+    public_url   => "http://${nova_public_ip}:8778/placement",
+    internal_url => "http://${nova_public_ip}:8778/placement",
+    admin_url    => "http://${nova_public_ip}:8778/placement",
   }
 
   class { '::nova::wsgi::apache_placement':
-    servername => $nova_admin_ip,
-    api_port   => 8770,
+    servername => $nova_public_ip,
+    api_port   => 8778,
     ssl        => false,
   }
 }
