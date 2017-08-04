@@ -16,6 +16,7 @@ class profile::openstack::nova::placement {
     public_url   => "http://${nova_public_ip}:8778/placement",
     internal_url => "http://${nova_public_ip}:8778/placement",
     admin_url    => "http://${nova_public_ip}:8778/placement",
+    region       => $region,
   }
 
   class { '::nova::wsgi::apache_placement':
