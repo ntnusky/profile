@@ -13,7 +13,7 @@ class profile::openstack::nova::placement {
 
   class { '::nova::keystone::auth_placement':
     password     => $placement_password,
-    admin_url    => "http://${nova_admin_ip}:8778/placement",
+    public_url    => "http://${nova_admin_ip}:8778/placement",
     internal_url => "http://${nova_admin_ip}:8778/placement",
     admin_url    => "http://${nova_admin_ip}:8778/placement",
     region       => $region,
