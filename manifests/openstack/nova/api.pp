@@ -14,6 +14,7 @@ class profile::openstack::nova::api {
   require ::profile::openstack::repo
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
+  require ::profile::openstack::nova::firewall
   contain ::profile::openstack::nova::keepalived
   include ::profile::openstack::nova::munin::api
 
