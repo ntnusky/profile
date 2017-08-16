@@ -10,6 +10,7 @@ class profile::services::apache {
     ensure => present,
   }
 
+
   apache::vhost { "${::fqdn} http":
     servername    => $::fqdn,
     port          => '80',
@@ -18,8 +19,17 @@ class profile::services::apache {
     docroot_group => 'www-data',
   }
 
+
   include ::apache::mod::rewrite
   include ::apache::mod::prefork
   include ::apache::mod::php
   include ::apache::mod::ssl
+
+  require ::profile::baseconfig::firewall 
+
+  firewall { '504 accept incoming HTTP, HTTPS':
+    proto  => 'tcp',
+    dport  => [80,443],
+    action => 'accept',
+  }
 }
