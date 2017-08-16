@@ -2,11 +2,15 @@
 class profile::services::rabbitmq {
 
   require profile::baseconfig::firewall
+  $source_firewall_rabbitmq = hiera("profile::networks::management")   
+  $destination_firewall_rabbitmq = hiera("profile::rabbitmq::ip")   
 
   firewall { '500 accept incoming rabbitmq':
-    proto  => 'tcp',
-    dport  => 5672,
-    action => 'accept',
+    source       => $source_firewall_rabbitmq,
+    destination  => $destination_firewall_rabbitmq,
+    proto        => 'tcp',
+    dport        => 5672,
+    action       => 'accept',
   }
 
   # VRRP information
