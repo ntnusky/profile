@@ -24,12 +24,6 @@ class profile::services::apache {
   include ::apache::mod::prefork
   include ::apache::mod::php
   include ::apache::mod::ssl
+  include ::profile::services::apache::firewall
 
-  require ::profile::baseconfig::firewall 
-
-  firewall { '504 accept incoming HTTP, HTTPS':
-    proto  => 'tcp',
-    dport  => [80,443],
-    action => 'accept',
-  }
 }
