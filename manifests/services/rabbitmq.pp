@@ -1,5 +1,19 @@
 # Installs and configures a rabbitmq server for our openstack environment.
 class profile::services::rabbitmq {
+
+  require profile::baseconfig::firewall
+
+  $source_firewall_rabbitmq      = hiera('profile::networks::management')
+  $destination_firewall_rabbitmq = hiera('profile::rabbitmq::ip')
+
+  firewall { '500 accept incoming rabbitmq':
+    source      => $source_firewall_rabbitmq,
+    destination => $destination_firewall_rabbitmq,
+    proto       => 'tcp',
+    dport       => 5672,
+    action      => 'accept',
+  }
+
   # VRRP information
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $vrid = hiera('profile::rabbitmq::vrrp::id')
