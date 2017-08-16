@@ -1,6 +1,6 @@
 # Configures iptables for nova
 class profile::openstack::nova::firewall {
-  firewall { 'nova-api-INPUT':
+  firewall { '511 nova-api-INPUT':
     jump => 'nova-api-INPUT',
   }
 }
