@@ -16,6 +16,8 @@ class profile::openstack::horizon {
   require ::profile::openstack::horizon::ssl
   require ::profile::openstack::repo
 
+  include ::profile::services::apache::firewall
+
   class { '::horizon':
     allowed_hosts                => concat(['127.0.0.1', $::fqdn, $horizon_ip ],
       $controller_api, $horizon_allowed_hosts
