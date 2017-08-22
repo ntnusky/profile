@@ -23,7 +23,7 @@ class profile::services::keepalived {
   }
   cron { 'restart_keepalived':
     ensure  => 'present',
-    command => '/bin/sleep 10; /bin/systemctl restart keepalived.service',
+    command => '/bin/sleep 15; /bin/systemctl restart keepalived.service',
     user    => 'root',
     special => 'reboot',
   }
