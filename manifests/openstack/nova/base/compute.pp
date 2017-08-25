@@ -17,12 +17,13 @@ class profile::openstack::nova::base::compute {
   include ::profile::openstack::nova::sudo
 
   class { '::nova':
-    database_connection => $database_connection,
-    glance_api_servers  =>
+    database_connection           => $database_connection,
+    glance_api_servers            =>
       join([join($controller_management_addresses, ':9292,'),''], ':9292'),
-    rabbit_host         => $rabbit_ip,
-    rabbit_userid       => $rabbit_user,
-    rabbit_password     => $rabbit_pass,
+    rabbit_host                   => $rabbit_ip,
+    rabbit_userid                 => $rabbit_user,
+    rabbit_password               => $rabbit_pass,
+    block_device_allocate_retries => 90,
   }
   class { '::nova::placement':
     password       => $placement_password,
