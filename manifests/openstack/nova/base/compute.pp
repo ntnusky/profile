@@ -23,7 +23,7 @@ class profile::openstack::nova::base::compute {
     rabbit_host                   => $rabbit_ip,
     rabbit_userid                 => $rabbit_user,
     rabbit_password               => $rabbit_pass,
-    block_device_allocate_retries => 90,
+    block_device_allocate_retries => 120,
   }
   class { '::nova::placement':
     password       => $placement_password,
