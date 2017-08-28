@@ -27,7 +27,7 @@ class profile::baseconfig::puppet {
     setting => 'environment',
     value   => $environment,
     notify  => Service['puppet'],
-    require => Package['puppet'],
+    require => Package[$agentPackage],
   }
 
   # This is to avoid ENC timeouts on nodes with hilarious amounts of facts...
@@ -37,12 +37,12 @@ class profile::baseconfig::puppet {
     section => 'agent',
     setting => 'configtimeout',
     value   => $configtimeout,
-    require => Package['puppet'],
+    require => Package[$agentPackage],
   }
 
   service { 'puppet':
     ensure  => 'running',
     enable  => true,
-    require => Package['puppet'],
+    require => Package[$agentPackage],
   }
 }
