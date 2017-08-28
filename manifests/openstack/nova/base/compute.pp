@@ -24,7 +24,6 @@ class profile::openstack::nova::base::compute {
     rabbit_userid                    => $rabbit_user,
     rabbit_password                  => $rabbit_pass,
     block_device_allocate_retries    => 120,
-    resume_guests_state_on_host_boot => true,
   }
   class { '::nova::placement':
     password       => $placement_password,
