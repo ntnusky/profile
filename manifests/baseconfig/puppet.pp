@@ -4,28 +4,16 @@ class profile::baseconfig::puppet {
   $configtimeout = hiera('profile:puppet::configtimeout', '3m')
   $aptkey = hiera('profile::puppet::aptkey')
 
-  # If we are running on ubuntu 14.04, add the puppet repos to get puppet 3.8.
-  if ($::lsbdistcodename == 'trusty') {
-    apt::source { 'puppetlabs':
-      location   => 'http://apt.puppetlabs.com',
-      repos      => 'main',
-      key        => $aptkey,
-      key_server => 'pgp.mit.edu',
-      before     => Package['puppet'],
-    }
+  if($::puppetversion < '4') {
+    $agentConfigFile = '/etc/puppet/puppet.conf'
+    $agentPackage = 'puppet'
+  } else {
+    $agentConfigFile = '/etc/puppetlabs/puppet/puppet.conf'
+    $agentPackage = 'puppet-agent'
   }
 
-  package { 'puppet':
+  package { $agentPackage:
     ensure => 'present',
-  }
-
-  ini_setting { 'Puppet Start':
-    ensure  => present,
-    path    => '/etc/default/puppet',
-    section => '',
-    setting => 'START',
-    value   => 'yes',
-    require => Package['puppet'],
   }
 
   # This environment is not the one really used, as that is decided by
@@ -34,7 +22,7 @@ class profile::baseconfig::puppet {
   # where an ENC  is not used.
   ini_setting { 'Puppet environment':
     ensure  => present,
-    path    => '/etc/puppet/puppet.conf',
+    path    => $agentConfigFile,
     section => 'agent',
     setting => 'environment',
     value   => $environment,
@@ -45,7 +33,7 @@ class profile::baseconfig::puppet {
   # This is to avoid ENC timeouts on nodes with hilarious amounts of facts...
   ini_setting { 'Puppet configtimeout':
     ensure  => 'present',
-    path    => '/etc/puppet/puppet.conf',
+    path    => $agentConfigFile,
     section => 'agent',
     setting => 'configtimeout',
     value   => $configtimeout,
@@ -54,6 +42,7 @@ class profile::baseconfig::puppet {
 
   service { 'puppet':
     ensure  => 'running',
+    enable  => true,
     require => Package['puppet'],
   }
 }
