@@ -28,12 +28,16 @@ class profile::baseconfig::users {
     source => 'puppet:///modules/profile/.bashrc',
   }
 
-  file { '/root/.mailrc':
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0400',
-    content => template('profile/mailrc.erb'),
+  #PUPPET5: This needs a puppet5 implementation. (And does this really make
+  #         sense to have here anyway?
+  if($::puppetversion < '5') {  
+    file { '/root/.mailrc':
+      ensure  => 'file',
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0400',
+      content => template('profile/mailrc.erb'),
+    }
   }
 
   $keys = hiera('profile::user::root::keys', false)
