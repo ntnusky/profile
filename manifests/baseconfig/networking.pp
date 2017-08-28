@@ -7,13 +7,16 @@ class profile::baseconfig::networking {
     profile::baseconfig::configureinterface { $interfacesToConfigure: }
   }
 
-  # Disable the rp filter, as the return traffic ofthen arrives on another
-  # interface than where the default gateway lives due to many interfaces on the
-  # nodes.
-  sysctl::value { 'net.ipv4.conf.all.rp_filter':
-    value => '0',
-  }
-  sysctl::value { 'net.ipv4.conf.default.rp_filter':
-    value => '0',
+  $useRPFilter = hiera('profile::networking::rpfilter', false)
+  if(! $useRPFilter) {
+    # Disable the rp filter, as the return traffic ofthen arrives on another
+    # interface than where the default gateway lives due to many interfaces on the
+    # nodes.
+    sysctl::value { 'net.ipv4.conf.all.rp_filter':
+      value => '0',
+    }
+    sysctl::value { 'net.ipv4.conf.default.rp_filter':
+      value => '0',
+    }
   }
 }
