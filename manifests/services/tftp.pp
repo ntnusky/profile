@@ -3,7 +3,6 @@
 class profile::services::tftp {
   class { '::tftp':
     directory => '/var/lib/tftpboot/',
-    inetd     => true,
     options   => '--secure',
   }
 }
