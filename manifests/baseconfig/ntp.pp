@@ -1,10 +1,10 @@
 # This class installs and configures NTP.
 class profile::baseconfig::ntp {
-  $ntpServer = hiera('profile::ntp::server')
+  $ntpServers = hiera('profile::ntp::servers')
   $tz = hiera('profile::ntp::timezone', 'Europe/Oslo')
 
   class { '::ntp':
-    servers  => [ $ntpServer ],
+    servers  => $ntpServers,
     restrict => [
       'default kod nomodify notrap nopeer noquery',
       '-6 default kod nomodify notrap nopeer noquery',

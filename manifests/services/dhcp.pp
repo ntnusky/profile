@@ -2,7 +2,7 @@
 class profile::services::dhcp {
   $searchdomain = hiera('profile::dhcp::searchdomain')
   $dns_servers = hiera_array('profile::dns::servers')
-  $ntp_server = hiera('profile::ntp::server')
+  $ntp_servers = hiera_array('profile::ntp::servers')
   $interfaces = hiera_array('profile::interfaces')
   $networks = hiera_array('profile::networks')
 
@@ -17,7 +17,7 @@ class profile::services::dhcp {
     dnssearchdomains => [$searchdomain],
     interfaces       => $interfaces,
     nameservers      => $dns_servers,
-    ntpservers       => $ntp_server,
+    ntpservers       => $ntp_servers,
     omapi_key        => $omapi_key,
     omapi_name       => $omapi_name,
     omapi_port       => $omapi_port,
