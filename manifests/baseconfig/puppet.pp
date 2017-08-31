@@ -30,14 +30,24 @@ class profile::baseconfig::puppet {
     require => Package[$agentPackage],
   }
 
-  # This is to avoid ENC timeouts on nodes with hilarious amounts of facts...
-  ini_setting { 'Puppet configtimeout':
-    ensure  => 'present',
-    path    => $agentConfigFile,
-    section => 'agent',
-    setting => 'configtimeout',
-    value   => $configtimeout,
-    require => Package[$agentPackage],
+  if($::puppetversion < '4') {
+    # This is to avoid ENC timeouts on nodes with hilarious amounts of facts...
+    ini_setting { 'Puppet configtimeout':
+      ensure  => 'present',
+      path    => $agentConfigFile,
+      section => 'agent',
+      setting => 'configtimeout',
+      value   => $configtimeout,
+      require => Package[$agentPackage],
+    }
+  } else {
+    ini_setting { 'Puppet configtimeout':
+      ensure  => 'absent',
+      path    => $agentConfigFile,
+      section => 'agent',
+      setting => 'configtimeout',
+      require => Package[$agentPackage],
+    }
   }
 
   service { 'puppet':
