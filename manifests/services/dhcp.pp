@@ -25,7 +25,5 @@ class profile::services::dhcp {
     pxefilename      => $pxe_file,
   }
 
-  profile::services::dhcp::pool { $networks:
-    require => Class['::dhcp'],
-  }
+  profile::services::dhcp::pool { $networks:}
 }
