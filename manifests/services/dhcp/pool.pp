@@ -5,7 +5,7 @@ define profile::services::dhcp::pool {
   $gateway = hiera("profile::networks::${name}::gateway")
   $range = hiera("profile::networks::${name}::range")
 
-  ::dhcp::pool { "${name}.${domain}":
+  ::dhcp::pool { "${name}":
     network => $id,
     mask    => $mask,
     range   => $range,
