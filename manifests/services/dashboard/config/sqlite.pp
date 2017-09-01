@@ -7,6 +7,7 @@ class profile::services::dashboard::config::sqlite {
   file { $database_location :
     ensure => 'file',
     group  => 'www-data',
+    mode   => '0660',
   }
 
   ini_setting { 'Machineadmin db type':
