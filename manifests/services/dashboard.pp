@@ -1,11 +1,9 @@
 # Installs and configures the management dashboard.
 class profile::services::dashboard {
-  package { [
-      'python3-django',
-      'python3-mysqldb',
-      'python3-passlib',
-      'python3-pypureomapi',
-    ] :
-    ensure => present,
-  }
+  require ::profile::services::apache
+
+  contain ::profile::services::dashboard::apache
+  contain ::profile::services::dashboard::config
+  contain ::profile::services::dashboard::install
+  contain ::profile::services::dashboard::packages
 }
