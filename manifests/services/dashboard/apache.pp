@@ -20,12 +20,12 @@ class profile::services::dashboard::apache {
       },
     ],
     custom_fragment     => '
-  <Directory /opt/machineadmin/machineadmin>
+  <Directory /opt/machineadmin/dashboard>
     <Files wsgi.py>
       Require all granted
     </Files>
   </Directory>',
-    wsgi_script_aliases => { '/' => '/opt/machineadmin/machineadmin/wsgi.py' },
+    wsgi_script_aliases => { '/' => '/opt/machineadmin/dashboard/wsgi.py' },
     aliases             => [
       { alias => '/static/',
         path  => '/opt/machineadminstatic/',
