@@ -8,7 +8,7 @@ class profile::services::puppetmaster {
   $path = '/opt/machineadmin-code'
   cron { 'Dashboard-client puppet-environments':
     command => "clients/puppetEnvironmentUpdater.py ${cnf}",
-    path    => "${path}"
+    path    => "${path}",
     user    => 'root',
     minute  => '*',
   }
