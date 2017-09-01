@@ -2,6 +2,12 @@
 class profile::services::dashboard::apache {
   require ::profile::services::apache
 
+  class { 'apache::mod::wsgi':
+    wsgi_python_path => '/opt/machineadmin/',
+    package_name     => 'libapache2-mod-wsgi-py3',
+    mod_path         => '/usr/lib/apache2/modules/mod_wsgi.so',
+  }
+
   $dashboardname = hiera('profile::dashboard::name')
 
   apache::vhost { "${dashboardname} http":
