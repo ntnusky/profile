@@ -33,7 +33,7 @@ class profile::services::dashboard::config::ldap {
     path    => $configfile,
     section => 'LDAP',
     setting => 'domain',
-    value   => $ldap_url,
+    value   => $ldap_domain,
     require => [
               File['/etc/machineadmin'],
             ],

@@ -4,6 +4,11 @@ class profile::services::dashboard::config::sqlite {
       '/etc/machineadmin/settings.ini')
   $database_location = hiera('profile::dashboard::database::name')
 
+  file { $database_location :
+    ensure => 'file',
+    group  => 'www-data',
+  }
+
   ini_setting { 'Machineadmin db type':
     ensure  => present,
     path    => $configfile,
