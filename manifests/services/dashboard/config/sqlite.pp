@@ -2,10 +2,18 @@
 class profile::services::dashboard::config::sqlite {
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')
-  $database_location = hiera('profile::dashboard::database::name')
+  $database_location = hiera('profile::dashboard::datadir')
 
   file { $database_location :
+    ensure => 'directory',
+    owner  => 'www-data',
+    group  => 'www-data',
+    mode   => '0770',
+  }
+
+  file { "${database_location}/db.sqlite" : 
     ensure => 'file',
+    owner  => 'www-data',
     group  => 'www-data',
     mode   => '0660',
   }
@@ -26,7 +34,7 @@ class profile::services::dashboard::config::sqlite {
     path    => $configfile,
     section => 'database',
     setting => 'name',
-    value   => $database_location,
+    value   => "${database_location}/db.sqlite",
     require => [
               File['/etc/machineadmin'],
             ],
