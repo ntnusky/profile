@@ -3,12 +3,12 @@ class profile::services::dashboard::config {
   $databasetype = hiera('profile::dashboard::database::type')
 
   if($databasetype == 'mysql') {
-    contain ::profile::services::config::mysql
+    contain ::profile::services::dashboard::config::mysql
   }
   if($databasetype == 'sqlite') {
-    contain ::profile::services::config::sqlite
+    contain ::profile::services::dashboard::config::sqlite
   }
 
-  contain ::profile::services::config::ldap
-  contain ::profile::services::config::general
+  contain ::profile::services::dashboard::config::ldap
+  contain ::profile::services::dashboard::config::general
 }
