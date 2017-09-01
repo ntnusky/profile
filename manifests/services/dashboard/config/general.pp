@@ -4,6 +4,7 @@ class profile::services::dashboard::config::general {
       '/etc/machineadmin/settings.ini')
   $django_secret = hiera('profile::dashboard::django::secret')
   $dashboardname = hiera('profile::dashboard::name')
+  $apiurl = hiera('profile::dashboard::api')
 
   file { '/etc/machineadmin':
     ensure => directory,
@@ -18,6 +19,17 @@ class profile::services::dashboard::config::general {
     section => 'general',
     setting => 'debug',
     value   => false,
+    require => [
+              File['/etc/machineadmin'],
+            ],
+  }
+
+  ini_setting { 'Machineadmin API':
+    ensure  => present,
+    path    => $configfile,
+    section => 'general',
+    setting => 'api',
+    value   => $apiurl,
     require => [
               File['/etc/machineadmin'],
             ],
