@@ -30,7 +30,7 @@ class profile::services::dashboard::install {
     group  => 'root',
   }
 
-  exec { '/opt/mailadmin/manage.py collectstatic --noinput':
+  exec { '/opt/machineadmin/manage.py collectstatic --noinput':
     refreshonly => true,
     require     => [
       Vcsrepo['/opt/machineadmin'],
