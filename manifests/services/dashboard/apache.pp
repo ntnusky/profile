@@ -1,6 +1,6 @@
 # Configures the apache vhost for the dashboard.
 class profile::services::dashboard::apache {
-  require ::services::apache
+  require ::profile::services::apache
 
   $dashboardname = hiera('profile::dashboard::name')
 
