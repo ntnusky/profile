@@ -8,12 +8,11 @@ class profile::services::memcache {
   $management_if = hiera('profile::interfaces::management')
   $memcached_port = '11211'
 
-  include ::profile::services::apache::firewall
-
   # Memcache IP
   $memcache_ip = hiera('profile::memcache::ip')
 
   require profile::services::keepalived
+  require profile::baseconfig::firewall
 
   firewall { '500 accept incoming memcached tcp':
     proto  => 'tcp',
