@@ -24,7 +24,7 @@ class profile::services::memcache {
     proto  => 'udp',
     dport  => $memcached_port,
     action => 'accept',
-
+  }
   class { 'memcached':
     listen_ip => $memcache_ip,
     tcp_port  => $memcached_port,
