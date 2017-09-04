@@ -21,4 +21,10 @@ class profile::services::keepalived {
   sysctl::value { 'net.ipv4.ip_nonlocal_bind':
     value => '1',
   }
+  cron { 'restart_keepalived':
+    ensure  => 'present',
+    command => '/bin/sleep 15; /bin/systemctl restart keepalived.service',
+    user    => 'root',
+    special => 'reboot',
+  }
 }
