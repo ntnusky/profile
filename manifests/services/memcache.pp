@@ -6,6 +6,7 @@ class profile::services::memcache {
   $vrid = hiera('profile::memcache::vrrp::id')
   $vrpri = hiera('profile::memcache::vrrp::priority')
   $management_if = hiera('profile::interfaces::management')
+  $source_firewall_management_net = hiera('profile::networks::management')
   $memcached_port = '11211'
 
   # Memcache IP
@@ -15,14 +16,18 @@ class profile::services::memcache {
   require profile::baseconfig::firewall
 
   firewall { '500 accept incoming memcached tcp':
-    proto  => 'tcp',
-    dport  => $memcached_port,
-    action => 'accept',
+    source      => $source_firewall_management_net,
+    destination => $memcache_ip,
+    proto       => 'tcp',
+    dport       => $memcached_port,
+    action      => 'accept',
   }
   firewall { '500 accept incoming memcached udp':
-    proto  => 'udp',
-    dport  => $memcached_port,
-    action => 'accept',
+    source      => $source_firewall_management_net,
+    destination => $memcache_ip,
+    proto       => 'udp',
+    dport       => $memcached_port,
+    action      => 'accept',
   }
   class { 'memcached':
     listen_ip => $memcache_ip,
