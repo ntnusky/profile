@@ -15,10 +15,11 @@ class profile::openstack::nova::compute {
   nova_config { 'DEFAULT/default_floating_pool': value => 'public' }
 
   class { '::nova::compute':
-    enabled                       => true,
-    vnc_enabled                   => true,
-    vncserver_proxyclient_address => $management_ip,
-    vncproxy_host                 => $nova_public_api
+    enabled                          => true,
+    vnc_enabled                      => true,
+    vncserver_proxyclient_address    => $management_ip,
+    vncproxy_host                    => $nova_public_api,
+    resume_guests_state_on_host_boot => true,
   }
 
   user { 'nova':

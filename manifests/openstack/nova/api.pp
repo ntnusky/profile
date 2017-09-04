@@ -15,6 +15,7 @@ class profile::openstack::nova::api {
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
   contain ::profile::openstack::nova::keepalived
+  contain ::profile::openstack::nova::placement
   include ::profile::openstack::nova::munin::api
 
   class { '::nova::keystone::auth':
@@ -40,7 +41,7 @@ class profile::openstack::nova::api {
     api_bind_address                     => $nova_public_ip,
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db                              => $sync_db,
-    enabled                              => true,
+    sync_db_api                          => $sync_db,
   }
 
   nova_config {
