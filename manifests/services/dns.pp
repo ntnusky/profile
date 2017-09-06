@@ -4,7 +4,7 @@ class profile::services::dns {
 
   include ::dns::server
 
-  dhs::server::options{'/etc/bind/named.conf.options':
+  dns::server::options{'/etc/bind/named.conf.options':
     forwarders => $dns_servers,
   }
 }
