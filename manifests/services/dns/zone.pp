@@ -7,5 +7,6 @@ define profile::services::dns::zone {
     nameservers  => $dns_servers,
     allow_update => concat($dns_updaters, '127.0.0.1'),
     data_dir     => '/var/lib/bind/zones',
+    require      => File['/var/lib/bind/zones'],
   }
 }

@@ -9,5 +9,12 @@ class profile::services::dns {
     forwarders => $dns_forwarders,
   }
 
+  file { '/var/lib/bind/zones':
+    ensure => 'directory',
+    owner  => 'bind',
+    group  => 'bind',
+    mode   => '0755',
+  }
+
   ::profile::services::dns::zone { $dns_zones : }
 }
