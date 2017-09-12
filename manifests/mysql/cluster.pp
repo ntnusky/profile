@@ -38,9 +38,9 @@ class profile::mysql::cluster {
     action      => 'accept',
   }
 
-  firewall { '500 accept incoming mysql cluster udp':
+  firewall { '500 accept incoming mysql cluster tcp':
     source      => $source_firewall_management_net,
-    proto       => 'udp',
+    proto       => 'tcp',
     dport       => '4567',
     action      => 'accept',
   }
