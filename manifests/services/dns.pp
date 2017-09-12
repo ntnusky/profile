@@ -8,7 +8,7 @@ class profile::services::dns {
   dns::server::options{'/etc/bind/named.conf.options':
     forwarders        => $dns_forwarders,
     dnssec_validation => 'no',
-    dnssec_enable     => 'no',
+    dnssec_enable     => false,
   }
 
   file { '/var/lib/bind/zones':
