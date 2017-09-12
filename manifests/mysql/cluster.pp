@@ -15,6 +15,7 @@ class profile::mysql::cluster {
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
   require profile::services::keepalived
+  require ::profile::baseconfig::firewall
   
   $installSensu = hiera('profile::sensu::install', true)
   if ($installSensu) {
@@ -28,6 +29,20 @@ class profile::mysql::cluster {
     key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
     key_server => 'keyserver.ubuntu.com',
     notify     => Exec['apt_update'],
+  }
+
+  firewall { '500 accept incoming mysql cluster tcp':
+    source      => $source_firewall_management_net,
+    proto       => 'tcp',
+    dport       => [ '3306', '4444', '4567', '4568' ],
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming mysql cluster udp':
+    source      => $source_firewall_management_net,
+    proto       => 'udp',
+    dport       => '4567',
+    action      => 'accept',
   }
 
   class { '::galera' :
