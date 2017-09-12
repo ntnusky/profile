@@ -16,9 +16,24 @@ class profile::openstack::glance::api {
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
+  require ::profile::baseconfig::firewall
   require ::profile::openstack::repo
   require ::profile::openstack::glance::database
   contain ::profile::openstack::glance::keepalived
+
+  firewall { '500 accept incoming admin glance tcp':
+    proto       => 'tcp',
+    destination => $glance_admin_ip,
+    dport       => '9292',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming public glance tcp':
+    proto       => 'tcp',
+    destination => $glance_public_ip,
+    dport       => '9292',
+    action      => 'accept',
+  }
 
   class { '::glance::api':
     keystone_password     => $mysql_pass,
