@@ -9,6 +9,7 @@ class profile::openstack::keystone {
 
   require ::profile::openstack::repo
   require ::profile::openstack::keystone::base
+  require ::profile::baseconfig::firewal
   contain ::profile::openstack::keystone::keepalived
   contain ::profile::openstack::keystone::ldap
 

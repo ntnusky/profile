@@ -1,7 +1,7 @@
 # Installs and configures a rabbitmq server for our openstack environment.
 class profile::services::rabbitmq {
 
-  require profile::baseconfig::firewall
+  require ::profile::baseconfig::firewall
 
   $source_firewall_rabbitmq      = hiera('profile::networks::management')
   $destination_firewall_rabbitmq = hiera('profile::rabbitmq::ip')

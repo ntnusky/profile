@@ -13,7 +13,7 @@ class profile::services::memcache {
   $memcache_ip = hiera('profile::memcache::ip')
 
   require profile::services::keepalived
-  require profile::baseconfig::firewall
+  require ::profile::baseconfig::firewall
 
   firewall { '500 accept incoming memcached tcp':
     source      => $source_firewall_management_net,
