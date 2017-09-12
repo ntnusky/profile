@@ -23,10 +23,10 @@ class profile::services::memcache {
     action      => 'accept',
   }
 
-  firewall { '500 accept incoming memcached udp':
+  firewall { '500 accept incoming memcached tcp':
     source      => $source_firewall_management_net,
     destination => $memcache_ip,
-    proto       => 'udp',
+    proto       => 'tcp',
     dport       => $memcached_port,
     action      => 'accept',
   }
