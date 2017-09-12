@@ -18,6 +18,20 @@ class profile::openstack::nova::api {
   contain ::profile::openstack::nova::keepalived
   include ::profile::openstack::nova::munin::api
 
+  firewall { '500 accept incoming nova admin tcp':
+    destination => $keystone_admin_ip,
+    proto       => 'tcp',
+    dport       => '8774',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming nova public tcp':
+    destination => $keystone_public_ip,
+    proto       => 'tcp',
+    dport       => '8774',
+    action      => 'accept',
+  }
+
   class { '::nova::keystone::auth':
     password        => $nova_password,
     public_url      => "http://${nova_public_ip}:8774/v2/%(tenant_id)s",
