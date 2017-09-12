@@ -13,6 +13,21 @@ class profile::openstack::keystone {
   contain ::profile::openstack::keystone::keepalived
   contain ::profile::openstack::keystone::ldap
 
+  firewall { '500 accept incoming admin keystone tcp':
+    proto       => 'tcp',
+    destination => $admin_ip,
+    dport       => [ '5000', '35357' ],
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming public keystone tcp':
+    proto       => 'tcp',
+    destination => $admin_ip,
+    dport       => '5000',
+    action      => 'accept',
+  }
+
+
   class { '::keystone::roles::admin':
     email        => $admin_email,
     password     => $admin_pass,
