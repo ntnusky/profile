@@ -6,7 +6,9 @@ class profile::services::dns {
   include ::dns::server
 
   dns::server::options{'/etc/bind/named.conf.options':
-    forwarders => $dns_forwarders,
+    forwarders        => $dns_forwarders,
+    dnssec_validation => 'no',
+    dnssec_enable     => 'no',
   }
 
   file { '/var/lib/bind/zones':
