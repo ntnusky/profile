@@ -7,6 +7,9 @@ class profile::openstack::keystone {
   $admin_email = hiera('profile::keystone::admin_email')
   $admin_pass = hiera('profile::keystone::admin_password')
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management')
+
   require ::profile::openstack::repo
   require ::profile::openstack::keystone::base
   require ::profile::baseconfig::firewall
@@ -14,6 +17,7 @@ class profile::openstack::keystone {
   contain ::profile::openstack::keystone::ldap
 
   firewall { '500 accept incoming admin keystone tcp':
+    source      => $source_firewall_management_net,
     proto       => 'tcp',
     destination => $admin_ip,
     dport       => [ '5000', '35357' ],
@@ -21,6 +25,7 @@ class profile::openstack::keystone {
   }
 
   firewall { '500 accept incoming public keystone tcp':
+    source      => $source_firewall_management_net,
     proto       => 'tcp',
     destination => $admin_ip,
     dport       => '5000',
