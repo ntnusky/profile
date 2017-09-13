@@ -21,12 +21,16 @@ class profile::openstack::neutron::api {
   # Database connection string
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management')
+
   require ::profile::openstack::neutron::base
   require ::profile::baseconfig::firewall
   contain ::profile::openstack::neutron::database
   contain ::profile::openstack::neutron::keepalived
 
   firewall { '500 accept incoming admin neutron tcp':
+    source      => $source_firewall_management_net,
     destination => $neutron_admin_ip,
     proto       => 'tcp',
     dport       => '9696',
@@ -34,6 +38,7 @@ class profile::openstack::neutron::api {
   }
 
   firewall { '500 accept incoming public neutron tcp':
+    source      => $source_firewall_management_net,
     destination => $neutron_public_ip,
     proto       => 'tcp',
     dport       => '9696',
