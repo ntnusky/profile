@@ -36,14 +36,15 @@ class profile::openstack::glance::api {
   }
 
   class { '::glance::api':
-    keystone_password     => $mysql_pass,
-    auth_strategy         => '',
-    database_connection   => $database_connection,
-    registry_host         => $management_ip,
-    os_region_name        => $region,
-    known_stores          => ['glance.store.rbd.Store'],
-    show_image_direct_url => true,
-    pipeline              => 'keystone',
+    keystone_password       => $mysql_pass,
+    auth_strategy           => '',
+    database_connection     => $database_connection,
+    registry_host           => $management_ip,
+    os_region_name          => $region,
+    known_stores            => ['glance.store.rbd.Store'],
+    show_image_direct_url   => true,
+    show_multiple_locations => true,
+    pipeline                => 'keystone',
   }
 
   class { '::glance::api::authtoken':

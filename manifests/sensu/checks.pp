@@ -47,7 +47,7 @@ class profile::sensu::checks {
 
   # Physical Dell Servers checks
   sensu::check { 'rac-system-event-log':
-    command     => "/etc/sensu/plugins/extra/check_rac_sel.sh -h :::rac.ip::: -p :::rac.password:::",
+    command     => '/etc/sensu/plugins/extra/check_rac_sel.sh -h :::rac.ip::: -p :::rac.password:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'dell-servers' ],
@@ -132,6 +132,12 @@ class profile::sensu::checks {
   }
   sensu::check { 'openstack-compute-api':
     command     => "check-http.rb -u http://${nova_api}:8774/v2.1/v3 --response-code 401",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'os-api-checks' ],
+  }
+  sensu::check { 'openstack-placement-api':
+    command     => "check-http.rb -u http://${nova_api}:8778/placement --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
