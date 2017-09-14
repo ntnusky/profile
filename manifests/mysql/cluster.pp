@@ -14,6 +14,9 @@ class profile::mysql::cluster {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management')
+
   require profile::services::keepalived
   require ::profile::baseconfig::firewall
   
@@ -33,6 +36,7 @@ class profile::mysql::cluster {
 
   firewall { '500 accept incoming mysql cluster tcp':
     source      => $source_firewall_management_net,
+#    destination => $mysql_ip,
     proto       => 'tcp',
     dport       => [ '3306', '4444', '4567', '4568' ],
     action      => 'accept',
@@ -40,7 +44,8 @@ class profile::mysql::cluster {
 
   firewall { '500 accept incoming mysql cluster tcp':
     source      => $source_firewall_management_net,
-    proto       => 'tcp',
+#    destination => $mysql_ip, 
+    proto       => 'udp',
     dport       => '4567',
     action      => 'accept',
   }
