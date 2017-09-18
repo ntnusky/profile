@@ -31,7 +31,6 @@ class profile::openstack::nova::api {
   }
 
   firewall { '500 accept incoming nova public tcp':
-    source      => $source_firewall_management_net,
     destination => $keystone_public_ip,
     proto       => 'tcp',
     dport       => '8774',
