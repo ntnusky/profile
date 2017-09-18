@@ -2,7 +2,7 @@
 define profile::services::dashboard::config::dhcp::server {
   $host = hiera("profile::dhcp::${name}::address")
   $port = hiera("profile::dhcp::${name}::omapiport", 7911)
-  $name = hiera("profile::dhcp::${name}::keyname")
+  $keyname = hiera("profile::dhcp::${name}::keyname")
   $key = hiera("profile::dhcp::${name}::key")
 
   $configfile = hiera('profile::dashboard::configfile',
@@ -35,7 +35,7 @@ define profile::services::dashboard::config::dhcp::server {
     path    => $configfile,
     section => 'DHCP-SERVERS',
     setting => "${name}Keyname",
-    value   => $name,
+    value   => $keyname,
     require => [
               File['/etc/machineadmin'],
             ],
