@@ -4,6 +4,7 @@ class profile::services::dns {
   $dns_zones = hiera_array('profile::dns::zones')
 
   include ::dns::server
+  include ::profile::services::dashboard::clients::dns
 
   dns::server::options{'/etc/bind/named.conf.options':
     forwarders        => $dns_forwarders,

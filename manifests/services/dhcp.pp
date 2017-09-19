@@ -13,6 +13,8 @@ class profile::services::dhcp {
   $pxe_server = hiera('profile::dhcp::pxe::server')
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
 
+  include ::profile::services::dashboard::clients::dhcp
+
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
     interfaces       => $interfaces,
