@@ -1,6 +1,6 @@
 # Creates DNS zone
 define profile::services::dns::zone {
-  $dns_servers = hiera_array('profile::dns::servers::fqdn')
+  $dns_servers = hiera_array('profile::dns::servers::names')
   $dns_zones = hiera_array('profile::dns::zones')
   $dns_updaters = hiera_array('profile::dns::updaters', [])
 
