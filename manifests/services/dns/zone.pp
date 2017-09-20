@@ -15,7 +15,8 @@ define profile::services::dns::zone {
     require      => File['/var/lib/bind/zones'],
   }->
   ::dns::record::a { $facts['networking']['hostname']:
-    zone => $name,
-    data => [$facts['networking']['ip']],
+    zone     => $name,
+    data     => [$facts['networking']['ip']],
+    data_dir => '/var/lib/bind/zones',
   }
 }
