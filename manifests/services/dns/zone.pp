@@ -13,5 +13,9 @@ define profile::services::dns::zone {
     allow_update => concat($dns_updaters, '127.0.0.1'),
     data_dir     => '/var/lib/bind/zones',
     require      => File['/var/lib/bind/zones'],
+  }->
+  ::dns::record::a { $facts['networking']['hostname']:
+    zone => $name,
+    data => [$facts['networking']['ip']],
   }
 }
