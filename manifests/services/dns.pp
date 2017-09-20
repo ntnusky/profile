@@ -12,12 +12,5 @@ class profile::services::dns {
     dnssec_enable     => false,
   }
 
-  file { '/var/lib/bind/zones':
-    ensure => 'directory',
-    owner  => 'bind',
-    group  => 'bind',
-    mode   => '0755',
-  }
-
   ::profile::services::dns::zone { $dns_zones : }
 }
