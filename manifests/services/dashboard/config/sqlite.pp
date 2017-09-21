@@ -11,7 +11,7 @@ class profile::services::dashboard::config::sqlite {
     mode   => '0770',
   }
 
-  file { "${database_location}/db.sqlite" : 
+  file { "${database_location}/db.sqlite":
     ensure => 'file',
     owner  => 'www-data',
     group  => 'www-data',

@@ -1,14 +1,22 @@
 # Configures the apache vhost for the dashboard.
 class profile::services::dashboard::apache {
-  require ::profile::services::apache
+  $dashboardname = hiera('profile::dashboard::name')
 
+  require ::profile::services::apache
+  include ::profile::services::dashboard::install::staticfiles
+
+  # Install and configure apache mod wsgi
   class { 'apache::mod::wsgi':
     wsgi_python_path => '/opt/machineadmin/',
     package_name     => 'libapache2-mod-wsgi-py3',
     mod_path         => '/usr/lib/apache2/modules/mod_wsgi.so',
   }
 
-  $dashboardname = hiera('profile::dashboard::name')
+  $fragment = '<Directory /opt/machineadmin/dashboard>
+  <Files wsgi.py>
+    Require all granted
+  </Files>
+</Directory>'
 
   apache::vhost { "${dashboardname} http":
     servername          => $dashboardname,
@@ -19,17 +27,14 @@ class profile::services::dashboard::apache {
         require => 'all granted',
       },
     ],
-    custom_fragment     => '
-  <Directory /opt/machineadmin/dashboard>
-    <Files wsgi.py>
-      Require all granted
-    </Files>
-  </Directory>',
+    custom_fragment     => $fragment,
     wsgi_script_aliases => { '/' => '/opt/machineadmin/dashboard/wsgi.py' },
-    aliases             => [
-      { alias => '/static/',
+    aliases             => [{
+        alias => '/static/',
         path  => '/opt/machineadminstatic/',
       },
     ],
   }
+
+  Vcsrepo['/opt/machineadmin'] ~> Service['httpd']
 }

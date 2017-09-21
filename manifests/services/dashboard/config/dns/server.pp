@@ -16,14 +16,14 @@ define profile::services::dashboard::config::dns::server {
               File['/etc/machineadmin'],
             ],
   }
-  
+
   if($key) {
     ini_setting { "Machineadmin DNS Server ${name} Key":
       ensure  => present,
       path    => $configfile,
       section => 'DNS',
       setting => "${name}Key",
-      value   => $port,
+      value   => $key,
       require => [
                 File['/etc/machineadmin'],
               ],
