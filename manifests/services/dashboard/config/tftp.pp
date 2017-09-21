@@ -1,10 +1,10 @@
 # Configures the dashboard.
-class profile::services::dashboard::config::dns {
+class profile::services::dashboard::config::tftp {
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')
 
   $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/')
-  ini_setting { "Machineadmin TFTP location":
+  ini_setting { 'Machineadmin TFTP location':
     ensure  => present,
     path    => $configfile,
     section => 'TFTP',
@@ -14,6 +14,4 @@ class profile::services::dashboard::config::dns {
               File['/etc/machineadmin'],
             ],
   }
-
-  ::profile::services::dashboard::config::dns::server { $servers : }
 }
