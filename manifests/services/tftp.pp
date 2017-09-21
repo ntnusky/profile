@@ -3,6 +3,8 @@
 class profile::services::tftp {
   $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/') 
 
+  include ::profile::services::dashboard::clients::tftp
+
   # Install and configure the tftp server.
   class { '::tftp':
     directory => $rootdir,
