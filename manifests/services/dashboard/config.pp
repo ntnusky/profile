@@ -11,6 +11,7 @@ class profile::services::dashboard::config {
 
   contain ::profile::services::dashboard::config::dhcp
   contain ::profile::services::dashboard::config::dns
-  contain ::profile::services::dashboard::config::ldap
   contain ::profile::services::dashboard::config::general
+  contain ::profile::services::dashboard::config::ldap
+  contain ::profile::services::dashboard::config::tftp
 }

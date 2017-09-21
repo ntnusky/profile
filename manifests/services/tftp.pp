@@ -1,9 +1,11 @@
 # This class installs a tftpserver and configures it to have its root at
 # /var/lib/tftpboot.
 class profile::services::tftp {
+  $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/') 
+
   # Install and configure the tftp server.
   class { '::tftp':
-    directory => '/var/lib/tftpboot/',
+    directory => $rootdir,
     options   => '--secure',
   }
   
