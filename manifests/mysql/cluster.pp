@@ -8,7 +8,7 @@ class profile::mysql::cluster {
   $mysql_ip = hiera('profile::mysql::ip')
   
   # We should migrate away from the key controller::management::addresses
-  $old_servers = hiera('controller::management::addresses')
+  $old_servers = hiera('controller::management::addresses', false)
   $servers = hiera('profile::mysql::servers', $old_servers)
   
   $master  = hiera('profile::mysqlcluster::master')
@@ -20,6 +20,9 @@ class profile::mysql::cluster {
 
   require profile::services::keepalived
   
+  if (!$servers) {
+    fail("MYSQL Server ip addresses need to be supplied")
+  }
   $installSensu = hiera('profile::sensu::install', true)
   if ($installSensu) {
     include ::profile::sensu::plugin::mysql
