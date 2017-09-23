@@ -7,6 +7,7 @@ class profile::services::dashboard::packages {
       'python3-django-python3-ldap',
       'python3-mysqldb',
       'python3-passlib',
+      'python3-pymysql',
     ] :
     ensure => present,
   }
