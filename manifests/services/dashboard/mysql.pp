@@ -11,6 +11,5 @@ class profile::services::dashboard::mysql {
     password_hash => mysql_password($database_pass),
     user          => $database_user,
     host          => $database_grant,
-    allowed_hosts => [$database_grant],
   }
 }
