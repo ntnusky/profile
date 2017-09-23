@@ -8,9 +8,9 @@ class profile::services::dashboard::mysql {
   $database_pass = hiera('profile::dashboard::database::pass')
 
   ::openstacklib::db::mysql { $database_name:
-    password      = mysql_password($database_pass),
-    user          = $database_user,
-    host          = $database_grant,
-    allowed_hosts = [$database_grant],
+    password      => mysql_password($database_pass),
+    user          => $database_user,
+    host          => $database_grant,
+    allowed_hosts => [$database_grant],
   }
 }
