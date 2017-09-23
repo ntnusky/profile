@@ -7,9 +7,22 @@ class profile::services::dashboard::mysql {
   $database_user = hiera('profile::dashboard::database::user')
   $database_pass = hiera('profile::dashboard::database::pass')
 
-  ::openstacklib::db::mysql { $database_name:
+  mysql_database { $database_name:
+    ensure  => present,
+    charset => 'utf8',
+    collate => 'utf8_general_ci',
+    require => [ Class['mysql::server'], Class['mysql::client'] ],
+  }
+
+  mysql_user { "${database_user}@${database_grant}":
     password_hash => mysql_password($database_pass),
-    user          => $database_user,
-    host          => $database_grant,
+    require       => Mysql_database[$database_name],
+  }
+
+  mysql_grant { "${database_user}@${database_grant}/${database_name}.*":
+    privileges => ['ALL'],
+    table      => "${database_name}.*",
+    require    => Mysql_user["${database_user}@${database_grant}"],
+    user       => "${database_user}@${database_grant}",
   }
 }
