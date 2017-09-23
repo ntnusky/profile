@@ -6,7 +6,11 @@ class profile::mysql::cluster {
   $vrpri = hiera('profile::mysql::vrrp::priority')
   
   $mysql_ip = hiera('profile::mysql::ip')
-  $servers = hiera('controller::management::addresses')
+  
+  # We should migrate away from the key controller::management::addresses
+  $old_servers = hiera('controller::management::addresses')
+  $servers = hiera('profile::mysql::servers', $old_servers)
+  
   $master  = hiera('profile::mysqlcluster::master')
   $rootpassword = hiera('profile::mysqlcluster::root_password')
   $statuspassword = hiera('profile::mysqlcluster::status_password')
