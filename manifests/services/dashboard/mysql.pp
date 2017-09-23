@@ -11,7 +11,7 @@ class profile::services::dashboard::mysql {
     ensure  => present,
     charset => 'utf8',
     collate => 'utf8_general_ci',
-    require => [ Class['mysql::server'], Class['mysql::client'] ],
+    require => [ Class['::profile::mysql::cluster'] ],
   }
 
   mysql_user { "${database_user}@${database_grant}":
