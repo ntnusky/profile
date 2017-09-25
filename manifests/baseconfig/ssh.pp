@@ -6,6 +6,9 @@ class profile::baseconfig::ssh {
   if ($::puppetversion > '3.5.0') {
     class {'::ssh':
       server_options => {
+        'Match User postgres' => {
+          'HostbasedAuthentication' => 'yes',
+        },
         'Match User nova' => {
           'HostbasedAuthentication' => 'yes',
         },
