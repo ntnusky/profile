@@ -24,43 +24,43 @@ class profile::services::postgresql::pgpool {
     $weight = hiera("profile::postgres::${id}::id", 1)
     $flag = hiera("profile::postgres::${id}::flag", 'ALLOW_TO_FAILOVER')
 
-    ini_setting { 'pgpool ${id} hostname':
+    ini_setting { "pgpool ${id} hostname":
       ensure  => present,
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
-      setting => 'backend_hostname${id}',
+      setting => "backend_hostname${id}",
       value   => $server,
     }
 
-    ini_setting { 'pgpool ${id} port':
+    ini_setting { "pgpool ${id} port":
       ensure  => present,
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
-      setting => 'backend_port${id}',
+      setting => "backend_port${id}",
       value   => $port,
     }
 
-    ini_setting { 'pgpool ${id} weight':
+    ini_setting { "pgpool ${id} weight":
       ensure  => present,
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
-      setting => 'backend_weight${id}',
+      setting => "backend_weight${id}",
       value   => $weight,
     }
 
-    ini_setting { 'pgpool ${id} datadir':
+    ini_setting { "pgpool ${id} datadir":
       ensure  => present,
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
-      setting => 'backend_data_directory${id}',
+      setting => "backend_data_directory${id}",
       value   => $datadir,
     }
 
-    ini_setting { 'pgpool ${id} flag':
+    ini_setting { "pgpool ${id} flag":
       ensure  => present,
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
-      setting => 'backend_flag${id}',
+      setting => "backend_flag${id}",
       value   => $flag,
     }
   }
