@@ -2,7 +2,7 @@
 class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
-  $database_port = hiera('profile::postgres::backend::port', 5433) 
+  $database_port = hiera('profile::postgres::backend::port', '5433')
   $password = hiera('profile::postgres::password')
 
   class { '::postgresql::globals':
@@ -13,7 +13,7 @@ class profile::services::postgresql::server {
   class { '::postgresql::server':
     ip_mask_allow_all_users => '0.0.0.0/0',
     listen_addresses        => $management_ip,
-    port                    => $databse_port,
+    port                    => scanf($database_port, '%i')[0],
     postgres_password       => $password,
     manage_pg_ident_conf    => false,
   }
