@@ -6,7 +6,7 @@ class profile::services::postgresql::server {
   $password = hiera('profile::postgres::password')
 
   class { '::postgresql::globals':
-    manage_package_repo => true, 
+    manage_package_repo => true,
     version             => '9.5',
   }
 
