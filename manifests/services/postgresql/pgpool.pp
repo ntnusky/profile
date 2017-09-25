@@ -14,7 +14,7 @@ class profile::services::postgresql::pgpool {
     path    => '/etc/pgpool2/pgpool.conf',
     section => '',
     setting => 'listen_addresses',
-    value   => $management_ip,
+    value   => "'${management_ip}'",
   }
 
   $servers.each |$id, $server| {
@@ -29,7 +29,7 @@ class profile::services::postgresql::pgpool {
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
       setting => "backend_hostname${id}",
-      value   => $server,
+      value   => "'${server}'",
     }
 
     ini_setting { "pgpool ${id} port":
@@ -53,7 +53,7 @@ class profile::services::postgresql::pgpool {
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
       setting => "backend_data_directory${id}",
-      value   => $datadir,
+      value   => "'${datadir}'",
     }
 
     ini_setting { "pgpool ${id} flag":
@@ -61,7 +61,7 @@ class profile::services::postgresql::pgpool {
       path    => '/etc/pgpool2/pgpool.conf',
       section => '',
       setting => "backend_flag${id}",
-      value   => $flag,
+      value   => "'${flag}'",
     }
   }
 }
