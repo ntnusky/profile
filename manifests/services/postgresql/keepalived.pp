@@ -1,10 +1,10 @@
 # Configuring keepalived for the postgres IP
 class profile::services::postgresql::keepalived {
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $vrid = hiera('profile::postgresql::vrrp::id')
-  $vrpri = hiera('profile::postgresql::vrrp::priority')
+  $vrid = hiera('profile::postgres::vrrp::id')
+  $vrpri = hiera('profile::postgres::vrrp::priority')
 
-  $postgresql_ip = hiera('profile::postgresql::ip')
+  $postgresql_ip = hiera('profile::postgres::ip')
   $management_if = hiera('profile::interfaces::management')
 
   require ::profile::services::keepalived
