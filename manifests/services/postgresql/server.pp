@@ -15,6 +15,7 @@ class profile::services::postgresql::server {
     listen_addresses        => $management_ip,
     port                    => $databse_port,
     postgres_password       => $password,
+    manage_pg_ident_conf    => false,
   }
 
   class { '::postgresql::server::contrib': }
