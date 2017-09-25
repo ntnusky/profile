@@ -18,7 +18,7 @@ class profile::services::puppetmaster {
     value   => '/opt/machineadmin/clients/puppetAutosign.sh',
   }
 
-  ini_setting { 'Puppetmaster autosign':
+  ini_setting { 'Puppetmaster node_terminus':
     ensure  => present,
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
