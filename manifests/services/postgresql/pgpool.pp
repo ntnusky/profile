@@ -3,7 +3,7 @@ class profile::services::postgresql::pgpool {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
-  $servers = hiera_array('profile::postgres::servers')
+  $servers = hiera_hash('profile::postgres::servers')
 
   package { 'pgpool2':
     ensure => present,
@@ -17,13 +17,12 @@ class profile::services::postgresql::pgpool {
     value   => $management_ip,
   }
 
-  $servers.each |$server| {
-    $id = hiera("profile::postgres::${server}::id")
-    $port = hiera("profile::postgres::${server}::port", '5433')
-    $datadir = hiera("profile::postgres::${server}::id",
+  $servers.each |$id, $server| {
+    $port = hiera("profile::postgres::${id}::port", '5433')
+    $datadir = hiera("profile::postgres::${id}::id",
         '/var/lib/postgresql/9.5/main/')
-    $weight = hiera("profile::postgres::${server}::id", 1)
-    $flag = hiera("profile::postgres::${server}::flag", 'ALLOW_TO_FAILOVER')
+    $weight = hiera("profile::postgres::${id}::id", 1)
+    $flag = hiera("profile::postgres::${id}::flag", 'ALLOW_TO_FAILOVER')
 
     ini_setting { 'pgpool ${id} hostname':
       ensure  => present,
