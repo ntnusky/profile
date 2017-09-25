@@ -9,12 +9,19 @@ class profile::services::postgresql::pgpool {
     ensure => present,
   }
 
+  service { 'pgpool2':
+    ensure  => 'running',
+    enable  => true,
+    require => Package['pgpool2'],
+  }
+
   ini_setting { 'pgpool listen_address':
     ensure  => present,
     path    => '/etc/pgpool2/pgpool.conf',
     section => '',
     setting => 'listen_addresses',
     value   => "'${management_ip}'",
+    notify  => Service['pgpool2'],
   }
 
   $servers.each |$id, $server| {
@@ -30,6 +37,7 @@ class profile::services::postgresql::pgpool {
       section => '',
       setting => "backend_hostname${id}",
       value   => "'${server}'",
+      notify  => Service['pgpool2'],
     }
 
     ini_setting { "pgpool ${id} port":
@@ -38,6 +46,7 @@ class profile::services::postgresql::pgpool {
       section => '',
       setting => "backend_port${id}",
       value   => $port,
+      notify  => Service['pgpool2'],
     }
 
     ini_setting { "pgpool ${id} weight":
@@ -46,6 +55,7 @@ class profile::services::postgresql::pgpool {
       section => '',
       setting => "backend_weight${id}",
       value   => $weight,
+      notify  => Service['pgpool2'],
     }
 
     ini_setting { "pgpool ${id} datadir":
@@ -54,6 +64,7 @@ class profile::services::postgresql::pgpool {
       section => '',
       setting => "backend_data_directory${id}",
       value   => "'${datadir}'",
+      notify  => Service['pgpool2'],
     }
 
     ini_setting { "pgpool ${id} flag":
@@ -62,6 +73,7 @@ class profile::services::postgresql::pgpool {
       section => '',
       setting => "backend_flag${id}",
       value   => "'${flag}'",
+      notify  => Service['pgpool2'],
     }
   }
 }
