@@ -4,6 +4,8 @@ class profile::services::postgresql::server {
   $management_ip = hiera("profile::interfaces::${management_if}::address")
   $database_port = hiera('profile::postgres::backend::port', '5433')
   $password = hiera('profile::postgres::password')
+  $replicator_password = hiera('profile::postgres::replicatorpassword')
+  $master_server = hiera('profile::postgres::masterserver')
 
   class { '::postgresql::globals':
     manage_package_repo => true,
@@ -17,6 +19,11 @@ class profile::services::postgresql::server {
     port                       => scanf($database_port, '%i')[0],
     postgres_password          => $password,
     manage_pg_ident_conf       => false,
+  }
+
+  postgresql::server::role { 'replicator':
+    password_hash => postgresql_password('replicator', $replicator_password),
+    replication   => true,
   }
 
   class { '::postgresql::server::contrib': }
