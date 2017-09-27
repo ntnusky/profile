@@ -44,7 +44,7 @@ class profile::services::postgresql::server {
   }
 
   if($::fqdn != $master_server) {
-    postgresql::server::config_entry { 'host_standby':
+    postgresql::server::config_entry { 'hot_standby':
       value => 'on',
     }
   }
