@@ -1,5 +1,7 @@
 # Installs and configures puppetdb 
 class profile::services::puppetdb::server {
+  contain ::profile::services::puppetdb::keepalived 
+
   $dbhost = hiera('profile::postgres::ip')
   $dbport = hiera('profile::postgres::port', '5432')
   $dbname = hiera('profile::puppetdb::database::name')

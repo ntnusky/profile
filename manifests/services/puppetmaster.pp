@@ -2,6 +2,8 @@
 class profile::services::puppetmaster {
   include ::profile::services::dashboard::install
 
+  $puppetdb_host = hiera('profile::puppetdb::ip')
+
   $cnf = '/etc/machineadmin/settings.ini'
 
   cron { 'Dashboard-client puppet-environments':
@@ -32,5 +34,9 @@ class profile::services::puppetmaster {
     section => 'master',
     setting => 'external_nodes',
     value   => '/opt/machineadmin/clients/puppetENC.sh',
+  }
+
+  class { 'puppetdb::master::config':
+    puppetdb_server => $puppetdb_host,
   }
 }
