@@ -4,7 +4,7 @@ class profile::services::puppetmaster {
   include ::profile::services::puppetmaster::keepalived
 
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
-  $usePuppetdb = hiera('profile::puppetdb::masterconfig', true)
+  $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
 
   $cnf = '/etc/machineadmin/settings.ini'
 
@@ -38,8 +38,9 @@ class profile::services::puppetmaster {
     value   => '/opt/machineadmin/clients/puppetENC.sh',
   }
 
-  if($usePuppetdb) {
+  if($usepuppetdb) {
     class { 'puppetdb::master::config':
       puppetdb_server => $puppetdb_hostname,
     }
+  }
 }
