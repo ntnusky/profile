@@ -1,8 +1,10 @@
 # Installs and configures a puppetmaster 
 class profile::services::puppetmaster {
   include ::profile::services::dashboard::install
+  include ::profile::services::puppetmaster::keepalived
 
-  $puppetdb_host = hiera('profile::puppetdb::ip')
+  $puppetdb_hostname = hiera('profile::puppetdb::hostname')
+  $usePuppetdb = hiera('profile::puppetdb::masterconfig', true)
 
   $cnf = '/etc/machineadmin/settings.ini'
 
@@ -36,7 +38,8 @@ class profile::services::puppetmaster {
     value   => '/opt/machineadmin/clients/puppetENC.sh',
   }
 
-  class { 'puppetdb::master::config':
-    puppetdb_server => $puppetdb_host,
-  }
+  if($usePuppetdb) {
+    class { 'puppetdb::master::config':
+      puppetdb_server => $puppetdb_hostname,
+    }
 }
