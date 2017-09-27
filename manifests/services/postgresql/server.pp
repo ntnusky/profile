@@ -50,10 +50,10 @@ class profile::services::postgresql::server {
 
   @@postgresql::server::pg_hba_rule { "allow ${management_ip} for replication":
     description => "Open up PostgreSQL for access from ${management_ip}",
-    type        => 'hostssl',
+    type        => 'host',
     database    => 'replication',
     user        => 'replicator',
-    address     => $management_ip,
+    address     => "${management_ip}/32",
     auth_method => 'md5',
   }
 
