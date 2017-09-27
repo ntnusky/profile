@@ -6,6 +6,7 @@ class profile::services::postgresql::server {
   $password = hiera('profile::postgres::password')
   $replicator_password = hiera('profile::postgres::replicatorpassword')
   $master_server = hiera('profile::postgres::masterserver')
+  $servers = hiera_hash('profile::postgres::servers')
 
   class { '::postgresql::globals':
     manage_package_repo => true,
@@ -24,6 +25,39 @@ class profile::services::postgresql::server {
   postgresql::server::role { 'replicator':
     password_hash => postgresql_password('replicator', $replicator_password),
     replication   => true,
+  }
+
+  postgresql::server::config_entry { 'wal_level':
+    value => 'hot_standby',
+  }
+
+  postgresql::server::config_entry { 'kmax_wal_senders':
+    value => '3',
+  }
+
+  postgresql::server::config_entry { 'checkpoint_segments':
+    value => '8',
+  }
+
+  postgresql::server::config_entry { 'wal_keep_segments':
+    value => '8',
+  }
+
+  if($::fqdn != $master_server) {
+    postgresql::server::config_entry { 'host_standby':
+      value => 'on',
+    }
+  }
+
+  $servers.each |$id, $server| {
+    postgresql::server::pg_hba_rule { "allow ${server} for replication":
+      description => "Open up PostgreSQL for access from ${server}",
+      type        => 'hostssl',
+      database    => 'replication',
+      user        => 'replicator',
+      address     => $server,
+      auth_method => 'md5',
+    }
   }
 
   class { '::postgresql::server::contrib': }
