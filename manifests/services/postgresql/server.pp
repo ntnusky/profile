@@ -7,7 +7,7 @@ class profile::services::postgresql::server {
 
   class { '::postgresql::globals':
     manage_package_repo => true,
-    version             => '9.5',
+    version             => '9.6',
   }
 
   class { '::postgresql::server':
