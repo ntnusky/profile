@@ -31,12 +31,12 @@ class profile::services::postgresql::server {
     value => 'hot_standby',
   }
 
-  postgresql::server::config_entry { 'kmax_wal_senders':
+  postgresql::server::config_entry { 'max_wal_senders':
     value => '3',
   }
 
   postgresql::server::config_entry { 'checkpoint_segments':
-    value => '8',
+    ensure => 'absent',
   }
 
   postgresql::server::config_entry { 'wal_keep_segments':
