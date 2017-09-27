@@ -3,6 +3,7 @@ class profile::services::postgresql::pgpool {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
+  $postgres_ip = hiera('profile::postgres::ip')
   $servers = hiera_hash('profile::postgres::servers')
 
   package { 'pgpool2':
@@ -20,14 +21,14 @@ class profile::services::postgresql::pgpool {
     path    => '/etc/pgpool2/pgpool.conf',
     section => '',
     setting => 'listen_addresses',
-    value   => "'${management_ip}'",
+    value   => "'${postgres_ip}'",
     notify  => Service['pgpool2'],
   }
 
   $servers.each |$id, $server| {
     $port = hiera("profile::postgres::${id}::port", '5433')
     $datadir = hiera("profile::postgres::${id}::id",
-        '/var/lib/postgresql/9.5/main/')
+        '/var/lib/postgresql/9.6/main/')
     $weight = hiera("profile::postgres::${id}::id", 1)
     $flag = hiera("profile::postgres::${id}::flag", 'ALLOW_TO_FAILOVER')
 
