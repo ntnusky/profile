@@ -97,7 +97,7 @@ class profile::services::postgresql::server {
   }
   @@concat::fragment { "postgres postgres ${::hostname}":
     target  => '/root/.pgpass',
-    content => "${::hostname}:5433:*:postgres:${replicator_password}",
+    content => "${::hostname}:5433:*:postgres:${password}",
     tag     => 'pgpass',
   }
 
