@@ -13,6 +13,7 @@ class profile::services::postgresql::keepalived {
   keepalived::vrrp::script { 'check_postgresql':
     script  => "/usr/local/bin/check_pgsql_master.bash ${localip} 5432",
     require => File['/usr/local/bin/check_pgsql_master.bash'],
+    weight  => '-10',
   }
 
   keepalived::vrrp::instance { 'postgresql-database':
