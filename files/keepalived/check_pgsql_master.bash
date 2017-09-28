@@ -5,9 +5,14 @@ if [[ $# -lt 2 ]]; then
 fi
 
 var=$(psql -h $1 -U postgres -p $2 -c 'SELECT pg_is_in_recovery();' -qtA)
+iscluster=$(psql -h $1 -U postgres -p $2 -c '\l' -qtA | grep -c puppetdb)
 
 if [[ $var == 'f' ]]; then
-  exit 0
+  if [[ $iscluster -ne 0 ]]; then
+    exit 0
+  else
+    exit 2
+  fi
 else
-  exit 1
+  exit 3
 fi
