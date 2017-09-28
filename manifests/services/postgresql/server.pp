@@ -62,16 +62,20 @@ class profile::services::postgresql::server {
   Postgresql::Server::Pg_hba_rule <<| |>>
 
   concat { '/var/lib/postgresql/.pgpass':
-    ensure => present,
-    owner  => 'postgres',
-    group  => 'postgres',
-    mode   => '0600',
+    ensure         => present,
+    owner          => 'postgres',
+    group          => 'postgres',
+    mode           => '0600',
+    warn           => true,
+    ensure_newline => true,
   }
   concat { '/root/.pgpass':
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0600',
+    ensure         => present,
+    owner          => 'root',
+    group          => 'root',
+    mode           => '0600',
+    warn           => true,
+    ensure_newline => true,
   }
 
   $mid = '5433:replication:replicator'
