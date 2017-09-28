@@ -29,7 +29,7 @@ class profile::services::postgresql::server {
   class { '::postgresql::server':
     ip_mask_deny_postgres_user => '0.0.0.0/32',
     ip_mask_allow_all_users    => '0.0.0.0/0',
-    listen_addresses           => "${management_ip},${postgresql_ip}",
+    listen_addresses           => "127.0.0.1,::1,${management_ip},${postgresql_ip}",
     port                       => scanf($database_port, '%i')[0],
     postgres_password          => $confpassword,
     manage_pg_ident_conf       => false,
