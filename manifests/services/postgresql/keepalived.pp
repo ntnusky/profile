@@ -6,11 +6,13 @@ class profile::services::postgresql::keepalived {
 
   $postgresql_ip = hiera('profile::postgres::ip')
   $management_if = hiera('profile::interfaces::management')
+  $localip = $facts['networking']['interfaces'][$management_if]['ip']
 
   require ::profile::services::keepalived
 
   keepalived::vrrp::script { 'check_postgresql':
-    script => '/usr/bin/killall -0 postgres',
+    script  => "/usr/local/bin/check_pgsql_master.bash ${localip} 5432",
+    require => File['/usr/local/bin/check_pgsql_master.bash'],
   }
 
   keepalived::vrrp::instance { 'postgresql-database':
@@ -24,5 +26,13 @@ class profile::services::postgresql::keepalived {
       "${postgresql_ip}/32",
     ],
     track_script      => 'check_postgresql',
+  }
+
+  file { '/usr/local/bin/check_pgsql_master.bash':
+    ensure => 'file',
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/profile/keepalived/check_pgsql_master.bash',
   }
 }

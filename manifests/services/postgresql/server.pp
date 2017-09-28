@@ -2,7 +2,7 @@
 class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
-  $database_port = hiera('profile::postgres::backend::port', '5433')
+  $database_port = hiera('profile::postgres::backend::port', '5432')
   $password = hiera('profile::postgres::password')
   $replicator_password = hiera('profile::postgres::replicatorpassword')
   $master_server = hiera('profile::postgres::masterserver')
@@ -78,7 +78,7 @@ class profile::services::postgresql::server {
     ensure_newline => true,
   }
 
-  $mid = '5433:replication:replicator'
+  $mid = "${database_port}:replication:replicator"
   @@concat::fragment { "postgres replication ${management_ip}":
     target  => '/var/lib/postgresql/.pgpass',
     content => "${management_ip}:${mid}:${replicator_password}",
@@ -92,12 +92,12 @@ class profile::services::postgresql::server {
 
   @@concat::fragment { "postgres postgres ${management_ip}":
     target  => '/root/.pgpass',
-    content => "${management_ip}:5433:*:postgres:${password}",
+    content => "${management_ip}:${database_port}:*:postgres:${password}",
     tag     => 'pgpass',
   }
   @@concat::fragment { "postgres postgres ${::hostname}":
     target  => '/root/.pgpass',
-    content => "${::hostname}:5433:*:postgres:${password}",
+    content => "${::hostname}:${database_port}:*:postgres:${password}",
     tag     => 'pgpass',
   }
 
