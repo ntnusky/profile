@@ -68,29 +68,26 @@ class profile::services::postgresql::server {
     ensure => present,
   }
 
+  $mid = '5433:replication:replicator'
   @@concat::fragment { "postgres replication ${management_ip}":
     target  => '/var/lib/postgresql/.pgpass',
-    content => \
-        "${management_ip}:5433:replication:replicator:${replicator_password}",
+    content => "${management_ip}:${mid}:${replicator_password}",
     tag     => 'pgpass',
   }
   @@concat::fragment { "postgres replication ${::hostname}":
     target  => '/var/lib/postgresql/.pgpass',
-    content => \
-        "${::hostname}:5433:replication:replicator:${replicator_password}",
+    content => "${::hostname}:${mid}:${replicator_password}",
     tag     => 'pgpass',
   }
 
   @@concat::fragment { "postgres postgres ${management_ip}":
     target  => '/root/.pgpass',
-    content => \
-        "${management_ip}:5433:*:postgres:${password}",
+    content => "${management_ip}:5433:*:postgres:${password}",
     tag     => 'pgpass',
   }
   @@concat::fragment { "postgres postgres ${::hostname}":
     target  => '/root/.pgpass',
-    content => \
-        "${::hostname}:5433:*:postgres:${replicator_password}",
+    content => "${::hostname}:5433:*:postgres:${replicator_password}",
     tag     => 'pgpass',
   }
 
