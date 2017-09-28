@@ -3,6 +3,7 @@ class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
   $database_port = hiera('profile::postgres::backend::port', '5432')
+  $postgresql_ip = hiera('profile::postgres::ip')
   $password = hiera('profile::postgres::password')
   $replicator_password = hiera('profile::postgres::replicatorpassword')
   $master_server = hiera('profile::postgres::masterserver')
@@ -15,7 +16,7 @@ class profile::services::postgresql::server {
   class { '::postgresql::server':
     ip_mask_deny_postgres_user => '0.0.0.0/32',
     ip_mask_allow_all_users    => '0.0.0.0/0',
-    listen_addresses           => $management_ip,
+    listen_addresses           => [$management_ip, $postgresql_ip],
     port                       => scanf($database_port, '%i')[0],
     postgres_password          => $password,
     manage_pg_ident_conf       => false,
