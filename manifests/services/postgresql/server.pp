@@ -21,6 +21,8 @@ class profile::services::postgresql::server {
     manage_pg_ident_conf       => false,
   }
 
+  class { '::postgresql::server::contrib': }
+
   postgresql::server::role { 'replicator':
     password_hash => postgresql_password('replicator', $replicator_password),
     replication   => true,
@@ -59,5 +61,38 @@ class profile::services::postgresql::server {
 
   Postgresql::Server::Pg_hba_rule <<| |>>
 
-  class { '::postgresql::server::contrib': }
+  concat { '/var/lib/postgresql/.pgpass':
+    ensure => present,
+  }
+  concat { '/root/.pgpass':
+    ensure => present,
+  }
+
+  @@concat::fragment { "postgres replication ${management_ip}":
+    target  => '/var/lib/postgresql/.pgpass',
+    content => \
+        "${management_ip}:5433:replication:replicator:${replicator_password}",
+    tag     => 'pgpass',
+  }
+  @@concat::fragment { "postgres replication ${::hostname}":
+    target  => '/var/lib/postgresql/.pgpass',
+    content => \
+        "${::hostname}:5433:replication:replicator:${replicator_password}",
+    tag     => 'pgpass',
+  }
+
+  @@concat::fragment { "postgres postgres ${management_ip}":
+    target  => '/root/.pgpass',
+    content => \
+        "${management_ip}:5433:*:postgres:${password}",
+    tag     => 'pgpass',
+  }
+  @@concat::fragment { "postgres postgres ${::hostname}":
+    target  => '/root/.pgpass',
+    content => \
+        "${::hostname}:5433:*:postgres:${replicator_password}",
+    tag     => 'pgpass',
+  }
+
+  Concat::Fragment <<| tag == 'pgpass'  |>>
 }
