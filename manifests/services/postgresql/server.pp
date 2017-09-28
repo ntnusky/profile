@@ -8,6 +8,19 @@ class profile::services::postgresql::server {
   $replicator_password = hiera('profile::postgres::replicatorpassword')
   $master_server = hiera('profile::postgres::masterserver')
 
+  if($::fqdn == $master_server) {
+    $confpassword = $password
+    postgresql::server::role { 'replicator':
+      password_hash => postgresql_password('replicator', $replicator_password),
+      replication   => true,
+    }
+  } else {
+    $confpassword = undef
+    postgresql::server::config_entry { 'hot_standby':
+      value => 'on',
+    }
+  }
+
   class { '::postgresql::globals':
     manage_package_repo => true,
     version             => '9.6',
@@ -18,16 +31,12 @@ class profile::services::postgresql::server {
     ip_mask_allow_all_users    => '0.0.0.0/0',
     listen_addresses           => "${management_ip},${postgresql_ip}",
     port                       => scanf($database_port, '%i')[0],
-    postgres_password          => $password,
+    postgres_password          => $confpassword,
     manage_pg_ident_conf       => false,
   }
 
   class { '::postgresql::server::contrib': }
 
-  postgresql::server::role { 'replicator':
-    password_hash => postgresql_password('replicator', $replicator_password),
-    replication   => true,
-  }
 
   postgresql::server::config_entry { 'wal_level':
     value => 'hot_standby',
@@ -43,12 +52,6 @@ class profile::services::postgresql::server {
 
   postgresql::server::config_entry { 'wal_keep_segments':
     value => '8',
-  }
-
-  if($::fqdn != $master_server) {
-    postgresql::server::config_entry { 'hot_standby':
-      value => 'on',
-    }
   }
 
   @@postgresql::server::pg_hba_rule { "allow ${management_ip} for replication":
