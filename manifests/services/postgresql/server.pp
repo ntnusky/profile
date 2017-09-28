@@ -65,13 +65,13 @@ class profile::services::postgresql::server {
     ensure => present,
     owner  => 'postgres',
     group  => 'postgres',
-    mode   => 0600,
+    mode   => '0600',
   }
   concat { '/root/.pgpass':
     ensure => present,
     owner  => 'root',
     group  => 'root',
-    mode   => 0600,
+    mode   => '0600',
   }
 
   $mid = '5433:replication:replicator'
