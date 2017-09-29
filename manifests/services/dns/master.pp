@@ -1,5 +1,5 @@
 # Installs and configures a DNS server.
-class profile::services::dns {
+class profile::services::dns::master {
   $dns_forwarders = hiera('profile::dns::forwarders')
   $dns_zones = hiera_array('profile::dns::zones')
 
