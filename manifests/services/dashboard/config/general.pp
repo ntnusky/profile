@@ -57,16 +57,4 @@ class profile::services::dashboard::config::general {
             ],
   }
 
-  ini_setting { 'Machineadmin staticpath':
-    ensure  => present,
-    path    => $configfile,
-    section => 'general',
-    setting => 'staticpath',
-    value   => '/opt/machineadminstatic',
-    require => [
-              File['/etc/machineadmin'],
-            ],
-    before  => Exec['/opt/machineadmin/manage.py collectstatic --noinput'],
-  }
-
 }

@@ -1,5 +1,7 @@
 # Configures the apache vhost for the dashboard.
 class profile::services::dashboard::apache {
+  $configfile = hiera('profile::dashboard::configfile',
+      '/etc/machineadmin/settings.ini')
   $dashboardname = hiera('profile::dashboard::name')
 
   require ::profile::services::apache
@@ -37,4 +39,16 @@ class profile::services::dashboard::apache {
   }
 
   Vcsrepo['/opt/machineadmin'] ~> Service['httpd']
+
+  ini_setting { 'Machineadmin staticpath':
+    ensure  => present,
+    path    => $configfile,
+    section => 'general',
+    setting => 'staticpath',
+    value   => '/opt/machineadminstatic',
+    require => [
+              File['/etc/machineadmin'],
+            ],
+    before  => Exec['/opt/machineadmin/manage.py collectstatic --noinput'],
+  }
 }
