@@ -19,7 +19,7 @@ define profile::baseconfig::configureinterface {
     }
   }
 
-  $table_id = hiera("profile::interfaces::${name}::newtable::id")
+  $table_id = hiera("profile::interfaces::${name}::tableid")
   if($facts['networking']['interfaces'][$name]['ip']) {
     $net4id = $facts['networking']['interfaces'][$name]['network']
     $net4mask = $facts['networking']['interfaces'][$name]['netmask']
