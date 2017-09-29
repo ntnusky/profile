@@ -12,7 +12,7 @@ define profile::baseconfig::networkrule (
     owner   => 'root',
     group   => 'root',
     path    => "/etc/network/if-up.d/z90-rule-${name}",
-    content => template('rule_up.erb'),
+    content => template('profile/rule_up.erb'),
     notify  => $::network::manage_config_file_notify,
   }
   file { "ruledown-${name}":
@@ -21,7 +21,7 @@ define profile::baseconfig::networkrule (
     owner   => 'root',
     group   => 'root',
     path    => "/etc/network/if-down.d/z90-rule-${name}",
-    content => template('rule_down.erb'),
+    content => template('profile/rule_down.erb'),
     notify  => $::network::manage_config_file_notify,
   }
 }
