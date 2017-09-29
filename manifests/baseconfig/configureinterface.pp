@@ -22,12 +22,13 @@ define profile::baseconfig::configureinterface {
   $table_id = hiera("profile::interfaces::${name}::newtable::id")
   if($facts['networking']['interfaces'][$name]['ip']) {
     $net4id = $facts['networking']['interfaces'][$name]['network']
+    $net4mask = $facts['networking']['interfaces'][$name]['netmask']
     $v4netids = ['0.0.0.0', $net4id]
-    $v4masks = ['0.0.0.0', $facts['networking']['interfaces'][$name]['netmask']]
+    $v4masks = ['0.0.0.0', $net4mask]
     $v4gateways = [$v4gateway, false]
     $v4tables = ["table-${name}", "table-${name}"]
     $v4families = ['inet', 'inet']
-    $v4rules = ["from ${net4id} lookup table-${name}"]
+    $v4rules = ["from ${net4id}/${net4mask} lookup table-${name}"]
   } else {
     $v4netids = []
     $v4masks =  []
@@ -39,11 +40,11 @@ define profile::baseconfig::configureinterface {
   if($facts['networking']['interfaces'][$name]['ip6']) {
     $net6id = $facts['networking']['interfaces'][$name]['network6']
     $v6netids = ['::/0', $net6id]
-    $v6masks = ['::/0', $facts['networking']['interfaces'][$name]['netmask6']]
+    $v6masks = ['::/0', '/64']
     $v6gateways = [$v6gateway, false]
     $v6tables = ["table-${name}", "table-${name}"]
     $v6families = ['inet6', 'inet6']
-    $v6rules = ["from ${net6id} lookup table-${name}"]
+    $v6rules = ["from ${net6id}/64 lookup table-${name}"]
   } else {
     $v6netids = []
     $v6masks =  []
