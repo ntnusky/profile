@@ -5,13 +5,17 @@ define profile::baseconfig::configureinterface {
   $secondary_routing = hiera("profile::interfaces::${name}::newtable", false)
 
   if($method == 'dhcp') {
-    $address = $facts['networking']['interface'][$name]['ip']
-    $netmask = $facts['networking']['interface'][$name]['netmask']
+    if($facts['networking']['interfaces'][$name]['ip']) {
+      $address = $facts['networking']['interfaces'][$name]['ip']
+      $netmask = $facts['networking']['interfaces'][$name]['netmask']
+    } else {
+      $address = undef
+    }
   } else {
     $address = hiera("profile::interfaces::${name}::address", false)
     $netmask = hiera("profile::interfaces::${name}::netmask", '255.255.255.0')
-    $gateway = hiera("profile::interfaces::${name}::gateway", undef)
   }
+  $gateway = hiera("profile::interfaces::${name}::gateway", undef)
 
   if($method == 'dhcp') {
     network::interface { $name:
@@ -34,7 +38,7 @@ define profile::baseconfig::configureinterface {
       table_id => $table_id,
     }->
     network::route { $name:
-      ipaddress => [ '0.0.0.0', $netid, ],
+      ipaddress => [ '0.0.0.0', ip_address($netid), ],
       netmask   => [ '0.0.0.0', $netmask, ],
       gateway   => [ $gateway, false, ],
       table     => [ "table-${name}", "table-${name}",],
