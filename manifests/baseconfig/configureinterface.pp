@@ -39,8 +39,8 @@ define profile::baseconfig::configureinterface {
   }
   if($facts['networking']['interfaces'][$name]['ip6']) {
     $net6id = $facts['networking']['interfaces'][$name]['network6']
-    $v6netids = ['::/0', $net6id]
-    $v6masks = ['::/0', '/64']
+    $v6netids = ['::', $net6id]
+    $v6masks = ['0', '64']
     $v6gateways = [$v6gateway, false]
     $v6tables = ["table-${name}", "table-${name}"]
     $v6families = ['inet6', 'inet6']
