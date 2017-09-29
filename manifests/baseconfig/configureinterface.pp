@@ -61,7 +61,7 @@ define profile::baseconfig::configureinterface {
     netmask   => concat($v4masks, $v6masks),
     gateway   => concat($v4gateways, $v6gateways),
     table     => concat($v4tables, $v6tables),
-    familiy   => concat($v4families, $v6families),
+    family   => concat($v4families, $v6families),
   }->
   network::rule { $name:
     iprule => concat($v4rules, $v6rules),
