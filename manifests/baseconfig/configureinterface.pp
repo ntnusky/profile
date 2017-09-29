@@ -29,6 +29,7 @@ define profile::baseconfig::configureinterface {
     $v4tables = ["table-${name}", "table-${name}"]
     $v4families = ['inet', 'inet']
     $v4rules = ["from ${net4id}/${net4mask} lookup table-${name}"]
+    $v4rulef = ['inet']
   } else {
     $v4netids = []
     $v4masks =  []
@@ -36,6 +37,7 @@ define profile::baseconfig::configureinterface {
     $v4tables = []
     $v4families = []
     $v4rules = []
+    $v4rulef = []
   }
   if($facts['networking']['interfaces'][$name]['ip6']) {
     $net6id = $facts['networking']['interfaces'][$name]['network6']
@@ -45,6 +47,7 @@ define profile::baseconfig::configureinterface {
     $v6tables = ["table-${name}", "table-${name}"]
     $v6families = ['inet6', 'inet6']
     $v6rules = ["from ${net6id}/64 lookup table-${name}"]
+    $v6rulef = ['inet6']
   } else {
     $v6netids = []
     $v6masks =  []
@@ -52,6 +55,7 @@ define profile::baseconfig::configureinterface {
     $v6tables = []
     $v6families = []
     $v6rules = []
+    $v6rulef = []
   }
 
   network::routing_table { "table-${name}":
@@ -64,7 +68,8 @@ define profile::baseconfig::configureinterface {
     table     => concat($v4tables, $v6tables),
     family   => concat($v4families, $v6families),
   }->
-  network::rule { $name:
+  profile::baseconfig::networkrule { $name:
     iprule => concat($v4rules, $v6rules),
+    family => concat($v4rulef, $v6rulef),
   }
 }
