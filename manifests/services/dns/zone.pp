@@ -9,7 +9,7 @@ define profile::services::dns::zone (
   $master_name = hiera("profile::dns::${masterserver}::name")
 
   if($type == 'slave') {
-    $master_ip = hiera("profile::dns::${masterserver}::ip")
+    $master_ip = hiera("profile::dns::${masterserver}::ipv4")
     $allow_update = undef
   } else {
     $master_ip = undef
@@ -17,7 +17,7 @@ define profile::services::dns::zone (
   }
 
   $servers = $dns_servers.map |$server| {
-    hiera("profile::dns::${server}::ip")
+    hiera("profile::dns::${server}::ipv4")
   }
 
   ::dns::zone { $name :
