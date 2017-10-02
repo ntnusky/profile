@@ -3,7 +3,7 @@ define profile::services::dns::zone (
   $type = 'master',
 ) {
   $zones = hiera_hash('profile::dns::zones')
-  $dns_servers = values($zones)
+  $dns_slaves = hiera_array('profile::dns::slaves')
   $dns_zones = keys($zones)
   $masterserver = $zones[$name]
   $master_name = hiera("profile::dns::${masterserver}::name")
@@ -16,12 +16,8 @@ define profile::services::dns::zone (
     $allow_update = ['key update']
   }
 
-  $servers = $dns_servers.map |$server| {
-    hiera("profile::dns::${server}::ipv4")
-  }
-
   ::dns::zone { $name :
-    nameservers    => $servers,
+    nameservers    => concat($dns_slaves, $master_name),
     allow_update   => $allow_update,
     allow_transfer => ['key transfer'],
     data_dir       => '/var/lib/bind/zones',
