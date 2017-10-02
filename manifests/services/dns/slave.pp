@@ -5,6 +5,7 @@ class profile::services::dns::slave {
 
   $update_key = hiera('profile::dns::key::update')
   $transfer_key = hiera('profile::dns::key::transfer')
+  $master_ip = hiera('profile::dns::master::ip')
 
   include ::dns::server
   include ::profile::services::dashboard::clients::dns
@@ -15,12 +16,9 @@ class profile::services::dns::slave {
     dnssec_enable     => false,
   }
 
-  ::dns::tsig { 'update':
-    secret => $update_key,
-  }
-
   ::dns::tsig { 'transfer':
     secret => $transfer_key,
+    server => $master_ip,
   }
 
   ::profile::services::dns::zone { $dns_zones :

@@ -7,8 +7,10 @@ define profile::services::dns::zone (
 
   if($type == 'slave') {
     $master_ip = hiera('profile::dns::master::ip')
+    $allow_update = undef
   } else {
     $master_ip = undef
+    $allow_update = ['key update']
   }
   $master_name = hiera('profile::dns::master::name')
 
@@ -18,7 +20,7 @@ define profile::services::dns::zone (
 
   ::dns::zone { $name :
     nameservers    => $servers,
-    allow_update   => ['key update'],
+    allow_update   => $allow_update,
     allow_transfer => ['key transfer'],
     data_dir       => '/var/lib/bind/zones',
     zone_type      => $type,
