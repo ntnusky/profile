@@ -1,7 +1,6 @@
 # Installs and configures a DHCP server.
 class profile::services::dhcp {
   $searchdomain = hiera('profile::dhcp::searchdomain')
-  $dns_servers = hiera_array('profile::dns::servers::addresses')
   $ntp_servers = hiera_array('profile::ntp::servers')
   $interfaces = hiera_array('profile::interfaces')
   $networks = hiera_array('profile::networks')
@@ -12,6 +11,11 @@ class profile::services::dhcp {
 
   $pxe_server = hiera('profile::dhcp::pxe::server')
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
+
+  $dns_server_names = unique(values(hiera_hash('profile::dns::zones')))
+  $dns_servers = $dns_server_names.map |$server| {
+    hiera("profile::dns::${server}::ipv4")
+  }
 
   include ::profile::services::dashboard::clients::dhcp
 

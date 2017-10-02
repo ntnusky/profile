@@ -3,8 +3,8 @@ class profile::services::dashboard::config::dns {
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')
 
-  $servers = hiera_array('profile::dns::servers::names')
-  $domains = hiera_hash('profile::dns::domains')
+  $domains = hiera_hash('profile::dns::zones')
+  $servers = unique(values($domains))
 
   ini_setting { 'Machineadmin DNS Servers':
     ensure  => present,
