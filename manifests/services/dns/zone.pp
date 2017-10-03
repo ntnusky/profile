@@ -3,7 +3,7 @@ define profile::services::dns::zone (
   $type = 'master',
 ) {
   $zones = hiera_hash('profile::dns::zones')
-  $dns_slaves = keys(hiera_array('profile::dns::slaves', {}))
+  $dns_slaves = keys(hiera_hash('profile::dns::slaves', {}))
   $dns_zones = keys($zones)
   $masterserver = $zones[$name]
   $master_name = hiera("profile::dns::${masterserver}::name")
