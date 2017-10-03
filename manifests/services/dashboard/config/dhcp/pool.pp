@@ -4,7 +4,7 @@ define profile::services::dashboard::config::dhcp::pool {
   $mask = hiera("profile::networks::${name}::mask")
   $gateway = hiera("profile::networks::${name}::gateway")
   $domain = hiera("profile::networks::${name}::domain")
-  $range = hiera("profile::networks::${name}::range")
+  $range = hiera("profile::networks::${name}::range", '')
   $reserved = hiera_array("profile::networks::${name}::reserved", [])
 
   $configfile = hiera('profile::dashboard::configfile',
@@ -60,7 +60,7 @@ define profile::services::dashboard::config::dhcp::pool {
     path    => $configfile,
     section => 'DHCP',
     setting => "${name}Reserved",
-    value   => join(concat([$range2], $reserved), ','),
+    value   => join(concat($reserved, $range2), ','),
     require => [
               File['/etc/machineadmin'],
             ],
