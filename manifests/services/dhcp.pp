@@ -13,7 +13,7 @@ class profile::services::dhcp {
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
 
   $master_server_names = unique(values(hiera_hash('profile::dns::zones')))
-  $master_servers = $dns_server_names.map |$server| {
+  $master_servers = $master_server_names.map |$server| {
     hiera("profile::dns::${server}::query::ipv4")
   }
   $slave_servers = values(unique(hiera_hash("profile::dns::slaves")))
