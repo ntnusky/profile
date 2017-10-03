@@ -7,8 +7,7 @@ class profile::services::dns::master {
   $transfer_key = hiera('profile::dns::key::transfer')
 
   include ::dns::server
-  include ::profile::services::dashboard::clients::dns
-
+  
   ::dns::server::options{'/etc/bind/named.conf.options':
     forwarders        => $dns_forwarders,
     dnssec_validation => 'no',

@@ -13,7 +13,6 @@ class profile::services::dns::slave {
   }
 
   include ::dns::server
-  include ::profile::services::dashboard::clients::dns
 
   ::dns::server::options{'/etc/bind/named.conf.options':
     forwarders        => $dns_forwarders,
