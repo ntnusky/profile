@@ -3,6 +3,7 @@ define profile::services::dashboard::config::dhcp::pool {
   $network = hiera("profile::networks::${name}::id")
   $mask = hiera("profile::networks::${name}::mask")
   $gateway = hiera("profile::networks::${name}::gateway")
+  $domain = hiera("profile::networks::${name}::domain")
   $range = hiera("profile::networks::${name}::range")
   $reserved = hiera_array("profile::networks::${name}::reserved", [])
 
@@ -15,6 +16,17 @@ define profile::services::dashboard::config::dhcp::pool {
     section => 'DHCP',
     setting => "${name}Network",
     value   => $network,
+    require => [
+              File['/etc/machineadmin'],
+            ],
+  }
+
+  ini_setting { "Machineadmin DHCP Pool ${name} domain":
+    ensure  => present,
+    path    => $configfile,
+    section => 'DHCP',
+    setting => "${name}Domain",
+    value   => $domain,
     require => [
               File['/etc/machineadmin'],
             ],
