@@ -11,18 +11,13 @@ class profile::services::dhcp {
 
   $pxe_server = hiera('profile::dhcp::pxe::server')
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
-
-  $master_server_names = unique(values(hiera_hash('profile::dns::zones')))
-  $master_servers = $master_server_names.map |$server| {
-    hiera("profile::dns::${server}::query::ipv4")
-  }
-  $slave_servers = values(unique(hiera_hash("profile::dns::slaves")))
-
+  
+  $nameservers = hiera_array('profile::dns::resolvers')
 
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
     interfaces       => $interfaces,
-    nameservers      => unique(concat($master_servers, $slave_servers)),
+    nameservers      => $nameservers,
     ntpservers       => $ntp_servers,
     omapi_key        => $omapi_key,
     omapi_name       => $omapi_name,
