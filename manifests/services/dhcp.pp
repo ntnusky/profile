@@ -18,7 +18,6 @@ class profile::services::dhcp {
   }
   $slave_servers = values(unique(hiera_hash("profile::dns::slaves")))
 
-  include ::profile::services::dashboard::clients::dhcp
 
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
