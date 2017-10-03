@@ -22,7 +22,7 @@ class profile::services::dhcp {
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
     interfaces       => $interfaces,
-    nameservers      => unique($master_servers, $slave_servers),
+    nameservers      => unique(concat($master_servers, $slave_servers)),
     ntpservers       => $ntp_servers,
     omapi_key        => $omapi_key,
     omapi_name       => $omapi_name,
