@@ -28,7 +28,7 @@ class profile::services::puppetmaster {
     setting           => "${pfx}service/certificate-authority-service",
     key_val_separator => '',
   }
-  $setting = "${pfx}disabled-service/certificate-authority-disabled-service",
+  $setting = "${pfx}disabled-service/certificate-authority-disabled-service"
   ini_setting { 'Puppetmaster ca disable':
     ensure            => $disabled,
     path              => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
