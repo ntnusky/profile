@@ -23,14 +23,17 @@ class profile::services::puppetmaster {
 
   $pfx = 'puppetlabs.services.ca.certificate-authority-'
   ini_setting { 'Puppetmaster ca enable':
-    ensure  => $enabled,
-    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
-    setting => "${pfx}service/certificate-authority-service",
+    ensure            => $enabled,
+    path              => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    setting           => "${pfx}service/certificate-authority-service",
+    key_val_separator => '',
   }
+  $setting = "${pfx}disabled-service/certificate-authority-disabled-service",
   ini_setting { 'Puppetmaster ca disable':
-    ensure  => $disabled,
-    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
-    setting => "${pfx}disabled-service/certificate-authority-disabled-service",
+    ensure            => $disabled,
+    path              => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    setting           => $setting,
+    key_val_separator => '',
   }
 
   cron { 'Dashboard-client puppet-environments':
