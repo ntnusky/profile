@@ -1,6 +1,6 @@
 # Installs a TFTP image and prepares it for netboot
 define profile::services::tftp::image {
-  $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/') 
+  $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/')
   $name = hiera("profile::pxe::${name}::name")
   $kernel = hiera("profile::pxe::${name}::kernel")
   $initrd = hiera("profile::pxe::${name}::initrd")
@@ -9,23 +9,23 @@ define profile::services::tftp::image {
     ensure => 'directory',
     owner  => 'root',
     group  => 'root',
-    mode   => 0755,
+    mode   => '0755',
   }
 
   file {"${rootdir}${name}/initrd.gz":
-    ensure  => 'file'
+    ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => 0644,
+    mode    => '0644',
     source  => $initrd,
     require => File["${rootdir}${name}"],
   }
 
   file {"${rootdir}${name}/linux":
-    ensure  => 'file'
+    ensure  => 'file',
     owner   => 'root',
     group   => 'root',
-    mode    => 0644,
+    mode    => '0644',
     source  => $kernel,
     require => File["${rootdir}${name}"],
   }
