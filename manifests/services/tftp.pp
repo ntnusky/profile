@@ -23,14 +23,14 @@ class profile::services::tftp {
   }
 
   file { "${rootdir}pxelinux.0":
-    ensure  => 'link',
-    target  => '/usr/lib/PXELINUX/pxelinux.0',
+    ensure  => 'file',
+    source  => '/usr/lib/PXELINUX/pxelinux.0',
     require => Package['pxelinux'],
   }
 
   file { "${rootdir}ldlinux.c32":
-    ensure  => 'link',
-    target  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
+    ensure  => 'file',
+    source  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
     require => Package['syslinux'],
   }
 
