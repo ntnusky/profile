@@ -5,8 +5,33 @@ class profile::services::puppetmaster {
 
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
+  $puppetca = hiera('profile::puppet::caserver')
 
   $cnf = '/etc/machineadmin/settings.ini'
+
+  package { 'puppetserver':
+    ensure => 'present',
+  }
+
+  if($puppetca == $::fqdn) {
+    $enabled = 'present'
+    $disabled = 'absent'
+  } else {
+    $enabled = 'absent'
+    $disabled = 'present'
+  }
+
+  $pfx = 'puppetlabs.services.ca.certificate-authority-'
+  ini_setting { 'Puppetmaster ca enable':
+    ensure  => $enabled,
+    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    setting => "${pfx}service/certificate-authority-service",
+  }
+  ini_setting { 'Puppetmaster ca disable':
+    ensure  => $disabled,
+    path    => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
+    setting => "${pfx}disabled-service/certificate-authority-disabled-service",
+  }
 
   cron { 'Dashboard-client puppet-environments':
     command => "/opt/machineadmin/clients/puppetEnvironmentUpdater.py ${cnf}",
