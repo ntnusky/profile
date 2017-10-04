@@ -1,7 +1,6 @@
 # Installs a TFTP image and prepares it for netboot
 define profile::services::tftp::image {
   $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/')
-  $name = hiera("profile::pxe::${name}::name")
   $kernel = hiera("profile::pxe::${name}::kernel")
   $initrd = hiera("profile::pxe::${name}::initrd")
 
