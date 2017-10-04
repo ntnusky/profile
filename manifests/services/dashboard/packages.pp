@@ -5,7 +5,7 @@ class profile::services::dashboard::packages {
   package { [
       'python3-django',
       'python3-django-python3-ldap',
-      'python3-dnspython'
+      'python3-dnspython',
       'python3-mysqldb',
       'python3-passlib',
       'python3-pymysql',
