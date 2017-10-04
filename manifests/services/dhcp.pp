@@ -9,7 +9,8 @@ class profile::services::dhcp {
   $omapi_key = hiera('profile::dhcp::omapi::key')
   $omapi_port = hiera('profile::dhcp::omapi::port', 7911)
 
-  $pxe_server = hiera('profile::dhcp::pxe::server')
+  $management_ip = $facts['networking']['interfaces'][$man_if]['ip']
+  $pxe_server = hiera('profile::dhcp::pxe::server', $management_ip)
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
   
   $nameservers = hiera_array('profile::dns::resolvers')
