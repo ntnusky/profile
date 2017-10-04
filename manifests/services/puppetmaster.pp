@@ -14,26 +14,17 @@ class profile::services::puppetmaster {
   }
 
   if($puppetca == $::fqdn) {
-    $enabled = 'present'
-    $disabled = 'absent'
+    $template = 'ca.enabled.cfg'
   } else {
-    $enabled = 'absent'
-    $disabled = 'present'
+    $template = 'ca.disabled.cfg'
   }
 
-  $pfx = 'puppetlabs.services.ca.certificate-authority-'
-  ini_setting { 'Puppetmaster ca enable':
-    ensure            => $enabled,
-    path              => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
-    setting           => "${pfx}service/certificate-authority-service",
-    key_val_separator => '',
-  }
-  $setting = "${pfx}disabled-service/certificate-authority-disabled-service"
-  ini_setting { 'Puppetmaster ca disable':
-    ensure            => $disabled,
-    path              => '/etc/puppetlabs/puppetserver/services.d/ca.cfg',
-    setting           => $setting,
-    key_val_separator => '',
+  file { '/etc/puppetlabs/puppetserver/services.d/ca.cfg':
+    ensure => present,
+    owner => 'root',
+    group => 'root',
+    mode  => '0644',
+    source => "puppet:///modules/profile/puppet/${template}",
   }
 
   cron { 'Dashboard-client puppet-environments':
