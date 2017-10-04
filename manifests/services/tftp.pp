@@ -15,4 +15,21 @@ class profile::services::tftp {
   package { 'tftp-hpa':
     ensure => 'present',
   }
+
+  # Set up the tftp-boot directory
+  package { ['syslinux', 'pxelinux']:
+    ensure => 'present',
+  }
+
+  file { '/var/lib/tftpboot/pxelinux.0':
+    ensure  => 'link',
+    target  => '/usr/lib/PXELINUX/pxelinux.0',
+    require => Package['pxelinux'],
+  }
+
+  file { '/var/lib/tftpboot/ldlinux.c32':
+    ensure  => 'link',
+    target  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
+    require => Package['syslinux'],
+  }
 }
