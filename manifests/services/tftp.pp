@@ -2,6 +2,7 @@
 # /var/lib/tftpboot.
 class profile::services::tftp {
   $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/') 
+  $images = hiera('profile::pxe::images')
 
   include ::profile::services::dashboard::clients::tftp
 
@@ -21,15 +22,17 @@ class profile::services::tftp {
     ensure => 'present',
   }
 
-  file { '/var/lib/tftpboot/pxelinux.0':
+  file { "${rootdir}pxelinux.0":
     ensure  => 'link',
     target  => '/usr/lib/PXELINUX/pxelinux.0',
     require => Package['pxelinux'],
   }
 
-  file { '/var/lib/tftpboot/ldlinux.c32':
+  file { "${rootdir}ldlinux.c32":
     ensure  => 'link',
     target  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
     require => Package['syslinux'],
   }
+
+  ::profile::services::tftp::image { $images : }
 }
