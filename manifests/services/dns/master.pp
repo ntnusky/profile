@@ -9,6 +9,7 @@ class profile::services::dns::master {
   include ::dns::server
   
   ::dns::server::options{'/etc/bind/named.conf.options':
+    forwarders        => $dns_forwarders,
     dnssec_validation => 'no',
     dnssec_enable     => false,
   }
