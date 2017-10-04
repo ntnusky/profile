@@ -1,7 +1,5 @@
 # Installs and configures a DNS server.
 class profile::services::dns::slave {
-  $dns_forwarders = hiera('profile::dns::forwarders')
-
   $update_key = hiera('profile::dns::key::update')
   $transfer_key = hiera('profile::dns::key::transfer')
 
@@ -15,7 +13,6 @@ class profile::services::dns::slave {
   include ::dns::server
 
   ::dns::server::options{'/etc/bind/named.conf.options':
-    forwarders        => $dns_forwarders,
     dnssec_validation => 'no',
     dnssec_enable     => false,
   }
