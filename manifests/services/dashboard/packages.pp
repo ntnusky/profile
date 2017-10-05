@@ -9,6 +9,7 @@ class profile::services::dashboard::packages {
       'python3-mysqldb',
       'python3-passlib',
       'python3-pymysql',
+      'python3-yaml',
     ] :
     ensure => present,
   }
