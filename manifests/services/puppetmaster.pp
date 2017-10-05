@@ -6,11 +6,21 @@ class profile::services::puppetmaster {
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetca = hiera('profile::puppet::caserver')
+  $r10krepo = hiera('profile::puppet::r10k::repo')
 
   $cnf = '/etc/machineadmin/settings.ini'
 
   package { 'puppetserver':
     ensure => 'present',
+  }
+  service { 'puppetserver':
+    ensure  => 'running',
+    enabled => true,
+    require => Package['puppetserver'],
+  }
+
+  class { 'r10k':
+    remote => $r10krepo,
   }
 
   if($puppetca == $::fqdn) {
@@ -19,12 +29,32 @@ class profile::services::puppetmaster {
     $template = 'ca.disabled.cfg'
   }
 
+  file { '/etc/puppetlabs/puppet/ssl/ca/ca_crl.pem'
+    ensure  => 'link',
+    owner   => 'puppet',
+    group   => 'puppet',
+    target  => '/etc/puppetlabs/puppet/ssl/crl.pem',
+    replace => false,
+    notify  => Service['puppetserver'],
+    require => File['/etc/puppetlabs/puppet/ssl/ca'],
+  }
+
+  file { '/etc/puppetlabs/puppet/ssl/ca'
+    ensure  => 'directory',
+    mode    => '0755',
+    owner   => 'puppet',
+    group   => 'puppet',
+    require => Package['puppetserver'],
+  }
+
   file { '/etc/puppetlabs/puppetserver/services.d/ca.cfg':
-    ensure => present,
-    owner => 'root',
-    group => 'root',
-    mode  => '0644',
-    source => "puppet:///modules/profile/puppet/${template}",
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => "puppet:///modules/profile/puppet/${template}",
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
   }
 
   cron { 'Dashboard-client puppet-environments':
@@ -39,6 +69,8 @@ class profile::services::puppetmaster {
     section => 'master',
     setting => 'autosign',
     value   => '/opt/machineadmin/clients/puppetAutosign.sh',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
   }
 
   ini_setting { 'Puppetmaster node_terminus':
@@ -47,6 +79,8 @@ class profile::services::puppetmaster {
     section => 'master',
     setting => 'node_terminus',
     value   => 'exec',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
   }
 
   ini_setting { 'Puppetmaster enc':
@@ -55,6 +89,8 @@ class profile::services::puppetmaster {
     section => 'master',
     setting => 'external_nodes',
     value   => '/opt/machineadmin/clients/puppetENC.sh',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
   }
 
   if($usepuppetdb) {
