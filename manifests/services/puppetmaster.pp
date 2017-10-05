@@ -58,9 +58,7 @@ class profile::services::puppetmaster {
   }
 
   cron { 'Dashboard-client puppet-environments':
-    command => "/opt/machineadmin/clients/puppetEnvironmentUpdater.py ${cnf}",
-    user    => 'root',
-    minute  => '*',
+    ensure => absent,
   }
 
   ini_setting { 'Puppetmaster autosign':
