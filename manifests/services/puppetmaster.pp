@@ -29,7 +29,7 @@ class profile::services::puppetmaster {
     $template = 'ca.disabled.cfg'
   }
 
-  file { '/etc/puppetlabs/puppet/ssl/ca/ca_crl.pem'
+  file { '/etc/puppetlabs/puppet/ssl/ca/ca_crl.pem':
     ensure  => 'link',
     owner   => 'puppet',
     group   => 'puppet',
@@ -39,7 +39,7 @@ class profile::services::puppetmaster {
     require => File['/etc/puppetlabs/puppet/ssl/ca'],
   }
 
-  file { '/etc/puppetlabs/puppet/ssl/ca'
+  file { '/etc/puppetlabs/puppet/ssl/ca':
     ensure  => 'directory',
     mode    => '0755',
     owner   => 'puppet',
