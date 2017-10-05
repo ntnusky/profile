@@ -9,21 +9,19 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::unattendedupgrades
 
-  $installMunin = hiera('profile::munin::install', true)
-  if($installMunin) {
+  $installmunin = hiera('profile::munin::install', true)
+  if($installmunin) {
     include ::profile::munin::node
   }
 
-  $installSensu = hiera('profile::sensu::install', true)
-  if ($::hostname != 'monitor' and $installSensu) {
+  $installsensu = hiera('profile::sensu::install', true)
+  if ($::hostname != 'monitor' and $installsensu) {
     include ::profile::sensu::client
   }
 
-  # This is a properly ugly way to ensure that the hosts dont lose their
-  # arp-entry for the gateway.
+  # The ping vg hack is not needed anymore, as we now use multiple routing
+  # tables.
   cron { 'gwrefresh':
-    command => '/bin/ping vg.no -c 1 &> /dev/null',
-    user    => root,
-    minute  => '*',
+    ensure => absent,
   }
 }
