@@ -58,8 +58,10 @@ class profile::services::puppetmaster {
   }
 
   cron { 'Dashboard-client puppet-environments':
-    ensure => absent,
-  }
+    command => "/opt/machineadmin/manage.py puppet_report",                        
+    user    => 'root',                                                           
+    minute  => '*',                                                              
+  }    
 
   ini_setting { 'Puppetmaster autosign':
     ensure  => present,
