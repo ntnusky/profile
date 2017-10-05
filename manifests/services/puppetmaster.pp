@@ -15,7 +15,7 @@ class profile::services::puppetmaster {
   }
   service { 'puppetserver':
     ensure  => 'running',
-    enabled => true,
+    enable  => true,
     require => Package['puppetserver'],
   }
 
