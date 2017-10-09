@@ -14,4 +14,4 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
       ssh-agent bash -c "ssh-add $sshprivkey; git pull ${hostname}:${repolocation}"
     fi
   fi
-done < "/root/.ssh/authorized_keys"#!/bin/bash
+done < "/root/.ssh/authorized_keys"
