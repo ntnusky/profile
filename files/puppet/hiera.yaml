@@ -7,14 +7,14 @@ defaults:
   datadir: data
   data_hash: yaml_data
 
-  hierarchy:
-   - name: "Per-Node data"
-     path: "nodes/%{trusted.certname}.yaml"
-   - name: "Networking data"
-     path: "networking.yaml"
-   - name: "Packages data"
-     path: "packages.yaml"
-   - name: "User data"
-     path: "users.yaml"
-   - name: "Common data"
-     path: "common.yaml"
+hierarchy:
+ - name: "Per-Node data"
+   path: "nodes/%{trusted.certname}.yaml"
+ - name: "Networking data"
+   path: "networking.yaml"
+ - name: "Packages data"
+   path: "packages.yaml"
+ - name: "User data"
+   path: "users.yaml"
+ - name: "Common data"
+   path: "common.yaml"
