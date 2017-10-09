@@ -28,16 +28,16 @@ class profile::services::puppetmaster {
     type    => 'ssh-rsa',
     key     => $::facts['ssh']['rsa']['key'],
     tag     => 'puppetmaster-hostkeys',
-    require => File["/root/.ssh"],
+    require => File['/root/.ssh'],
   }
   Ssh_authorized_key <<| tag == 'puppetmaster-hostkeys' |>>
 
   file { '/usr/local/sbin/pull_hiera.sh':
-    ensure  => present,
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0755',
-    source  => "puppet:///modules/profile/puppet/pull_hiera.sh",
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/profile/puppet/pull_hiera.sh',
   }
 
   if($puppetca == $::fqdn) {
@@ -75,10 +75,16 @@ class profile::services::puppetmaster {
   }
 
   cron { 'Dashboard-client puppet-environments':
-    command => "/opt/machineadmin/manage.py puppet_report",                        
-    user    => 'root',                                                           
-    minute  => '*',                                                              
-  }    
+    command => '/opt/machineadmin/manage.py puppet_report',
+    user    => 'root',
+    minute  => '*',
+  }
+
+  cron { 'Puppet hieradata sync':
+    command => '/usr/local/sbin/pull_hiera.sh',
+    user    => 'root',
+    minute  => '*',
+  }
 
   ini_setting { 'Puppetmaster autosign':
     ensure  => present,
