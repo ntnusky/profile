@@ -19,9 +19,11 @@ class profile::services::haproxy {
   }
 
   haproxy::listen { 'stats':
-    ipaddress => $ip,
-    ports     => '9000',
-    options   => {
+    bind    => {
+      "${ip}:9000"     => [],
+      '127.0.0.1:9000' => [],
+    },
+    options => {
       'mode'  => 'http',
       'stats' => [
         'hide-version',
