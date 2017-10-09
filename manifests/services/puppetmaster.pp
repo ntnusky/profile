@@ -23,6 +23,15 @@ class profile::services::puppetmaster {
     remote => $r10krepo,
   }
 
+  @@ssh_authorized_key { "puppetmaster-${::fqdn}":
+    user    => 'root',
+    type    => 'ssh-rsa',
+    key     => $::facts['ssh']['rsa']['key'],
+    tag     => 'puppetmaster-hostkeys',
+    require => File["/root/.ssh"],
+  }
+  Ssh_authorized_key <<| tag == 'puppetmaster-hostkeys' |>>
+
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
   } else {
