@@ -64,7 +64,7 @@ class profile::services::puppetmaster {
     require => Package['puppetserver'],
   }
 
-  file { '/etc/puppetlabs/puppetserver/services.d/hiera.yaml':
+  file { '/etc/puppetlabs/puppet/hiera.yaml':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
