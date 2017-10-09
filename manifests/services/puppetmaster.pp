@@ -64,6 +64,16 @@ class profile::services::puppetmaster {
     require => Package['puppetserver'],
   }
 
+  file { '/etc/puppetlabs/puppetserver/services.d/hiera.yaml':
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => "puppet:///modules/profile/puppet/hiera.yaml",
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
   file { '/etc/puppetlabs/puppetserver/services.d/ca.cfg':
     ensure  => present,
     owner   => 'root',
