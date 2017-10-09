@@ -32,6 +32,14 @@ class profile::services::puppetmaster {
   }
   Ssh_authorized_key <<| tag == 'puppetmaster-hostkeys' |>>
 
+  file { '/usr/local/sbin/pull_hiera.sh':
+    ensure  => present,
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    source  => "puppet:///modules/profile/puppet/pull_hiera.sh",
+  }
+
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
   } else {
