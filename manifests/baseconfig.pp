@@ -1,6 +1,7 @@
 # This class ensures that all baseconfiguration are brought in.
 class profile::baseconfig {
   include ::profile::baseconfig::firewall
+  include ::profile::baseconfig::git
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
