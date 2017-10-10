@@ -3,6 +3,9 @@ class profile::services::puppetmaster::config {
   $puppetca = hiera('profile::puppet::caserver')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
+  $management_if = hiera('profile::interfaces::management')
+  $master_alt_name = hiera('profile::puppet::hostname')
+  $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
 
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
@@ -28,12 +31,30 @@ class profile::services::puppetmaster::config {
     require => Package['puppetserver'],
   }
 
+  file_line { 'Puppetserver listen IP':
+    path  => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
+    line  => "    ssl-host: ${master_ip}",
+    match => '    ssl-host: .*',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
   file { '/etc/puppetlabs/puppetserver/services.d/ca.cfg':
     ensure  => present,
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
     source  => "puppet:///modules/profile/puppet/${template}",
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
+  ini_setting { 'Puppetmaster DNS alt':
+    ensure  => present,
+    path    => '/etc/puppetlabs/puppet/puppet.conf',
+    section => 'main',
+    setting => 'dns_alt_names',
+    value   => $master_alt_name,
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
@@ -70,7 +91,8 @@ class profile::services::puppetmaster::config {
 
   if($usepuppetdb) {
     class { 'puppetdb::master::config':
-      puppetdb_server => $puppetdb_hostname,
+      puppetdb_server                => $puppetdb_hostname,
+      create_puppet_service_resource => false,
     }
   }
 }
