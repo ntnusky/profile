@@ -3,7 +3,7 @@ class profile::services::mysql::haproxy::backend {
   $if = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$if]['ip']
 
-  @@haproxy::balancermember { $::fqdn:
+  @@haproxy::balancermember { "mysql-${::fqdn}":
     listening_service => 'mysqlcluster',
     server_names      => $::hostname,
     ipaddresses       => $ip,
