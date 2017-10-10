@@ -3,6 +3,8 @@ class profile::services::puppetmaster::config {
   $puppetca = hiera('profile::puppet::caserver')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
+  $management_if = hiera('profile::interfaces::management')
+  $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
 
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
@@ -25,6 +27,14 @@ class profile::services::puppetmaster::config {
     mode    => '0755',
     owner   => 'puppet',
     group   => 'puppet',
+    require => Package['puppetserver'],
+  }
+
+  file_line { 'Puppetserver listen IP':
+    path  => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
+    line  => "    ssl-host: ${master_ip}",
+    match => '    ssl-host: .*',
+    notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
 
