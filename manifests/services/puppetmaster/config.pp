@@ -70,7 +70,8 @@ class profile::services::puppetmaster::config {
 
   if($usepuppetdb) {
     class { 'puppetdb::master::config':
-      puppetdb_server => $puppetdb_hostname,
+      puppetdb_server                => $puppetdb_hostname,
+      create_puppet_service_resource => false,
     }
   }
 }
