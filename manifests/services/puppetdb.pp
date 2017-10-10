@@ -13,8 +13,8 @@ class profile::services::puppetdb {
     manage_firewall  => false,
   }
   class { '::puppetdb::master::config':
-    terminus_package               => 'puppetdb-terminus',
-    create_puppet_service_resource => false,
+    terminus_package => 'puppetdb-terminus',
+    restart_puppet   => false,
   }
 
 }
