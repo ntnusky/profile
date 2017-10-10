@@ -1,19 +1,12 @@
-# Configuring galera and maraidb cluster
-class profile::mysql::cluster {
+# Installing galera and mariadb cluster
+class profile::services::mysql::cluster
   $servers = hiera('profile::mysql::servers')
-  
   $master  = hiera('profile::mysqlcluster::master')
   $rootpassword = hiera('profile::mysqlcluster::root_password')
   $statuspassword = hiera('profile::mysqlcluster::status_password')
-  $haproxypassword = hiera('profile::mysqlcluster::haproxy_password')
 
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
-
-  $installsensu = hiera('profile::sensu::install', true)
-  if ($installsensu) {
-    include ::profile::sensu::plugin::mysql
-  }
 
   apt::source { 'galera_mariadb':
     location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
@@ -44,33 +37,5 @@ class profile::mysql::cluster {
       }
     },
     require             => Apt::Source['galera_mariadb'],
-  }
-
-  mysql_user { "root@${master}":
-    ensure  => 'absent',
-    require => Class['::galera'],
-  }->
-  mysql_user { 'root@%':
-    ensure        => 'present',
-    password_hash => mysql_password($rootpassword)
-  }->
-  mysql_grant { 'root@%/*.*':
-    ensure     => 'present',
-    options    => ['GRANT'],
-    privileges => ['ALL'],
-    table      => '*.*',
-    user       => 'root@%',
-  }
-
-  mysql_user { 'haproxy_check@%':
-    ensure        => 'present',
-    password_hash => mysql_password($haproxypassword)
-  }->
-  mysql_grant { 'haproxy_check@%/mysql.user':
-    ensure     => 'present',
-    options    => ['GRANT'],
-    privileges => ['SELECT'],
-    table      => 'mysql.user',
-    user       => 'haproxy_check@%',
   }
 }
