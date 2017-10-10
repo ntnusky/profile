@@ -1,7 +1,7 @@
 # Configures the haproxy backend for this mysql cluster member 
 class profile::services::mysql::haproxy::backend {
   $if = hiera('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$if]['ip'] 
+  $ip = $::facts['networking']['interfaces'][$if]['ip']
 
   @@haproxy::balancermember { $::fqdn:
     listening_service => 'mysqlcluster',
