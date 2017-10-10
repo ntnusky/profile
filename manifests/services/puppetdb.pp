@@ -14,7 +14,6 @@ class profile::services::puppetdb {
   }
   class { '::puppetdb::master::config':
     terminus_package => 'puppetdb-terminus',
-    restart_puppet   => false,
   }
 
 }
