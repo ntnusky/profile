@@ -33,9 +33,9 @@ class profile::services::puppetmaster::config {
   }
 
   file_line { 'Puppetserver listen IP':
-    path  => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
-    line  => "    ssl-host: ${master_ip}",
-    match => '    ssl-host: .*',
+    path    => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
+    line    => "    ssl-host: ${master_ip}",
+    match   => '    ssl-host: .*',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }

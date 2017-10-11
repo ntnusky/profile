@@ -7,6 +7,6 @@ class profile::services::puppet::altnames {
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'main',
     setting => 'dns_alt_names',
-    value   => $alt_names,
+    value   => join($alt_names, ','),
   }
 }
