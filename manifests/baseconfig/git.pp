@@ -1,5 +1,7 @@
 # This class installs and configures NTP.
 class profile::baseconfig::git {
+  include ::git
+
   git::config{'root-email':
     value => "root@${::fqdn}",
     user  => 'root',
