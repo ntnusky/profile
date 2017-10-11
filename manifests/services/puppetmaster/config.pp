@@ -4,8 +4,9 @@ class profile::services::puppetmaster::config {
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
   $management_if = hiera('profile::interfaces::management')
-  $master_alt_name = hiera('profile::puppet::hostname')
   $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+
+  include ::profile::services::puppet::altnames
 
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
@@ -45,16 +46,6 @@ class profile::services::puppetmaster::config {
     group   => 'root',
     mode    => '0644',
     source  => "puppet:///modules/profile/puppet/${template}",
-    notify  => Service['puppetserver'],
-    require => Package['puppetserver'],
-  }
-
-  ini_setting { 'Puppetmaster DNS alt':
-    ensure  => present,
-    path    => '/etc/puppetlabs/puppet/puppet.conf',
-    section => 'main',
-    setting => 'dns_alt_names',
-    value   => $master_alt_name,
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
