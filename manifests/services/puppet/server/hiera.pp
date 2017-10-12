@@ -1,6 +1,6 @@
 # Configures the puppetmaster to use hiera, and set up hiera replication between
 # puppet masters
-class profile::services::puppetmaster::hiera {
+class profile::services::puppet::server::hiera {
   @@ssh_authorized_key { "puppetmaster-${::fqdn}":
     user    => 'root',
     type    => 'ssh-rsa',

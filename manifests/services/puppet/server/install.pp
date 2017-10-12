@@ -1,5 +1,5 @@
 # Installs the puppetmaster with r10k.
-class profile::services::puppetmaster::install {
+class profile::services::puppet::server::install {
   include ::profile::services::dashboard::install
 
   $r10krepo = hiera('profile::puppet::r10k::repo')

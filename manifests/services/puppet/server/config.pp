@@ -1,5 +1,5 @@
 # Configures the puppetmaster
-class profile::services::puppetmaster::config {
+class profile::services::puppet::server::config {
   $puppetca = hiera('profile::puppet::caserver')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')

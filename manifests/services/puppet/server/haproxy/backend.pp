@@ -1,5 +1,5 @@
 # Configures the haproxy backend for this puppetmaster 
-class profile::services::puppetmaster::haproxy::backend {
+class profile::services::puppet::server::haproxy::backend {
   $if = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$if]['ip']
 

@@ -1,5 +1,5 @@
 # Configures a database for puppetdb
-class profile::services::puppetdb::database {
+class profile::services::puppet::db::database {
   $dbname = hiera('profile::puppetdb::database::name')
   $dbuser = hiera('profile::puppetdb::database::user')
   $dbpass = hiera('profile::puppetdb::database::pass')

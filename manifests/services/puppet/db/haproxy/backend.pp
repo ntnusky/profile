@@ -1,5 +1,5 @@
 # Configures the haproxy backend for this puppetdb server 
-class profile::services::puppetdb::haproxy::backend {
+class profile::services::puppet::db::haproxy::backend {
   $if = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$if]['ip']
 
