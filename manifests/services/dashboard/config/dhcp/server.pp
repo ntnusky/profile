@@ -1,9 +1,10 @@
 # Creates DHCP pool based on data from hiera
 define profile::services::dashboard::config::dhcp::server {
-  $host = hiera("profile::dhcp::${name}::address")
-  $port = hiera("profile::dhcp::${name}::omapiport", 7911)
-  $keyname = hiera("profile::dhcp::${name}::keyname")
-  $key = hiera("profile::dhcp::${name}::key")
+  $servers = hiera_hash('profile::dhcp::servers')
+  $host = $servers[$name]
+  $keyname = hiera('profile::dhcp::omapi::name')
+  $key = hiera('profile::dhcp::omapi::key')
+  $port = 7911
 
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')

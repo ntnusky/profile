@@ -1,6 +1,6 @@
 # Installing galera and mariadb cluster
 class profile::services::mysql::cluster {
-  $servers = hiera('profile::mysql::servers')
+  $servers = hiera('profile::mysqlcluster::servers')
   $master  = hiera('profile::mysqlcluster::master')
   $rootpassword = hiera('profile::mysqlcluster::root_password')
   $statuspassword = hiera('profile::mysqlcluster::status_password')

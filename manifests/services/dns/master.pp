@@ -4,12 +4,14 @@ class profile::services::dns::master {
 
   $update_key = hiera('profile::dns::key::update')
   $transfer_key = hiera('profile::dns::key::transfer')
+  $forwarders = hiera('profile::dns::forwarders', [])
 
   include ::dns::server
-  
+
   ::dns::server::options{'/etc/bind/named.conf.options':
     dnssec_validation => 'no',
     dnssec_enable     => false,
+    forwarders        => $forwarders,
   }
 
   ::dns::tsig { 'update':

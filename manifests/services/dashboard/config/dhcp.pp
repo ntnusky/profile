@@ -4,7 +4,7 @@ class profile::services::dashboard::config::dhcp {
       '/etc/machineadmin/settings.ini')
 
   $pools = hiera_array('profile::networks')
-  $servers = hiera_array('profile::dhcp::servers')
+  $servers = keys(hiera_hash('profile::dhcp::servers'))
 
   ini_setting { 'Machineadmin DHCP Pools':
     ensure  => present,
