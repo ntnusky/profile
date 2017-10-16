@@ -1,6 +1,7 @@
 # Installs and configures puppetdb 
 class profile::services::puppet::db {
   include ::profile::services::puppet::altnames
+  include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
 
   $dbhost = hiera('profile::postgres::ip')
