@@ -50,6 +50,10 @@ class profile::services::postgresql::server {
     ensure => 'absent',
   }
 
+  postgresql::server::config_entry { 'max_connections':
+    value => '250',
+  }
+
   postgresql::server::config_entry { 'wal_keep_segments':
     value => '8',
   }
