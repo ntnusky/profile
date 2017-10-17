@@ -7,6 +7,7 @@ class profile::services::keepalived {
   # Install keepalived
   include ::keepalived
 
+  # Open the firewall for vrrp traffic
   firewall { '020 accept vrrp':
     proto       => 'vrrp',
     destination => '224.0.0.18',
@@ -19,6 +20,11 @@ class profile::services::keepalived {
   sysctl::value { 'net.ipv4.ip_nonlocal_bind':
     value => '1',
   }
+  sysctl::value { 'net.ipv6.ip_nonlocal_bind':
+    value => '1',
+  }
+
+  # As keepalived has startproblems at boot, restart it 15 seconds after boot.
   cron { 'restart_keepalived':
     ensure  => 'present',
     command => '/bin/sleep 15; /bin/systemctl restart keepalived.service',

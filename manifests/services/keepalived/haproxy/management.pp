@@ -1,10 +1,9 @@
 # Keepalived config for management haproxy servers
-
 class profile::services::keepalived::haproxy::management {
-
   require ::profile::services::keepalived
 
   $ip = hiera('profile::haproxy::management::ip')
+  $ipv6 = hiera('profile::haproxy::management::ipv6', false)
   $vrrp_id = hiera('profile::haproxy::management::vrrp::id')
   $vrrp_priority = hiera('profile::haproxy::management::vrrp:priority')
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
@@ -27,4 +26,18 @@ class profile::services::keepalived::haproxy::management {
     track_script      => 'check_haproxy',
   }
 
+  if($ipv6) {
+    keepalived::vrrp::instance { 'management-haproxy-v6':
+      interface         => $management_if,
+      state             => 'MASTER',
+      virtual_router_id => $vrrp_id,
+      priority          => $vrrp_priority,
+      auth_type         => 'PASS',
+      auth_pass         => $vrrp_password,
+      virtual_ipaddress => [
+        "${ipv6}/128",
+      ],
+      track_script      => 'check_haproxy',
+    }
+  }
 }
