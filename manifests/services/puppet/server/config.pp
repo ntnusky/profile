@@ -3,6 +3,8 @@ class profile::services::puppet::server::config {
   $puppetca = hiera('profile::puppet::caserver')
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
+  $management_if = hiera('profile::interfaces::management')
+  $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
 
   include ::profile::services::puppet::altnames
 
@@ -32,7 +34,7 @@ class profile::services::puppet::server::config {
 
   file_line { 'Puppetserver listen IP':
     path    => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
-    line    => '    ssl-host: 0.0.0.0',
+    line    => "    ssl-host: ${master_ip}",
     match   => '    ssl-host: .*',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
