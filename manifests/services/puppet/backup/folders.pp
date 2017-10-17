@@ -1,5 +1,5 @@
-# Configures folders which the puppetca can store its backup.
-class profile::services::puppet::server::backup {
+# Configures folders where the puppetca can store its backup.
+class profile::services::puppet::backup::folders {
   file { '/var/opt/puppet':
     ensure => directory,
     owner  => 'root',

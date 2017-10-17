@@ -1,6 +1,6 @@
 # Installs and configures a puppetmaster 
 class profile::services::puppet::server {
-  include ::profile::services::puppet::server::backup
+  include ::profile::services::puppet::backup::server
   include ::profile::services::puppet::server::config
   include ::profile::services::puppet::server::firewall
   include ::profile::services::puppet::server::hiera
