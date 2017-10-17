@@ -30,6 +30,13 @@ class profile::sensu::checks {
     subscribers => [ 'all' ],
   }
 
+  sensu::check { 'dns':
+    command     => 'check-dns.rb -d :::dns.domain|ntnu.no:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
   # Physical servers only checks
   sensu::check { 'general-hw-error':
     command     => 'check-hardware-fail.rb',
