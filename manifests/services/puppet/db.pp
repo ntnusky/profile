@@ -10,9 +10,6 @@ class profile::services::puppet::db {
   $dbuser = hiera('profile::puppetdb::database::user')
   $dbpass = hiera('profile::puppetdb::database::pass')
 
-  $if = hiera('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$if]['ip']
-
   class { '::puppetdb::server':
     database           => 'postgres',
     database_port      => $dbport,
@@ -20,6 +17,5 @@ class profile::services::puppet::db {
     database_username  => $dbuser,
     database_password  => $dbpass,
     database_name      => $dbname,
-    ssl_listen_address => $ip,
   }
 }
