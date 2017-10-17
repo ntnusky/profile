@@ -2,10 +2,20 @@
 class profile::services::puppet::server::haproxy::frontend {
   require ::profile::services::haproxy
 
-  $ip = hiera('profile::haproxy::management::ip')
+  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv6 = hiera('profile::haproxy::management::ipv6', false)
 
-  haproxy::listen { 'puppetserver':
-    ipaddress => $ip,
-    ports     => '8140',
+  if($ipv6) {
+    haproxy::listen { 'puppetserver':
+      bind      => {
+        "${ipv4}:8140" => [],
+        "${ipv6}:8140" => [],
+      },
+    }
+  } else {
+    haproxy::listen { 'puppetserver':
+      ipaddress => $ipv4,
+      ports     => '8140',
+    }
   }
 }
