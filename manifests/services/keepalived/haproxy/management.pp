@@ -13,31 +13,20 @@ class profile::services::keepalived::haproxy::management {
     script => '/usr/bin/killall -0 haproxy',
   }
 
+  if($ipv6) {
+    $vip = ["${ip}/32", "${ipv6}/128"]
+  } else {
+    $vip = ["${ip}/32"]
+  }
+
   keepalived::vrrp::instance { 'management-haproxy':
     interface         => $management_if,
-    state             => 'MASTER',
+    state             => 'BACKUP',
     virtual_router_id => $vrrp_id,
     priority          => $vrrp_priority,
     auth_type         => 'PASS',
     auth_pass         => $vrrp_password,
-    virtual_ipaddress => [
-      "${ip}/32",
-    ],
+    virtual_ipaddress => $vip,
     track_script      => 'check_haproxy',
-  }
-
-  if($ipv6) {
-    keepalived::vrrp::instance { 'management-haproxy-v6':
-      interface         => $management_if,
-      state             => 'MASTER',
-      virtual_router_id => $vrrp_id,
-      priority          => $vrrp_priority,
-      auth_type         => 'PASS',
-      auth_pass         => $vrrp_password,
-      virtual_ipaddress => [
-        "${ipv6}/128",
-      ],
-      track_script      => 'check_haproxy',
-    }
   }
 }
