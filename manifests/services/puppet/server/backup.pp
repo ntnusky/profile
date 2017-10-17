@@ -1,0 +1,19 @@
+# Configures folders which the puppetca can store its backup.
+class profile::services::puppet::server::backup {
+  file { '/var/opt/puppet':
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0750',
+  }
+
+  @@file { "/var/opt/puppet/${::hostname}":
+    ensure => directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0750',
+    tag    => 'puppetserver-backup',
+  }
+
+  File <<| tag == 'puppetserver-backup' |>>
+}
