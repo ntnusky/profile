@@ -13,6 +13,7 @@ class profile::services::puppet::backup::ca {
   cron { 'Puppet cabackup':
     command => '/usr/local/sbin/cabackup.sh',
     user    => 'root',
-    minute  => '*',
+    hour    => '13',
+    minute  => '37',
   }
 }
