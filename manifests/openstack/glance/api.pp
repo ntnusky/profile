@@ -16,19 +16,40 @@ class profile::openstack::glance::api {
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management')
+
+  require ::profile::baseconfig::firewall
   require ::profile::openstack::repo
   require ::profile::openstack::glance::database
   contain ::profile::openstack::glance::keepalived
 
+  firewall { '500 accept incoming admin glance tcp':
+    source      => $source_firewall_management_net,
+    proto       => 'tcp',
+    destination => $glance_admin_ip,
+    dport       => '9292',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming public glance tcp':
+    source      => $source_firewall_management_net,
+    proto       => 'tcp',
+    destination => $glance_public_ip,
+    dport       => '9292',
+    action      => 'accept',
+  }
+
   class { '::glance::api':
-    keystone_password     => $mysql_pass,
-    auth_strategy         => '',
-    database_connection   => $database_connection,
-    registry_host         => $management_ip,
-    os_region_name        => $region,
-    known_stores          => ['glance.store.rbd.Store'],
-    show_image_direct_url => true,
-    pipeline              => 'keystone',
+    keystone_password       => $mysql_pass,
+    auth_strategy           => '',
+    database_connection     => $database_connection,
+    registry_host           => $management_ip,
+    os_region_name          => $region,
+    known_stores            => ['glance.store.rbd.Store'],
+    show_image_direct_url   => true,
+    show_multiple_locations => true,
+    pipeline                => 'keystone',
   }
 
   class { '::glance::api::authtoken':

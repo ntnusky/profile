@@ -7,9 +7,22 @@ class profile::services::keepalived {
   # Install keepalived
   include ::keepalived
 
+  firewall { '020 accept vrrp':
+    proto       => 'vrrp',
+    destination => '224.0.0.18',
+    action      => 'accept',
+  }
+
+
   # Enable bindings to ip's not present on the machine, so that the
   # services can bind to keepalived addresses.
   sysctl::value { 'net.ipv4.ip_nonlocal_bind':
     value => '1',
+  }
+  cron { 'restart_keepalived':
+    ensure  => 'present',
+    command => '/bin/sleep 15; /bin/systemctl restart keepalived.service',
+    user    => 'root',
+    special => 'reboot',
   }
 }

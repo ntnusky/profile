@@ -6,16 +6,35 @@ class profile::services::memcache {
   $vrid = hiera('profile::memcache::vrrp::id')
   $vrpri = hiera('profile::memcache::vrrp::priority')
   $management_if = hiera('profile::interfaces::management')
-  
+  $source_firewall_management_net = hiera('profile::networks::management')
+  $memcached_port = '11211'
+
   # Memcache IP
   $memcache_ip = hiera('profile::memcache::ip')
 
   require profile::services::keepalived
-  
+  require ::profile::baseconfig::firewall
+
+  firewall { '500 accept incoming memcached tcp':
+    source      => $source_firewall_management_net,
+    destination => $memcache_ip,
+    proto       => 'tcp',
+    dport       => $memcached_port,
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming memcached tcp':
+    source      => $source_firewall_management_net,
+    destination => $memcache_ip,
+    proto       => 'tcp',
+    dport       => $memcached_port,
+    action      => 'accept',
+  }
+
   class { 'memcached':
     listen_ip => $memcache_ip,
-    tcp_port  => '11211',
-    udp_port  => '11211',
+    tcp_port  => $memcached_port,
+    udp_port  => $memcached_port,
   }
 
   keepalived::vrrp::script { 'check_memcache':

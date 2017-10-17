@@ -9,15 +9,25 @@ class profile::openstack::nova::base::compute {
   $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
   $rabbit_ip = hiera('profile::rabbitmq::ip')
 
+  $placement_password = hiera('profile::placement::keystone::password')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $region = hiera('profile::region')
+
   require ::profile::openstack::repo
   include ::profile::openstack::nova::sudo
 
   class { '::nova':
-    database_connection => $database_connection,
-    glance_api_servers  =>
+    database_connection              => $database_connection,
+    glance_api_servers               =>
       join([join($controller_management_addresses, ':9292,'),''], ':9292'),
-    rabbit_host         => $rabbit_ip,
-    rabbit_userid       => $rabbit_user,
-    rabbit_password     => $rabbit_pass,
+    rabbit_host                      => $rabbit_ip,
+    rabbit_userid                    => $rabbit_user,
+    rabbit_password                  => $rabbit_pass,
+    block_device_allocate_retries    => 120,
+  }
+  class { '::nova::placement':
+    password       => $placement_password,
+    auth_url       => "http://${keystone_admin_ip}:35357/v3",
+    os_region_name => $region,
   }
 }
