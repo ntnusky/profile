@@ -8,7 +8,7 @@ class profile::services::postgresql::backup {
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
-    source => template('profile/postgresbackup.sh.erb'),
+    source => 'puppet:///modules/profile/postgres/postgresbackup.sh',
   }
 
   file { '/usr/local/sbin/postgresbackupclean.py':
@@ -20,7 +20,7 @@ class profile::services::postgresql::backup {
   }
 
   cron { 'Postgres database backup':
-    command => '/usr/local/sbin/postgresbackup.sh',
+    command => "/usr/local/sbin/postgresbackup.sh ${pgip}",
     user    => 'root',
     hour    => '*/3',
     minute  => '26',
