@@ -8,7 +8,7 @@ class profile::services::postgresql::backup {
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
-    source => template('puppet:///modules/profile/postgresbackup.sh.erb'),
+    source => template('profile/postgresbackup.sh.erb'),
   }
 
   file { '/usr/local/sbin/postgresbackupclean.py':
