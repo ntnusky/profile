@@ -1,0 +1,7 @@
+#!/bin/bash
+location="/var/backups"
+filename="${location}/PostgresDump.$(date +%y%m%d%H%M%S).pgsql.gz"
+
+logger "Staring postgres backup"
+pg_dumpall -U postgres -h <%= @pgip -%> | gzip > $filename
+logger "Finished postgres backup"
