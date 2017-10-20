@@ -26,7 +26,7 @@ class profile::services::mysql::backup {
   cron { 'Mysql database backup cleaning':
     command => '/usr/local/sbin/mysqlbackupclean.py',
     user    => 'root',
-    hour    => '*/3',
-    minute  => '44',
+    hour    => '1',
+    minute  => '57',
   }
 }
