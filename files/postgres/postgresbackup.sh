@@ -9,4 +9,5 @@ fi
 
 logger "Staring postgres backup"
 pg_dumpall -U postgres -h $1 | gzip > $filename
+chmod 600 $filename
 logger "Finished postgres backup"
