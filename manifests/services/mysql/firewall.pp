@@ -2,6 +2,7 @@
 class profile::services::mysql::firewall {
   require ::firewall
 
+  $management_net = hiera('profile::networks::management')
   $management_if = hiera('profile::interfaces::management')
   $ip = $facts['networking']['interfaces'][$management_if]['ip']
 

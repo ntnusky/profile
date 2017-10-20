@@ -1,0 +1,7 @@
+#!/bin/bash
+location="/var/backups"
+filename="${location}/MysqlDump.$(date +%y%m%d%H%M%S).sql.gz"
+
+logger "Staring mysql backup"
+mysqldump --all-databases | gzip > $filename
+logger "Finished mysql backup"
