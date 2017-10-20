@@ -6,7 +6,7 @@ class profile::services::mysql::cluster {
   $statuspassword = hiera('profile::mysqlcluster::status_password')
 
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = hiera("profile::interfaces::${management_if}::address")
+  $management_ip = $facts['networking']['interfaces'][$management_if]['ip']
 
   apt::source { 'galera_mariadb':
     location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',

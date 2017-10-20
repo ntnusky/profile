@@ -1,6 +1,7 @@
 # Configuring galera and maraidb cluster
 class profile::services::mysql {
   include ::profile::services::mysql::cluster
+  include ::profile::services::mysql::firewall
   include ::profile::services::mysql::haproxy::backend
   include ::profile::services::mysql::users
 
