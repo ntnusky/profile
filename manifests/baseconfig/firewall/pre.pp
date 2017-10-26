@@ -40,14 +40,14 @@ class profile::baseconfig::firewall::pre {
     provider => 'ip6tables',
   }->
   firewall { '001 ipv6 accept all to lo interface':
-    proto   => 'all',
-    iniface => 'lo',
-    action  => 'accept',
+    proto    => 'all',
+    iniface  => 'lo',
+    action   => 'accept',
     provider => 'ip6tables',
   }->
   firewall { '002 ipv6 allow link-local':
     proto    => 'all',
-    source   => 'fe80::/10'',
+    source   => 'fe80::/10',
     action   => 'accept',
     provider => 'ip6tables',
   }->
