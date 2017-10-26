@@ -7,4 +7,10 @@ class profile::services::puppet::db::firewall {
     dport  => 8081,
     action => 'accept',
   }
+  firewall { '051 ipv6 Accept incoming puppetdb':
+    proto    => 'tcp',
+    dport    => 8081,
+    action   => 'accept',
+    provider => 'ip6tables',
+  }
 }
