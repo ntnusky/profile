@@ -7,7 +7,6 @@ class profile::services::libvirt {
     'mgmt-net' => {
       autostart          => true,
       forward_mode       => 'bridge',
-      forward_dev        => 'br0',
       forward_interfaces => [ $mgmt_nic, ],
     }
   }
