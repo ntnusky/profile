@@ -6,7 +6,7 @@ class profile::baseconfig::firewall::post {
     firewall { '999 drop all':
       proto      => 'all',
       jump       => 'LOG',
-      log_level  => 'debug',
+      log_level  => '5',
       log_prefix => 'FW-DROP',
       before     => undef,
     }
