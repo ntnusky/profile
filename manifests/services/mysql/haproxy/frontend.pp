@@ -3,10 +3,20 @@ class profile::services::mysql::haproxy::frontend {
   require ::profile::services::haproxy
   include ::profile::services::mysql::firewall::balancer
 
-  $ip = hiera('profile::haproxy::management::ip')
+  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv6 = hiera('profile::haproxy::management::ipv6', false)
 
-  haproxy::listen { 'mysqlcluster':
-    ipaddress => $ip,
-    ports     => '3306',
+  if($ipv6) {
+    haproxy::listen { 'mysqlcluster':
+      bind      => {
+        "${ipv4}:3306" => [],
+        "${ipv6}:3306" => [],
+      },
+    }
+  } else {
+    haproxy::listen { 'mysqlcluster':
+      ipaddress => $ipv4,
+      ports     => '3306',
+    }
   }
 }
