@@ -1,5 +1,5 @@
 #Configures the firewall for the mysql servers
-class profile::services::mysql::firewall {
+class profile::services::mysql::firewall::server {
   require ::firewall
 
   $management_net = hiera('profile::networks::management')

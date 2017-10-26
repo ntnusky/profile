@@ -1,6 +1,7 @@
 # Configures the haproxy in frontend for the puppetmasters 
 class profile::services::puppet::server::haproxy::frontend {
   require ::profile::services::haproxy
+  include ::profile::services::puppet::server::firewall
 
   $ipv4 = hiera('profile::haproxy::management::ip')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
