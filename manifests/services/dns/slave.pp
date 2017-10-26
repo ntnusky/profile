@@ -11,6 +11,7 @@ class profile::services::dns::slave {
   }
 
   include ::dns::server
+  include ::profile::services::dns::firewall
 
   ::dns::server::options{'/etc/bind/named.conf.options':
     dnssec_validation => 'no',

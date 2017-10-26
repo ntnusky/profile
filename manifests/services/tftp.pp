@@ -5,6 +5,7 @@ class profile::services::tftp {
   $images = hiera('profile::pxe::images')
 
   include ::profile::services::dashboard::clients::tftp
+  include ::profile::services::tftp::firewall
 
   # Install and configure the tftp server.
   class { '::tftp':

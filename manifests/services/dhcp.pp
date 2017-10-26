@@ -16,6 +16,8 @@ class profile::services::dhcp {
 
   $nameservers = hiera_array('profile::dns::resolvers')
 
+  include ::profile::services::dhcp::firewall
+
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
     interfaces       => $interfaces,

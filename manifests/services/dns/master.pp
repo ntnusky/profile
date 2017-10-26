@@ -7,6 +7,7 @@ class profile::services::dns::master {
   $forwarders = hiera('profile::dns::forwarders', [])
 
   include ::dns::server
+  include ::profile::services::dns::firewall
 
   ::dns::server::options{'/etc/bind/named.conf.options':
     dnssec_validation => 'no',
