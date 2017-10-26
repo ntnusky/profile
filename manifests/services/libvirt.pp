@@ -22,7 +22,7 @@ class profile::services::libvirt {
     networks_defaults => $net_defaults,
   }
 
-  libvirt_pool { 'lvm-vmvg':
+  libvirt_pool { 'vmvg':
     ensure    => present,
     type      => 'logical',
     autostart => true,
