@@ -2,7 +2,6 @@
 class profile::services::libvirt {
 
   $mgmt_nic = hiera('profile::interfaces::management')
-  $mgmt_ip  = $::facts['networking'][$mgmt_nic]['ip']
 
   $networks = {
     'mgmt-net' => {
