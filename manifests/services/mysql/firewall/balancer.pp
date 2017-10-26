@@ -2,7 +2,7 @@
 class profile::services::mysql::firewall::balancer {
   require ::firewall
 
-  firewall { '070 Accept incoming MySQL requests':
+  firewall { '071 Accept incoming MySQL requests':
     proto       => 'tcp',
     dport       => 3306,
     action      => 'accept',
