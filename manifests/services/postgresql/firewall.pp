@@ -14,6 +14,13 @@ class profile::services::postgresql::firewall {
     dport       => 5432,
     action      => 'accept',
     source      => $management_net,
-    destination => [$ip, $postgresql_ip],
+    destination => $ip,
+  }
+  firewall { '071 Accept incoming postgres requests':
+    proto       => 'tcp',
+    dport       => 5432,
+    action      => 'accept',
+    source      => $management_net,
+    destination => $postgresql_ip,
   }
 }
