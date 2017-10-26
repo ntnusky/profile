@@ -21,4 +21,15 @@ class profile::services::libvirt {
     networks          => $networks,
     networks_defaults => $net_defaults,
   }
+
+  libvirt_pool { 'lvm-vmvg':
+    ensure    => present,
+    type      => 'logical',
+    autostart => true,
+    target    => '/dev/vmvg',
+  }
+
+  libvirt_pool { 'default':
+    ensure => absent,
+  }
 }
