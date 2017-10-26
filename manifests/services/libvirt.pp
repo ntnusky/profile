@@ -17,8 +17,22 @@ class profile::services::libvirt {
   }
 
   class { '::libvirt':
+    deb_default       => {
+      'libvirtd_opts' => '',
+    },
     mdns_adv          => false,
     networks          => $networks,
     networks_defaults => $net_defaults,
+  }
+
+  libvirt_pool { 'vmvg':
+    ensure    => present,
+    type      => 'logical',
+    autostart => true,
+    target    => '/dev/vmvg',
+  }
+
+  libvirt_pool { 'default':
+    ensure => absent,
   }
 }
