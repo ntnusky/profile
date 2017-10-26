@@ -17,6 +17,9 @@ class profile::services::libvirt {
   }
 
   class { '::libvirt':
+    deb_defaults      => {
+      'libvirtd_opts' => '',
+    },
     mdns_adv          => false,
     networks          => $networks,
     networks_defaults => $net_defaults,
