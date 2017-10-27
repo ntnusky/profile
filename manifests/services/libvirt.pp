@@ -35,4 +35,12 @@ class profile::services::libvirt {
   libvirt_pool { 'default':
     ensure => absent,
   }
+
+  libvirt_pool { 'images':
+    ensure => absent,
+  }
+
+  package { 'vlan':
+    ensure => present,
+  }
 }
