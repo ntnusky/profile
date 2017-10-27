@@ -10,8 +10,8 @@ define profile::baseconfig::configureinterface {
       enable_dhcp => true,
     }
   } else {
-    $address = hiera("profile::interfaces::${name}::address", false)
-    $netmask = hiera("profile::interfaces::${name}::netmask", false)
+    $address = hiera("profile::interfaces::${name}::address", undef)
+    $netmask = hiera("profile::interfaces::${name}::netmask", undef)
     network::interface{ $name:
       method    => $method,
       ipaddress => $address,
