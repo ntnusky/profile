@@ -11,8 +11,9 @@ define profile::baseconfig::configureinterface {
     }
   } else {
     $address = hiera("profile::interfaces::${name}::address", false)
-    $netmask = hiera("profile::interfaces::${name}::netmask", '255.255.255.0')
+    $netmask = hiera("profile::interfaces::${name}::netmask", false)
     network::interface{ $name:
+      method    => $method,
       ipaddress => $address,
       netmask   => $netmask,
       gateway   => $v4gateway,
