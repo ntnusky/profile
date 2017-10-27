@@ -10,13 +10,14 @@ class profile::services::libvirt::networks {
       vs_bridge { "br-vlan-${network}":
         ensure => present,
       }
-      ::profile::infrastructure::ovs::patch {
+      $n = "${network}-${vlanid}-br"
+      ::profile::infrastructure::ovs::patch { $n :
         physical_if => $physical_if,
         vlan_id     => $vlanid,
         ovs_bridge  => "br-vlan-${network}",
         require     => Vs_bridge["br-vlan-${network}"],
       }
-      libvirt::network { $network:
+      ::libvirt::network { $network:
         ensure             => 'running',
         autostart          => true,
         forward_mode       => 'bridge',
