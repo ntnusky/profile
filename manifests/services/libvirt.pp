@@ -1,15 +1,17 @@
 # Configure libvirt hosts
 class profile::services::libvirt {
-i
-  $mgmt_nic = hiera('profile::interfaces::management')
 
-  $networks = {
-    'mgmt-net' => {
-      autostart          => true,
-      forward_mode       => 'bridge',
-      forward_interfaces => [ $mgmt_nic, ],
-    }
-  }
+  #$mgmt_nic = hiera('profile::interfaces::management')
+
+  #  $networks = {
+  #  'mgmt-net' => {
+  #    autostart          => true,
+  #    forward_mode       => 'bridge',
+  #    forward_interfaces => [ $mgmt_nic, ],
+  #  }
+  #}
+
+  $networks = hiera('profile::libvirt::networks'), [])
 
   $net_defaults = {
     'ensure'    => present,
