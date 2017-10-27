@@ -7,20 +7,20 @@ class profile::services::libvirt::networks {
     $vlanid = hiera("profile::networks::${network}::vlanid")
     $physical_if = hiera("profile::kvm::interfaces::${network}", false)
     if ( $physical_if ) {
-      vs_bridge { "br-vlan-${network}":
+      vs_bridge { "br-${network}":
         ensure => present,
       }
       ::profile::infrastructure::ovs::patch {
         physical_if => $physical_if,
         vlan_id     => $vlanid,
-        ovs_bridge  => "br-vlan-${network}",
-        require     => Vs_bridge["br-vlan-${network}"],
+        ovs_bridge  => "br-${network}",
+        require     => Vs_bridge["br-${network}"],
       }
       libvirt::network { $network:
         ensure             => 'running',
         autostart          => true,
         forward_mode       => 'bridge',
-        forward_interfaces => [ "br-vlan-${network}", ],
+        forward_interfaces => [ "br-${network}", ],
       }
     }
   }
