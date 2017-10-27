@@ -1,6 +1,6 @@
 # Configure libvirt hosts
 class profile::services::libvirt {
-
+i
   $mgmt_nic = hiera('profile::interfaces::management')
 
   $networks = {
@@ -16,6 +16,8 @@ class profile::services::libvirt {
     'autostart' => true,
   }
 
+  contain ::profile::services::libvirt::pools
+
   class { '::libvirt':
     deb_default       => {
       'libvirtd_opts' => '',
@@ -23,21 +25,6 @@ class profile::services::libvirt {
     mdns_adv          => false,
     networks          => $networks,
     networks_defaults => $net_defaults,
-  }
-
-  libvirt_pool { 'vmvg':
-    ensure    => present,
-    type      => 'logical',
-    autostart => true,
-    target    => '/dev/vmvg',
-  }
-
-  libvirt_pool { 'default':
-    ensure => absent,
-  }
-
-  libvirt_pool { 'images':
-    ensure => absent,
   }
 
   package { 'vlan':
