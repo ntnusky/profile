@@ -11,7 +11,7 @@ class profile::services::libvirt {
   #  }
   #}
 
-  $networks = hiera('profile::libvirt::networks', [])
+  $networks = hiera('profile::libvirt::networks', {})
 
   $net_defaults = {
     'ensure'    => 'running',
