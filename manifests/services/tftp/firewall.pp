@@ -4,7 +4,6 @@ class profile::services::tftp::firewall {
   # is handled by the defult allow ESTABLISHED incoming rule from baseconfig.
   firewall { '400 accept incoming TFTP':
     proto  => 'udp',
-    sport  => [69],
     dport  => [69],
     action => 'accept',
   }
