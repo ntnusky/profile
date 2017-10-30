@@ -4,6 +4,7 @@ class profile::services::dashboard::config::general {
       '/etc/machineadmin/settings.ini')
   $django_secret = hiera('profile::dashboard::django::secret')
   $dashboardname = hiera('profile::dashboard::name')
+  $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
   $apiurl = hiera('profile::dashboard::api')
 
   file { '/etc/machineadmin':
@@ -56,5 +57,17 @@ class profile::services::dashboard::config::general {
               File['/etc/machineadmin'],
             ],
   }
-
+  
+  if($dashboardv4name) {
+    ini_setting { 'Machineadmin ipv4 host':
+      ensure  => present,
+      path    => $configfile,
+      section => 'hosts',
+      setting => 'ipv4',
+      value   => $dashboardv4name,
+      require => [
+                File['/etc/machineadmin'],
+              ],
+    }
+  }
 }
