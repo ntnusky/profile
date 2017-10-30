@@ -6,6 +6,7 @@ class profile::services::haproxy {
 
   $nic = hiera('profile::interfaces::management')
   $ip = $facts['networking']['interfaces'][$nic]['ip']
+  $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes')
 
   class { '::haproxy':
     merge_options  => true,
@@ -21,7 +22,7 @@ class profile::services::haproxy {
   haproxy::listen { 'stats':
     bind    => {
       '0.0.0.0:9000' => [],
-      '::0:9000' => [],
+      '::0:9000'     => [],
     },
     options => {
       'mode'  => 'http',
@@ -38,5 +39,14 @@ class profile::services::haproxy {
     proto  => 'tcp',
     dport  => 9000,
     action => 'accept',
+  }
+  $ipv6_management_nets.each |$net| {
+    firewall { "061 ipv6 accept incoming haproxy stats from ${net}":
+      proto    => 'tcp',
+      dport    => 9000,
+      source   => $net,
+      action   => 'accept',
+      provider => 'ip6tables',
+    }
   }
 }
