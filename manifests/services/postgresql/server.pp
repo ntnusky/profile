@@ -3,7 +3,8 @@ class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = $facts['networking']['interfaces'][$management_if]['ip']
   $database_port = hiera('profile::postgres::backend::port', '5432')
-  $postgresql_ip = hiera('profile::postgres::ip')
+  $postgresql_ipv4 = hiera('profile::postgres::ipv4')
+  $postgresql_ipv6 = hiera('profile::postgres::ipv6', [])
   $password = hiera('profile::postgres::password')
   $replicator_password = hiera('profile::postgres::replicatorpassword')
   $master_server = hiera('profile::postgres::masterserver')
@@ -26,10 +27,13 @@ class profile::services::postgresql::server {
     version             => '9.6',
   }
 
+  $ips = concat([$postgresql_ipv4], $postgresql_ipv6, '127.0.0.1', '::1',
+      $management_ip)
+
   class { '::postgresql::server':
     ip_mask_deny_postgres_user => '0.0.0.0/32',
     ip_mask_allow_all_users    => '0.0.0.0/0',
-    listen_addresses           => "127.0.0.1,::1,${management_ip},${postgresql_ip}",
+    listen_addresses           => join($ips, ','),
     port                       => scanf($database_port, '%i')[0],
     postgres_password          => $confpassword,
     manage_pg_ident_conf       => false,
