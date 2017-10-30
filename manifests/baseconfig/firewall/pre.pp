@@ -4,6 +4,7 @@ class profile::baseconfig::firewall::pre {
     require => undef,
   }
 
+  $ipv4_management_nets = hiera_array('profile::networking::management::ipv4::prefixes', false)
   $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes')
 
   # Default firewall rules
@@ -26,11 +27,23 @@ class profile::baseconfig::firewall::pre {
     proto  => 'all',
     state  => ['RELATED', 'ESTABLISHED'],
     action => 'accept',
-  }->
-  firewall { '004 accept incoming SSH':
-    proto  => 'tcp',
-    dport  => 22,
-    action => 'accept',
+  }
+
+  if($ipv4_management_nets) {
+    $ipv4_management_nets.each |$net| {
+      firewall { "004 accept incoming SSH from ${net}":
+        proto    => 'tcp',
+        dport    => 22,
+        source   => $net,
+        action   => 'accept',
+      }
+    }
+  } else {
+    firewall { '004 accept incoming SSH':
+      proto  => 'tcp',
+      dport  => 22,
+      action => 'accept',
+    }
   }
 
   # Default firewall rules
