@@ -3,6 +3,7 @@ class profile::services::dashboard::apache {
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')
   $dashboardname = hiera('profile::dashboard::name')
+  $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
 
   require ::profile::services::apache
   include ::profile::services::dashboard::install::staticfiles
@@ -36,6 +37,26 @@ class profile::services::dashboard::apache {
         path  => '/opt/machineadminstatic/',
       },
     ],
+  }
+
+  if($dashboardv4name) {
+    apache::vhost { "${dashboardv4name} http":
+      servername          => $dashboardv4name,
+      port                => '80',
+      docroot             => "/var/www/${dashboardname}",
+      directories         => [
+        { path    => '/opt/machineadmin/',
+          require => 'all granted',
+        },
+      ],
+      custom_fragment     => $fragment,
+      wsgi_script_aliases => { '/' => '/opt/machineadmin/dashboard/wsgi.py' },
+      aliases             => [{
+          alias => '/static/',
+          path  => '/opt/machineadminstatic/',
+        },
+      ],
+    }
   }
 
   Vcsrepo['/opt/machineadmin'] ~> Service['httpd']
