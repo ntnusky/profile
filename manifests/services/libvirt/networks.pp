@@ -23,6 +23,10 @@ class profile::services::libvirt::networks {
         forward_mode       => 'bridge',
         forward_interfaces => [ "br-${network}", ],
       }
+      sysctl::value { "net.ipv6-conf.br-${network}.autoconf":
+        value   => '0',
+        require => Vs_bridge["br-${network}"],
+      }
     }
   }
 }
