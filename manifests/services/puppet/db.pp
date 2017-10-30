@@ -4,7 +4,7 @@ class profile::services::puppet::db {
   include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
 
-  $dbhost = hiera('profile::postgres::ip')
+  $dbhost = hiera('profile::postgres::ipv4')
   $dbport = hiera('profile::postgres::port', '5432')
   $dbname = hiera('profile::puppetdb::database::name')
   $dbuser = hiera('profile::puppetdb::database::user')
