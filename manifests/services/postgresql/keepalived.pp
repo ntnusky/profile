@@ -42,7 +42,7 @@ class profile::services::postgresql::keepalived {
   }
 
   if($v6ip) {
-    keepalived::vrrp::instance { 'postgresql-database':
+    keepalived::vrrp::instance { 'postgresql-database-ipv6':
       interface         => $management_if,
       state             => 'MASTER',
       virtual_router_id => $v6id,
