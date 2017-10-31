@@ -16,5 +16,7 @@ hierarchy:
    path: "packages.yaml"
  - name: "User data"
    path: "users.yaml"
+ - name: "Sensu data"
+   path: "sensu.yaml"
  - name: "Common data"
    path: "common.yaml"
