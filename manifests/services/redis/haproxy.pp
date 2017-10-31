@@ -7,7 +7,6 @@ class profile::services::redis::haproxy {
   haproxy::frontend { 'ft_redis':
     ipaddress => '*',
     ports     => '6379',
-    defaults  => 'redis',
     options   => {
       'default_backend' => 'bk_redis',
       'mode'            => 'tcp',
@@ -19,7 +18,6 @@ class profile::services::redis::haproxy {
   }
 
   haproxy::backend { 'bk_redis':
-    defaults => 'redis',
     options  => {
       'option'    => [
         'log-health-checks',

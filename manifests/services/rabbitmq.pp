@@ -26,7 +26,6 @@ class profile::services::rabbitmq {
 
   # Controller information
   $if_management = hiera('profile::interfaces::management')
-  $ctrlnodes  = hiera('controller::names')
 
   # Rabbit IP
   $rabbit_ip = hiera('profile::rabbitmq::ip')
