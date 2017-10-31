@@ -8,15 +8,17 @@ class profile::services::mysql::haproxy::frontend {
 
   if($ipv6) {
     haproxy::listen { 'mysqlcluster':
-      bind      => {
+      bind => {
         "${ipv4}:3306" => [],
         "${ipv6}:3306" => [],
       },
+      mode => 'tcp',
     }
   } else {
     haproxy::listen { 'mysqlcluster':
       ipaddress => $ipv4,
       ports     => '3306',
+      mode      => 'tcp',
     }
   }
 }

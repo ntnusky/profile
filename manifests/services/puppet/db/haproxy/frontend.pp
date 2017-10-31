@@ -8,15 +8,17 @@ class profile::services::puppet::db::haproxy::frontend {
 
   if($ipv6) {
     haproxy::listen { 'puppetdb':
-      bind      => {
+      bind => {
         "${ipv4}:8081" => [],
         "${ipv6}:8081" => [],
       },
+      mode => 'tcp',
     }
   } else {
     haproxy::listen { 'puppetdb':
       ipaddress => $ipv4,
       ports     => '8081',
+      mode      => 'tcp',
     }
   }
 }

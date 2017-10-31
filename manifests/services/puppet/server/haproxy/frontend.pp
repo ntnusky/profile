@@ -8,15 +8,17 @@ class profile::services::puppet::server::haproxy::frontend {
 
   if($ipv6) {
     haproxy::listen { 'puppetserver':
-      bind      => {
+      bind => {
         "${ipv4}:8140" => [],
         "${ipv6}:8140" => [],
       },
+      mode => 'tcp',
     }
   } else {
     haproxy::listen { 'puppetserver':
       ipaddress => $ipv4,
       ports     => '8140',
+      mode      => 'tcp',
     }
   }
 }
