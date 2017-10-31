@@ -1,18 +1,18 @@
 # Installs the dashboard
 class profile::services::dashboard::install::staticfiles {
-  file { '/opt/machineadminstatic':
+  file { '/opt/shiftleaderstatic':
     ensure => directory,
     mode   => '0755',
     owner  => 'root',
     group  => 'root',
   }
 
-  exec { '/opt/machineadmin/manage.py collectstatic --noinput':
+  exec { '/opt/shiftleader/manage.py collectstatic --noinput':
     refreshonly => true,
     require     => [
-      Vcsrepo['/opt/machineadmin'],
-      File['/opt/machineadminstatic'],
+      Vcsrepo['/opt/shiftleader'],
+      File['/opt/shiftleaderstatic'],
     ],
-    subscribe   => Vcsrepo['/opt/machineadmin'],
+    subscribe   => Vcsrepo['/opt/shiftleader'],
   }
 }

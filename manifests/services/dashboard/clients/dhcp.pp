@@ -2,13 +2,13 @@
 class profile::services::dashboard::clients::dhcp {
   require ::profile::services::dashboard::install
 
-  exec { '/opt/machineadmin/manage.py load_subnets':
+  exec { '/opt/shiftleader/manage.py load_subnets':
     refreshonly => true,
-    subscribe   => Vcsrepo['/opt/machineadmin'],
+    subscribe   => Vcsrepo['/opt/shiftleader'],
   }
 
-  exec { '/opt/machineadmin/manage.py sync_dhcp':
+  exec { '/opt/shiftleader/manage.py sync_dhcp':
     refreshonly => true,
-    subscribe   => Vcsrepo['/opt/machineadmin'],
+    subscribe   => Vcsrepo['/opt/shiftleader'],
   }
 }

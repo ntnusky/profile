@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::tftp {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/')
   ini_setting { 'Machineadmin TFTP location':
@@ -11,7 +11,7 @@ class profile::services::dashboard::config::tftp {
     setting => 'rootdir',
     value   => $rootdir,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }

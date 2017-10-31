@@ -1,6 +1,6 @@
 # Installs the puppetmaster with r10k.
 class profile::services::puppet::server::install {
-  include ::profile::services::dashboard::install
+  require ::profile::services::dashboard::install
 
   $r10krepo = hiera('profile::puppet::r10k::repo')
 
@@ -13,7 +13,7 @@ class profile::services::puppet::server::install {
   }
 
   cron { 'Dashboard-client puppet-environments':
-    command => '/opt/machineadmin/manage.py puppet_report',
+    command => '/opt/shiftleader/manage.py puppet_report',
     user    => 'root',
     minute  => '*',
   }

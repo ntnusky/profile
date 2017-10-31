@@ -8,7 +8,7 @@ define profile::services::dashboard::config::dhcp::pool {
   $reserved = hiera_array("profile::networks::${name}::ipv4::reserved", [])
 
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   ini_setting { "Machineadmin DHCP Pool ${name} id":
     ensure  => present,
@@ -17,7 +17,7 @@ define profile::services::dashboard::config::dhcp::pool {
     setting => "${name}Network",
     value   => $network,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -28,7 +28,7 @@ define profile::services::dashboard::config::dhcp::pool {
     setting => "${name}Domain",
     value   => $domain,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -39,7 +39,7 @@ define profile::services::dashboard::config::dhcp::pool {
     setting => "${name}Netmask",
     value   => $mask,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -50,7 +50,7 @@ define profile::services::dashboard::config::dhcp::pool {
     setting => "${name}Gateway",
     value   => $gateway,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -62,7 +62,7 @@ define profile::services::dashboard::config::dhcp::pool {
     setting => "${name}Reserved",
     value   => join(concat($reserved, $range2), ','),
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }

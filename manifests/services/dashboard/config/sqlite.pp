@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::sqlite {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $database_location = hiera('profile::dashboard::datadir')
 
   file { $database_location :
@@ -25,7 +25,7 @@ class profile::services::dashboard::config::sqlite {
     setting => 'type',
     value   => 'sqlite',
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -36,7 +36,7 @@ class profile::services::dashboard::config::sqlite {
     setting => 'name',
     value   => "${database_location}/db.sqlite",
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }

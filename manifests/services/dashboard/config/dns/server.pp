@@ -4,7 +4,7 @@ define profile::services::dashboard::config::dns::server {
   $key = hiera("profile::dns::${name}::key", false)
 
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   ini_setting { "Machineadmin DNS Server ${name} Address":
     ensure  => present,
@@ -13,7 +13,7 @@ define profile::services::dashboard::config::dns::server {
     setting => "${name}Address",
     value   => $ipv4,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -25,7 +25,7 @@ define profile::services::dashboard::config::dns::server {
       setting => "${name}Key",
       value   => $key,
       require => [
-                File['/etc/machineadmin'],
+                File['/etc/shiftleader'],
               ],
     }
   }

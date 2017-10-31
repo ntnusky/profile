@@ -1,9 +1,9 @@
 # Configures the dashboard.
 class profile::services::dashboard::mysql {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $database_name = hiera('profile::dashboard::database::name')
-  $database_grant = hiera('profile::dashboard::database::grant')
+  $database_grant = hiera('profile::dashboard::database::grant', '%')
   $database_user = hiera('profile::dashboard::database::user')
   $database_pass = hiera('profile::dashboard::database::pass')
 
