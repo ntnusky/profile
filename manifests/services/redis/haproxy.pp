@@ -4,30 +4,17 @@ class profile::services::redis::haproxy {
 
   require ::profile::services::haproxy
 
-  haproxy::defaults { 'redis':
-    options => {
-      'log'     => 'global',
-      'mode'    => 'tcp',
-      'timeout' => [
-        'connect 5s',
-        'server 2m',
-        'client 2m',
-      ],
-      'option'  => [
-        'log-health-checks',
-        'tcplog',
-        'clitcpka',
-        'srvtcpka',
-      ],
-    },
-  }
-
   haproxy::frontend { 'ft_redis':
     ipaddress => '*',
     ports     => '6379',
     defaults  => 'redis',
     options   => {
       'default_backend' => 'bk_redis',
+      'mode'            => 'tcp',
+      'option'          => [
+        'clitcpka',
+        'srvtcpka',
+      ],
     },
   }
 
@@ -35,7 +22,9 @@ class profile::services::redis::haproxy {
     defaults => 'redis',
     options  => {
       'option'    => [
+        'log-health-checks',
         'tcp-check',
+        'tcplog',
       ],
       'tcp-check' => [
         'connect',
