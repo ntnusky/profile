@@ -5,9 +5,9 @@ class profile::sensu::haproxy {
   haproxy::frontend { 'ft_uchiwa':
     ipaddress => '*',
     ports     => '80,443',
+    mode      => 'http',
     options   => {
       'default_backend' => 'bk_uchiwa',
-      'mode'            => 'http',
       'option'          => [
         'forwardfor',
         'http-server-close',
@@ -16,6 +16,7 @@ class profile::sensu::haproxy {
   }
 
   haproxy::backend { 'bk_uchiwa':
+    mode    => 'http',
     options => {
       'balance' => 'source',
       'cookie'  => 'SERVERID insert indirect nocache',
