@@ -2,13 +2,13 @@
 class profile::services::dashboard::clients::dns {
   require ::profile::services::dashboard::install
 
-  exec { '/opt/machineadmin/manage.py load_domains':
+  exec { '/opt/shiftleader/manage.py load_domains':
     refreshonly => true,
-    subscribe   => Vcsrepo['/opt/machineadmin'],
+    subscribe   => Vcsrepo['/opt/shiftleader'],
   }
 
-  exec { '/opt/machineadmin/manage.py sync_dns':
+  exec { '/opt/shiftleader/manage.py sync_dns':
     refreshonly => true,
-    subscribe   => Vcsrepo['/opt/machineadmin'],
+    subscribe   => Vcsrepo['/opt/shiftleader'],
   }
 }

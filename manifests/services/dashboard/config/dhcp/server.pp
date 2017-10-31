@@ -7,7 +7,7 @@ define profile::services::dashboard::config::dhcp::server {
   $port = 7911
 
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   ini_setting { "Machineadmin DHCP Server ${name} Address":
     ensure  => present,
@@ -16,7 +16,7 @@ define profile::services::dashboard::config::dhcp::server {
     setting => "${name}Host",
     value   => $host,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -27,7 +27,7 @@ define profile::services::dashboard::config::dhcp::server {
     setting => "${name}Port",
     value   => $port,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -38,7 +38,7 @@ define profile::services::dashboard::config::dhcp::server {
     setting => "${name}Keyname",
     value   => $keyname,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -49,7 +49,7 @@ define profile::services::dashboard::config::dhcp::server {
     setting => "${name}Key",
     value   => $key,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }

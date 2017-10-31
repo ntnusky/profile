@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::ldap {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $ldap_url = hiera('profile::dashboard::ldap::url')
   $ldap_search = hiera('profile::dashboard::ldap::search_base')
   $ldap_domain = hiera('profile::dashboard::ldap::domain')
@@ -13,7 +13,7 @@ class profile::services::dashboard::config::ldap {
     setting => 'url',
     value   => $ldap_url,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -24,7 +24,7 @@ class profile::services::dashboard::config::ldap {
     setting => 'search-base',
     value   => $ldap_search,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -35,7 +35,7 @@ class profile::services::dashboard::config::ldap {
     setting => 'domain',
     value   => $ldap_domain,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }

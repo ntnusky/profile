@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::dns {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   $domains = hiera_hash('profile::dns::zones')
   $servers = unique(values($domains))
@@ -13,7 +13,7 @@ class profile::services::dashboard::config::dns {
     setting => 'servers',
     value   => join($servers, ','),
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -25,7 +25,7 @@ class profile::services::dashboard::config::dns {
       setting => $key,
       value   => $value,
       require => [
-                File['/etc/machineadmin'],
+                File['/etc/shiftleader'],
               ],
     }
   }

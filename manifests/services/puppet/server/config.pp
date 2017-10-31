@@ -55,7 +55,7 @@ class profile::services::puppet::server::config {
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
     setting => 'autosign',
-    value   => '/opt/machineadmin/clients/puppetAutosign.sh',
+    value   => '/opt/shiftleader/clients/puppetAutosign.sh',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
@@ -75,7 +75,7 @@ class profile::services::puppet::server::config {
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
     setting => 'external_nodes',
-    value   => '/opt/machineadmin/clients/puppetENC.sh',
+    value   => '/opt/shiftleader/clients/puppetENC.sh',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }

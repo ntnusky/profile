@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::dhcp {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   $pools = hiera_array('profile::networks')
   $servers = keys(hiera_hash('profile::dhcp::servers'))
@@ -13,7 +13,7 @@ class profile::services::dashboard::config::dhcp {
     setting => 'pools',
     value   => join($pools, ','),
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -24,7 +24,7 @@ class profile::services::dashboard::config::dhcp {
     setting => 'servers',
     value   => join($servers, ','),
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 

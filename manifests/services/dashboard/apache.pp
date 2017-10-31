@@ -1,7 +1,7 @@
 # Configures the apache vhost for the dashboard.
 class profile::services::dashboard::apache {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $dashboardname = hiera('profile::dashboard::name')
   $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
 
@@ -10,12 +10,12 @@ class profile::services::dashboard::apache {
 
   # Install and configure apache mod wsgi
   class { 'apache::mod::wsgi':
-    wsgi_python_path => '/opt/machineadmin/',
+    wsgi_python_path => '/opt/shiftleader/',
     package_name     => 'libapache2-mod-wsgi-py3',
     mod_path         => '/usr/lib/apache2/modules/mod_wsgi.so',
   }
 
-  $fragment = '<Directory /opt/machineadmin/dashboard>
+  $fragment = '<Directory /opt/shiftleader/dashboard>
   <Files wsgi.py>
     Require all granted
   </Files>
@@ -26,15 +26,15 @@ class profile::services::dashboard::apache {
     port                => '80',
     docroot             => "/var/www/${dashboardname}",
     directories         => [
-      { path    => '/opt/machineadmin/',
+      { path    => '/opt/shiftleader/',
         require => 'all granted',
       },
     ],
     custom_fragment     => $fragment,
-    wsgi_script_aliases => { '/' => '/opt/machineadmin/dashboard/wsgi.py' },
+    wsgi_script_aliases => { '/' => '/opt/shiftleader/dashboard/wsgi.py' },
     aliases             => [{
         alias => '/static/',
-        path  => '/opt/machineadminstatic/',
+        path  => '/opt/shiftleaderstatic/',
       },
     ],
   }
@@ -45,31 +45,31 @@ class profile::services::dashboard::apache {
       port                => '80',
       docroot             => "/var/www/${dashboardname}",
       directories         => [
-        { path    => '/opt/machineadmin/',
+        { path    => '/opt/shiftleader/',
           require => 'all granted',
         },
       ],
       custom_fragment     => $fragment,
-      wsgi_script_aliases => { '/' => '/opt/machineadmin/dashboard/wsgi.py' },
+      wsgi_script_aliases => { '/' => '/opt/shiftleader/dashboard/wsgi.py' },
       aliases             => [{
           alias => '/static/',
-          path  => '/opt/machineadminstatic/',
+          path  => '/opt/shiftleaderstatic/',
         },
       ],
     }
   }
 
-  Vcsrepo['/opt/machineadmin'] ~> Service['httpd']
+  Vcsrepo['/opt/shiftleader'] ~> Service['httpd']
 
   ini_setting { 'Machineadmin staticpath':
     ensure  => present,
     path    => $configfile,
     section => 'general',
     setting => 'staticpath',
-    value   => '/opt/machineadminstatic',
+    value   => '/opt/shiftleaderstatic',
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
-    before  => Exec['/opt/machineadmin/manage.py collectstatic --noinput'],
+    before  => Exec['/opt/shiftleader/manage.py collectstatic --noinput'],
   }
 }

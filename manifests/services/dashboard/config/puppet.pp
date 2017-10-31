@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::puppet {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
 
   $puppetserver = hiera('profile::puppet::hostname')
   $puppetca = hiera('profile::puppet::caserver')
@@ -13,7 +13,7 @@ class profile::services::dashboard::config::puppet {
     setting => 'server',
     value   => $puppetserver,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -24,7 +24,7 @@ class profile::services::dashboard::config::puppet {
     setting => 'caserver',
     value   => $puppetca,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 

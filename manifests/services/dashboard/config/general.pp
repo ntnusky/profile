@@ -1,13 +1,13 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::general {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $django_secret = hiera('profile::dashboard::django::secret')
   $dashboardname = hiera('profile::dashboard::name')
   $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
   $apiurl = hiera('profile::dashboard::api')
 
-  file { '/etc/machineadmin':
+  file { '/etc/shiftleader':
     ensure => directory,
     mode   => '0755',
     owner  => 'root',
@@ -21,7 +21,7 @@ class profile::services::dashboard::config::general {
     setting => 'debug',
     value   => false,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -32,7 +32,7 @@ class profile::services::dashboard::config::general {
     setting => 'api',
     value   => $apiurl,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -43,7 +43,7 @@ class profile::services::dashboard::config::general {
     setting => 'secret',
     value   => $django_secret,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -54,7 +54,7 @@ class profile::services::dashboard::config::general {
     setting => 'main',
     value   => $dashboardname,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
   
@@ -66,7 +66,7 @@ class profile::services::dashboard::config::general {
       setting => 'ipv4',
       value   => $dashboardv4name,
       require => [
-                File['/etc/machineadmin'],
+                File['/etc/shiftleader'],
               ],
     }
   }

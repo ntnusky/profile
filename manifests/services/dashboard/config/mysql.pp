@@ -1,7 +1,7 @@
 # Configures the dashboard.
 class profile::services::dashboard::config::mysql {
   $configfile = hiera('profile::dashboard::configfile',
-      '/etc/machineadmin/settings.ini')
+      '/etc/shiftleader/settings.ini')
   $database_name = hiera('profile::dashboard::database::name')
   $database_host = hiera('profile::dashboard::database::host')
   $database_user = hiera('profile::dashboard::database::user')
@@ -14,7 +14,7 @@ class profile::services::dashboard::config::mysql {
     setting => 'type',
     value   => 'mysql',
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -25,7 +25,7 @@ class profile::services::dashboard::config::mysql {
     setting => 'host',
     value   => $database_host,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -36,7 +36,7 @@ class profile::services::dashboard::config::mysql {
     setting => 'name',
     value   => $database_name,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -47,7 +47,7 @@ class profile::services::dashboard::config::mysql {
     setting => 'user',
     value   => $database_user,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 
@@ -58,7 +58,7 @@ class profile::services::dashboard::config::mysql {
     setting => 'password',
     value   => $database_pass,
     require => [
-              File['/etc/machineadmin'],
+              File['/etc/shiftleader'],
             ],
   }
 }
