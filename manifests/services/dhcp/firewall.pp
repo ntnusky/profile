@@ -1,6 +1,6 @@
 # This class configures firewall rules for DHCP 
 class profile::services::dhcp::firewall {
-  $management_net = hiera('profile::networks::management')
+  $management_net = hiera('profile::networks::management::ipv4::prefix')
 
   firewall { '400 accept incoming DHCP':
     proto  => 'udp',

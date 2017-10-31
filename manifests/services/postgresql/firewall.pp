@@ -2,8 +2,8 @@
 class profile::services::postgresql::firewall {
   require ::firewall
 
-  $management_net = hiera('profile::networks::management')
-  $management_netv6 = hiera('profile::networks::management::ipv6')
+  $management_net = hiera('profile::networks::management::ipv4::prefix')
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix')
   $management_if = hiera('profile::interfaces::management')
   $ip = $facts['networking']['interfaces'][$management_if]['ip']
   $postgresql_ipv4 = hiera('profile::postgres::ipv4')

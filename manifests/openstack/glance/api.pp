@@ -17,7 +17,7 @@ class profile::openstack::glance::api {
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   require ::profile::baseconfig::firewall
   require ::profile::openstack::repo

@@ -11,7 +11,7 @@ class profile::openstack::cinder::api {
   $memcached_ip = hiera('profile::memcache::ip')
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   require ::profile::baseconfig::firewall
   require ::profile::openstack::repo
