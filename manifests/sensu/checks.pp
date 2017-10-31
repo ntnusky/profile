@@ -150,4 +150,12 @@ class profile::sensu::checks {
     standalone  => false,
     subscribers => [ 'os-infra-checks'],
   }
+
+  # HAProxy checks
+  sensu::check { 'haproxy-stats':
+    command     => 'check-haproxy.rb -S localhost -q / -P 9000 -A',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'haproxy-servers' ],
+  }
 }

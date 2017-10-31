@@ -1,6 +1,5 @@
 # Install and configure sensu-server and dashboard
 class profile::sensu::server {
-  require ::profile::services::redis
 
   $rabbithost = hiera('profile::rabbitmq::ip')
   $sensurabbitpass = hiera('profile::sensu::rabbit_password')
@@ -12,8 +11,9 @@ class profile::sensu::server {
   $smtp_port = hiera('profile::sensu::mailer::smtp_port')
   $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
   $subs_from_client_conf = hiera('sensu::subscriptions','')
+  $redishost = hiera('profile::redis::ip')
 
-  if ( $::is_virtual == 'true' ) {
+  if ( $::is_virtual ) {
     $subs = [ 'all' ]
   } else {
     $subs = [ 'all', 'physical-servers' ]
@@ -29,6 +29,8 @@ class profile::sensu::server {
     rabbitmq_host               => $rabbithost,
     rabbitmq_password           => $sensurabbitpass,
     rabbitmq_reconnect_on_error => true,
+    redis_host                  => $redishost,
+    redis_reconnect_on_error    => true,
     server                      => true,
     api                         => true,
     use_embedded_ruby           => true,
