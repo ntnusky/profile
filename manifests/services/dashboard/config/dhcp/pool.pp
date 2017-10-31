@@ -1,11 +1,11 @@
 # Creates DHCP pool based on data from hiera
 define profile::services::dashboard::config::dhcp::pool {
-  $network = hiera("profile::networks::${name}::id")
-  $mask = hiera("profile::networks::${name}::mask")
-  $gateway = hiera("profile::networks::${name}::gateway")
+  $network = hiera("profile::networks::${name}::ipv4::id")
+  $mask = hiera("profile::networks::${name}::ipv4::mask")
+  $gateway = hiera("profile::networks::${name}::ipv4::gateway")
   $domain = hiera("profile::networks::${name}::domain")
-  $range = hiera("profile::networks::${name}::range", '')
-  $reserved = hiera_array("profile::networks::${name}::reserved", [])
+  $range = hiera("profile::networks::${name}::ipv4::dynamicrange", '')
+  $reserved = hiera_array("profile::networks::${name}::ipv4::reserved", [])
 
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/machineadmin/settings.ini')

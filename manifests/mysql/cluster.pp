@@ -19,7 +19,7 @@ class profile::mysql::cluster {
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   require profile::services::keepalived
   require ::profile::baseconfig::firewall

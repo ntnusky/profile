@@ -6,7 +6,7 @@ class profile::services::memcache {
   $vrid = hiera('profile::memcache::vrrp::id')
   $vrpri = hiera('profile::memcache::vrrp::priority')
   $management_if = hiera('profile::interfaces::management')
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
   $memcached_port = '11211'
 
   # Memcache IP

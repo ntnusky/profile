@@ -3,7 +3,7 @@ class profile::services::rabbitmq {
 
   require ::profile::baseconfig::firewall
 
-  $source_firewall_rabbitmq      = hiera('profile::networks::management')
+  $source_firewall_rabbitmq      = hiera('profile::networks::management::ipv4::prefix')
   $destination_firewall_rabbitmq = hiera('profile::rabbitmq::ip')
 
   firewall { '500 accept incoming rabbitmq':

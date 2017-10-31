@@ -7,7 +7,7 @@ class profile::openstack::nova::api {
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   $nova_password = hiera('profile::nova::keystone::password')
   $nova_secret = hiera('profile::nova::sharedmetadataproxysecret')

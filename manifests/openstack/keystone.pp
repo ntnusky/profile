@@ -8,7 +8,7 @@ class profile::openstack::keystone {
   $admin_pass = hiera('profile::keystone::admin_password')
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   require ::profile::openstack::repo
   require ::profile::openstack::keystone::base

@@ -22,7 +22,7 @@ class profile::openstack::neutron::api {
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
   # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management')
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   require ::profile::openstack::neutron::base
   require ::profile::baseconfig::firewall
