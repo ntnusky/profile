@@ -7,6 +7,14 @@ class profile::sensu::uchiwa {
   $api_name = hiera('profile::region')
   $uchiwa_url = hiera('profile::sensu::uchiwa::fqdn')
 
+  $management_if = hiera('profile::interfaces::management')
+  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+
+  $private_key = hiera('profile::sensu::uchiwa::private_key')
+  $public_key  = hiera('profile::sensu::uchiwa::public_key')
+  $private_key_path = '/etc/sensu/keys/uchiwa.rsa'
+  $public_key_path  = '/etc/sensu/keys/uchiwa.rsa.pub'
+
   class { '::uchiwa':
     user                => 'sensu',
     pass                => $password,
@@ -17,6 +25,10 @@ class profile::sensu::uchiwa {
       pass    => '',
       timeout => 10,
     }],
+    auth                => {
+      'publickey'  => $public_key_path,
+      'privatekey' => $private_key_path,
+    },
   }
 
   include ::apache::mod::proxy
@@ -28,6 +40,7 @@ class profile::sensu::uchiwa {
     port                => 80,
     docroot             => false,
     manage_docroot      => false,
+    access_log_format   => 'forwarded',
     proxy_preserve_host => true,
     proxy_pass          => [
       {
@@ -47,4 +60,44 @@ class profile::sensu::uchiwa {
     ProxyHTMLEnable On
     ProxyHTMLURLMap http://127.0.0.1:3000/ /',
   }
+
+  file { '/etc/sensu/keys':
+    ensure => directory,
+    owner  => 'uchiwa',
+    group  => 'uchiwa',
+    mode   => '0700',
+  }
+
+  file { $private_key_path:
+    ensure  => file,
+    owner   => 'uchiwa',
+    group   => 'uchiwa',
+    mode    => '0600',
+    content => $private_key,
+    require => File['/etc/sensu/keys'],
+    notify  => Service[$uchiwa::service_name],
+  }
+
+  file { $public_key_path:
+    ensure  => file,
+    owner   => 'uchiwa',
+    group   => 'uchiwa',
+    mode    => '0644',
+    content => $public_key,
+    require => File['/etc/sensu/keys'],
+    notify  => Service[$uchiwa::service_name],
+  }
+
+  @@haproxy::balancermember { $::fqdn:
+    defaults          => 'uchiwa',
+    listening_service => 'bk_uchiwa',
+    ports             => '80',
+    ipaddresses       => $management_ip,
+    server_names      => $::hostname,
+    options           => [
+      'check inter 5s',
+      'cookie',
+    ],
+  }
+
 }
