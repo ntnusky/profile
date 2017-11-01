@@ -89,7 +89,6 @@ class profile::sensu::uchiwa {
   }
 
   @@haproxy::balancermember { $::fqdn:
-    defaults          => 'uchiwa',
     listening_service => 'bk_uchiwa',
     ports             => '80',
     ipaddresses       => $management_ip,
