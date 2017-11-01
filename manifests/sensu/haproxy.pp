@@ -2,13 +2,16 @@
 class profile::sensu::haproxy {
   require ::profile::services::haproxy
 
+  $domain = hiera('profile::sensu::uchiwa::fqdn')
+
   haproxy::frontend { 'ft_uchiwa':
     ipaddress => '*',
     ports     => '80,443',
     mode      => 'http',
     options   => {
-      'default_backend' => 'bk_uchiwa',
-      'option'          => [
+      'acl'         => "host_uchiwa hdr_dom(host) -m dom ${domain}",
+      'use_backend' => 'bk_uchiwa if host_uchiwa',
+      'option'      => [
         'forwardfor',
         'http-server-close',
       ],
