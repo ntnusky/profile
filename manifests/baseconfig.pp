@@ -16,7 +16,7 @@ class profile::baseconfig {
   }
 
   $installsensu = hiera('profile::sensu::install', true)
-  if ($::hostname != 'monitor' and $installsensu) {
+  if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
     include ::profile::sensu::client
   }
 
