@@ -1,21 +1,39 @@
 # Haproxy config for uchiwa
 class profile::sensu::haproxy {
+  require ::firewall
   require ::profile::services::haproxy
 
   $domain = hiera('profile::sensu::uchiwa::fqdn')
+  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv6 = hiera('profile::haproxy::management::ipv6', false)
+  $ft_options = {
+    'acl'         => "host_uchiwa hdr_dom(host) -m dom ${domain}",
+    'use_backend' => 'bk_uchiwa if host_uchiwa',
+    'option'      => [
+      'forwardfor',
+      'http-server-close',
+    ],
+  }
 
-  haproxy::frontend { 'ft_uchiwa':
-    ipaddress => '*',
-    ports     => '80,443',
-    mode      => 'http',
-    options   => {
-      'acl'         => "host_uchiwa hdr_dom(host) -m dom ${domain}",
-      'use_backend' => 'bk_uchiwa if host_uchiwa',
-      'option'      => [
-        'forwardfor',
-        'http-server-close',
-      ],
-    },
+  if($ipv6) {
+    haproxy::frontend { 'ft_uchiwa':
+      bind    => {
+        "${ipv4}:80"  => [],
+        "${ipv4}:443" => [],
+        "${ipv6}:80"  => [],
+        "${ipv6}:443" => [],
+      },
+      ports   => '80,443',
+      mode    => 'http',
+      options => $ft_options,
+    }
+  } else {
+    haproxy::frontend { 'ft_uchiwa':
+      ipaddress => $ipv4,
+      ports     => '80,443',
+      mode      => 'http',
+      options   => $ft_options,
+    }
   }
 
   haproxy::backend { 'bk_uchiwa':
