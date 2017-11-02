@@ -5,6 +5,7 @@ class profile::services::puppet::server::config {
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
   $management_if = hiera('profile::interfaces::management')
   $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $dash_url = hiera('profile::dashboard::name')
 
   include ::profile::services::puppet::altnames
 
@@ -46,6 +47,26 @@ class profile::services::puppet::server::config {
     group   => 'root',
     mode    => '0644',
     source  => "puppet:///modules/profile/puppet/${template}",
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
+  ini_setting { 'Puppetmaster report':
+    ensure  => present,
+    path    => '/etc/puppetlabs/puppet/puppet.conf',
+    section => 'master',
+    setting => 'reports',
+    value   => 'http',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
+  ini_setting { 'Puppetmaster report url':
+    ensure  => present,
+    path    => '/etc/puppetlabs/puppet/puppet.conf',
+    section => 'master',
+    setting => 'reporturl',
+    value   => "http://${dash_url}/puppet/report/",
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
