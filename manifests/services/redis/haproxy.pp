@@ -13,7 +13,7 @@ class profile::services::redis::haproxy {
       'clitcpka',
       'srvtcpka',
     ],
-  },
+  }
 
   if($ipv6) {
     haproxy::frontend { 'ft_redis':
