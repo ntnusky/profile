@@ -24,7 +24,7 @@ class profile::services::redis::haproxy {
       mode    => 'tcp',
       options => $ft_options,
     }
-  else {
+  } else {
     haproxy::frontend { 'ft_redis':
       ipaddress => $ipv4,
       ports     => '6379',
