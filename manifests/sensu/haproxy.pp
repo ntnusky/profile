@@ -23,7 +23,6 @@ class profile::sensu::haproxy {
         "${ipv6}:80"  => [],
         "${ipv6}:443" => [],
       },
-      ports   => '80,443',
       mode    => 'http',
       options => $ft_options,
     }
