@@ -2,7 +2,6 @@
 class profile::sensu::uchiwa {
 
   require ::profile::services::apache
-  include ::profile::sensu::uchiwa::firewall
 
   $password = hiera('profile::sensu::uchiwa::password')
   $api_name = hiera('profile::region')
