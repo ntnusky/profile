@@ -27,7 +27,7 @@ class profile::services::puppet::server::haproxy::frontend {
       options   => $ft_options,
     }
   }
-  hapoxy::backend { 'bk_puppetserver':
+  haproxy::backend { 'bk_puppetserver':
     mode    => 'tcp',
     options => {
       'balance' => 'roundrobin',
