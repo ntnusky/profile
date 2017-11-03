@@ -17,7 +17,7 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'load':
-    command     => 'check-load.rb -w :::load.warning|1,5,10::: -c :::load.critical|10,15,25:::',
+    command     => 'check-load.rb -w :::load.warning|1.7,1.6,1.5::: -c :::load.critical|1.9,1.8,1.7:::',
     standalone  => false,
     interval    => 300,
     subscribers => [ 'all'],
