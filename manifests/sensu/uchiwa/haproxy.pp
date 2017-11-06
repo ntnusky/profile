@@ -4,7 +4,7 @@ class profile::sensu::uchiwa::haproxy {
   require ::profile::services::haproxy
 
   $domain = hiera('profile::sensu::uchiwa::fqdn')
-  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
   $ft_options = {
     'acl'         => "host_uchiwa hdr_dom(host) -m dom ${domain}",

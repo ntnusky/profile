@@ -4,7 +4,7 @@ class profile::services::puppet::db::haproxy::backend {
   $ip = $::facts['networking']['interfaces'][$if]['ip']
 
   @@haproxy::balancermember { "Puppetdb-${::fqdn}":
-    listening_service => 'puppetdb',
+    listening_service => 'bk_puppetdb',
     server_names      => $::hostname,
     ipaddresses       => $ip,
     ports             => '8081',
