@@ -4,7 +4,7 @@ class profile::services::redis::haproxy {
   require ::profile::services::haproxy
   include ::profile::services::redis::firewall
 
-  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
 
   $ft_options = {

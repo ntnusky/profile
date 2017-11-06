@@ -1,9 +1,9 @@
-# Configures the haproxy in frontend for the mysql cluster 
+# Configures the haproxy in frontend for the mysql cluster
 class profile::services::mysql::haproxy::frontend {
   require ::profile::services::haproxy
   include ::profile::services::mysql::firewall::balancer
 
-  $ipv4 = hiera('profile::haproxy::management::ip')
+  $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
 
   $ft_options = {
