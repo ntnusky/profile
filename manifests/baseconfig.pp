@@ -12,7 +12,7 @@ class profile::baseconfig {
 
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
-    include ::profile::munin::node
+    include ::profile::monitoring::munin::node
   }
 
   $installsensu = hiera('profile::sensu::install', true)

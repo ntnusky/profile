@@ -1,5 +1,5 @@
 # This define configures an apache vhost for a munin dashboard.
-define profile::services::munin::server::vhost {
+define profile::monitoring::munin::server::vhost {
   require profile::services::apache
 
   apache::vhost { "${name} http":

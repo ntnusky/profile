@@ -1,6 +1,6 @@
 # This class installs a munin server, and configures an apache virtuaø-host
 # responding to its name. 
-class profile::services::munin::server {
+class profile::monitoring::munin::server {
   $munin_urls = hiera('profile::munin::urls')
 
   class{ '::munin::master':
@@ -14,5 +14,5 @@ class profile::services::munin::server {
     ensure  => link,
   }
 
-  ::profile::services::munin::server::vhost { $munin_urls : }
+  ::profile::monitoring::munin::server::vhost { $munin_urls : }
 }
