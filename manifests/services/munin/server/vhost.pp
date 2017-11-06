@@ -10,9 +10,9 @@ define profile::services::munin::server::vhost {
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
     directories   => [
-      { path            => '/munin-cgi',
-        provider        => 'location',
-        require         => 'all granted',
+      { path     => '/munin-cgi',
+        provider => 'location',
+        require  => 'all granted',
       },
       { path            => '/munin-cgi/munin-cgi-html',
         provider        => 'location',
@@ -46,8 +46,8 @@ define profile::services::munin::server::vhost {
       },
     ],
     aliases       => [
-      { alias       => '/munin-cgi/static',
-        path        => '/var/cache/munin/www/static',
+      { alias => '/munin-cgi/static',
+        path  => '/var/cache/munin/www/static',
       },
       { scriptalias => '/munin-cgi/munin-cgi-html',
         path        => '/usr/lib/munin/cgi/munin-cgi-html',

@@ -14,5 +14,5 @@ class profile::services::munin::server {
     ensure  => link,
   }
 
-  ::profile::services::munin::server::vhost { $munin_main_urls : }
+  ::profile::services::munin::server::vhost { $munin_urls : }
 }
