@@ -40,14 +40,14 @@ define profile::services::munin::server::vhost {
         require => 'all granted',
         options => ['None'],
       },
-      { path    => '/var/cache/munin/www/static',
+      { path    => '/etc/munin/static',
         require => 'all granted',
         options => ['None'],
       },
     ],
     aliases       => [
       { alias => '/munin-cgi/static',
-        path  => '/var/cache/munin/www/static',
+        path  => '/etc/munin/static',
       },
       { scriptalias => '/munin-cgi/munin-cgi-html',
         path        => '/usr/lib/munin/cgi/munin-cgi-html',
@@ -61,11 +61,11 @@ define profile::services::munin::server::vhost {
     ],
     rewrites       => [
       { rewrite_rule => [
-          '^/favicon.ico /var/cache/munin/www/static/favicon.ico [L]',
+          '^/favicon.ico /etc/munin/static/favicon.ico [L]',
         ],
       },
       { rewrite_rule => [
-          '^/static/(.*) /var/cache/munin/www/static/$1          [L]',
+          '^/static/(.*) /etc/munin/static/$1          [L]',
         ],
       },
       { rewrite_rule => [
