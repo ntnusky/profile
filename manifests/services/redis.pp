@@ -8,6 +8,7 @@ class profile::services::redis {
   $nic = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$nic]['ip']
   $redismaster = hiera('profile::redis::master')
+  $installsensu = hiera('profile::sensu::install', true)
 
   if ( $nodetype == 'slave' ) {
     $slaveof = "${redismaster} 6379"
@@ -55,5 +56,9 @@ class profile::services::redis {
     proto  => 'tcp',
     dport  => 26379,
     action => 'accept',
+  }
+
+  if ($installsensu) {
+    include ::profile::sensu::plugin::redis
   }
 }
