@@ -8,12 +8,6 @@ class profile::monitoring::munin::node {
   include ::profile::monitoring::munin::plugin::puppet
 
   class {'::munin::node':
-    allow          => [
-      '127.0.0.0/8',
-      '::1/128',
-      $management_ipv4,
-      $management_ipv6,
-    ],
     purge_configs  => true,
     service_ensure => 'running',
   }
