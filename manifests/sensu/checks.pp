@@ -158,4 +158,24 @@ class profile::sensu::checks {
     standalone  => false,
     subscribers => [ 'haproxy-servers' ],
   }
+
+  # Redis checks
+  sensu::check { 'redis-slave-status':
+    command     => 'check-redis-slave-status.rb',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
+  sensu::check { 'redis-memory':
+    command     => 'check-redis-memory-percentage.rb -w :::redis.memwarn|80::: -c :::redis.memcrit|90:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
+  sensu::check { 'redis-ping':
+    command     => 'check-redis-ping.rb',
+    interfal    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
 }
