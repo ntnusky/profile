@@ -174,7 +174,7 @@ class profile::sensu::checks {
   }
   sensu::check { 'redis-ping':
     command     => 'check-redis-ping.rb',
-    interfal    => 300,
+    interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],
   }
