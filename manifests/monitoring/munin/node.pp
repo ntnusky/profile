@@ -12,7 +12,12 @@ class profile::monitoring::munin::node {
 
   class {'::munin::node':
     bind_address   => $management_ip,
-    allow          => [$management_ipv4, $management_ipv6], 
+    allow          => [
+      '127.0.0.0/8',
+      '::1/128',
+      $management_ipv4,
+      $management_ipv6,
+    ],
     purge_configs  => true,
     service_ensure => 'running',
   }
