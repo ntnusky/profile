@@ -41,4 +41,8 @@ class profile::monitoring::munin::plugin::mysql {
     ensure => link,
     config => ["env.mysqlopts --user=root --password=${pw}"],
   }
+  munin::plugin { 'mysql_queries':
+    ensure => link,
+    config => ["env.mysqlopts --user=root --password=${pw}"],
+  }
 }
