@@ -7,6 +7,9 @@ class profile::sensu::checks {
   $cinder_api = hiera('profile::api::cinder::public::ip')
   $glance_api = hiera('profile::api::glance::public::ip')
   $heat_api = hiera('profile::api::heat::public::ip')
+  $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])
+  $puppetwarn = $puppet_runinterval*60
+  $puppetcrit = floor($puppetwarn*1.5)
 
   # Base checks for all hosts
   sensu::check { 'diskspace':
@@ -25,6 +28,13 @@ class profile::sensu::checks {
 
   sensu::check { 'memory':
     command     => 'check-memory-percent.rb -w :::memory.warning|85::: -c :::memory.critical|90:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
+  sensu::check { 'puppetrun':
+    command     => "sudo check-puppet-last-run.rb -r -w ${puppetwarn} -c ${puppetcrit}"
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
