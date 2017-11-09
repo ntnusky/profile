@@ -1,5 +1,6 @@
 # This class installs the munin plugins which monitors mysql statistics 
 class profile::monitoring::munin::plugin::mysql {
+  $pw = hiera('profile::mysqlcluster::root_password')
   ensure_packages ( [
       'libcache-cache-perl',
     ], {
@@ -36,6 +37,7 @@ class profile::monitoring::munin::plugin::mysql {
     munin::plugin { "mysql_${plugin}":
       ensure => link,
       target => 'mysql_',
+      config => ["env.mysqlpassword ${pw}"],
     }
   }
   munin::plugin { 'mysql_bytes':
