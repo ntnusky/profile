@@ -5,8 +5,9 @@ class profile::services::haproxy {
   require ::firewall
 
   $nic = hiera('profile::interfaces::management')
-  $ip = $facts['networking']['interfaces'][$nic]['ip']
+  $ip = $::facts['networking']['interfaces'][$nic]['ip']
   $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes')
+  $installsensu = hiera('profile::sensu::install', true)
 
   class { '::haproxy':
     merge_options  => true,
@@ -48,5 +49,9 @@ class profile::services::haproxy {
       action   => 'accept',
       provider => 'ip6tables',
     }
+  }
+
+  if ($installsensu) {
+    include ::profile::sensu::plugin::haproxy
   }
 }
