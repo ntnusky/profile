@@ -40,6 +40,13 @@ class profile::sensu::checks {
     subscribers => [ 'all' ],
   }
 
+  sensu::check { 'ntp-offset':
+    command     => 'check-ntp.rb -w :::ntp.warn|10::: -c :::ntp.crit|100:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
   # Physical servers only checks
   sensu::check { 'general-hw-error':
     command     => 'check-hardware-fail.rb',
