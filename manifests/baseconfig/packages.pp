@@ -23,9 +23,9 @@ class profile::baseconfig::packages {
   }
 
   # Install a range of useful tools.
-  package { $basepackages :
-    ensure => 'present',
-  }
+  ensure_packages ( $basepackages, {
+    'ensure' => 'present',
+  })
 
   # Install pip3 so that we can use it as an package-provider
   package { 'python3-pip':
