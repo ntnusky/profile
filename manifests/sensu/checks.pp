@@ -7,9 +7,9 @@ class profile::sensu::checks {
   $cinder_api = hiera('profile::api::cinder::public::ip')
   $glance_api = hiera('profile::api::glance::public::ip')
   $heat_api = hiera('profile::api::heat::public::ip')
-  $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])
-  $puppetwarn = $puppet_runinterval*60
-  $puppetcrit = floor($puppetwarn*1.5)
+  $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])*60
+  $puppetwarn = $puppet_runinterval*3
+  $puppetcrit = $puppet_runinterval*10
 
   # Base checks for all hosts
   sensu::check { 'diskspace':
@@ -34,7 +34,7 @@ class profile::sensu::checks {
   }
 
   sensu::check { 'puppetrun':
-    command     => "sudo check-puppet-last-run.rb -r -w ${puppetwarn} -c ${puppetcrit}",
+    command     => "sudo check-puppet-last-run.rb -r -w :::puppet.warn|${puppetwarn}::: -c :::|puppet.crit|${puppetcrit}:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
