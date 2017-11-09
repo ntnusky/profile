@@ -42,17 +42,22 @@ class profile::monitoring::munin::plugin::mysql {
   }
   munin::plugin { 'mysql_bytes':
     ensure => link,
+    config => ["env.mysqlopts '--user=root --password=${pw}'"],
   }
   munin::plugin { 'mysql_innodb':
     ensure => link,
+    config => ["env.mysqlopts '--user=root --password=${pw}'"],
   }
   munin::plugin { 'mysql_queries':
     ensure => link,
+    config => ["env.mysqlopts '--user=root --password=${pw}'"],
   }
   munin::plugin { 'mysql_slowqueries':
     ensure => link,
+    config => ["env.mysqlopts '--user=root --password=${pw}'"],
   }
   munin::plugin { 'mysql_threads':
     ensure => link,
+    config => ["env.mysqlopts '--user=root --password=${pw}'"],
   }
 }
