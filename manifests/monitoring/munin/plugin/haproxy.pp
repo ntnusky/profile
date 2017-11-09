@@ -1,4 +1,4 @@
-# This class installs the munin plugins which monitors puppet statistics 
+# This class installs the munin plugins which monitors haproxy statistics 
 class profile::monitoring::munin::plugin::haproxy {
   ensure_packages ( [
       'liblwp-useragent-determined-perl',

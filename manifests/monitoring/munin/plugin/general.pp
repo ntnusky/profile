@@ -49,6 +49,12 @@ class profile::monitoring::munin::plugin::general {
   munin::plugin { 'memory':
     ensure => link,
   }
+  munin::plugin { 'multiping':
+    ensure       => link,
+    config       => [
+      'env.host ntnu.no gjovik-gw1.uninett.no ntnu-gw-l0.nettel.ntnu.no',
+    ],
+  }
   munin::plugin { 'netstat':
     ensure => link,
   }
