@@ -58,6 +58,9 @@ class profile::monitoring::munin::plugin::general {
   munin::plugin { 'netstat':
     ensure => link,
   }
+  munin::plugin { 'ntp_offset':
+    ensure => link,
+  }
   munin::plugin { 'open_files':
     ensure => link,
   }
