@@ -15,9 +15,7 @@ class profile::monitoring::munin::plugin::mysql {
     'files_tables',
     'innodb_bpool',
     'innodb_bpool_act',
-    'innodb_insert_buf',
     'innodb_io',
-    'innodb_io_pend',
     'innodb_log',
     'innodb_rows',
     'innodb_semaphores',
@@ -26,7 +24,6 @@ class profile::monitoring::munin::plugin::mysql {
     'network_traffic',
     'qcache',
     'qcache_mem',
-    'replication',
     'select_types',
     'slow',
     'sorts',
@@ -39,22 +36,6 @@ class profile::monitoring::munin::plugin::mysql {
       target => 'mysql_',
       config => ["env.mysqlpassword ${pw}"],
     }
-  }
-  munin::plugin { 'mysql_bytes':
-    ensure => link,
-    config => ["env.mysqlopts --user=root --password=${pw}"],
-  }
-  munin::plugin { 'mysql_innodb':
-    ensure => link,
-    config => ["env.mysqlopts --user=root --password=${pw}"],
-  }
-  munin::plugin { 'mysql_queries':
-    ensure => link,
-    config => ["env.mysqlopts --user=root --password=${pw}"],
-  }
-  munin::plugin { 'mysql_slowqueries':
-    ensure => link,
-    config => ["env.mysqlopts --user=root --password=${pw}"],
   }
   munin::plugin { 'mysql_threads':
     ensure => link,
