@@ -2,7 +2,7 @@
 class profile::services::dashboard::packages {
   require ::profile::baseconfig::packages
 
-  package { [
+  ensure_packages ( [
       'python3-django',
       'python3-django-python3-ldap',
       'python3-dnspython',
@@ -10,9 +10,10 @@ class profile::services::dashboard::packages {
       'python3-passlib',
       'python3-pymysql',
       'python3-yaml',
-    ] :
-    ensure => present,
-  }
+    ], {
+      'ensure' => 'present',
+    }
+  )
 
   package { 'pypureomapi':
     ensure   => present,

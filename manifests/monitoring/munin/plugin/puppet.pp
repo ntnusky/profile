@@ -1,5 +1,12 @@
 # This class installs the munin plugins which monitors puppet statistics 
 class profile::monitoring::munin::plugin::puppet {
+  ensure_packages ( [
+      'python-yaml',
+    ], {
+      'ensure' => 'present',
+    }
+  )
+
   munin::plugin { 'puppet_lastrun':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/puppet_lastrun',
