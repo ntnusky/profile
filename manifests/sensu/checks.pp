@@ -7,9 +7,12 @@ class profile::sensu::checks {
   $cinder_api = hiera('profile::api::cinder::public::ip')
   $glance_api = hiera('profile::api::glance::public::ip')
   $heat_api = hiera('profile::api::heat::public::ip')
+
   $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])*60
   $puppetwarn = $puppet_runinterval*3
   $puppetcrit = $puppet_runinterval*10
+
+  $memcached_ip = hiera('profile::memcache::ip','127.0.0.1')
 
   # Base checks for all hosts
   sensu::check { 'diskspace':
@@ -194,5 +197,13 @@ class profile::sensu::checks {
     interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],
+  }
+
+  # memcached checks
+  sensu::check { 'memcached-status':
+    command     => "check-memcached-stats.rb -h ${memcached_ip}",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'memcached-ext' ],
   }
 }

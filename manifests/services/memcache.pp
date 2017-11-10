@@ -8,6 +8,7 @@ class profile::services::memcache {
   $management_if = hiera('profile::interfaces::management')
   $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
   $memcached_port = '11211'
+  $installsensu = hiera('profile::sensu::install', true)
 
   # Memcache IP
   $memcache_ip = hiera('profile::memcache::ip')
@@ -52,5 +53,9 @@ class profile::services::memcache {
       "${memcache_ip}/32",
     ],
     track_script      => 'check_memcache',
+  }
+
+  if ($installsensu) {
+    include ::profile::sensu::plugin::memcached
   }
 }
