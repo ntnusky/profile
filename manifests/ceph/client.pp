@@ -24,6 +24,6 @@ class profile::ceph::client {
   ceph_config {
     'global/osd_journal_size': value                   => $journal_size;
     'client/rbd cache': value                          => 'true';
-    'client/rbd cahe writethrough until flush': value  => 'true';
+    'client/rbd cache writethrough until flush': value  => 'true';
   }
 }
