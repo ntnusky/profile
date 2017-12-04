@@ -180,20 +180,20 @@ class profile::sensu::checks {
   }
 
   # Redis checks
-  sensu::check { 'redis-slave-status':
+  sensu::check { 'redis-slave-status -P :::redis.masterauth:::':
     command     => 'check-redis-slave-status.rb',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],
   }
   sensu::check { 'redis-memory':
-    command     => 'check-redis-memory-percentage.rb -w :::redis.memwarn|80::: -c :::redis.memcrit|90:::',
+    command     => 'check-redis-memory-percentage.rb -P :::redis.masterauth::: -w :::redis.memwarn|80::: -c :::redis.memcrit|90:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],
   }
   sensu::check { 'redis-ping':
-    command     => 'check-redis-ping.rb',
+    command     => 'check-redis-ping.rb -P :::redis.masterauth:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],

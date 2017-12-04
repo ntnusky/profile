@@ -9,6 +9,7 @@ class profile::services::redis {
   $ip = $::facts['networking']['interfaces'][$nic]['ip']
   $redismaster = hiera('profile::redis::master')
   $installsensu = hiera('profile::sensu::install', true)
+  $masterauth = hiera('profile::redis::masterauth')
 
   if ( $nodetype == 'slave' ) {
     $slaveof = "${redismaster} 6379"
@@ -27,9 +28,12 @@ class profile::services::redis {
     bind                => "${ip} 127.0.0.1",
     min_slaves_to_write => 1,
     slaveof             => $slaveof,
+    masterauth          => $masterauth,
+    requirepass         => $masterauth,
   } ->
 
   class { '::redis::sentinel':
+    auth_pass        => $masterauth,
     down_after       => 5000,
     failover_timeout => 60000,
     redis_host       => $redismaster,
