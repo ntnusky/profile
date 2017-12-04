@@ -6,6 +6,7 @@ class profile::services::redis::haproxy {
 
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
+  $redisauth = hiera('profile::redis::masterauth')
 
   $ft_options = {
     'default_backend' => 'bk_redis',
@@ -42,6 +43,8 @@ class profile::services::redis::haproxy {
       ],
       'tcp-check' => [
         'connect',
+        "send AUTH ${redisauth}\r\n",
+        'expect string +OK',
         'send PING\r\n',
         'expect string +PONG',
         'send info\ replication\r\n',
