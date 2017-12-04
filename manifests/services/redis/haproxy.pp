@@ -43,7 +43,7 @@ class profile::services::redis::haproxy {
       ],
       'tcp-check' => [
         'connect',
-        "send AUTH ${redisauth}\r\n",
+        "send AUTH\\ ${redisauth}\\r\\n",
         'expect string +OK',
         'send PING\r\n',
         'expect string +PONG',
