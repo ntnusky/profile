@@ -180,8 +180,8 @@ class profile::sensu::checks {
   }
 
   # Redis checks
-  sensu::check { 'redis-slave-status -P :::redis.masterauth:::':
-    command     => 'check-redis-slave-status.rb',
+  sensu::check { 'redis-slave-status':
+    command     => 'check-redis-slave-status.rb -P :::redis.masterauth:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'redis' ],
