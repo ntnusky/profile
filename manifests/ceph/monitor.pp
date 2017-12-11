@@ -5,6 +5,7 @@ class profile::ceph::monitor {
 
   $fsid = hiera('profile::ceph::fsid')
   $mon_key = hiera('profile::ceph::monitor_key')
+  $mgr_key = hiera('profile::ceph::mgr_key')
   $admin_key = hiera('profile::ceph::admin_key')
   $bootstrap_osd_key = hiera('profile::ceph::osd_bootstrap_key')
   $replicas =  hiera('profile::ceph::replicas', undef)
@@ -27,6 +28,10 @@ class profile::ceph::monitor {
     mon_host              => $controlleraddresses,
     osd_pool_default_size => $replicas,
     before                => Anchor['profile::ceph::monitor::end']
+  }
+  ceph::mgr { $::hostname :
+    key        => $mgr_key,
+    inject_key => true,
   }
   ceph_config {
     'global/osd_journal_size': value => $journal_size;
