@@ -18,7 +18,23 @@ fi
 data=$(rados df)
 
 for pool in $(ceph osd pool ls); do
-  i=$( echo "$data" | grep $pool | awk '{ print $2 }')
-  
-  echo ${pool}.value $(($i * 1024))
+  unit=$( echo "$data" | grep $pool | awk '{ print $2 }' | awk '{ print substr($0,length,1) }')
+  i=$( echo "$data" | grep $pool | awk '{ print $2 }' | sed 's/[a-zA-Z]$//')
+
+  case $unit in
+    K)
+      factor=1024
+      ;;
+    M)
+      factor=1048576
+      ;;
+    G)
+      factor=1073741824
+      ;;
+    *)
+      factor=1
+      ;;
+  esac
+
+  echo ${pool}.value $(($i * $factor))
 done

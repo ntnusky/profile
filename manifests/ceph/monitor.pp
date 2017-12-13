@@ -51,6 +51,7 @@ class profile::ceph::monitor {
     cap_mon => 'allow *',
     cap_osd => 'allow *',
     cap_mds => 'allow',
+    cap_mgr => 'allow *',
     before  => Anchor['profile::ceph::monitor::end']
   }
   ceph::key { 'client.bootstrap-osd':
