@@ -6,6 +6,7 @@ define profile::services::dashboard::config::dhcp::pool {
   $domain = hiera("profile::networks::${name}::domain")
   $range = hiera("profile::networks::${name}::ipv4::dynamicrange", '')
   $reserved = hiera_array("profile::networks::${name}::ipv4::reserved", [])
+  $v6prefix = hiera("profile::networks::${name}::ipv6::prefix", false)
 
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/shiftleader/settings.ini')
@@ -64,5 +65,29 @@ define profile::services::dashboard::config::dhcp::pool {
     require => [
               File['/etc/shiftleader'],
             ],
+  }
+
+  if($v6prefix) {
+    ini_setting { "Machineadmin DHCP Pool ${name} v6prefix":
+      ensure  => present,
+      path    => $configfile,
+      section => 'DHCP',
+      setting => "${name}v6prefix",
+      value   => $v6prefix,
+      require => [
+                File['/etc/shiftleader'],
+              ],
+    }
+  } else {
+    ini_setting { "Machineadmin DHCP Pool ${name} v6prefix":
+      ensure  => absent,
+      path    => $configfile,
+      section => 'DHCP',
+      setting => "${name}v6prefix",
+      require => [
+                File['/etc/shiftleader'],
+              ],
+    }
+
   }
 }
