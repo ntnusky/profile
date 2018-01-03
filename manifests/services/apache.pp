@@ -6,8 +6,9 @@ class profile::services::apache {
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   class { '::apache':
-    mpm_module => 'prefork',
-    confd_dir  => '/etc/apache2/conf-enabled'
+    mpm_module    => 'prefork',
+    confd_dir     => '/etc/apache2/conf-enabled',
+    default_vhost => false,
   }
 
   package { 'libcgi-pm-perl':
