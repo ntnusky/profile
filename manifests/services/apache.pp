@@ -21,7 +21,7 @@ class profile::services::apache {
     servername    => $::fqdn,
     port          => '80',
     ip            => concat([], $management_ipv4, $management_ipv6),
-    add_listen    => false
+    add_listen    => false,
     docroot       => "/var/www/${::fqdn}",
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
