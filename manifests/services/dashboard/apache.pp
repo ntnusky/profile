@@ -4,6 +4,9 @@ class profile::services::dashboard::apache {
       '/etc/shiftleader/settings.ini')
   $dashboardname = hiera('profile::dashboard::name')
   $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
+  $management_if = hiera('profile::interfaces::management')
+  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ipv6']
 
   require ::profile::services::apache
   include ::profile::services::dashboard::install::staticfiles
@@ -24,6 +27,7 @@ class profile::services::dashboard::apache {
   apache::vhost { "${dashboardname} http":
     servername          => $dashboardname,
     port                => '80',
+    ip                  => concat([], $management_ipv4, $management_ipv6),
     docroot             => "/var/www/${dashboardname}",
     directories         => [
       { path    => '/opt/shiftleader/',
@@ -43,6 +47,7 @@ class profile::services::dashboard::apache {
     apache::vhost { "${dashboardv4name} http":
       servername          => $dashboardv4name,
       port                => '80',
+      ip                  => concat([], $management_ipv4, $management_ipv6),
       docroot             => "/var/www/${dashboardname}",
       directories         => [
         { path    => '/opt/shiftleader/',
