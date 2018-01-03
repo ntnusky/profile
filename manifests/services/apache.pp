@@ -14,11 +14,14 @@ class profile::services::apache {
     ensure => present,
   }
 
+  apache::listen { "${management_ipv4}:80": }
+  apache::listen { "[${management_ipv6}]:80": }
 
   apache::vhost { "${::fqdn} http":
     servername    => $::fqdn,
     port          => '80',
     ip            => concat([], $management_ipv4, $management_ipv6),
+    add_listen    => false
     docroot       => "/var/www/${::fqdn}",
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
