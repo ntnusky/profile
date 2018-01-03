@@ -3,7 +3,7 @@
 class profile::services::apache {
   $management_if = hiera('profile::interfaces::management')
   $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ipv6']
+  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   class { '::apache':
     mpm_module => 'prefork',
