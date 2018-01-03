@@ -9,6 +9,7 @@ class profile::services::dashboard::apache {
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   require ::profile::services::apache
+  include ::profile::services::dashboard::haproxy::backend
   include ::profile::services::dashboard::install::staticfiles
 
   # Install and configure apache mod wsgi
