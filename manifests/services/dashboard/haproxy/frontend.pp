@@ -4,11 +4,18 @@ class profile::services::dashboard::haproxy::frontend {
   require ::profile::services::haproxy
 
   $domain = hiera('profile::dashboard::name')
+  $domainv4 = hiera('profile::dashboard::name::v4only')
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
   $ft_options = {
-    'acl'         => "host_shiftleader hdr_dom(host) -m dom ${domain}",
-    'use_backend' => 'bk_shiftleader if host_shiftleader',
+    'acl'         => [
+      "host_shiftleader hdr_dom(host) -m dom ${domain}",
+      "host_shiftleaderv4 hdr_dom(host) -m dom ${domainv4}",
+    ],
+    'use_backend' => [
+      'bk_shiftleader if host_shiftleader',
+      'bk_shiftleader if host_shiftleaderv4',
+    ],
     'option'      => [
       'forwardfor',
       'http-server-close',
