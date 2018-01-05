@@ -3,9 +3,10 @@ class profile::services::haproxy::web {
   include ::profile::services::apache::firewall
   require ::profile::services::haproxy
 
-  $domains = hiera_hash('profile::haproxy::web::domains')
-  $ipv4 = hiera('profile::haproxy::web::ipv4')
-  $ipv6 = hiera('profile::haproxy::web::ipv6', false)
+  $profile = hiera('profile::haproxy::web::profile')
+  $domains = hiera_hash("profile::haproxy::${profile}::domains")
+  $ipv4 = hiera("profile::haproxy::${profile}::ipv4")
+  $ipv6 = hiera("profile::haproxy::${profile}::ipv6", false)
 
   $acl = $domains.map |String $domain, String $name| {
     "host_${name} hdr_dom(host) -m dom ${domain}"
