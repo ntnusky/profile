@@ -51,8 +51,8 @@ class profile::services::haproxy {
     }
   }
 
-  $installMunin = hiera('profile::munin::install', true)
-  if($installMunin) {
+  $installmunin = hiera('profile::munin::install', true)
+  if($installmunin) {
     include ::profile::monitoring::munin::plugin::haproxy
   }
   if ($installsensu) {
