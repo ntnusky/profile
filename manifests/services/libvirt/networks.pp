@@ -4,8 +4,8 @@ class profile::services::libvirt::networks {
 
   $networks = hiera('profile::networks', {})
   $networks.each | $network |  {
-    # Linux interfaces is max 16 chars long (br-<13 chars>)
-    $bridge_name = $network[0,13]
+    # Linux interfaces is max 16 chars long (br-<12 chars>\0)
+    $bridge_name = $network[0,12]
     $vlanid = hiera("profile::networks::${network}::vlanid")
     $physical_if = hiera("profile::kvm::interfaces::${network}", false)
     if ( $physical_if ) {
