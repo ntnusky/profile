@@ -7,10 +7,10 @@ class profile::services::haproxy::web {
   $ipv4 = hiera('profile::haproxy::web::ipv4')
   $ipv6 = hiera('profile::haproxy::web::ipv6', false)
 
-  $acl = $domains.map |String $name, String $domain| {
+  $acl = $domains.map |String $domain, String $name| {
     "host_${name} hdr_dom(host) -m dom ${domain}"
   }
-  $backend = $domains.map |String $name, String $domain| {
+  $backend = $domains.map |String $domain, String $name| {
     "bk_${name} if host_${name}"
   }
 
