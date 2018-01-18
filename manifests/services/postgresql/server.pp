@@ -1,7 +1,7 @@
 # This class installs and configures the postgresql server 
 class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
   $database_port = hiera('profile::postgres::backend::port', '5432')
   $postgresql_ipv4 = hiera('profile::postgres::ipv4')
   $postgresql_ipv6 = hiera('profile::postgres::ipv6', [])
@@ -73,23 +73,21 @@ class profile::services::postgresql::server {
 
   Postgresql::Server::Pg_hba_rule <<| |>>
 
-  @@concat { '/var/lib/postgresql/.pgpass':
+  concat { '/var/lib/postgresql/.pgpass':
     ensure         => present,
     owner          => 'postgres',
     group          => 'postgres',
     mode           => '0600',
     warn           => true,
     ensure_newline => true,
-    tag            => 'pgpass',
   }
-  @@concat { '/root/.pgpass':
+  concat { '/root/.pgpass':
     ensure         => present,
     owner          => 'root',
     group          => 'root',
     mode           => '0600',
     warn           => true,
     ensure_newline => true,
-    tag            => 'pgpass',
   }
 
   $mid = "${database_port}:replication:replicator"
@@ -103,6 +101,10 @@ class profile::services::postgresql::server {
     content => "${::hostname}:${mid}:${replicator_password}",
     tag     => 'pgpass',
   }
+  concat::fragment { 'postgres /var/lib comment-hack':
+    target  => '/var/lib/postgresql/.pgpass',
+    content => '# Comment hack, to ensure that the file exists',
+  }
 
   @@concat::fragment { "postgres postgres ${management_ip}":
     target  => '/root/.pgpass',
@@ -114,7 +116,10 @@ class profile::services::postgresql::server {
     content => "${::hostname}:${database_port}:*:postgres:${password}",
     tag     => 'pgpass',
   }
+  concat::fragment { 'postgres /root comment-hack':
+    target  => '/root/.pgpass',
+    content => '# Comment hack, to ensure that the file exists',
+  }
 
   Concat::Fragment <<| tag == 'pgpass'  |>>
-  Concat <<| tag == 'pgpass'  |>>
 }
