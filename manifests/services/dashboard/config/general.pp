@@ -73,7 +73,7 @@ class profile::services::dashboard::config::general {
   }
 
   if($installEnvironment) {
-    ini_setting { 'Machineadmin ipv4 host':
+    ini_setting { 'Machineadmin installation environment':
       ensure  => present,
       path    => $configfile,
       section => 'general',
