@@ -2,7 +2,7 @@
 define profile::services::dashboard::config::dns::server {
   $ipv4 = hiera("profile::dns::${name}::ipv4")
   $key = hiera("profile::dns::${name}::key", false)
-  $name = hiera("profile::dns::${name}::name", false)
+  $keyname = hiera("profile::dns::${name}::name", false)
   $algorithm = hiera("profile::dns::${name}::algorithm", false)
 
   $configfile = hiera('profile::dashboard::configfile',
@@ -36,7 +36,7 @@ define profile::services::dashboard::config::dns::server {
             ],
   }
 
-  if($name) {
+  if($keyname) {
     $nameensure = 'present'
   } else {
     $nameensure = 'absent'
@@ -47,7 +47,7 @@ define profile::services::dashboard::config::dns::server {
     path    => $configfile,
     section => 'DNS',
     setting => "${name}Keyname",
-    value   => $name,
+    value   => $keyname,
     require => [
               File['/etc/shiftleader'],
             ],
