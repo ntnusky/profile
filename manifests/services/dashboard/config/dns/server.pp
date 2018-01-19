@@ -2,7 +2,7 @@
 define profile::services::dashboard::config::dns::server {
   $ipv4 = hiera("profile::dns::${name}::ipv4")
   $key = hiera("profile::dns::${name}::key", false)
-  $keyname = hiera("profile::dns::${name}::name", false)
+  $keyname = hiera("profile::dns::${name}::keyname", false)
   $algorithm = hiera("profile::dns::${name}::algorithm", false)
 
   $configfile = hiera('profile::dashboard::configfile',
