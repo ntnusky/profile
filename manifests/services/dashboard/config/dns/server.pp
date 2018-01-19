@@ -2,6 +2,8 @@
 define profile::services::dashboard::config::dns::server {
   $ipv4 = hiera("profile::dns::${name}::ipv4")
   $key = hiera("profile::dns::${name}::key", false)
+  $name = hiera("profile::dns::${name}::name", false)
+  $algorithm = hiera("profile::dns::${name}::algorithm", false)
 
   $configfile = hiera('profile::dashboard::configfile',
       '/etc/shiftleader/settings.ini')
@@ -18,15 +20,53 @@ define profile::services::dashboard::config::dns::server {
   }
 
   if($key) {
-    ini_setting { "Machineadmin DNS Server ${name} Key":
-      ensure  => present,
-      path    => $configfile,
-      section => 'DNS',
-      setting => "${name}Key",
-      value   => $key,
-      require => [
-                File['/etc/shiftleader'],
-              ],
-    }
+    $keyensure = 'present'
+  } else {
+    $keyensure = 'absent'
+  }
+
+  ini_setting { "Machineadmin DNS Server ${name} Key":
+    ensure  => $keyensure,
+    path    => $configfile,
+    section => 'DNS',
+    setting => "${name}Key",
+    value   => $key,
+    require => [
+              File['/etc/shiftleader'],
+            ],
+  }
+
+  if($name) {
+    $nameensure = 'present'
+  } else {
+    $nameensure = 'absent'
+  }
+
+  ini_setting { "Machineadmin DNS Server ${name} Name":
+    ensure  => $nameensure,
+    path    => $configfile,
+    section => 'DNS',
+    setting => "${name}Keyname",
+    value   => $name,
+    require => [
+              File['/etc/shiftleader'],
+            ],
+  }
+
+  if($algorithm) {
+    $algorithmensure = 'present'
+  } else {
+    $algorithmensure = 'absent'
+  }
+
+  ini_setting { "Machineadmin DNS Server ${name} Key":
+    ensure  => $algorithmensure,
+    path    => $configfile,
+    section => 'DNS',
+    setting => "${name}Algorithm",
+    value   => $algorithm,
+    require => [
+              File['/etc/shiftleader'],
+            ],
   }
 }
