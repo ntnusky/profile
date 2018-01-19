@@ -6,6 +6,7 @@ class profile::services::dashboard::config::general {
   $dashboardname = hiera('profile::dashboard::name')
   $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
   $apiurl = hiera('profile::dashboard::api')
+  $installEnvironment = hiera('profile::productionlevel', false)
 
   file { '/etc/shiftleader':
     ensure => directory,
@@ -65,6 +66,19 @@ class profile::services::dashboard::config::general {
       section => 'hosts',
       setting => 'ipv4',
       value   => $dashboardv4name,
+      require => [
+                File['/etc/shiftleader'],
+              ],
+    }
+  }
+
+  if($installEnvironment) {
+    ini_setting { 'Machineadmin ipv4 host':
+      ensure  => present,
+      path    => $configfile,
+      section => 'general',
+      setting => 'env',
+      value   => $installEnvironment,
       require => [
                 File['/etc/shiftleader'],
               ],
