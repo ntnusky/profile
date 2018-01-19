@@ -59,7 +59,7 @@ define profile::services::dashboard::config::dns::server {
     $algorithmensure = 'absent'
   }
 
-  ini_setting { "Machineadmin DNS Server ${name} Key":
+  ini_setting { "Machineadmin DNS Server ${name} Algorithm":
     ensure  => $algorithmensure,
     path    => $configfile,
     section => 'DNS',
