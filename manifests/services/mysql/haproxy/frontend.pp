@@ -31,7 +31,7 @@ class profile::services::mysql::haproxy::frontend {
   haproxy::backend { 'bk_mysqlcluster':
     mode    => 'tcp',
     options => {
-      'balance' => 'roundrobin',
+      'balance' => 'source',
       'option'  => [
         'tcplog',
       ],
