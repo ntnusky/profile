@@ -8,7 +8,8 @@ class profile::sensu::uchiwa {
   $uchiwa_url = hiera('profile::sensu::uchiwa::fqdn')
 
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   $private_key = hiera('profile::sensu::uchiwa::private_key')
   $public_key  = hiera('profile::sensu::uchiwa::public_key')
@@ -38,6 +39,7 @@ class profile::sensu::uchiwa {
     servername          => $uchiwa_url,
     serveraliases       => [$uchiwa_url],
     port                => 80,
+    ip                  => concat([], $management_ipv4, $management_ipv6),
     docroot             => false,
     manage_docroot      => false,
     access_log_format   => 'forwarded',
@@ -91,7 +93,7 @@ class profile::sensu::uchiwa {
   @@haproxy::balancermember { $::fqdn:
     listening_service => 'bk_uchiwa',
     ports             => '80',
-    ipaddresses       => $management_ip,
+    ipaddresses       => $management_ipv4,
     server_names      => $::hostname,
     options           => [
       'check inter 5s',
