@@ -10,8 +10,12 @@ defaults:
 hierarchy:
  - name: "Per-Node data"
    path: "nodes/%{trusted.certname}.yaml"
+ - name: "Various certificates"
+   path: "certs.yaml"
  - name: "Networking data"
    path: "networking.yaml"
+ - name: "OpenStack data"
+   path: "openstack.yaml"
  - name: "Packages data"
    path: "packages.yaml"
  - name: "User data"
