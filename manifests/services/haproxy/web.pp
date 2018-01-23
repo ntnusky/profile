@@ -43,10 +43,10 @@ class profile::services::haproxy::web {
   if($certificate) {
     if ($nossl) {
       $redirect = { 'redirect' =>
-        "scheme https if !{ ssl_fc } ! { hdr_dom(host) -m dom ${nossl} }"
+        "scheme https code 301 if !{ ssl_fc } ! { hdr_dom(host) -m dom ${nossl} }"
       }
     } else {
-      $redirect = { 'redirect' => 'scheme https if !{ ssl_fc }' }
+      $redirect = { 'redirect' => 'scheme https code 301 if !{ ssl_fc }' }
     }
 
     if($ipv6) {
