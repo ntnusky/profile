@@ -18,4 +18,10 @@ class profile::services::tftp::acl {
     mode   => '0755',
     source => 'puppet:///modules/profile/pull_acl.sh',
   }
+
+  cron { 'TFTP ACL sync':
+    command => '/usr/local/sbin/pull_acl.sh',
+    user    => 'root',
+    minute  => '*',
+  }
 }
