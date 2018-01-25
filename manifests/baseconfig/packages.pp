@@ -9,11 +9,7 @@ class profile::baseconfig::packages {
 
   # If it is an Dell machine, install dell's utilities
   if($::bios_vendor == 'Dell Inc.') {
-    class { '::srvadmin':
-      repository_url => "http://linux.dell.com/repo/community/openmanage/910/${::lsbdistcodename}",
-      repository     => 'main',
-    }
-
+    include ::srvadmin
     include ::hwraid
 
     $megaclipackages = [ 'megacli', 'mpt-status' ]
