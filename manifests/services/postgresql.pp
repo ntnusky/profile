@@ -4,5 +4,4 @@ class profile::services::postgresql {
   contain profile::services::postgresql::firewall
   contain profile::services::postgresql::keepalived
   contain profile::services::postgresql::server
-  contain profile::services::postgresql::monitoring
 }
