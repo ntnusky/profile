@@ -1,6 +1,6 @@
 # Define balancer members for munin haproxy backend
 class profile::monitoring::munin::haproxy::balancermember {
-  $management_if = hiera('profile::networking::interfaces::management')
+  $management_if = hiera('profile::interfaces::management')
   $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
 
   @@haproxy::balancermember { "munin-${::fqdn}":
