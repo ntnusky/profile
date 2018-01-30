@@ -2,10 +2,15 @@
 define profile::monitoring::munin::server::vhost {
   require profile::services::apache
 
+  $management_if = hiera('profile::interfaces::management')
+  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+
   apache::vhost { "${name} http":
     servername    => $name,
     serveraliases => [$name],
     port          => '80',
+    ip            => concat([], $management_ipv4, $management_ipv6),
     docroot       => '/var/cache/munin/www',
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
