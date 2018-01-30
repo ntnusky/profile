@@ -16,7 +16,7 @@ class profile::sensu::checks {
 
   # Base checks for all hosts
   sensu::check { 'diskspace':
-    command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -I :::disk.mountpoints|all:::',
+    command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -i :::disk.ignore|none:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
