@@ -7,13 +7,14 @@ define profile::monitoring::munin::server::vhost {
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   apache::vhost { "${name} http":
-    servername    => $name,
-    serveraliases => [$name],
-    port          => '80',
-    ip            => concat([], $management_ipv4, $management_ipv6),
-    docroot       => '/var/cache/munin/www',
-    docroot_owner => 'www-data',
-    docroot_group => 'www-data',
+    servername        => $name,
+    serveraliases     => [$name],
+    port              => '80',
+    ip                => concat([], $management_ipv4, $management_ipv6),
+    docroot           => '/var/cache/munin/www',
+    docroot_owner     => 'www-data',
+    docroot_group     => 'www-data',
+    access_log_format => 'forwarded',
     directories   => [
       { path     => '/munin-cgi',
         provider => 'location',
