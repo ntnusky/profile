@@ -3,6 +3,8 @@
 class profile::monitoring::munin::server {
   $munin_urls = hiera('profile::munin::urls')
 
+  contain ::profile::monitoring::munin::haproxy::balancermember
+
   class{ '::munin::master':
     extra_config => [
       'cgiurl_graph /munin-cgi/munin-cgi-graph',
