@@ -6,4 +6,9 @@ class profile::sensu::plugin::memcached {
   sensu::plugin { 'sensu-plugins-memcached':
     type => 'package'
   }
+
+  package { 'libsasl2-dev':
+    ensure => 'present',
+    before => Sensu::Plugin['sensu-plugins-memcached'],
+  }
 }
