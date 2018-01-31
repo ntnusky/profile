@@ -12,7 +12,7 @@ class profile::services::memcache {
   contain ::profile::services::memcache::firewall
 
   class { 'memcached':
-    listen_ip => "${memcache_ipv4},${memcache_ipv6}",
+    listen_ip => "127.0.0.1,${memcache_ipv4},${memcache_ipv6}",
     tcp_port  => $memcached_port,
     udp_port  => $memcached_port,
   }
