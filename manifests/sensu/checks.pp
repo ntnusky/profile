@@ -36,7 +36,14 @@ class profile::sensu::checks {
     subscribers => [ 'all' ],
   }
 
-  sensu::check { 'puppetrun':
+  sensu::check { 'dns':
+    command     => 'check-dns.rb -d :::dns.domain|ntnu.no:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
+    sensu::check { 'puppetrun':
     command     => "sudo check-puppet-last-run.rb -r -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
     interval    => 300,
     standalone  => false,

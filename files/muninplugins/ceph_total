@@ -18,12 +18,15 @@ issued
 
 Mate Gabri <mate@gabri.hu>
 Eigil Obrestad <eigil-git@obrestad.org>
+Lars Erik Pedersen <lars.e.pedersen@ntnu.no>
 
 =head1 LICENSE
 
 GPLv2
 
 =head1 CHANGELOG
+
+13.dec 2017 - Lars Erik - Patch the plugin to support Ceph Luminous (only)
 
 17.oct 2016 - Eigil - Change plugin to report capacity in bytes. Also made the
 plugin work in small clusters where capacity is given in MB instead of GB.
@@ -76,10 +79,10 @@ fi
 
 capacity=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $1}')
 capacityU=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $2}')
-data=$(ceph -s | grep pgmap | cut -d ',' -f 3 | awk '{ print $1 }')
-dataU=$(ceph -s | grep pgmap | cut -d ',' -f 3 | awk '{ print $2 }')
-used=$(ceph -s | grep avail | awk '{ print $1}')
-usedU=$(ceph -s | grep avail | awk '{ print $2}')
+data=$(ceph -s | grep objects | cut -d ',' -f 2 | awk '{ print $1 }')
+dataU=$(ceph -s | grep objects | cut -d ',' -f 2 | awk '{ print $2 }')
+used=$(ceph -s | grep avail | awk '{ print $2}')
+usedU=$(ceph -s | grep avail | awk '{ print $3}')
 
 if [ $capacityU = "MB" ]; then
   echo "capacity.value $(($capacity*1048576))"
