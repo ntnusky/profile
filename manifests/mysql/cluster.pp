@@ -18,11 +18,7 @@ class profile::mysql::cluster {
   $management_if = hiera('profile::interfaces::management')
   $management_ip = hiera("profile::interfaces::${management_if}::address")
 
-  # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
-
   require profile::services::keepalived
-  require ::profile::baseconfig::firewall
   
   if (!$servers) {
     fail("MYSQL Server ip addresses need to be supplied")
@@ -39,22 +35,6 @@ class profile::mysql::cluster {
     key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
     key_server => 'keyserver.ubuntu.com',
     notify     => Exec['apt_update'],
-  }
-
-  firewall { '500 accept incoming mysql cluster tcp':
-    source      => $source_firewall_management_net,
-#    destination => $mysql_ip,
-    proto       => 'tcp',
-    dport       => [ '3306', '4444', '4567', '4568' ],
-    action      => 'accept',
-  }
-
-  firewall { '500 accept incoming mysql cluster tcp':
-    source      => $source_firewall_management_net,
-#    destination => $mysql_ip, 
-    proto       => 'udp',
-    dport       => '4567',
-    action      => 'accept',
   }
 
   class { '::galera' :
