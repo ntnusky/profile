@@ -36,7 +36,6 @@ class profile::mysql::cluster {
     release      => $::lsbdistcodename,
     key          => '177F4010FE56CA3336300305F1656F24C74CD1D8',
     key_server   => 'keyserver.ubuntu.com',
-    notify       => Exec['apt_update'],
   }
 
   class { '::galera' :
