@@ -57,7 +57,7 @@ class profile::mysql::cluster {
         'max_connections' => '1000',
       }
     },
-    require             => Apt::Source['galera_mariadb'],
+#    require             => Apt::Source['galera_mariadb'],
   }
 
   mysql_user { "root@${master}":
