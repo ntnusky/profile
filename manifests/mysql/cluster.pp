@@ -28,15 +28,15 @@ class profile::mysql::cluster {
     include ::profile::sensu::plugin::mysql
   }
 
-  apt::source { 'galera_mariadb':
-    architecture => '',
-    comment      => '',
-    location     => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
-    repos        => 'main',
-    release      => $::lsbdistcodename,
-    key          => '177F4010FE56CA3336300305F1656F24C74CD1D8',
-    key_server   => 'keyserver.ubuntu.com',
-  }
+  #apt::source { 'galera_mariadb':
+  #  architecture => '',
+  #  comment      => '',
+  #  location     => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
+  #  repos        => 'main',
+  #  release      => $::lsbdistcodename,
+  #  key          => '177F4010FE56CA3336300305F1656F24C74CD1D8',
+  #  key_server   => 'keyserver.ubuntu.com',
+  #}
 
   class { '::galera' :
     galera_servers      => $servers,
