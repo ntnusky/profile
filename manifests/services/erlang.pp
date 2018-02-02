@@ -1,7 +1,6 @@
 # Module to install erlang from Erlangs repositories
 class profile::services::erlang {
   apt::source { 'erlang':
-    architecture => '',
     comment      => '',
     location     => 'https://packages.erlang-solutions.com/ubuntu',
     repos        => 'contrib',
