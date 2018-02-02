@@ -8,16 +8,22 @@ class profile::sensu::checks {
   $glance_api = hiera('profile::api::glance::public::ip')
   $heat_api = hiera('profile::api::heat::public::ip')
 
+  $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])*60
+  $puppetwarn = $puppet_runinterval*3
+  $puppetcrit = $puppet_runinterval*10
+
+  $memcached_ip = hiera('profile::memcache::ip','127.0.0.1')
+
   # Base checks for all hosts
   sensu::check { 'diskspace':
-    command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -I :::disk.mountpoints|all:::',
+    command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -t ext2,ext3,ext4,xfs -i :::disk.ignore|none:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
   }
 
   sensu::check { 'load':
-    command     => 'check-load.rb -w :::load.warning|1,5,10::: -c :::load.critical|10,15,25:::',
+    command     => 'check-load.rb -w :::load.warning|1.7,1.6,1.5::: -c :::load.critical|1.9,1.8,1.7:::',
     standalone  => false,
     interval    => 300,
     subscribers => [ 'all'],
@@ -32,6 +38,20 @@ class profile::sensu::checks {
 
   sensu::check { 'dns':
     command     => 'check-dns.rb -d :::dns.domain|ntnu.no:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
+    sensu::check { 'puppetrun':
+    command     => "sudo check-puppet-last-run.rb -r -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
+  sensu::check { 'ntp-offset':
+    command     => 'check-ntp.rb -w :::ntp.warn|10::: -c :::ntp.crit|100:::',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
@@ -156,5 +176,41 @@ class profile::sensu::checks {
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-infra-checks'],
+  }
+
+  # HAProxy checks
+  sensu::check { 'haproxy-stats':
+    command     => 'check-haproxy.rb -S localhost -q / -P 9000 -A',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'haproxy-servers' ],
+  }
+
+  # Redis checks
+  sensu::check { 'redis-slave-status':
+    command     => 'check-redis-slave-status.rb -P :::redis.masterauth:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
+  sensu::check { 'redis-memory':
+    command     => 'check-redis-memory-percentage.rb -P :::redis.masterauth::: -w :::redis.memwarn|80::: -c :::redis.memcrit|90:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
+  sensu::check { 'redis-ping':
+    command     => 'check-redis-ping.rb -P :::redis.masterauth:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'redis' ],
+  }
+
+  # memcached checks
+  sensu::check { 'memcached-status':
+    command     => "check-memcached-stats.rb -h ${memcached_ip}",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'memcached-ext' ],
   }
 }

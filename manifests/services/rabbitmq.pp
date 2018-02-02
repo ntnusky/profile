@@ -1,5 +1,7 @@
 # Installs and configures a rabbitmq server for our openstack environment.
 class profile::services::rabbitmq {
+
+  include ::profile::services::rabbitmq::firewall
   # VRRP information
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $vrid = hiera('profile::rabbitmq::vrrp::id')
@@ -12,7 +14,6 @@ class profile::services::rabbitmq {
 
   # Controller information
   $if_management = hiera('profile::interfaces::management')
-  $ctrlnodes  = hiera('controller::names')
 
   # Rabbit IP
   $rabbit_ip = hiera('profile::rabbitmq::ip')

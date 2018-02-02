@@ -2,7 +2,7 @@
 import sys
 import yaml
 
-statusfile = open('/var/lib/puppet/state/last_run_summary.yaml', 'r')
+statusfile = open('/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml', 'r')
 y = yaml.load(statusfile)
 
 if('config' in sys.argv):

@@ -21,9 +21,29 @@ class profile::openstack::neutron::api {
   # Database connection string
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
+
   require ::profile::openstack::neutron::base
+  require ::profile::baseconfig::firewall
   contain ::profile::openstack::neutron::database
   contain ::profile::openstack::neutron::keepalived
+
+  firewall { '500 accept incoming admin neutron tcp':
+    source      => $source_firewall_management_net,
+    destination => $neutron_admin_ip,
+    proto       => 'tcp',
+    dport       => '9696',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming public neutron tcp':
+    source      => $source_firewall_management_net,
+    destination => $neutron_public_ip,
+    proto       => 'tcp',
+    dport       => '9696',
+    action      => 'accept',
+  }
 
   # Configure the neutron API endpoint in keystone
   class { '::neutron::keystone::auth':

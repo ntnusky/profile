@@ -6,7 +6,7 @@ class profile::sensu::client {
   $client_ip = getvar("::ipaddress_${mgmt_nic}")
   $subs_from_client_conf = hiera('sensu::subscriptions','')
 
-  if ( $::is_virtual == 'true' ) {
+  if ( $::is_virtual ) {
     $subs = [ 'all' ]
   } else {
     $subs = [ 'all', 'physical-servers' ]
