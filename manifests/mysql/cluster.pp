@@ -29,12 +29,14 @@ class profile::mysql::cluster {
   }
 
   apt::source { 'galera_mariadb':
-    location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
-    repos      => 'main',
-    release    => $::lsbdistcodename,
-    key        => '177F4010FE56CA3336300305F1656F24C74CD1D8',
-    key_server => 'keyserver.ubuntu.com',
-    notify     => Exec['apt_update'],
+    architecture => '',
+    comment      => '',
+    location     => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
+    repos        => 'main',
+    release      => $::lsbdistcodename,
+    key          => '177F4010FE56CA3336300305F1656F24C74CD1D8',
+    key_server   => 'keyserver.ubuntu.com',
+    notify       => Exec['apt_update'],
   }
 
   class { '::galera' :
