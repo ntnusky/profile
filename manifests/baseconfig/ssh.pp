@@ -6,7 +6,10 @@ class profile::baseconfig::ssh {
   if ($::puppetversion > '3.5.0') {
     class {'::ssh':
       server_options => {
-        'Match User nova' => {
+        'Match User postgres' => {
+          'HostbasedAuthentication' => 'yes',
+        },
+        'Match User nova'     => {
           'HostbasedAuthentication' => 'yes',
         },
       },
@@ -25,6 +28,10 @@ class profile::baseconfig::ssh {
                   awk \'{print $1}\' | sed -e \'s/,/\n/g\' > \
                   /etc/ssh/shosts.equiv',
       path    => '/bin:/usr/bin',
+      unless  => '[ $(md5sum /etc/ssh/shosts.equiv | awk \'{print $1;}\') == \
+                  $(cat /etc/ssh/ssh_known_hosts | grep -v "^#" | awk \
+                  \'{print $1}\' | sed -e \'s/,/\n/g\' | md5sum | awk \
+                  \'{print $1}\') ];',
       require => Class['ssh::knownhosts'],
     }
   }

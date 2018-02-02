@@ -1,37 +1,30 @@
-# This class installs and configures a simple memcached server placed behind a
-# keepalived VIP.
+# This class installs and configures a simple memcached server
 class profile::services::memcache {
   # Variables for keepalived
-  $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $vrid = hiera('profile::memcache::vrrp::id')
-  $vrpri = hiera('profile::memcache::vrrp::priority')
   $management_if = hiera('profile::interfaces::management')
-  
-  # Memcache IP
-  $memcache_ip = hiera('profile::memcache::ip')
+  $memcached_port = '11211'
+  $installsensu = hiera('profile::sensu::install', true)
+  $use_keepalived = hiera('profile::memcache::keepalived', false)
 
-  require profile::services::keepalived
-  
+  if ( $use_keepalived ) {
+    contain ::profile::services::memcache::keepalived
+    $memcache_ip = hiera('profile::memcache::ip')
+    $listen = $memcache_ip
+  } else {
+    $memcache_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+    $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+    $listen = "${memcache_ipv4},${memcache_ipv6}"
+  }
+
+  contain ::profile::services::memcache::firewall
+
   class { 'memcached':
-    listen_ip => $memcache_ip,
-    tcp_port  => '11211',
-    udp_port  => '11211',
+    listen_ip => "127.0.0.1,${listen}",
+    tcp_port  => $memcached_port,
+    udp_port  => $memcached_port,
   }
 
-  keepalived::vrrp::script { 'check_memcache':
-    script => '/usr/bin/killall -0 memcached',
-  }
-
-  keepalived::vrrp::instance { 'management-memcached':
-    interface         => $management_if,
-    state             => 'MASTER',
-    virtual_router_id => $vrid,
-    priority          => $vrpri,
-    auth_type         => 'PASS',
-    auth_pass         => $vrrp_password,
-    virtual_ipaddress => [
-      "${memcache_ip}/32",
-    ],
-    track_script      => 'check_memcache',
+  if ($installsensu) {
+    include ::profile::sensu::plugin::memcached
   }
 }

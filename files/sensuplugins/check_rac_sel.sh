@@ -29,11 +29,11 @@ else
   elif [ $level == "Critical" ]; then
     severity="CRITICAL"
     msg=$lastentry
-    exitcode=3
+    exitcode=2
   elif [ $level == "Non-Critical" ]; then
     severity="WARNING"
     msg=$lastentry
-    exitcode=2
+    exitcode=1
   else
     severity="UNKNOWN"
     msg=$lastentry

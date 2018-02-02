@@ -10,10 +10,30 @@ class profile::openstack::cinder::api {
   $cinder_admin_ip = hiera('profile::api::cinder::admin::ip')
   $memcached_ip = hiera('profile::memcache::ip')
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
+
+  require ::profile::baseconfig::firewall
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
   require ::profile::openstack::cinder::database
   contain ::profile::openstack::cinder::keepalived
+
+  firewall { '500 accept incoming cinder admin tcp':
+    source      => $source_firewall_management_net,
+    destination => $cinder_admin_ip,
+    proto       => 'tcp',
+    dport       => '8776',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming cinder public tcp':
+    source      => $source_firewall_management_net,
+    destination => $cinder_public_ip,
+    proto       => 'tcp',
+    dport       => '8776',
+    action      => 'accept',
+  }
 
   class  { '::cinder::keystone::auth':
     password        => $keystone_password,

@@ -1,8 +1,5 @@
 # This class installs varios basic tools.
-
-
 class profile::baseconfig::packages {
-
   $basepackages = hiera_array('profile::baseconfig::packages')
 
   # If it is an HP machine, install hpacucli.
@@ -10,6 +7,7 @@ class profile::baseconfig::packages {
     include ::hpacucli
   }
 
+  # If it is an Dell machine, install dell's utilities
   if($::bios_vendor == 'Dell Inc.') {
     include ::srvadmin
     include ::hwraid
@@ -25,7 +23,12 @@ class profile::baseconfig::packages {
   }
 
   # Install a range of useful tools.
-  package { $basepackages :
+  ensure_packages ( $basepackages, {
+    'ensure' => 'present',
+  })
+
+  # Install pip3 so that we can use it as an package-provider
+  package { 'python3-pip':
     ensure => 'present',
   }
 

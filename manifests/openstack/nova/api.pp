@@ -6,6 +6,9 @@ class profile::openstack::nova::api {
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
 
+  # Firewall settings
+  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
+
   $nova_password = hiera('profile::nova::keystone::password')
   $nova_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $sync_db = hiera('profile::nova::sync_db')
@@ -14,9 +17,25 @@ class profile::openstack::nova::api {
   require ::profile::openstack::repo
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
+  require ::profile::openstack::nova::firewall
   contain ::profile::openstack::nova::keepalived
   contain ::profile::openstack::nova::placement
   include ::profile::openstack::nova::munin::api
+
+  firewall { '500 accept incoming nova admin tcp':
+    source      => $source_firewall_management_net,
+    destination => $keystone_admin_ip,
+    proto       => 'tcp',
+    dport       => '8774',
+    action      => 'accept',
+  }
+
+  firewall { '500 accept incoming nova public tcp':
+    destination => $keystone_public_ip,
+    proto       => 'tcp',
+    dport       => '8774',
+    action      => 'accept',
+  }
 
   class { '::nova::keystone::auth':
     password        => $nova_password,

@@ -1,0 +1,26 @@
+---
+# Hiera 5 Global configuration file
+
+version: 5
+
+defaults:
+  datadir: data
+  data_hash: yaml_data
+
+hierarchy:
+ - name: "Per-Node data"
+   path: "nodes/%{trusted.certname}.yaml"
+ - name: "Various certificates"
+   path: "certs.yaml"
+ - name: "Networking data"
+   path: "networking.yaml"
+ - name: "OpenStack data"
+   path: "openstack.yaml"
+ - name: "Packages data"
+   path: "packages.yaml"
+ - name: "User data"
+   path: "users.yaml"
+ - name: "Sensu data"
+   path: "sensu.yaml"
+ - name: "Common data"
+   path: "common.yaml"
