@@ -19,7 +19,7 @@ class profile::services::memcache {
   contain ::profile::services::memcache::firewall
 
   class { 'memcached':
-    listen_ip => $listen,
+    listen_ip => "127.0.0.1,${listen}",
     tcp_port  => $memcached_port,
     udp_port  => $memcached_port,
   }
