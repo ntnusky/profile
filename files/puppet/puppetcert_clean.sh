@@ -5,16 +5,16 @@ if [[ ! -e /etc/puppetlabs/puppet/ssl/ca/inventory.txt ]]; then
   exit 1
 fi
 
-logger "Starts to clean puppet certificates"
+logger "[PUPPET-CertClean] Starts to clean puppet certificates"
 
 # Get a list over all hosts registerd in shiftleader
 allslhosts=$(/opt/shiftleader/manage.py hostlist | sort)
 noHosts=$(echo $allslhosts | wc -l)
-logger "Got a list of ${noHosts} hosts from shiftleader"
+logger "[PUPPET-CertClean] Got a list of ${noHosts} hosts from shiftleader"
 
 if [[ $noHosts -le 1 ]]; then
   echo "Aborting, as the list from shiftleader is too short"
-  logger "Aborting, as the list from shiftleader is too short"
+  logger "[PUPPET-CertClean] Aborting, as the list from shiftleader is too short"
   exit 2
 fi
 
@@ -22,13 +22,13 @@ fi
 allcahosts=$(/opt/puppetlabs/bin/puppet cert list --all | awk '{print $2}' | \
     cut -d '"' -f 2)
 noHosts=$(echo $allcahosts | wc -l)
-logger "Got a list of ${noHosts} hosts from puppetca"
+logger "[PUPPET-CertClean] Got a list of ${noHosts} hosts from puppetca"
 
 # Loop trough all hosts which has a puppetcert, but is not listed in
 # shiftleader:
 for host in $(echo ${allslhosts[@]} ${allslhosts[@]} ${allcahosts[@]} | \
     tr ' ' '\n' | sort | uniq -u); do
-  logger "Deleting the cert for $host as it is not in shiftleader anymore"
+  logger "[PUPPET-CertClean] Deleting the cert for $host as it is not in shiftleader anymore"
   # Delete the cert
   /opt/puppetlabs/bin/puppet cert clean $host
 done
@@ -39,8 +39,10 @@ for host in $installinghosts; do
   # If the host in installing have a puppet cert:
   /opt/puppetlabs/bin/puppet cert print $host &> /dev/null
   if [[ $? -eq 0 ]]; then
-    logger "Deleting the cert for $host as the host is reinstalling"
+    logger "[PUPPET-CertClean] Deleting the cert for $host as the host is reinstalling"
     # Delete it.
     /opt/puppetlabs/bin/puppet cert clean $host
   fi
 done
+
+logger "[PUPPET-CertClean] Finished to clean puppet certificates"
