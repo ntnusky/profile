@@ -9,7 +9,12 @@ logger "[PUPPET-CertClean] Starts to clean puppet certificates"
 
 # Get a list over all hosts registerd in shiftleader
 allslhosts=$(/opt/shiftleader/manage.py hostlist | sort)
-noHosts=$(echo $allslhosts | wc -l)
+
+noHosts = 0
+for host in $allslhosts; do
+  ((noHosts++))
+done
+
 logger "[PUPPET-CertClean] Got a list of ${noHosts} hosts from shiftleader"
 
 if [[ $noHosts -le 1 ]]; then
