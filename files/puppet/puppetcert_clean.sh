@@ -26,7 +26,12 @@ fi
 # Get a list over all hosts with a valid puppet client certificate
 allcahosts=$(/opt/puppetlabs/bin/puppet cert list --all | awk '{print $2}' | \
     cut -d '"' -f 2)
-noHosts=$(echo $allcahosts | wc -l)
+
+noHosts = 0
+for host in $allcahosts; do
+  ((noHosts++))
+done
+
 logger "[PUPPET-CertClean] Got a list of ${noHosts} hosts from puppetca"
 
 # Loop trough all hosts which has a puppetcert, but is not listed in
