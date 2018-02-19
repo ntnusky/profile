@@ -15,8 +15,18 @@ else
   done
 
   RACCMD="$RACADM -r $host -u root -p $password"
-  totalentries=$($RACCMD getsel -i | egrep -o '[[:digit:]]+')
-  lastentry=$($RACCMD getsel -s $totalentries -o | tail -n1 | sed 's/\r//g' | sed 's/^ *//g')
+  run=true
+  pattern='Unable to allocate memory'
+  count=0
+  while [ $run == true ] && [ $count -lt 30 ]; do
+    totalentries=$($RACCMD getsel -i | egrep -o '[[:digit:]]+')
+    lastentry=$($RACCMD getsel -s $totalentries -o | tail -n1 | sed 's/\r//g' | sed 's/^ *//g')
+    if [[ ! $lastentry =~ $pattern ]]; then
+      run=false
+    else
+      ((count++))
+    fi
+  done
   level=$(echo $lastentry | cut -d' ' -f4)
   if [ $level == "Ok" ]; then
     severity="OK"
