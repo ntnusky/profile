@@ -7,4 +7,10 @@ class profile::openstack::keystone::firewall::haproxy::services {
     dport  => 5000,
     action => 'accept',
   }
+  firewall { '100 Keystone API - Public IPv6':
+    proto    => 'tcp',
+    dport    => 5000,
+    action   => 'accept',
+    provider => 'ip6tables',
+  }
 }
