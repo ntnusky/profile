@@ -2,6 +2,7 @@
 class profile::openstack::keystone::haproxy::management {
   require ::profile::services::haproxy
   include ::profile::openstack::keystone::firewall::haproxy::management
+  include ::profile::openstack::keystone::haproxy::backend::oldmanagement
 
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
