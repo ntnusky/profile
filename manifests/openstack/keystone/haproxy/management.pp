@@ -1,7 +1,7 @@
 # Configures the haproxy frontend for the internal and admin keystone API
 class profile::openstack::keystone::haproxy::management {
   require ::profile::services::haproxy
-  include ::profile::openstack::keepalive::firewall::haproxy::management 
+  include ::profile::openstack::keystone::firewall::haproxy::management
 
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
