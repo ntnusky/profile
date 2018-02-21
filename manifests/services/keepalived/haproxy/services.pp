@@ -10,14 +10,14 @@ class profile::services::keepalived::haproxy::services {
   $v6_priority = hiera('profile::haproxy::services::ipv6::priority')
 
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $management_if = hiera('profile::interfaces::management')
+  $services_if = hiera('profile::interfaces::services')
 
   keepalived::vrrp::script { 'check_haproxy':
     script => '/usr/bin/killall -0 haproxy',
   }
 
   keepalived::vrrp::instance { 'services-haproxy-v4':
-    interface         => $management_if,
+    interface         => $services_if,
     state             => 'BACKUP',
     virtual_router_id => $v4_id,
     priority          => $v4_priority,
@@ -28,7 +28,7 @@ class profile::services::keepalived::haproxy::services {
   }
 
   keepalived::vrrp::instance { 'services-haproxy-v6':
-    interface         => $management_if,
+    interface         => $services_if,
     state             => 'BACKUP',
     virtual_router_id => $v6_id,
     priority          => $v6_priority,
