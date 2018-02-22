@@ -34,7 +34,7 @@ class profile::openstack::keystone::haproxy::services {
   }
 
   haproxy::frontend { 'ft_keystone_public':
-    bind    => $bind
+    bind    => $bind,
     mode    => 'http',
     options => $ft_options,
   }
