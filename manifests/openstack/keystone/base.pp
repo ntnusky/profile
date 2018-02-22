@@ -17,9 +17,26 @@ class profile::openstack::keystone::base {
   $mysql_ip = hiera('profile::mysql::ip')
   $db_con = "mysql://keystone:${mysql_password}@${mysql_ip}/keystone"
 
+  $cache_servers = hiera_array('profile::memcache::servers', false)
+
   require ::profile::openstack::repo
   require ::profile::openstack::keystone::database
   include ::profile::openstack::keystone::tokenflush
+
+  if($cache_servers) {
+    $memcache = $cache_servers.map | $server | {
+      "${server}:11211"
+    }
+
+    $keystone_opts = {
+      'memcache_servers' => $memcache,
+      'cache_backend'    => 'keystone.cache.memcache_pool',
+      'cache_enabled'    => true,
+      'token_caching'    => true,
+    }
+  } else {
+    $keystone_opts = {}
+  }
 
   class { '::keystone':
     admin_token             => $admin_token,
@@ -34,6 +51,7 @@ class profile::openstack::keystone::base {
     enable_fernet_setup     => true,
     enable_credential_setup => true,
     using_domain_config     => true,
+    *                       => $keystone_opts,
   }
 
   class { '::keystone::roles::admin':
