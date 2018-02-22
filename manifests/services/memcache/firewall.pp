@@ -4,6 +4,8 @@ class profile::services::memcache::firewall {
 
   $management_if = hiera('profile::interfaces::management')
   $sourcev4 = hiera('profile::networks::management::ipv4::prefix')
+  $sourcev4_extra = hiera('profile::networks::management::ipv4::prefix::extra', 
+      false)
   $sourcev6 = hiera('profile::networks::management::ipv6::prefix')
   $memcached_port = '11211'
   $use_keepalived = hiera('profile::memcache::keepalived', false)
@@ -28,6 +30,24 @@ class profile::services::memcache::firewall {
     proto       => 'udp',
     dport       => $memcached_port,
     action      => 'accept',
+  }
+
+  if($sourcev4_extra) {
+    firewall { '500 accept incoming memcached tcp':
+      source      => $sourcev4_extra,
+      destination => $destv4,
+      proto       => 'tcp',
+      dport       => $memcached_port,
+      action      => 'accept',
+    }
+
+    firewall { '500 accept incoming memcached udp':
+      source      => $sourcev4_extra,
+      destination => $destv4,
+      proto       => 'udp',
+      dport       => $memcached_port,
+      action      => 'accept',
+    }
   }
 
   if ( ! $use_keepalived ) {
