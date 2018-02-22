@@ -23,12 +23,12 @@ class profile::openstack::keystone::haproxy::services {
   }
 
   if($ipv6) {
-    $bind => { 
+    $bind = {
       "${ipv4}:5000" => $ssl,
       "${ipv6}:5000" => $ssl,
     }
   } else {
-    $bind => { 
+    $bind = {
       "${ipv4}:5000" => $ssl,
     }
   }

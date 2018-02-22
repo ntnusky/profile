@@ -19,19 +19,19 @@ class profile::openstack::keystone::haproxy::management {
   }
 
   if($ipv6) {
-    $bind_adm => { 
+    $bind_adm = {
       "${ipv4}:35357" => $ssl,
       "${ipv6}:35357" => $ssl,
     }
-    $bind_int => { 
+    $bind_int = {
       "${ipv4}:5000" => $ssl,
       "${ipv6}:5000" => $ssl,
     }
   } else {
-    $bind_adm => { 
+    $bind_adm = {
       "${ipv4}:35357" => $ssl,
     }
-    $bind_int => { 
+    $bind_int = {
       "${ipv4}:5000" => $ssl,
     }
   }
