@@ -33,7 +33,7 @@ class profile::services::memcache::firewall {
   }
 
   if($sourcev4_extra) {
-    firewall { '500 accept incoming memcached tcp':
+    firewall { '500 accept incoming memcached tcp from old management':
       source      => $sourcev4_extra,
       destination => $destv4,
       proto       => 'tcp',
@@ -41,7 +41,7 @@ class profile::services::memcache::firewall {
       action      => 'accept',
     }
 
-    firewall { '500 accept incoming memcached udp':
+    firewall { '500 accept incoming memcached udp from old management':
       source      => $sourcev4_extra,
       destination => $destv4,
       proto       => 'udp',
