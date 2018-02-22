@@ -2,7 +2,7 @@
 class profile::services::haproxy::certs::manageapi {
   $certificate = hiera('profile::haproxy::management::apicert', false)
   $certfile = hiera('profile::haproxy::management::apicert::certfile',
-                    '/etc/ssl/private/haproxy.managemnetapi.pem')
+                    '/etc/ssl/private/haproxy.managementapi.pem')
 
   if ($certificate) {
     file { $certfile:
