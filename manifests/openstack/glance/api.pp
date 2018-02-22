@@ -65,7 +65,7 @@ class profile::openstack::glance::api {
   class  { '::glance::keystone::auth':
     password     => $keystone_password,
     public_url   => "${glance_public}:9292",
-    internal_url => "${glance_admin}:9292",
+    internal_url => "${glance_internal}:9292",
     admin_url    => "${glance_admin}:9292",
     region       => $region,
   }
