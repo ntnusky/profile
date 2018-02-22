@@ -4,11 +4,11 @@ class profile::openstack::keystone::endpoint {
   $admin_ip = hiera('profile::api::keystone::admin::ip')
   $public_ip = hiera('profile::api::keystone::public::ip')
 
-  $admin_endpoint = hiera('profile::keystone::endpoint::admin',
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin',
       "http://${admin_ip}")
-  $internal_endpoint = hiera('profile::keystone::endpoint::internal',
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal',
       "http://${admin_ip}")
-  $public_endpoint = hiera('profile::keystone::endpoint::public',
+  $public_endpoint = hiera('profile::openstack::endpoint::public',
       "http://${public_ip}")
 
   class { '::keystone::endpoint':

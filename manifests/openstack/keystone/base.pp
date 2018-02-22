@@ -4,9 +4,9 @@ class profile::openstack::keystone::base {
   $admin_ip = hiera('profile::api::keystone::admin::ip')
   $public_ip = hiera('profile::api::keystone::public::ip')
 
-  $admin_endpoint = hiera('profile::keystone::endpoint::admin',
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin',
       "http://${admin_ip}")
-  $public_endpoint = hiera('profile::keystone::endpoint::public',
+  $public_endpoint = hiera('profile::openstack::endpoint::public',
       "http://${public_ip}")
 
   $admin_email = hiera('profile::keystone::admin_email')
