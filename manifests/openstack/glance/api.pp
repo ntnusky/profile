@@ -3,7 +3,7 @@ class profile::openstack::glance::api {
   $region = hiera('profile::region')
   $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
-  $adminlb_ip = hiera('profile::haproxy::management::ipv4', false)
+  $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
 
   $glance_public_ip = hiera('profile::api::glance::public::ip')
   $glance_admin_ip = hiera('profile::api::glance::admin::ip')
