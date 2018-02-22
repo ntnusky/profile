@@ -8,9 +8,9 @@ class profile::openstack::keystone::haproxy::management {
 
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
-  $certificate = hiera('profile::haproxy::services::apicert', false)
-  $certfile = hiera('profile::haproxy::services::apicert::certfile',
-                    '/etc/ssl/private/haproxy.servicesapi.pem')
+  $certificate = hiera('profile::haproxy::management::apicert', false)
+  $certfile = hiera('profile::haproxy::services::management::certfile',
+                    '/etc/ssl/private/haproxy.managementapi.pem')
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
