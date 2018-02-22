@@ -31,7 +31,6 @@ class profile::openstack::glance::api {
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
-  require ::profile::baseconfig::firewall
   require ::profile::openstack::repo
   require ::profile::openstack::glance::database
   require ::profile::openstack::glance::firewall::server::api
