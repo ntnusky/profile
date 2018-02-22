@@ -1,6 +1,7 @@
 # Configures glance registry and backend
 class profile::openstack::glance::registry {
   $region = hiera('profile::region')
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
@@ -24,6 +25,10 @@ class profile::openstack::glance::registry {
   require ::profile::openstack::glance::database
   require ::profile::openstack::glance::firewall::server::registry
   require ::profile::openstack::repo
+
+  if($confhaproxy) {
+    contain ::profile::openstack::keystone::haproxy::backend::server
+  }
 
   class { '::glance::backend::rbd' :
     rbd_store_user => 'glance',

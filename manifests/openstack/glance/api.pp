@@ -1,6 +1,7 @@
 # Installs and configures the glance API
 class profile::openstack::glance::api {
   $region = hiera('profile::region')
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   $adminlb_ip = hiera('profile::haproxy::management::ipv4', false)
 
@@ -35,6 +36,10 @@ class profile::openstack::glance::api {
   require ::profile::openstack::glance::database
   require ::profile::openstack::glance::firewall::server::api
   contain ::profile::openstack::glance::keepalived
+
+  if($confhaproxy) {
+    contain ::profile::openstack::keystone::haproxy::backend::server
+  }
 
   class { '::glance::api':
     # Auth_strategy is blank to prevent glance::api from including
