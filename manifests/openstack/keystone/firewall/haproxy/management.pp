@@ -1,6 +1,7 @@
 # Opens the firewall for the keystone port from any source
 class profile::openstack::keystone::firewall::haproxy::management {
   require ::firewall
+  require ::profile::baseconfig::firewall
 
   $infra4_net1 = hiera('profile::networks::management::ipv4::prefix')
   $infra4_net2 = hiera('profile::networks::management::ipv4::prefix::extra', [])

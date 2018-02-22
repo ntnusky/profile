@@ -1,6 +1,7 @@
 # Opens the firewall for the keystone port from any source
 class profile::openstack::keystone::firewall::haproxy::services {
   require ::firewall
+  require ::profile::baseconfig::firewall
 
   firewall { '100 Keystone API - Public':
     proto  => 'tcp',
