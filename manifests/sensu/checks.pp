@@ -117,49 +117,49 @@ class profile::sensu::checks {
 
   # Openstack API checks
   sensu::check { 'openstack-identityv3-api':
-    command     => "check-http.rb -u https://${openstack_api}:5000/v3",
+    command     => "check-http.rb -u ${openstack_api}:5000/v3",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-identity-api':
-    command     => "check-http.rb -u https://${openstack_api}:5000/v2.0",
+    command     => "check-http.rb -u ${openstack_api}:5000/v2.0",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-network-api':
-    command     => "check-http.rb -u https://${openstack_api}:9696/v2.0 --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:9696/v2.0 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-image-api':
-    command     => "check-http.rb -u https://${openstack_api}:9292/v2 --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:9292/v2 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-orchestration-api':
-    command     => "check-http.rb -u https://${openstack_api}:8004/v1 --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:8004/v1 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-volumev3-api':
-    command     => "check-http.rb -u https://${openstack_api}:8776/v3 --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:8776/v3 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-compute-api':
-    command     => "check-http.rb -u https://${openstack_api}:8774/v2.1/v3 --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:8774/v2.1/v3 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-placement-api':
-    command     => "check-http.rb -u https://${openstack_api}:8778/placement --response-code 401",
+    command     => "check-http.rb -u ${openstack_api}:8778/placement --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
@@ -167,13 +167,13 @@ class profile::sensu::checks {
 
   # OpenStack Infrastructure checks
   sensu::check { 'openstack-floating-ip-rfc1918':
-    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u https://${openstack_api}:5000/v3 -s :::os.floating-rfc1918::: -w :::os.floating-rfc1918-warn|100::: -c :::os.floating-rfc1918-critical|50:::",
+    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u ${openstack_api}:5000/v3 -s :::os.floating-rfc1918::: -w :::os.floating-rfc1918-warn|100::: -c :::os.floating-rfc1918-critical|50:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-infra-checks'],
   }
   sensu::check { 'openstack-floating-ip-gua':
-    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u https://${openstack_api}:5000/v3 -s :::os.floating-gua::: -w :::os.floating-gua-warn|100::: -c :::os.floating-gua-critical|50:::",
+    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u ${openstack_api}:5000/v3 -s :::os.floating-gua::: -w :::os.floating-gua-warn|100::: -c :::os.floating-gua-critical|50:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-infra-checks'],
