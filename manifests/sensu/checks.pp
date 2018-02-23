@@ -1,12 +1,7 @@
 # Sensu check definitions
 class profile::sensu::checks {
 
-  $keystone_api = hiera('profile::api::keystone::public::ip')
-  $nova_api = hiera ('profile::api::nova::public::ip')
-  $neutron_api = hiera('profile::api::neutron::public::ip')
-  $cinder_api = hiera('profile::api::cinder::public::ip')
-  $glance_api = hiera('profile::api::glance::public::ip')
-  $heat_api = hiera('profile::api::heat::public::ip')
+  $openstack_api = hiera('profile::openstack::endpoint::public')
 
   $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])*60
   $puppetwarn = $puppet_runinterval*3
@@ -122,57 +117,63 @@ class profile::sensu::checks {
 
   # Openstack API checks
   sensu::check { 'openstack-identityv3-api':
-    command     => "check-http.rb -u http://${keystone_api}:5000/v3",
+    command     => "check-http.rb -u https://${openstack_api}:5000/v3",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-identity-api':
-    command     => "check-http.rb -u http://${keystone_api}:5000/v2.0",
+    command     => "check-http.rb -u https://${openstack_api}:5000/v2.0",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-network-api':
-    command     => "check-http.rb -u http://${neutron_api}:9696/v2.0 --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:9696/v2.0 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-image-api':
-    command     => "check-http.rb -u http://${glance_api}:9292/v2 --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:9292/v2 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-orchestration-api':
-    command     => "check-http.rb -u http://${heat_api}:8004/v1 --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:8004/v1 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-volumev3-api':
-    command     => "check-http.rb -u http://${cinder_api}:8776/v3 --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:8776/v3 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-compute-api':
-    command     => "check-http.rb -u http://${nova_api}:8774/v2.1/v3 --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:8774/v2.1/v3 --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
   sensu::check { 'openstack-placement-api':
-    command     => "check-http.rb -u http://${nova_api}:8778/placement --response-code 401",
+    command     => "check-http.rb -u https://${openstack_api}:8778/placement --response-code 401",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-api-checks' ],
   }
 
   # OpenStack Infrastructure checks
-  sensu::check { 'openstack-floating-ip':
-    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u http://${keystone_api}:5000/v3 -s :::os.floating-subnet::: -w :::os.floating-warn|100::: -c :::os.floating-critical|50:::",
+  sensu::check { 'openstack-floating-ip-rfc1918':
+    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u https://${openstack_api}:5000/v3 -s :::os.floating-rfc1918::: -w :::os.floating-rfc1918-warn|100::: -c :::os.floating-rfc1918-critical|50:::",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'os-infra-checks'],
+  }
+  sensu::check { 'openstack-floating-ip-gua':
+    command     => "/etc/sensu/plugins/extra/check_os_floating_ip.sh -p :::os.password::: -u https://${openstack_api}:5000/v3 -s :::os.floating-gua::: -w :::os.floating-gua-warn|100::: -c :::os.floating-gua-critical|50:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-infra-checks'],
