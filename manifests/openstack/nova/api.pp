@@ -20,6 +20,7 @@ class profile::openstack::nova::api {
   require ::profile::openstack::repo
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
+  require ::profile::openstack::nova::endpoint::api
   contain ::profile::openstack::nova::firewall::server
   contain ::profile::openstack::nova::keepalived
   contain ::profile::openstack::nova::placement
