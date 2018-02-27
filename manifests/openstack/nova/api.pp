@@ -38,7 +38,6 @@ class profile::openstack::nova::api {
   }
 
   class { '::nova::api':
-    api_bind_address                     => $nova_public_ip,
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db                              => $sync_db,
     sync_db_api                          => $sync_db,
