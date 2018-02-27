@@ -5,18 +5,20 @@ class profile::openstack::nova::placement {
   $region = hiera('profile::region')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
 
-  class { '::nova::placement':
-    password       => $placement_password,
-    auth_url       => "http://${keystone_admin_ip}:35357/v3",
-    os_region_name => $region,
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
+
+  contain ::profile::openstack::nova::endpoint::placement
+
+  if($confhaproxy) {
+    contain ::profile::openstack::glance::haproxy::backend::placement
   }
 
-  class { '::nova::keystone::auth_placement':
-    password     => $placement_password,
-    public_url    => "http://${nova_admin_ip}:8778/placement",
-    internal_url => "http://${nova_admin_ip}:8778/placement",
-    admin_url    => "http://${nova_admin_ip}:8778/placement",
-    region       => $region,
+  class { '::nova::placement':
+    password       => $placement_password,
+    auth_url       => "${keystone_admin}:35357/v3",
+    os_region_name => $region,
   }
 
   class { '::nova::wsgi::apache_placement':
