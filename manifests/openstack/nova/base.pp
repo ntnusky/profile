@@ -12,7 +12,7 @@ class profile::openstack::nova::base {
   $controller_management_addresses = hiera('controller::management::addresses')
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
   if(internal_endpoint) {
-    $glance_internal = "${glance_internal}:9292"
+    $glance_internal = "${internal_endpoint}:9292"
   } else {
     $oldapi = join([join($controller_management_addresses, ':9292,'),''], ':9292')
     $glance_internal = $oldapi
