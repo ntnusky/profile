@@ -41,10 +41,8 @@ class profile::openstack::heat::api {
   }
 
   class { '::heat::api':
-    bind_host => $heat_public_ip,
   }
 
   class { '::heat::api_cfn':
-    bind_host => $heat_public_ip,
   }
 }
