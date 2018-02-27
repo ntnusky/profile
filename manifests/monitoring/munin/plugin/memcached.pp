@@ -10,11 +10,14 @@ class profile::monitoring::munin::plugin::memcached {
 
   munin::plugin { 'memcached_rates':
     ensure => link,
+    target => 'memcached_',
   }
   munin::plugin { 'memcached_bytes':
     ensure => link,
+    target => 'memcached_',
   }
   munin::plugin { 'memcached_counters':
     ensure => link,
+    target => 'memcached_',
   }
 }
