@@ -37,7 +37,7 @@ class profile::openstack::glance::api {
   contain ::profile::openstack::glance::keepalived
 
   if($confhaproxy) {
-    contain ::profile::openstack::keystone::haproxy::backend::server
+    contain ::profile::openstack::glance::haproxy::backend::server
   }
 
   class { '::glance::api':

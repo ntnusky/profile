@@ -21,6 +21,10 @@ class profile::openstack::cinder::api {
   contain ::profile::openstack::cinder::firewall::server
   contain ::profile::openstack::cinder::keepalived
 
+  if($confhaproxy) {
+    contain ::profile::openstack::cinder::haproxy::backend::server
+  }
+
   $cinder_admin    = pick($admin_endpoint, "http://${cinder_admin_ip}")
   $cinder_internal = pick($internal_endpoint, "http://${cinder_admin_ip}")
   $cinder_public   = pick($public_endpoint, "http://${cinder_public_ip}")

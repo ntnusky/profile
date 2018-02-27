@@ -16,7 +16,7 @@ class profile::openstack::glance::haproxy::backend::oldmanagement {
       options           => 'check inter 2000 rise 2 fall 5',
     }
 
-    haproxy::balancermember { 'keystone-registry-static':
+    haproxy::balancermember { 'glance-registry-static':
       listening_service => 'bk_glance_registry',
       server_names      => $names,
       ipaddresses       => $addresses,
