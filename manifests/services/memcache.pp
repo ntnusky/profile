@@ -4,6 +4,7 @@ class profile::services::memcache {
   $management_if = hiera('profile::interfaces::management')
   $memcached_port = '11211'
   $installsensu = hiera('profile::sensu::install', true)
+  $installmunin = hiera('profile::munin::install', true)
   $use_keepalived = hiera('profile::memcache::keepalived', false)
 
   if ( $use_keepalived ) {
@@ -26,5 +27,8 @@ class profile::services::memcache {
 
   if ($installsensu) {
     include ::profile::sensu::plugin::memcached
+  }
+  if($installmunin) {
+    include ::profile::monitoring::munin::plugin::memcached
   }
 }
