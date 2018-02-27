@@ -1,7 +1,6 @@
 # Installs and configures Placement API
 class profile::openstack::nova::placement {
   $placement_password = hiera('profile::placement::keystone::password')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $region = hiera('profile::region')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
 
