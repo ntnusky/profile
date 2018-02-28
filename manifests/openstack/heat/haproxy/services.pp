@@ -44,7 +44,7 @@ class profile::openstack::heat::haproxy::services {
   }
 
   haproxy::frontend { 'ft_heat_public':
-    bind    => $bind_cfn,
+    bind    => $bind_api,
     mode    => 'http',
     options => $ft_options,
   }
