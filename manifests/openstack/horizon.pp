@@ -14,12 +14,10 @@ class profile::openstack::horizon {
   $server_name = hiera('profile::horizon::server_name')
   $django_secret = hiera('profile::horizon::django_secret')
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
-  $memcache_servers = hiera_array('profile::memcache::servers', undef)
 
-  # Should be removed:
-  $controller_api = hiera('controller::api::addresses')
-  $horizon_allowed_hosts = hiera('profile::horizon::allowed_hosts')
-  $horizon_server_aliases = hiera('profile::horizon::server_aliases')
+  # Try to retrieve memcache addresses.
+  $memcache_servers = hiera_array('profile::memcache::servers', false)
+  $memcache_server = hiera('profile::memcache::ip', false)
 
   include ::profile::services::apache::firewall
   require ::profile::openstack::repo
@@ -54,9 +52,16 @@ class profile::openstack::horizon {
     $keystone_url = "${keystone_base}:5000"
   }
 
+  # Determine which cacheservers to use
+  if(! $memcache_servers and ! $memcache_server) {
+    fail("${name} needs either a memcache ip, or a list over memcache servers")
+  } else {
+    $memcache = pick($memcache_servers, [$memcache_server,])
+  }
+
   class { '::horizon':
     allowed_hosts                => [$::fqdn, $server_name],
-    cache_server_ip              => $memcache_servers,
+    cache_server_ip              => $memcache,
     keystone_default_domain      => $ldap_name,
     keystone_multidomain_support => true,
     keystone_url                 => $keystone_url,
