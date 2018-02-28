@@ -64,11 +64,7 @@ class profile::openstack::horizon {
   if(! $memcache_servers and ! $memcache_server) {
     fail("${name} needs either a memcache ip, or a list over memcache servers")
   } else {
-    if($memcache_servers) {
-      $memcache = $memcache_servers[0]
-    } else {
-      $memcache = $memcache_server
-    }
+    $memcache = pick($memcache_servers, [$memcache_server,])
   }
 
   class { '::horizon':
