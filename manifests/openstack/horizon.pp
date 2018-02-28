@@ -69,6 +69,8 @@ class profile::openstack::horizon {
 
   class { '::horizon':
     allowed_hosts                => [$::fqdn, $server_name],
+    cache_backend                =>
+        'django.core.cache.backends.memcached.MemcachedCache',
     cache_server_ip              => $memcache,
     keystone_default_domain      => $ldap_name,
     keystone_multidomain_support => true,
