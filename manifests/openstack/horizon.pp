@@ -19,8 +19,8 @@ class profile::openstack::horizon {
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
 
   # Try to retrieve memcache addresses.
-  $memcache_servers = hiera_array('profile::memcache::servers', false)
-  $memcache_server = hiera('profile::memcache::ip', false)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_server = hiera('profile::memcache::ip', undef)
 
   include ::profile::services::apache::firewall
   require ::profile::openstack::repo
