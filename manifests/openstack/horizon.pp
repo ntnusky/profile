@@ -3,6 +3,9 @@ class profile::openstack::horizon {
   # Determine if SSL should be configured
   $ssl_cert = hiera('profile::horizon::ssl_cert', false)
 
+  # Determine if haproxy should be configured
+  $haproxy = hiera('profile::openstack::haproxy::configure::backend', true)
+
   # Try to retrieve IP-addresses for keystone and horizon.
   $horizon_ip = hiera('profile::api::horizon::public::ip', false)
   $keystone_ip = hiera('profile::api::keystone::public::ip', false)
@@ -21,6 +24,11 @@ class profile::openstack::horizon {
 
   include ::profile::services::apache::firewall
   require ::profile::openstack::repo
+
+  # If this server should be placed behind haproxy, make sure to configure it.
+  if($haproxy) {
+    include ::profile::openstack::horizon::haproxy::backend
+  }
 
   # If we should serve horizon over SSL:
   if($ssl_cert) {
