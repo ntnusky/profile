@@ -3,15 +3,15 @@ class profile::openstack::heat::firewall::haproxy {
   require ::profile::baseconfig::firewall
 
   firewall { '500 accept heat API':
-    proto       => 'tcp',
-    dport       => '8004',
-    action      => 'accept',
+    proto  => 'tcp',
+    dport  => '8004',
+    action => 'accept',
   }
 
   firewall { '500 accept heat cloudformation API':
-    proto       => 'tcp',
-    dport       => '8000',
-    action      => 'accept',
+    proto  => 'tcp',
+    dport  => '8000',
+    action => 'accept',
   }
 
   firewall { '500 v6 accept heat API':

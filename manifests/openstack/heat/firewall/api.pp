@@ -5,16 +5,16 @@ class profile::openstack::heat::firewall::api {
   $management_net = hiera('profile::networks::management::ipv4::prefix')
 
   firewall { '500 accept heat API':
-    source      => $management_net,
-    proto       => 'tcp',
-    dport       => '8004',
-    action      => 'accept',
+    source => $management_net,
+    proto  => 'tcp',
+    dport  => '8004',
+    action => 'accept',
   }
 
   firewall { '500 accept heat cloudformation API':
-    source      => $management_net,
-    proto       => 'tcp',
-    dport       => '8000',
-    action      => 'accept',
+    source => $management_net,
+    proto  => 'tcp',
+    dport  => '8000',
+    action => 'accept',
   }
 }

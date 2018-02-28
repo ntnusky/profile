@@ -11,9 +11,16 @@ class profile::openstack::heat::base {
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
 
+  # Misc other settings
   $region = hiera('profile::region')
-
   $memcached_ip = hiera('profile::memcache::ip')
+
+  # RabbitMQ
+  $rabbit_ip = hiera('profile::rabbitmq::ip')
+  $rabbit_user = hiera('profile::rabbitmq::rabbituser')
+  $rabbit_pass = hiera('profile::rabbitmq::rabbitpass')
+
+  # Database-connection
   $mysql_pass = hiera('profile::mysql::heatpass')
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://heat:${mysql_pass}@${mysql_ip}/heat"

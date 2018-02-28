@@ -4,7 +4,7 @@ class profile::openstack::heat::engine {
   $heat_admin_ip = hiera('profile::api::heat::admin::ip')
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
   $heat_internal  = pick($internal_endpoint, "http://${heat_admin_ip}")
-  
+
   # Retrieve other settings:
   $auth_encryption_key = hiera('profile::heat::auth_encryption_key')
 
