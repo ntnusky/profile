@@ -63,7 +63,7 @@ class profile::openstack::horizon {
   if($memcache_servers) {
     $memcache = {
       'cache_backend'   => 'django.core.cache.backends.memcached.MemcachedCache',
-      'cache_server_ip' => $memcache_server
+      'cache_server_ip' => $memcache_servers,
     }
   } else {
     $memcache = {}
