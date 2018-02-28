@@ -19,8 +19,7 @@ class profile::openstack::horizon {
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
 
   # Try to retrieve memcache addresses.
-  $memcache_servers = hiera_array('profile::memcache::servers', undef)
-  $memcache_server = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', false)
 
   include ::profile::services::apache::firewall
   require ::profile::openstack::repo
@@ -61,17 +60,17 @@ class profile::openstack::horizon {
   }
 
   # Determine which cacheservers to use
-  if(! $memcache_servers and ! $memcache_server) {
-    fail("${name} needs either a memcache ip, or a list over memcache servers")
+  if($memcache_servers) {
+    $memcache = {
+      'cache_backend'   => 'django.core.cache.backends.memcached.MemcachedCache',
+      'cache_server_ip' => $memcache_server
+    }
   } else {
-    $memcache = pick($memcache_servers, [$memcache_server,])
+    $memcache = {}
   }
 
   class { '::horizon':
     allowed_hosts                => [$::fqdn, $server_name],
-    cache_backend                =>
-        'django.core.cache.backends.memcached.MemcachedCache',
-    cache_server_ip              => $memcache,
     keystone_default_domain      => $ldap_name,
     keystone_multidomain_support => true,
     keystone_url                 => $keystone_url,
@@ -80,6 +79,6 @@ class profile::openstack::horizon {
     server_aliases               => [$::fqdn, $server_name],
     servername                   => $server_name,
     session_timeout              => 7200,
-    *                            => $ssl_settings,
+    *                            => merge($ssl_settings, $memcache),
   }
 }
