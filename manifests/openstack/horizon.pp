@@ -14,7 +14,7 @@ class profile::openstack::horizon {
   $server_name = hiera('profile::horizon::server_name')
   $django_secret = hiera('profile::horizon::django_secret')
   $ldap_name = hiera('profile::keystone::ldap_backend::name')
-  $memcache_servers = hiera_array('profile::memcache::servers')
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
 
   # Should be removed:
   $controller_api = hiera('controller::api::addresses')
