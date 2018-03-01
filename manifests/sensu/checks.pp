@@ -11,7 +11,7 @@ class profile::sensu::checks {
   contain ::profile::sensu::checks::rabbitmq
   contain ::profile::sensu::checks::redis
 
-  contain ::profile::sensu::checks::openstack::adminpi
+  contain ::profile::sensu::checks::openstack::adminapi
   contain ::profile::sensu::checks::openstack::floatingip
   contain ::profile::sensu::checks::openstack::publicapi
 
