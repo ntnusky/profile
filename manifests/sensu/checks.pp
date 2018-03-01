@@ -4,7 +4,7 @@ class profile::sensu::checks {
   contain ::profile::sensu::checks::base
   contain ::profile::sensu::checks::ceph
   contain ::profile::sensu::checks::dell
-  ccntain ::profile::sensu::checks::haproxy
+  contain ::profile::sensu::checks::haproxy
   contain ::profile::sensu::checks::memcached
   contain ::profile::sensu::checks::mysql
   contain ::profile::sensu::checks::physical
