@@ -1,5 +1,6 @@
 # HTTPS certificate checks
-class profile::sensu::checks::certs {
+# And web availability checks
+class profile::sensu::checks::web {
 
   $domains = hiera_hash('profile::sensu::checks::tlsexpiry')
 
@@ -9,6 +10,12 @@ class profile::sensu::checks::certs {
       interval    => 300,
       standalone  => false,
       subscribers => [ 'tls-expiry' ],
+    }
+    sensu::check { "web-${displayname}":
+      command     => "check-http.rb -r -u https://${domain}"
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'web' ],
     }
   }
 }
