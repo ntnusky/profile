@@ -12,7 +12,7 @@ class profile::sensu::checks::web {
       subscribers => [ 'tls-expiry' ],
     }
     sensu::check { "web-${displayname}":
-      command     => "check-http.rb -r -u https://${domain}"
+      command     => "check-http.rb -r -u https://${domain}",
       interval    => 300,
       standalone  => false,
       subscribers => [ 'web' ],
