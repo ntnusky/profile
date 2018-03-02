@@ -3,6 +3,7 @@ class profile::sensu::checks {
 
   contain ::profile::sensu::checks::base
   contain ::profile::sensu::checks::ceph
+  contain ::profile::sensu::checks::certs
   contain ::profile::sensu::checks::dell
   contain ::profile::sensu::checks::haproxy
   contain ::profile::sensu::checks::memcached
