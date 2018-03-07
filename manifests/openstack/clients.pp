@@ -7,4 +7,5 @@ class profile::openstack::clients {
   include ::nova::client
   include ::neutron::client
   include ::glance::client
+  include ::heat::client
 }
