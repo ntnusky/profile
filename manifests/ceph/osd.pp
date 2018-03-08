@@ -10,6 +10,7 @@ class profile::ceph::osd {
   $bootstrap_osd_key = hiera('profile::ceph::osd_bootstrap_key')
   $replicas =  hiera('profile::ceph::replicas', undef)
   $journal_size =  hiera('profile::ceph::journal::size', 10000)
+  $bluestore_cache_size = hiera('profile::ceph::bluestore::cache:size', undef)
 
   $cluster_network = hiera('profile::ceph::cluster_network', undef)
   $public_network = hiera('profile::ceph::public_network', undef)
@@ -26,7 +27,8 @@ class profile::ceph::osd {
     cluster_network       => $cluster_network,
   }
   ceph_config {
-    'global/osd_journal_size': value => $journal_size;
+    'global/osd_journal_size': value     => $journal_size;
+    'global/bluestore_cache_size': value => $bluestore_cache_size;
   }
   ceph::key {'client.bootstrap-osd':
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',
