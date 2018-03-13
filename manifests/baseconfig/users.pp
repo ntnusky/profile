@@ -21,11 +21,11 @@ class profile::baseconfig::users {
   }
 
   file { '/root/.bashrc':
-    ensure => 'file',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
-    source => 'puppet:///modules/profile/.bashrc',
+    ensure  => 'file',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    content => template('profile/bashrc.erb'),
   }
 
   file { '/root/.mailrc':
