@@ -23,13 +23,19 @@ class profile::ceph::base {
   # Install the ceph repos first
   require ::ceph::repo
 
+  if($cluster_networks) {
+    $cluster_networks_real = join($cluster_networks, ', ')
+  } else {
+    $cluster_networks_real = undef
+  }
+
   class { 'ceph':
     fsid                  => $fsid,
     mon_initial_members   => $initial_names,
     mon_host              => $initial_addresses,
     osd_pool_default_size => $replicas,
     public_network        => join($public_networks, ', '),
-    cluster_network       => join($cluster_networks, ', '),
+    cluster_network       => $cluster_networks_real,
   }
 
   ceph_config {
