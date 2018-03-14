@@ -65,9 +65,9 @@ case "$PRODLEVEL" in
 esac
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${COLOR}m\]\u@$(hostname -f)\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;${COLOR}m\]\u@$(hostname)\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@$(hostname -f):\w\$ '
+    PS1='${debian_chroot:+($debian_chroot)}\u@$(hostname):\w\$ '
 fi
 unset color_prompt force_color_prompt
 
