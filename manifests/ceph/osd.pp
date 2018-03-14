@@ -6,6 +6,7 @@ class profile::ceph::osd {
   $osds = hiera('profile::ceph::osds')
 
   require ::profile::ceph::base
+  include ::profile::ceph::firewall::daemons
 
   ceph::key {'client.bootstrap-osd':
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',

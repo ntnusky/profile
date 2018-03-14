@@ -16,6 +16,8 @@ class profile::ceph::monitor {
   }
 
   require ::profile::ceph::base
+  include ::profile::ceph::firewall::daemons
+  include ::profile::ceph::firewall::monitor
 
   ceph::mgr { $::hostname :
     key        => $mgr_key,
