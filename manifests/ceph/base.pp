@@ -28,8 +28,8 @@ class profile::ceph::base {
     mon_initial_members   => $initial_names,
     mon_host              => $initial_addresses,
     osd_pool_default_size => $replicas,
-    public_network        => $public_networks,
-    cluster_network       => $cluster_networks,
+    public_network        => join($public_networks, ', '),
+    cluster_network       => join($cluster_networks, ', '),
   }
 
   ceph_config {
