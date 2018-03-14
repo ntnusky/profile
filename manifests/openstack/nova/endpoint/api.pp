@@ -8,9 +8,9 @@ class profile::openstack::nova::endpoint::api {
   $keystone_public_ip = hiera('profile::api::keystone::public::ip')
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
 
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
-  $public_endpoint = hiera('profile::openstack::endpoint::public', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
 
   $nova_admin    = pick($admin_endpoint, "http://${nova_admin_ip}")
   $nova_internal = pick($internal_endpoint, "http://${nova_admin_ip}")

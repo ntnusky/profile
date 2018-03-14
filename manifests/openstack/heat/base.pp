@@ -4,8 +4,8 @@ class profile::openstack::heat::base {
   $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip')
 
   # Retrieve api urls, if they exist. 
-  $admin_endpoint    = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
+  $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
 
   # Determine which endpoint to use
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")

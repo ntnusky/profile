@@ -10,9 +10,9 @@ class profile::openstack::cinder::api {
   $cinder_admin_ip = hiera('profile::api::cinder::admin::ip')
   $memcached_ip = hiera('profile::memcache::ip')
 
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
-  $public_endpoint = hiera('profile::openstack::endpoint::public', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
 
   require ::profile::baseconfig::firewall
   require ::profile::openstack::repo

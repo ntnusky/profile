@@ -11,7 +11,7 @@ class profile::openstack::horizon {
   $keystone_ip = hiera('profile::api::keystone::public::ip', false)
 
   # Try to retrieve endpoint-names
-  $keystone_endpoint = hiera('profile::openstack::endpoint::internal', false)
+  $keystone_endpoint = hiera('profile::openstack::endpoint::internal', undef)
 
   # Horizon settings
   $server_name = hiera('profile::horizon::server_name')

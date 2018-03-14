@@ -10,8 +10,8 @@ class profile::openstack::nova::api {
   $region = hiera('profile::region')
 
   # Determine the keystone endpoint.
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
   $keystone_public_ip = hiera('profile::api::keystone::public::ip')
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")

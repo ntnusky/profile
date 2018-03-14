@@ -3,9 +3,9 @@ class profile::openstack::glance::registry {
   $region = hiera('profile::region')
   $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
-  $public_endpoint = hiera('profile::openstack::endpoint::public', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
 
   $keystone_public_ip = hiera('profile::api::keystone::public::ip')
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')

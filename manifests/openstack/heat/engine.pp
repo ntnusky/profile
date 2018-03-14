@@ -2,7 +2,7 @@
 class profile::openstack::heat::engine {
   # Determine which endpoint to use
   $heat_admin_ip = hiera('profile::api::heat::admin::ip')
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
   $heat_internal  = pick($internal_endpoint, "http://${heat_admin_ip}")
 
   # Retrieve other settings:

@@ -11,9 +11,9 @@ class profile::openstack::glance::api {
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $keystone_password = hiera('profile::glance::keystone::password')
 
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
-  $public_endpoint = hiera('profile::openstack::endpoint::public', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
 
   $glance_admin    = pick($admin_endpoint, "http://${glance_admin_ip}")
   $glance_internal = pick($internal_endpoint, "http://${glance_admin_ip}")

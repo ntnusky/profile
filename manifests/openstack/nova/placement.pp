@@ -4,7 +4,7 @@ class profile::openstack::nova::placement {
   $region = hiera('profile::region')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
 
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', false)
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
 

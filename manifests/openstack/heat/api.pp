@@ -5,9 +5,9 @@ class profile::openstack::heat::api {
   $heat_public_ip = hiera('profile::api::heat::public::ip')
 
   # Retrieve api urls, if they exist. 
-  $admin_endpoint    = hiera('profile::openstack::endpoint::admin', false)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', false)
-  $public_endpoint   = hiera('profile::openstack::endpoint::public', false)
+  $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint   = hiera('profile::openstack::endpoint::public', undef)
 
   # Determine which endpoint to use
   $heat_admin     = pick($admin_endpoint, "http://${heat_admin_ip}")
