@@ -60,7 +60,7 @@ class profile::monitoring::munin::plugin::postgresql {
       }
       munin::plugin { "postgres_scans_${database}":
         ensure => link,
-        targt  => 'postgres_scans_',
+        target  => 'postgres_scans_',
         config => [ 'user postgres' ],
       }
     }
