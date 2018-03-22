@@ -20,6 +20,32 @@ define profile::baseconfig::configureinterface {
     }
   }
 
+  # Add extra routes based on hieradata
+  $routes = hiera_hash("profile::interfaces::${name}::routes", false)
+  if($routes) {
+    $extranetids = $routes.map | $net, $gw | {
+      ip_address($net)
+    }
+    $extramasks = $routes.map | $net, $gw | {
+      ip_netmask($net)
+    }
+    $extragws = $routes.map | $net, $gw | {
+      ip_address($gw)
+    }
+    $extrafamilies = $routes.map | $net, $gw | {
+      'inet'
+    }
+    $extratables = $routes.map | $net, $gw | {
+      undef
+    }
+  } else {
+    $extranetids = []
+    $extramasks = []
+    $extragws = []
+    $extrafamilies = []
+    $extratables = []
+  }
+
   $table_id = hiera("profile::interfaces::${name}::tableid", false)
   if ($table_id) {
     if($::facts['networking']['interfaces'][$name]['ip']) {
@@ -64,15 +90,23 @@ define profile::baseconfig::configureinterface {
       table_id => $table_id,
     }->
     network::route { $name:
-      ipaddress => concat($v4netids, $v6netids),
-      netmask   => concat($v4masks, $v6masks),
-      gateway   => concat($v4gateways, $v6gateways),
-      table     => concat($v4tables, $v6tables),
-      family    => concat($v4families, $v6families),
+      ipaddress => concat($v4netids, $v6netids, $extranetids),
+      netmask   => concat($v4masks, $v6masks, $extramasks),
+      gateway   => concat($v4gateways, $v6gateways, $extragws),
+      table     => concat($v4tables, $v6tables, $extratables),
+      family    => concat($v4families, $v6families, $extrafamilies),
     }->
     profile::baseconfig::networkrule { $name:
       iprule => concat($v4rules, $v6rules),
       family => concat($v4rulef, $v6rulef),
+    }
+  } else {
+    network::route { $name:
+      ipaddress => $extranetids,
+      netmask   => $extramasks,
+      gateway   => $extragws,
+      table     => $extratables,
+      family    => $extrafamilies,
     }
   }
 }

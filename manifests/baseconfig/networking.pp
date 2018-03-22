@@ -7,17 +7,6 @@ class profile::baseconfig::networking {
     profile::baseconfig::configureinterface { $if_to_configure: }
   }
 
-  # Add extra routes based on hieradata
-  $routes = hiera_hash('profile::networking::routes', [])
-  $routes.each | $network, $gateway | {
-    $netid = ip_address($network)
-    network::route { "RouteTo-${netid}":
-      ipaddress => [$netid],
-      netmask   => [ip_netmask($network)],
-      gateway   => [$gateway],
-    }
-  }
-
   # Disable the rpfilter if that is desirable. This is needed if we are not
   # using multiple routing-tables on hosts where there is more than one nic.
   $rp_filter = hiera('profile::networking::rpfilter', false)
