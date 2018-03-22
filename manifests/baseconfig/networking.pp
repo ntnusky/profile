@@ -11,9 +11,9 @@ class profile::baseconfig::networking {
   $routes = hiera_hash('profile::networking::routes', [])
   $routes.each | $network, $gateway | {
     network::route { "RouteTo-${network}":
-      ipaddress => ip_address($network),
-      netmask   => ip_netmask($network),
-      gateway   => $gateway,
+      ipaddress => [ip_address($network)],
+      netmask   => [ip_netmask($network)],
+      gateway   => [$gateway],
     }
   }
 
