@@ -10,8 +10,9 @@ class profile::baseconfig::networking {
   # Add extra routes based on hieradata
   $routes = hiera_hash('profile::networking::routes', [])
   $routes.each | $network, $gateway | {
-    network::route { "RouteTo-${network}":
-      ipaddress => [ip_address($network)],
+    $netid = ip_address($network)
+    network::route { "RouteTo-${netid}":
+      ipaddress => [$netid],
       netmask   => [ip_netmask($network)],
       gateway   => [$gateway],
     }
