@@ -36,7 +36,7 @@ define profile::baseconfig::configureinterface {
       'inet'
     }
     $extratables = $routes.map | $net, $gw | {
-      undef
+      'main'
     }
   } else {
     $extranetids = []
