@@ -46,6 +46,13 @@ class profile::baseconfig::firewall::pre {
     }
   }
 
+  firewall { '005 accept DHCP':
+    proto  => 'udp',
+    dport  => 68,
+    action => 'accept',
+  }
+
+
   # Default firewall rules
   firewall { '000 ipv6 accept all icmp':
     proto    => 'ipv6-icmp',
