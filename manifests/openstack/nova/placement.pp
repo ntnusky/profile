@@ -3,6 +3,7 @@ class profile::openstack::nova::placement {
   $placement_password = hiera('profile::placement::keystone::password')
   $region = hiera('profile::region')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')

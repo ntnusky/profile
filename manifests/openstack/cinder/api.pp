@@ -1,6 +1,7 @@
 # Installs and configures the cinder API
 class profile::openstack::cinder::api {
   $region = hiera('profile::region')
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   $keystone_password = hiera('profile::cinder::keystone::password')
 

@@ -1,5 +1,6 @@
 # Installs and configures the nova API.
 class profile::openstack::nova::api {
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
   $memcache_ip = hiera('profile::memcache::ip')
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
