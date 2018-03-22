@@ -7,6 +7,7 @@ class profile::ceph::osd {
 
   require ::profile::ceph::base
   include ::profile::ceph::firewall::daemons
+  include ::profile::ceph::firewall::clusternet
 
   ceph::key {'client.bootstrap-osd':
     keyring_path => '/var/lib/ceph/bootstrap-osd/ceph.keyring',
