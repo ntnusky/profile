@@ -6,6 +6,7 @@ class profile::services::rabbitmq {
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
   $vrid = hiera('profile::rabbitmq::vrrp::id')
   $vrpri = hiera('profile::rabbitmq::vrrp::priority')
+  $vrinterval = hiera('profile::rabbitmq::vrrp::interval',2)
 
   # Rabbit credentials
   $rabbituser = hiera('profile::rabbitmq::rabbituser')
@@ -90,8 +91,9 @@ class profile::services::rabbitmq {
 
   # Configure keepalived
   keepalived::vrrp::script { 'check_rabbitmq':
-    script =>
+    script   =>
       "bash -c '[[ $(/usr/sbin/rabbitmqctl status | grep -c rabbit) -ge 2 ]]'",
+    interval => $vrinterval,
   }
   keepalived::vrrp::instance { 'public-rabbitmq':
     interface         => $if_management,

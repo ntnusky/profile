@@ -79,8 +79,8 @@ fi
 
 capacity=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $1}')
 capacityU=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $2}')
-data=$(ceph -s | grep objects | cut -d ',' -f 2 | awk '{ print $1 }')
-dataU=$(ceph -s | grep objects | cut -d ',' -f 2 | awk '{ print $2 }')
+data=$(ceph -s | grep objects: | cut -d ',' -f 2 | awk '{ print $1 }')
+dataU=$(ceph -s | grep objects: | cut -d ',' -f 2 | awk '{ print $2 }')
 used=$(ceph -s | grep avail | awk '{ print $2}')
 usedU=$(ceph -s | grep avail | awk '{ print $3}')
 

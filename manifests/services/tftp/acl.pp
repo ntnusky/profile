@@ -24,4 +24,11 @@ class profile::services::tftp::acl {
     user    => 'root',
     minute  => '*',
   }
+
+  file { '/root/acl':
+    ensure => link,
+    target => '/var/lib/tftpboot/acl',
+    owner  => 'root',
+    group  => 'root',
+  }
 }

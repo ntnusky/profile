@@ -8,6 +8,6 @@ class profile::services::mysql::haproxy::backend {
     server_names      => $::hostname,
     ipaddresses       => $ip,
     ports             => '3306',
-    options           => 'check',
+    options           => 'backup check',
   }
 }

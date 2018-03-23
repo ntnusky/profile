@@ -6,7 +6,7 @@ class profile::openstack::neutron::agents {
   $dns_servers = hiera('profile::nova::dns')
 
   require ::profile::openstack::neutron::base
-  require ::profile::openstack::neutron::firewall
+  require ::profile::openstack::neutron::firewall::l3agent
   require ::profile::openstack::repo
 
   class { '::neutron::agents::metadata':

@@ -1,63 +1,45 @@
 # Installs and configures the nova API.
 class profile::openstack::nova::api {
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
   $memcache_ip = hiera('profile::memcache::ip')
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
   $nova_public_ip = hiera('profile::api::nova::public::ip')
   $nova_admin_ip = hiera('profile::api::nova::admin::ip')
-
-  # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
 
   $nova_password = hiera('profile::nova::keystone::password')
   $nova_secret = hiera('profile::nova::sharedmetadataproxysecret')
   $sync_db = hiera('profile::nova::sync_db')
   $region = hiera('profile::region')
 
+  # Determine the keystone endpoint.
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
+  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
+
   require ::profile::openstack::repo
   require ::profile::openstack::nova::base
   require ::profile::openstack::nova::database
-  require ::profile::openstack::nova::firewall
+  require ::profile::openstack::nova::endpoint::api
+  contain ::profile::openstack::nova::firewall::server
   contain ::profile::openstack::nova::keepalived
   contain ::profile::openstack::nova::placement
   include ::profile::openstack::nova::munin::api
 
-  firewall { '500 accept incoming nova admin tcp':
-    source      => $source_firewall_management_net,
-    destination => $keystone_admin_ip,
-    proto       => 'tcp',
-    dport       => '8774',
-    action      => 'accept',
-  }
-
-  firewall { '500 accept incoming nova public tcp':
-    destination => $keystone_public_ip,
-    proto       => 'tcp',
-    dport       => '8774',
-    action      => 'accept',
-  }
-
-  class { '::nova::keystone::auth':
-    password        => $nova_password,
-    public_url      => "http://${nova_public_ip}:8774/v2/%(tenant_id)s",
-    internal_url    => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
-    admin_url       => "http://${nova_admin_ip}:8774/v2/%(tenant_id)s",
-    public_url_v3   => "http://${nova_public_ip}:8774/v3",
-    internal_url_v3 => "http://${nova_admin_ip}:8774/v3",
-    admin_url_v3    => "http://${nova_admin_ip}:8774/v3",
-    region          => $region,
+  if($confhaproxy) {
+    contain ::profile::openstack::glance::haproxy::backend::api
   }
 
   class { '::nova::keystone::authtoken':
-    auth_url          => "http://${keystone_admin_ip}:35357/",
-    auth_uri          => "http://${keystone_public_ip}:5000/",
+    auth_url          => "${keystone_admin}:35357/",
+    auth_uri          => "${keystone_internal}:5000/",
     password          => $nova_password,
     memcached_servers => $memcache_ip,
     region_name       => $region,
   }
 
   class { '::nova::api':
-    api_bind_address                     => $nova_public_ip,
     neutron_metadata_proxy_shared_secret => $nova_secret,
     sync_db                              => $sync_db,
     sync_db_api                          => $sync_db,

@@ -28,6 +28,7 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
       'ssl-default-bind-options'   => $ssloptions,
       'ssl-default-server-ciphers' => $sslciphers,
       'ssl-default-server-options' => $ssloptions,
+      'stats'                      => 'socket /var/lib/haproxy/stats mode 600 level admin',
     },
   }
 

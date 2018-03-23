@@ -1,56 +1,16 @@
 # Installs and configures the keystone identity API.
 class profile::openstack::keystone {
-  $region = hiera('profile::region')
-  $admin_ip = hiera('profile::api::keystone::admin::ip')
-  $public_ip = hiera('profile::api::keystone::public::ip')
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
-  $admin_email = hiera('profile::keystone::admin_email')
-  $admin_pass = hiera('profile::keystone::admin_password')
-
-  # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
-
-  require ::profile::openstack::repo
-  require ::profile::openstack::keystone::base
   require ::profile::baseconfig::firewall
+  require ::profile::openstack::keystone::base
+  contain ::profile::openstack::keystone::endpoint
+  contain ::profile::openstack::keystone::firewall::server
   contain ::profile::openstack::keystone::keepalived
   contain ::profile::openstack::keystone::ldap
+  require ::profile::openstack::repo
 
-  firewall { '500 accept incoming admin keystone tcp':
-    source      => $source_firewall_management_net,
-    proto       => 'tcp',
-    destination => $admin_ip,
-    dport       => [ '5000', '35357' ],
-    action      => 'accept',
-  }
-
-  firewall { '500 accept incoming public keystone tcp':
-    source      => $source_firewall_management_net,
-    proto       => 'tcp',
-    destination => $admin_ip,
-    dport       => '5000',
-    action      => 'accept',
-  }
-
-
-  class { '::keystone::roles::admin':
-    email        => $admin_email,
-    password     => $admin_pass,
-    admin_tenant => 'admin',
-    require      => Class['::keystone'],
-  }
-
-  class { '::keystone::endpoint':
-    public_url   => "http://${public_ip}:5000",
-    admin_url    => "http://${admin_ip}:35357",
-    internal_url => "http://${admin_ip}:5000",
-    region       => $region,
-    require      => Class['::keystone'],
-  }
-
-  class { '::keystone::wsgi::apache':
-    servername       => $public_ip,
-    servername_admin => $admin_ip,
-    ssl              => false,
+  if($confhaproxy) {
+    contain ::profile::openstack::keystone::haproxy::backend::server
   }
 }

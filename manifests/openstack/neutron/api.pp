@@ -5,12 +5,25 @@ class profile::openstack::neutron::api {
   $mysql_ip = hiera('profile::mysql::ip')
   $memcached_ip = hiera('profile::memcache::ip')
 
-  # IP Addresses
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  # Retrieve service IP Addresses
+  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip')
   $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $nova_public_ip = hiera('profile::api::nova::public::ip')
-  $neutron_admin_ip = hiera('profile::api::neutron::admin::ip')
-  $neutron_public_ip = hiera('profile::api::neutron::public::ip')
+  $nova_admin_ip      = hiera('profile::api::nova::admin::ip')
+  $neutron_admin_ip   = hiera('profile::api::neutron::admin::ip')
+  $neutron_public_ip  = hiera('profile::api::neutron::public::ip')
+
+  # Retrieve api urls, if they exist. 
+  $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)
+  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
+  $public_endpoint   = hiera('profile::openstack::endpoint::public', undef)
+
+  # Determine which endpoint to use
+  $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
+  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
+  $nova_internal     = pick($internal_endpoint, "http://${nova_admin_ip}")
+  $neutron_admin     = pick($admin_endpoint, "http://${neutron_admin_ip}")
+  $neutron_internal  = pick($internal_endpoint, "http://${neutron_admin_ip}")
+  $neutron_public    = pick($public_endpoint, "http://${neutron_public_ip}")
 
   # Openstack settings
   $nova_password = hiera('profile::nova::keystone::password')
@@ -21,44 +34,25 @@ class profile::openstack::neutron::api {
   # Database connection string
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
-  # Firewall settings
-  $source_firewall_management_net = hiera('profile::networks::management::ipv4::prefix')
-
   require ::profile::openstack::neutron::base
-  require ::profile::baseconfig::firewall
   contain ::profile::openstack::neutron::database
+  contain ::profile::openstack::neutron::firewall::l3agent
   contain ::profile::openstack::neutron::keepalived
-
-  firewall { '500 accept incoming admin neutron tcp':
-    source      => $source_firewall_management_net,
-    destination => $neutron_admin_ip,
-    proto       => 'tcp',
-    dport       => '9696',
-    action      => 'accept',
-  }
-
-  firewall { '500 accept incoming public neutron tcp':
-    source      => $source_firewall_management_net,
-    destination => $neutron_public_ip,
-    proto       => 'tcp',
-    dport       => '9696',
-    action      => 'accept',
-  }
 
   # Configure the neutron API endpoint in keystone
   class { '::neutron::keystone::auth':
     password     => $neutron_password,
-    public_url   => "http://${neutron_public_ip}:9696",
-    internal_url => "http://${neutron_admin_ip}:9696",
-    admin_url    => "http://${neutron_admin_ip}:9696",
+    public_url   => "${neutron_public}:9696",
+    internal_url => "${neutron_internal}:9696",
+    admin_url    => "${neutron_admin}:9696",
     region       => $region,
   }
 
   # Configure the service user neutron uses
   class { '::neutron::keystone::authtoken':
     password          => $neutron_password,
-    auth_url          => "http://${keystone_admin_ip}:35357/",
-    auth_uri          => "http://${keystone_public_ip}:5000/",
+    auth_url          => "${keystone_admin}:35357/",
+    auth_uri          => "${keystone_internal}:5000/",
     memcached_servers => $memcached_ip,
     region_name       => $region,
   }
@@ -74,8 +68,8 @@ class profile::openstack::neutron::api {
   # Configure nova notifications system
   class { '::neutron::server::notifications':
     password    => $nova_password,
-    auth_url    => "http://${keystone_admin_ip}:35357",
+    auth_url    => "${keystone_admin}:35357",
     region_name => $region,
-    nova_url    => "http://${nova_public_ip}:8774/v2",
+    nova_url    => "${nova_internal}:8774/v2",
   }
 }

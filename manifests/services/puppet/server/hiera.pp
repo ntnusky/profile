@@ -34,4 +34,11 @@ class profile::services::puppet::server::hiera {
     user    => 'root',
     minute  => '*',
   }
+
+  file { '/root/hieradata':
+    ensure => link,
+    target => '/etc/puppetlabs/puppet/data',
+    owner  => 'root',
+    group  => 'root',
+  }
 }

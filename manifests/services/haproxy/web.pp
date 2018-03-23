@@ -7,8 +7,8 @@ class profile::services::haproxy::web {
   $domains = hiera_hash("profile::haproxy::${profile}::domains")
   $ipv4 = hiera("profile::haproxy::${profile}::ipv4")
   $ipv6 = hiera("profile::haproxy::${profile}::ipv6", false)
-  $certificate = hiera('profile::haproxy::webcert', false)
-  $certfile = hiera('profile::haproxy::webcert::certfile',
+  $certificate = hiera("profile::haproxy::${profile}::webcert", false)
+  $certfile = hiera("profile::haproxy::${profile}::webcert::certfile",
                     '/etc/ssl/private/haproxy.pem')
   $nossl = hiera("profile::haproxy::${profile}::nossl", false)
 
