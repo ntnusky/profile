@@ -100,7 +100,7 @@ define profile::baseconfig::configureinterface {
       iprule => concat($v4rules, $v6rules),
       family => concat($v4rulef, $v6rulef),
     }
-  } else {
+  } elsif ($routes) {
     network::route { $name:
       ipaddress => $extranetids,
       netmask   => $extramasks,
