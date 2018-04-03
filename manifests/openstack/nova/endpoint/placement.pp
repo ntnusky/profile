@@ -14,7 +14,7 @@ class profile::openstack::nova::endpoint::placement {
 
   $nova_admin    = pick($admin_endpoint, "http://${nova_admin_ip}")
   $nova_internal = pick($internal_endpoint, "http://${nova_admin_ip}")
-  $nova_public   = pick($public_endpoint, "http://${nova_public_ip}")
+  $nova_public   = pick($internal_endpoint, "http://${nova_public_ip}")
 
   $placement_password = hiera('profile::placement::keystone::password')
 
