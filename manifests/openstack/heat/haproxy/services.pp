@@ -14,9 +14,11 @@ class profile::openstack::heat::haproxy::services {
 
   $ft_options = {
     'default_backend' => 'bk_heat_public',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
   $ft_cfn_options = {
     'default_backend' => 'bk_heat_cfn_public',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
 
   if($certificate) {

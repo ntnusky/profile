@@ -38,9 +38,11 @@ class profile::openstack::heat::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_heat_api_admin',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
   $ft_cfn_options = {
     'default_backend' => 'bk_heat_cfn_admin',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
 
   haproxy::frontend { 'ft_heat_api_admin':
