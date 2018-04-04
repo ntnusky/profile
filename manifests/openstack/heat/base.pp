@@ -27,6 +27,14 @@ class profile::openstack::heat::base {
 
   require ::profile::openstack::repo
 
+  # If heat is behind a proxy, make sure to parse the headers from the proxy to
+  # create correct urls internally.
+  if $keystone_admin =~ /^https.*/ {
+    $extra_options = { 'enable_proxy_headers_parsing' => true, }
+  } else {
+    $extra_options = {}
+  }
+
   class { '::heat':
     database_connection => $database_connection,
     region_name         => $region,
@@ -39,5 +47,6 @@ class profile::openstack::heat::base {
     keystone_user       => 'heat',
     keystone_password   => $mysql_pass,
     memcached_servers   => $memcached_ip,
+    *                   => $extra_options,
   }
 }
