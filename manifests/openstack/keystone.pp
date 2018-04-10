@@ -15,7 +15,7 @@ class profile::openstack::keystone {
   if($confhaproxy) {
     contain ::profile::openstack::keystone::haproxy::backend::server
   }
-  
+
   # Only configure keepalived if we actually have a shared IP for keystone. We
   # use this in the old controller-infrastructure. New infrastructures should be
   # based on haproxy instead.

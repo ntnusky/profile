@@ -23,7 +23,6 @@ class profile::openstack::keystone::base {
   $cache_servers = hiera_array('profile::memcache::servers', false)
 
   require ::profile::openstack::repo
-  require ::profile::openstack::keystone::database
   include ::profile::openstack::keystone::tokenflush
 
   if($cache_servers) {
