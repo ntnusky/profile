@@ -1,8 +1,8 @@
 # Performs the base configuration of keystone 
 class profile::openstack::keystone::base {
   $region = hiera('profile::region')
-  $admin_ip = hiera('profile::api::keystone::admin::ip')
-  $public_ip = hiera('profile::api::keystone::public::ip')
+  $admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
+  $public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
 
   $admin_endpoint = hiera('profile::openstack::endpoint::admin',
       "http://${admin_ip}")
