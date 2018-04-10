@@ -6,7 +6,6 @@ class profile::openstack::keystone::database {
   $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
   $mysql_ip = pick($mysql_new, $mysql_old)
 
-  require ::profile::mysql::cluster
   require ::profile::openstack::repo
 
   class { '::keystone::db::mysql':
