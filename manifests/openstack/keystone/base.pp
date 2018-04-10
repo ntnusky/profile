@@ -14,7 +14,10 @@ class profile::openstack::keystone::base {
   $admin_token = hiera('profile::keystone::admin_token')
 
   $mysql_password = hiera('profile::mysql::keystonepass')
-  $mysql_ip = hiera('profile::mysql::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
+
   $db_con = "mysql://keystone:${mysql_password}@${mysql_ip}/keystone"
 
   $cache_servers = hiera_array('profile::memcache::servers', false)

@@ -2,7 +2,9 @@
 class profile::openstack::keystone::database {
   $password = hiera('profile::mysql::keystonepass')
   $allowed_hosts = hiera('profile::mysql::allowed_hosts')
-  $mysql_ip = hiera('profile::mysql::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
 
   require ::profile::mysql::cluster
   require ::profile::openstack::repo
