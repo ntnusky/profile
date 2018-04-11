@@ -1,43 +1,54 @@
 # Installs and configures the glance API
 class profile::openstack::glance::api {
-  $region = hiera('profile::region')
-  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
-
-  $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
-
-  $glance_public_ip = hiera('profile::api::glance::public::ip')
-  $glance_admin_ip = hiera('profile::api::glance::admin::ip')
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
-  $keystone_password = hiera('profile::glance::keystone::password')
-
-  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
-  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
-
-  $glance_admin    = pick($admin_endpoint, "http://${glance_admin_ip}")
-  $glance_internal = pick($internal_endpoint, "http://${glance_admin_ip}")
-  $glance_public   = pick($public_endpoint, "http://${glance_public_ip}")
-  $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
-  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
-  $keystone_public   = pick($public_endpoint, "http://${keystone_public_ip}")
-
-  $memcached_ip = hiera('profile::memcache::ip')
-
-  $management_if = hiera('profile::interfaces::management')
-  $management_ip = hiera("profile::interfaces::${management_if}::address")
-
+  # Determine where the database is
   $mysql_pass = hiera('profile::mysql::glancepass')
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
-  require ::profile::openstack::repo
-  require ::profile::openstack::glance::database
-  require ::profile::openstack::glance::firewall::server::api
-  contain ::profile::openstack::glance::keepalived
+  # Openstack parameters
+  $region = hiera('profile::region')
+  $keystone_password = hiera('profile::glance::keystone::password')
 
+  # Determine which address to use for the glance registry
+  $management_if = hiera('profile::interfaces::management')
+  $management_ip = hiera("profile::interfaces::${management_if}::address")
+  $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
+
+  # Determine where the keystone service is located.
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
+  $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
+  $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
+  $keystone_public   = pick($public_endpoint, "http://${keystone_public_ip}")
+
+  # Retrieve addresses for the memcached servers, either the old IP or the new
+  # list of hosts.
+  $memcached_ip = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+
+  # Variables to determine if haproxy or keepalived should be configured.
+  $glance_admin_ip = hiera('profile::api::glance::admin::ip', false)
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
+
+  require ::profile::openstack::repo
+  contain ::profile::openstack::glance::ceph
+  include ::profile::openstack::glance::endpoint
+  contain ::profile::openstack::glance::firewall::server::api
+  include ::profile::openstack::glance::sudo
+  include ::profile::openstack::glance::rabbit
+
+  # If this server should be placed behind haproxy, export a haproxy
+  # configuration snippet.
   if($confhaproxy) {
     contain ::profile::openstack::glance::haproxy::backend::server
+  }
+
+  # Only configure keepalived if we actually have a shared IP for glance. We
+  # use this in the old controller-infrastructure. New infrastructures should be
+  # based on haproxy instead.
+  if($glance_admin_ip) {
+    contain ::profile::openstack::glance::keepalived
   }
 
   class { '::glance::api':
@@ -57,16 +68,8 @@ class profile::openstack::glance::api {
     password          => $keystone_password,
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
-    memcached_servers => $memcached_ip,
+    memcached_servers => pick($memcache_servers, $memcached_ip),
     region_name       => $region,
-  }
-
-  class  { '::glance::keystone::auth':
-    password     => $keystone_password,
-    public_url   => "${glance_public}:9292",
-    internal_url => "${glance_internal}:9292",
-    admin_url    => "${glance_admin}:9292",
-    region       => $region,
   }
 
   glance_api_config {

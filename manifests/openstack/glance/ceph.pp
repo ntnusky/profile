@@ -2,7 +2,7 @@
 class profile::openstack::glance::ceph {
   $glance_key = hiera('profile::ceph::glance_key')
 
-  exec { '/usr/bin/ceph osd pool create images 128' :
+  exec { '/usr/bin/ceph osd pool create images 32' :
     unless  => '/usr/bin/ceph osd pool get images size',
   }
 

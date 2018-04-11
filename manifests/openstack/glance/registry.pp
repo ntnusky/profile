@@ -15,15 +15,19 @@ class profile::openstack::glance::registry {
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
   $keystone_public   = pick($public_endpoint, "http://${keystone_public_ip}")
 
-  $memcached_ip = hiera('profile::memcache::ip')
+  # Retrieve addresses for the memcached servers, either the old IP or the new
+  # list of hosts.
+  $memcached_ip = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+
   $mysql_pass = hiera('profile::mysql::glancepass')
   $mysql_ip = hiera('profile::mysql::ip')
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
-  require ::profile::openstack::glance::base
   contain ::profile::openstack::glance::ceph
-  require ::profile::openstack::glance::database
-  require ::profile::openstack::glance::firewall::server::registry
+  contain ::profile::openstack::glance::firewall::server::registry
+  include ::profile::openstack::glance::sudo
+  include ::profile::openstack::glance::rabbit
   require ::profile::openstack::repo
 
   if($confhaproxy) {
@@ -46,7 +50,7 @@ class profile::openstack::glance::registry {
     password          => $keystone_password,
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
-    memcached_servers => $memcached_ip,
+    memcached_servers => pick($memcache_servers, $memcached_ip),
     region_name       => $region,
   }
 }
