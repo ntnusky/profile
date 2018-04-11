@@ -17,8 +17,8 @@ class profile::openstack::glance::api {
   $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
 
   # Determine where the keystone service is located.
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
