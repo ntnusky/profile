@@ -33,7 +33,7 @@ class profile::openstack::glance::registry {
   require ::profile::openstack::repo
 
   if($confhaproxy) {
-    contain ::profile::openstack::keystone::haproxy::backend::server
+    contain ::profile::openstack::glance::haproxy::backend::server
   }
 
   class { '::glance::backend::rbd' :
