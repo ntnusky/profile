@@ -13,7 +13,7 @@ class profile::openstack::glance::api {
 
   # Determine which address to use for the glance registry
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = hiera("profile::interfaces::${management_if}::address")
+  $management_ip = hiera("profile::interfaces::${management_if}::address", undef)
   $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
 
   # Determine where the keystone service is located.
