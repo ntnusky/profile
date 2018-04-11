@@ -1,16 +1,15 @@
 # Configures glance registry and backend
 class profile::openstack::glance::registry {
   $region = hiera('profile::region')
+  $keystone_password = hiera('profile::glance::keystone::password')
   $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
+  # Determine the correct endpoint for keystone
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
   $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
-
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
-  $keystone_password = hiera('profile::glance::keystone::password')
-
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', false)
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', false)
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
   $keystone_public   = pick($public_endpoint, "http://${keystone_public_ip}")
@@ -20,8 +19,11 @@ class profile::openstack::glance::registry {
   $memcached_ip = hiera('profile::memcache::ip', undef)
   $memcache_servers = hiera_array('profile::memcache::servers', undef)
 
+  # Determine how we connect to the database
   $mysql_pass = hiera('profile::mysql::glancepass')
-  $mysql_ip = hiera('profile::mysql::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
   contain ::profile::openstack::glance::ceph

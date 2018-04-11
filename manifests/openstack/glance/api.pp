@@ -2,7 +2,9 @@
 class profile::openstack::glance::api {
   # Determine where the database is
   $mysql_pass = hiera('profile::mysql::glancepass')
-  $mysql_ip = hiera('profile::mysql::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
   $database_connection = "mysql://glance:${mysql_pass}@${mysql_ip}/glance"
 
   # Openstack parameters
