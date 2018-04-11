@@ -11,6 +11,10 @@ class profile::openstack::keystone::endpoint {
   $public_endpoint = hiera('profile::openstack::endpoint::public',
       "http://${public_ip}")
 
+  # We need to define the endpoints on the keystone hosts, so include the other
+  # endpoints here.
+  include ::profile::openstack::glance::endpoint
+
   class { '::keystone::endpoint':
     public_url   => "${public_endpoint}:5000",
     admin_url    => "${admin_endpoint}:35357",

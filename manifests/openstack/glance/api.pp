@@ -35,7 +35,6 @@ class profile::openstack::glance::api {
 
   require ::profile::openstack::repo
   contain ::profile::openstack::glance::ceph
-  include ::profile::openstack::glance::endpoint
   contain ::profile::openstack::glance::firewall::server::api
   include ::profile::openstack::glance::sudo
   include ::profile::openstack::glance::rabbit
