@@ -9,12 +9,13 @@ class profile::services::info {
   contain ::profile::services::info::maillist
 
   apache::vhost { "${vhost} http":
-    servername  => $vhost,
-    port        => '80',
-    ip          => concat([], $management_ipv4, $management_ipv6),
-    add_listen  => false,
-    docroot     => "/var/www/${vhost}",
-    directories => [
+    servername        => $vhost,
+    port              => '80',
+    ip                => concat([], $management_ipv4, $management_ipv6),
+    add_listen        => false,
+    docroot           => "/var/www/${vhost}",
+    access_log_format => 'forwarded',
+    directories       => [
       { path    => '/mail',
         options => '-Indexes',
       },
