@@ -1,6 +1,7 @@
 #!/bin/bash
 
-LOCALFILE="/var/www/html/skyhigh-mail.txt"
+VHOST=<%= scope.call_function('lookup', ['profile::services::info::maillist::fqdn']) %>
+LOCALFILE="/var/www/$VHOST/mail/mail.txt"
 TODAY=$(date +%F)
 OS_PASSWORD=<%= scope.call_function('lookup', ['profile::keystone::admin_password']) %>
 OS_AUTH_URL=<%= scope.call_function('lookup', ['profile::openstack::endpoint::public']) %>:5000/v3
