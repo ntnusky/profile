@@ -2,9 +2,8 @@
 
 LOCALFILE="/var/www/html/skyhigh-mail.txt"
 TODAY=$(date +%F)
-AUTH_HOST=<%= scope.function_hiera(['profile::api::keystone::admin::ip']) %>
-OS_PASSWORD=<%= scope.function_hiera(['profile::keystone::admin_password']) %>
-OS_AUTH_URL="http://${AUTH_HOST}:5000/v3"
+OS_PASSWORD=<%= scope.call_function('lookup', ['profile::keystone::admin_password']) %>
+OS_AUTH_URL=<%= scope.call_function('lookup', ['profile::openstack::endpoint::public']) %>:5000/v3
 OSCMD="openstack --os-username admin --os-password $OS_PASSWORD --os-project-name admin --os-auth-url $OS_AUTH_URL --os-identity-api-version 3"
 
 declare -a mails=()
