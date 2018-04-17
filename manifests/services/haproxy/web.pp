@@ -13,7 +13,7 @@ class profile::services::haproxy::web {
   $nossl = hiera("profile::haproxy::${profile}::nossl", false)
 
   $acl = $domains.map |String $domain, String $name| {
-    "host_${name} hdr_dom(host) -m str ${domain}"
+    "host_${name} hdr_dom(host) -m beg ${domain}"
   }
   $backend = $domains.map |String $domain, String $name| {
     "bk_${name} if host_${name}"
@@ -43,7 +43,7 @@ class profile::services::haproxy::web {
   if($certificate) {
     if ($nossl) {
       $redirect = { 'redirect' =>
-        "scheme https code 301 if !{ ssl_fc } ! { hdr_dom(host) -m str ${nossl} }"
+        "scheme https code 301 if !{ ssl_fc } ! { hdr_dom(host) -m beg ${nossl} }"
       }
     } else {
       $redirect = { 'redirect' => 'scheme https code 301 if !{ ssl_fc }' }
