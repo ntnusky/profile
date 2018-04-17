@@ -5,7 +5,7 @@ class profile::services::info {
   $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
   $auth_password = lookup('profile::info::auth_password')
-  $auth_user = lookup('profile::info::auth_user', 'sympa')
+  $auth_user = lookup('profile::info::auth_user', String, 'first', 'sympa')
   $pw_hash = apache_pw_hash($auth_password)
 
   require ::profile::services::apache
