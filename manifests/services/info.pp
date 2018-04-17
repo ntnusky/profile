@@ -20,7 +20,7 @@ class profile::services::info {
     access_log_format => 'forwarded',
     directories       => [
       {
-        path           => '/mail',
+        path           => "/var/www/${vhost}/mail",
         options        => '-Indexes',
         auth_type      => 'Basic',
         auth_name      => 'Maillist auth',
@@ -32,7 +32,9 @@ class profile::services::info {
 
   file { "/var/www/${vhost}/.htpasswd":
     ensure  => file,
-    mode    => '0400',
+    owner   => 'root',
+    group   => 'www-data',
+    mode    => '0440',
     content => "${auth_user}:${pw_hash}",
   }
 }
