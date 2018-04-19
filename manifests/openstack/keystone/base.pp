@@ -40,20 +40,27 @@ class profile::openstack::keystone::base {
     $keystone_opts = {}
   }
 
+  if $admin_endpoint =~ /^https.*/ {
+    $proxy_headers = true
+  } else {
+    $proxy_headers = false
+  }
+
   class { '::keystone':
-    admin_token             => $admin_token,
-    admin_password          => $admin_pass,
-    database_connection     => $db_con,
-    debug                   => true,
-    enabled                 => false,
-    admin_bind_host         => '0.0.0.0',
-    admin_endpoint          => "${admin_endpoint}:35357/",
-    public_endpoint         => "${public_endpoint}:5000/",
-    token_provider          => 'uuid',
-    enable_fernet_setup     => true,
-    enable_credential_setup => true,
-    using_domain_config     => true,
-    *                       => $keystone_opts,
+    admin_token                  => $admin_token,
+    admin_password               => $admin_pass,
+    database_connection          => $db_con,
+    debug                        => true,
+    enabled                      => false,
+    admin_bind_host              => '0.0.0.0',
+    admin_endpoint               => "${admin_endpoint}:35357/",
+    public_endpoint              => "${public_endpoint}:5000/",
+    token_provider               => 'uuid',
+    enable_fernet_setup          => true,
+    enable_credential_setup      => true,
+    enable_proxy_headers_parsing => $proxy_headers,
+    using_domain_config          => true,
+    *                            => $keystone_opts,
   }
 
   class { '::keystone::roles::admin':
