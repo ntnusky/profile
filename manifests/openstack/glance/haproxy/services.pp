@@ -14,6 +14,7 @@ class profile::openstack::glance::haproxy::services {
 
   $ft_options = {
     'default_backend' => 'bk_glance_public',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
 
   if($certificate) {
