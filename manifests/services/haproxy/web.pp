@@ -26,6 +26,7 @@ class profile::services::haproxy::web {
       'forwardfor',
       'http-server-close',
     ],
+    'reqadd'      => 'X-Forwarded-Proto:\ https if { ssl_fc }',
   }
 
   $bindv4 = {
