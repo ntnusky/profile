@@ -13,8 +13,10 @@ class profile::openstack::keystone::endpoint {
 
   # We need to define the endpoints on the keystone hosts, so include the other
   # endpoints here.
+  include ::profile::openstack::cinder::endpoint
   include ::profile::openstack::glance::endpoint
 
+  # Defining the keystone endpoint
   class { '::keystone::endpoint':
     public_url   => "${public_endpoint}:5000",
     admin_url    => "${admin_endpoint}:35357",

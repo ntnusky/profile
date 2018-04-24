@@ -11,7 +11,7 @@ class profile::openstack::cinder::ceph {
     secret  => $ceph_key,
     cap_mon => 'allow r',
     cap_osd =>
-      'allow class-read object_prefix rbd_children, allow rwx pool=cinder',
+      'allow class-read object_prefix rbd_children, allow rwx pool=volumes',
     inject  => true,
   }
 }
