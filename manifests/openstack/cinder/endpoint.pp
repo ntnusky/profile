@@ -5,8 +5,8 @@ class profile::openstack::cinder::endpoint {
   $keystone_password = hiera('profile::cinder::keystone::password')
 
   # Determine the endpoint addresses
-  $cinder_public_ip = hiera('profile::api::cinder::public::ip')
-  $cinder_admin_ip = hiera('profile::api::cinder::admin::ip')
+  $cinder_public_ip = hiera('profile::api::cinder::public::ip', '127.0.0.1')
+  $cinder_admin_ip = hiera('profile::api::cinder::admin::ip', '127.0.0.1')
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
   $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
