@@ -40,9 +40,11 @@ class profile::openstack::glance::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_glance_api_admin',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
   $ft_reg_options = {
     'default_backend' => 'bk_glance_registry',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
 
   haproxy::frontend { 'ft_glance_api_admin':

@@ -4,13 +4,9 @@
 #
 # -p Password for admin user in admin project
 # -u URL to keystone v3 public API
-# -s Name of external subnet
+# -s Name of external network
 # -w Warning threshold - free floating IPs. Defaults to 100
 # -c Critical threshold - free floating IPs. Defaults to 50
-
-function getPoolSize {
-  echo "(2^(32-$1))-3" | bc
-}
 
 while getopts "p:u:s:w:c:" opts; do
   case $opts in
@@ -22,11 +18,15 @@ while getopts "p:u:s:w:c:" opts; do
   esac
 done
 
+export OS_USER_DOMAIN_NAME="Default"
 export OS_PROJECT_NAME="admin"
 export OS_USERNAME="admin"
 export OS_PASSWORD=$password
 export OS_AUTH_URL=$url
 export OS_IDENTITY_API_VERSION=3
+
+projectid=$(openstack project show $OS_PROJECT_NAME -f value -c id)
+export OS_PROJECT_ID=$projectid
 
 if [ -z $warning ]; then
   warning=100
@@ -36,19 +36,18 @@ if [ -z $critical ]; then
   critical=50
 fi
 
-total=$(openstack ip floating list -f value | wc -l)
-netmask=$(openstack subnet show $subnet -f value -c cidr | cut -d'/' -f2)
+stats=$(neutron net-ip-availability-list --network-name $subnet -f value -c total_ips -c used_ips)
+total=$(echo $stats | cut -d' ' -f1)
+used=$(echo $stats | cut -d' ' -f2)
 
-if [ ! -z $total ] && [ ! -z $netmask ]; then
-  poolsize=$(getPoolSize $netmask)
+if [ ! -z "${stats}" ]; then
+  free=$(($total - $used))
 else
   msg="UNKNOWN"
   exitcode=3
   echo "$msg - No response from API"
   exit $exitcode
 fi
-
-free=$(($poolsize - $total))
 
 if [ $free -le $critical ]; then
   msg="CRITICAL"
@@ -61,5 +60,5 @@ else
   exitcode=0
 fi
 
-echo "$msg - $free of $poolsize floating IPs available in pool."
+echo "$msg - $free of $total floating IPs available in pool."
 exit $exitcode

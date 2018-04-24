@@ -36,6 +36,7 @@ class profile::services::dashboard::apache {
         require => 'all granted',
       },
     ],
+    access_log_format   => 'forwarded',
     custom_fragment     => $fragment,
     wsgi_script_aliases => { '/' => '/opt/shiftleader/dashboard/wsgi.py' },
     aliases             => [{
@@ -57,6 +58,7 @@ class profile::services::dashboard::apache {
           require => 'all granted',
         },
       ],
+      access_log_format   => 'forwarded',
       custom_fragment     => $fragment,
       wsgi_script_aliases => { '/' => '/opt/shiftleader/dashboard/wsgi.py' },
       aliases             => [{

@@ -38,9 +38,11 @@ class profile::openstack::keystone::haproxy::management {
 
   $ft_admin_options = {
     'default_backend' => 'bk_keystone_admin',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
   $ft_internal_options = {
     'default_backend' => 'bk_keystone_internal',
+    'reqadd'          => 'X-Forwarded-Proto:\ https',
   }
 
   haproxy::frontend { 'ft_keystone_admin':

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VHOST=<%= scope.call_function('lookup', ['profile::services::info::maillist::fqdn']) %>
+VHOST=<%= scope.call_function('lookup', ['profile::info::maillist::fqdn']) %>
 LOCALFILE="/var/www/$VHOST/mail/mail.txt"
 TODAY=$(date +%F)
 OS_PASSWORD=<%= scope.call_function('lookup', ['profile::keystone::admin_password']) %>
