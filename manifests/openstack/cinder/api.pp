@@ -31,12 +31,11 @@ class profile::openstack::cinder::api {
   }
 
   class { '::cinder::api':
-    # Auth_strategy is blank to prevent cinder::api from including
+    # Auth_strategy is false to prevent cinder::api from including
     # ::cinder::keystone::authtoken.
-    auth_strategy       => '',
+    auth_strategy       => false,
     enabled             => true,
     default_volume_type => 'Normal',
-    keystone_password   => $keystone_password,
   }
 
   class { '::cinder::keystone::authtoken':
