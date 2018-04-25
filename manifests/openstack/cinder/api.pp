@@ -17,11 +17,16 @@ class profile::openstack::cinder::api {
   # list of hosts.
   $memcached_ip = hiera('profile::memcache::ip', undef)
   $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
 
+  include ::cinder::db::sync
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
   contain ::profile::openstack::cinder::firewall::server
-  include ::cinder::db::sync
+  include ::profile::services::memcache::pythonclient
 
   if($keystone_admin_ip) {
     contain ::profile::openstack::cinder::keepalived
@@ -44,7 +49,7 @@ class profile::openstack::cinder::api {
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
     password          => $keystone_password,
-    memcached_servers => pick($memcache_servers, $memcached_ip),
+    memcached_servers => $memcache,
     region_name       => $region,
   }
 }
