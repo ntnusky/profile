@@ -3,6 +3,8 @@
 class profile::openstack::cinder::ceph {
   $ceph_key = hiera('profile::ceph::nova_key')
 
+  require ::profile::ceph::client
+
   ceph_config {
     'client.nova/key': value => $ceph_key;
   }

@@ -34,6 +34,7 @@ class profile::openstack::cinder::api {
     # Auth_strategy is false to prevent cinder::api from including
     # ::cinder::keystone::authtoken.
     auth_strategy       => false,
+    keystone_enabled    => false,
     enabled             => true,
     default_volume_type => 'Normal',
   }
