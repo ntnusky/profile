@@ -28,6 +28,10 @@ class profile::openstack::glance::api {
   # list of hosts.
   $memcached_ip = hiera('profile::memcache::ip', undef)
   $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
 
   # Variables to determine if haproxy or keepalived should be configured.
   $glance_admin_ip = hiera('profile::api::glance::admin::ip', false)
@@ -38,6 +42,7 @@ class profile::openstack::glance::api {
   contain ::profile::openstack::glance::firewall::server::api
   include ::profile::openstack::glance::sudo
   include ::profile::openstack::glance::rabbit
+  include ::profile::services::memcache::pythonclient
 
   # If this server should be placed behind haproxy, export a haproxy
   # configuration snippet.
@@ -73,7 +78,7 @@ class profile::openstack::glance::api {
     password          => $keystone_password,
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
-    memcached_servers => pick($memcache_servers, $memcached_ip),
+    memcached_servers => $memcache,
     region_name       => $region,
   }
 
