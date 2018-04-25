@@ -36,6 +36,7 @@ class profile::openstack::cinder::api {
     auth_strategy       => '',
     enabled             => true,
     default_volume_type => 'Normal',
+    keystone_password   => $keystone_password,
   }
 
   class { '::cinder::keystone::authtoken':
