@@ -21,6 +21,7 @@ class profile::openstack::cinder::api {
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
   contain ::profile::openstack::cinder::firewall::server
+  include ::cinder::db::sync
 
   if($keystone_admin_ip) {
     contain ::profile::openstack::cinder::keepalived
