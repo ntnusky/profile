@@ -15,6 +15,7 @@ class profile::openstack::keystone::endpoint {
   # endpoints here.
   include ::profile::openstack::cinder::endpoint
   include ::profile::openstack::glance::endpoint
+  include ::profile::openstack::neutron::endpoint
 
   # Defining the keystone endpoint
   class { '::keystone::endpoint':

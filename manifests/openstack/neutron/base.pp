@@ -7,7 +7,6 @@ class profile::openstack::neutron::base {
   $rabbit_ip = hiera('profile::rabbitmq::ip')
 
   require ::profile::openstack::repo
-
   include ::profile::openstack::neutron::sudo
 
   class { '::neutron':
