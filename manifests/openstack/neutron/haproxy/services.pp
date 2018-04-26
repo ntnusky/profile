@@ -12,14 +12,17 @@ class profile::openstack::neutron::haproxy::services {
   $certfile = hiera('profile::haproxy::services::apicert::certfile',
                     '/etc/ssl/private/haproxy.servicesapi.pem')
 
-  $ft_options = {
-    'default_backend' => 'bk_neutron_public',
-  }
-
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
+  }
+
+  $ft_options = {
+    'default_backend' => 'bk_neutron_public',
+    'reqadd'          => $proto,
   }
 
   if($ipv6) {

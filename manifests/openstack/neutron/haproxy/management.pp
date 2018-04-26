@@ -14,8 +14,10 @@ class profile::openstack::neutron::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -31,6 +33,7 @@ class profile::openstack::neutron::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_neutron_api_admin',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_neutron_api_admin':
