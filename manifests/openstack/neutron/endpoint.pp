@@ -1,8 +1,8 @@
 # Configures the neutron endpoint in keystone
 class profile::openstack::neutron::endpoint {
   # Retrieve service IP Addresses
-  $neutron_admin_ip   = hiera('profile::api::neutron::admin::ip')
-  $neutron_public_ip  = hiera('profile::api::neutron::public::ip')
+  $neutron_admin_ip   = hiera('profile::api::neutron::admin::ip', '127.0.0.1')
+  $neutron_public_ip  = hiera('profile::api::neutron::public::ip', '127.0.0.1')
 
   # Retrieve api urls, if they exist. 
   $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)

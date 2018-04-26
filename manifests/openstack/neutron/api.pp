@@ -16,8 +16,8 @@ class profile::openstack::neutron::api {
   }
 
   # Retrieve service IP Addresses
-  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip')
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
+  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
   $nova_admin_ip      = hiera('profile::api::nova::admin::ip', false)
 
   # Retrieve api urls, if they exist. 
