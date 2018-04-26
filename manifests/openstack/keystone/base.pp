@@ -21,6 +21,7 @@ class profile::openstack::keystone::base {
   $db_con = "mysql://keystone:${mysql_password}@${mysql_ip}/keystone"
 
   $cache_servers = hiera_array('profile::memcache::servers', false)
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   require ::profile::openstack::repo
   include ::profile::openstack::keystone::tokenflush
@@ -41,12 +42,6 @@ class profile::openstack::keystone::base {
     $keystone_opts = {}
   }
 
-  if $admin_endpoint =~ /^https.*/ {
-    $proxy_headers = true
-  } else {
-    $proxy_headers = false
-  }
-
   class { '::keystone':
     admin_token                  => $admin_token,
     admin_password               => $admin_pass,
@@ -59,7 +54,7 @@ class profile::openstack::keystone::base {
     token_provider               => 'uuid',
     enable_fernet_setup          => true,
     enable_credential_setup      => true,
-    enable_proxy_headers_parsing => $proxy_headers,
+    enable_proxy_headers_parsing => $confhaproxy,
     using_domain_config          => true,
     *                            => $keystone_opts,
   }

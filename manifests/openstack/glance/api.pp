@@ -48,9 +48,6 @@ class profile::openstack::glance::api {
   # configuration snippet.
   if($confhaproxy) {
     contain ::profile::openstack::glance::haproxy::backend::server
-    $proxy_headers = true
-  } else {
-    $proxy_headers = false
   }
 
   # Only configure keepalived if we actually have a shared IP for glance. We
@@ -65,7 +62,7 @@ class profile::openstack::glance::api {
     # ::glance::api::authtoken.
     auth_strategy                => '',
     database_connection          => $database_connection,
-    enable_proxy_headers_parsing => $proxy_headers,
+    enable_proxy_headers_parsing => $confhaproxy,
     keystone_password            => $keystone_password,
     known_stores                 => ['glance.store.rbd.Store'],
     os_region_name               => $region,

@@ -36,12 +36,6 @@ class profile::openstack::cinder::api {
     contain ::profile::openstack::cinder::haproxy::backend::server
   }
 
-  if $admin_endpoint =~ /^https.*/ {
-    $proxy_headers = true
-  } else {
-    $proxy_headers = false
-  }
-
   class { '::cinder::api':
     # Auth_strategy is false to prevent cinder::api from including
     # ::cinder::keystone::authtoken.
@@ -49,7 +43,7 @@ class profile::openstack::cinder::api {
     keystone_enabled             => false,
     enabled                      => true,
     default_volume_type          => 'Normal',
-    enable_proxy_headers_parsing => $proxy_headers,
+    enable_proxy_headers_parsing => $confhaproxy,
   }
 
   class { '::cinder::keystone::authtoken':
