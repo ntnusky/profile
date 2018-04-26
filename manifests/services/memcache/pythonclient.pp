@@ -1,6 +1,9 @@
 # installs the python-memchace client
 class profile::services::memcache::pythonclient {
-  ensure_packages ( ['python-memcache'], {
-    'ensure' => 'present',
-  })
+  $install = hiera('profile::memcache::pythonclient::install', true)
+  if $install {
+    ensure_packages ( ['python-memcache'], {
+      'ensure' => 'present',
+    })
+  }
 }

@@ -25,7 +25,6 @@ class profile::openstack::keystone::base {
 
   require ::profile::openstack::repo
   include ::profile::openstack::keystone::tokenflush
-  include ::profile::services::memcache::pythonclient
 
   if($cache_servers) {
     $memcache = $cache_servers.map | $server | {
