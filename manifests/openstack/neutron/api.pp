@@ -8,7 +8,7 @@ class profile::openstack::neutron::api {
   $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
 
   # Retrieve the addresses for the memcached servers.
-  $memcached_ip = hiera('profile::memcache::ip')
+  $memcached_ip = hiera('profile::memcache::ip', undef)
   $memcache_servers = hiera_array('profile::memcache::servers', undef)
   $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
   $memcache = $memcache_servers_real.map | $server | {
