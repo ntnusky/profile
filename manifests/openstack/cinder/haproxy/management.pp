@@ -14,8 +14,10 @@ class profile::openstack::cinder::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -31,6 +33,7 @@ class profile::openstack::cinder::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_cinder_api_admin',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_cinder_api_admin':

@@ -16,8 +16,10 @@ class profile::openstack::glance::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -40,11 +42,11 @@ class profile::openstack::glance::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_glance_api_admin',
-    'reqadd'          => 'X-Forwarded-Proto:\ https',
+    'reqadd'          => $proto,
   }
   $ft_reg_options = {
     'default_backend' => 'bk_glance_registry',
-    'reqadd'          => 'X-Forwarded-Proto:\ https',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_glance_api_admin':
