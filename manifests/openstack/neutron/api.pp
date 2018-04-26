@@ -40,6 +40,7 @@ class profile::openstack::neutron::api {
   $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   require ::profile::openstack::neutron::base
+  include ::profile::services::memcache::pythonclient
 
   if($nova_admin_ip) {
     contain ::profile::openstack::neutron::keepalived
