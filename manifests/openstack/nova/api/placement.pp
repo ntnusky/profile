@@ -9,7 +9,7 @@ class profile::openstack::nova::api::placement {
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
 
   if($confhaproxy) {
-    contain ::profile::openstack::glance::haproxy::backend::placement
+    contain ::profile::openstack::nova::haproxy::backend::placement
   }
 
   class { '::nova::placement':
