@@ -19,7 +19,7 @@ class profile::openstack::nova::api::placement {
   }
 
   class { '::nova::wsgi::apache_placement':
-    api_port   => 8778,
-    ssl        => false,
+    api_port => 8778,
+    ssl      => false,
   }
 }

@@ -5,7 +5,7 @@ class profile::openstack::nova::base {
   $mysql_old = hiera('profile::mysql::ip', undef)
   $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
   $mysql_ip = pick($mysql_new, $mysql_old)
-  
+
   # Mysql connectionstrings
   $db_con = "mysql://nova:${mysql_password}@${mysql_ip}/nova"
   $api_db_con = "mysql://nova_api:${mysql_password}@${mysql_ip}/nova_api"
