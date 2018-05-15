@@ -14,8 +14,10 @@ class profile::openstack::nova::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -38,9 +40,11 @@ class profile::openstack::nova::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_nova_api_admin',
+    'reqadd'          => $proto,
   }
   $ft_place_options = {
     'default_backend' => 'bk_nova_place_admin',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_nova_api_admin':

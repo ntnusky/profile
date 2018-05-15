@@ -4,7 +4,7 @@ class profile::openstack::nova::ceph {
 
   $nova_key = hiera('profile::ceph::nova_key')
 
-  exec { '/usr/bin/ceph osd pool create volumes 512' :
+  exec { '/usr/bin/ceph osd pool create volumes 32' :
     unless => '/usr/bin/ceph osd pool get volumes size',
   }
 
