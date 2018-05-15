@@ -32,7 +32,7 @@ class profile::openstack::nova::api::compute {
   include ::profile::openstack::nova::munin::api
 
   if($confhaproxy) {
-    contain ::profile::openstack::glance::haproxy::backend::api
+    contain ::profile::openstack::nova::haproxy::backend::api
   }
 
   if($nova_admin_ip) {
