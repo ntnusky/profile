@@ -17,7 +17,6 @@ class profile::openstack::nova::endpoint::api {
   $nova_public   = pick($public_endpoint, "http://${nova_public_ip}")
 
   require ::profile::openstack::repo
-  require ::profile::openstack::nova::base
 
   class { '::nova::keystone::auth':
     password        => $nova_password,
