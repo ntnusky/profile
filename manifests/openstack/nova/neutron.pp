@@ -5,7 +5,7 @@ class profile::openstack::nova::neutron {
 
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
 
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
 
   $neutron_admin_ip = hiera('profile::api::neutron::admin::ip', '127.0.0.1')
