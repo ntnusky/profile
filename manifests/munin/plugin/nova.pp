@@ -1,10 +1,13 @@
 # This class installs the munin plugins which monitors openstack usage
 # variables. Should be installed on the openstack controllers.
 class profile::munin::plugin::nova {
-  $admin_ip = hiera('profile::api::keystone::admin::ip')
+  $internal_endpint  = hiera('profile::openstack::endpoint::admin', undef)
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
+  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
+
   $admin_token = hiera('profile::keystone::admin_token')
   $admin_pass = hiera('profile::keystone::admin_password')
-  $admin_url = "http://${admin_ip}:5000/v3"
+  $admin_url = "${keystone_internal}:5000/v3"
 
   munin::plugin { 'openstack_projects':
     ensure => present,
