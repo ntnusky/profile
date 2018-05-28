@@ -20,26 +20,31 @@ class profile::openstack::nova::haproxy::services {
     $proto = 'X-Forwarded-Proto:\ http'
   }
 
-  $ft_options = {
-    'default_backend' => 'bk_nova_public',
-    'reqadd'          => $proto,
-  }
-
   if($ipv6) {
     $bind = {
       "${ipv4}:8774" => $ssl,
       "${ipv6}:8774" => $ssl,
     }
+    $bindvnc = {
+      "${ipv4}:6080" => $ssl,
+      "${ipv6}:6080" => $ssl,
+    }
   } else {
     $bind = {
       "${ipv4}:8774" => $ssl,
+    }
+    $bindvnc = {
+      "${ipv4}:6080" => $ssl,
     }
   }
 
   haproxy::frontend { 'ft_nova_public':
     bind    => $bind,
     mode    => 'http',
-    options => $ft_options,
+    options => {
+      'default_backend' => 'bk_nova_public',
+      'reqadd'          => $proto,
+    }
   }
 
   haproxy::backend { 'bk_nova_public':
@@ -50,6 +55,25 @@ class profile::openstack::nova::haproxy::services {
         'tcplog',
         'tcpka',
         'httpchk',
+      ],
+    },
+  }
+
+  haproxy::frontend { 'ft_nova_vnc':
+    bind    => $bind,
+    mode    => 'tcp',
+    options => {
+      'default_backend' => 'bk_nova_vnc',
+    }
+  }
+
+  haproxy::backend { 'bk_nova_vnc':
+    mode    => 'tcp',
+    options => {
+      'balance' => 'source',
+      'option'  => [
+        'tcplog',
+        'tcpka',
       ],
     },
   }
