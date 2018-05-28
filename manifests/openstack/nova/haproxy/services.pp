@@ -60,7 +60,7 @@ class profile::openstack::nova::haproxy::services {
   }
 
   haproxy::frontend { 'ft_nova_vnc':
-    bind    => $bind,
+    bind    => $bindvnc,
     mode    => 'tcp',
     options => {
       'default_backend' => 'bk_nova_vnc',
