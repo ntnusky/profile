@@ -1,5 +1,6 @@
 # Installs the nova vnc proxy
 class profile::openstack::nova::vncproxy {
+  include ::nova::deps
   include ::profile::openstack::nova::firewall::vncproxy
   include ::profile::openstack::nova::haproxy::backend::vnc
   require ::profile::openstack::repo
@@ -18,10 +19,18 @@ class profile::openstack::nova::vncproxy {
     vncproxy_host     => $host,
     vncproxy_protocol => $protocol,
     vncproxy_port     => $port,
-    before            => Class['::nova::vncproxy'],
   }
 
-  class { '::nova::vncproxy':
-    enabled => true,
+  nova_config {
+    'vnc/novncproxy_host': value => '0.0.0.0';
+    'vnc/novncproxy_port': value => $port;
+  }
+
+  nova::generic_service { 'vncproxy':
+    enabled        => true,
+    manage_service => true,
+    package_name   => 'nova-novncproxy',
+    service_name   => 'nova-novncproxy',
+    ensure_package => present,
   }
 }
