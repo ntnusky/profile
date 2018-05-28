@@ -33,6 +33,7 @@ class profile::openstack::nova::api::compute {
 
   if($confhaproxy) {
     contain ::profile::openstack::nova::haproxy::backend::api
+    contain ::profile::openstack::nova::haproxy::backend::metadata
   }
 
   if($nova_admin_ip) {
