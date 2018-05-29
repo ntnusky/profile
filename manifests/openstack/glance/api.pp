@@ -11,11 +11,6 @@ class profile::openstack::glance::api {
   $region = hiera('profile::region')
   $keystone_password = hiera('profile::glance::keystone::password')
 
-  # Determine which address to use for the glance registry
-  $management_if = hiera('profile::interfaces::management')
-  $management_ip = hiera("profile::interfaces::${management_if}::address", undef)
-  $adminlb_ip = hiera('profile::haproxy::management::ipv4', undef)
-
   # Determine where the keystone service is located.
   $keystone_public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
@@ -66,7 +61,7 @@ class profile::openstack::glance::api {
     keystone_password            => $keystone_password,
     known_stores                 => ['glance.store.rbd.Store'],
     os_region_name               => $region,
-    registry_host                => pick($adminlb_ip, $management_ip),
+    registry_host                => '127.0.0.1', 
     show_image_direct_url        => true,
     show_multiple_locations      => true,
   }
