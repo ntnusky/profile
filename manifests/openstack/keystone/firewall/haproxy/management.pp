@@ -30,7 +30,7 @@ class profile::openstack::keystone::firewall::haproxy::management {
   }
 
   if($infra6_net) {
-    firewall { "100 Keystone API v6 - Internal":
+    firewall { '100 Keystone API v6 - Internal':
       proto    => 'tcp',
       dport    => 5000,
       action   => 'accept',
