@@ -1,7 +1,7 @@
 # Perfomes basic heat configuration
 class profile::openstack::heat::base {
   # Retrieve service IP Addresses
-  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip')
+  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
 
   # Retrieve api urls, if they exist. 
   $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)
@@ -13,7 +13,14 @@ class profile::openstack::heat::base {
 
   # Misc other settings
   $region = hiera('profile::region')
-  $memcached_ip = hiera('profile::memcache::ip')
+
+  # Determine memcahce-server-addresses
+  $memcached_ip = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
 
   # RabbitMQ
   $rabbit_ip = hiera('profile::rabbitmq::ip')
@@ -22,7 +29,9 @@ class profile::openstack::heat::base {
 
   # Database-connection
   $mysql_pass = hiera('profile::mysql::heatpass')
-  $mysql_ip = hiera('profile::mysql::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
   $database_connection = "mysql://heat:${mysql_pass}@${mysql_ip}/heat"
 
   require ::profile::openstack::repo
@@ -46,7 +55,7 @@ class profile::openstack::heat::base {
     keystone_tenant     => 'services',
     keystone_user       => 'heat',
     keystone_password   => $mysql_pass,
-    memcached_servers   => $memcached_ip,
+    memcached_servers   => $memcached,
     *                   => $extra_options,
   }
 }
