@@ -30,6 +30,7 @@ class profile::openstack::nova::api::compute {
   require ::profile::openstack::nova::base
   contain ::profile::openstack::nova::firewall::server
   include ::profile::openstack::nova::munin::api
+  include ::profile::openstack::nova::neutron
 
   if($confhaproxy) {
     contain ::profile::openstack::nova::haproxy::backend::api
