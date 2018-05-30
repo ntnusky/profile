@@ -4,10 +4,7 @@ class profile::ceph::client {
   $admin_key = hiera('profile::ceph::admin_key')
 
   require ::profile::ceph::base
-
-  ceph::key { 'client.admin':
-    secret => $admin_key,
-  }
+  include ::profile::ceph::key::admin
 
   ceph_config {
     'client/rbd cache':
