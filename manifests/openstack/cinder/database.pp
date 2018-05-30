@@ -4,7 +4,6 @@ class profile::openstack::cinder::database {
   $allowed_hosts = hiera('profile::mysql::allowed_hosts')
 
   require ::profile::openstack::repo
-  include ::cinder::db::sync
 
   class { '::cinder::db::mysql' :
     password      => $password,

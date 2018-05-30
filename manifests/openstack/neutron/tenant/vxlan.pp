@@ -1,11 +1,10 @@
 # Configures the neutron ml2 agent to use VXLAN for tenant traffic.
 class profile::openstack::neutron::tenant::vxlan {
-  $vni_low = hiera('profile::neutron::vni_low')
-  $vni_high = hiera('profile::neutron::vni_high')
   $_tenant_if = hiera('profile::interfaces::tenant')
 
   require ::profile::openstack::repo
   require ::profile::openstack::neutron::base
+  include ::profile::openstack::neutron::ml2::config
   require ::vswitch::ovs
 
   # Make sure there is allways an IP available for tunnel endpoints, even if the
@@ -24,13 +23,6 @@ class profile::openstack::neutron::tenant::vxlan {
     tenant_mapping => 'provider:br-provider',
     local_ip       => $local_ip,
     tunnel_types   => ['vxlan'],
-  }
-
-  class { '::neutron::plugins::ml2':
-    type_drivers         => ['vxlan', 'flat'],
-    tenant_network_types => ['vxlan'],
-    mechanism_drivers    => ['openvswitch', 'l2population'],
-    vni_ranges           => "${vni_low}:${vni_high}"
   }
 
   if($_tenant_if == 'vlan') {

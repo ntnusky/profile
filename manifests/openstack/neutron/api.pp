@@ -1,16 +1,24 @@
 # Installs and configures the neutron api
 class profile::openstack::neutron::api {
-  # Database and cache
+  # Determine the correct database settings
   $mysql_password = hiera('profile::mysql::neutronpass')
-  $mysql_ip = hiera('profile::mysql::ip')
-  $memcached_ip = hiera('profile::memcache::ip')
+  $mysql_old = hiera('profile::mysql::ip', undef)
+  $mysql_new = hiera('profile::haproxy::management::ipv4', undef)
+  $mysql_ip = pick($mysql_new, $mysql_old)
+  $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
+
+  # Retrieve the addresses for the memcached servers.
+  $memcached_ip = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
 
   # Retrieve service IP Addresses
-  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip')
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $nova_admin_ip      = hiera('profile::api::nova::admin::ip')
-  $neutron_admin_ip   = hiera('profile::api::neutron::admin::ip')
-  $neutron_public_ip  = hiera('profile::api::neutron::public::ip')
+  $keystone_admin_ip  = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
+  $nova_admin_ip      = hiera('profile::api::nova::admin::ip', false)
 
   # Retrieve api urls, if they exist. 
   $admin_endpoint    = hiera('profile::openstack::endpoint::admin', undef)
@@ -21,9 +29,6 @@ class profile::openstack::neutron::api {
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
   $nova_internal     = pick($internal_endpoint, "http://${nova_admin_ip}")
-  $neutron_admin     = pick($admin_endpoint, "http://${neutron_admin_ip}")
-  $neutron_internal  = pick($internal_endpoint, "http://${neutron_admin_ip}")
-  $neutron_public    = pick($public_endpoint, "http://${neutron_public_ip}")
 
   # Openstack settings
   $nova_password = hiera('profile::nova::keystone::password')
@@ -31,29 +36,28 @@ class profile::openstack::neutron::api {
   $service_providers = hiera('profile::neutron::service_providers')
   $region = hiera('profile::region')
 
-  # Database connection string
-  $database_connection = "mysql://neutron:${mysql_password}@${mysql_ip}/neutron"
+  # Should haproxy be configured?
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   require ::profile::openstack::neutron::base
-  contain ::profile::openstack::neutron::database
-  contain ::profile::openstack::neutron::firewall::l3agent
-  contain ::profile::openstack::neutron::keepalived
+  include ::profile::openstack::neutron::firewall::api
+  include ::profile::openstack::neutron::ml2::config
+  include ::profile::services::memcache::pythonclient
 
-  # Configure the neutron API endpoint in keystone
-  class { '::neutron::keystone::auth':
-    password     => $neutron_password,
-    public_url   => "${neutron_public}:9696",
-    internal_url => "${neutron_internal}:9696",
-    admin_url    => "${neutron_admin}:9696",
-    region       => $region,
+  if($nova_admin_ip) {
+    contain ::profile::openstack::neutron::keepalived
   }
 
-  # Configure the service user neutron uses
+  if($confhaproxy) {
+    contain ::profile::openstack::neutron::haproxy::backend::server
+  }
+
+  # Configure how neutron communicates with keystone
   class { '::neutron::keystone::authtoken':
     password          => $neutron_password,
     auth_url          => "${keystone_admin}:35357/",
     auth_uri          => "${keystone_internal}:5000/",
-    memcached_servers => $memcached_ip,
+    memcached_servers => $memcache,
     region_name       => $region,
   }
 
@@ -62,7 +66,9 @@ class profile::openstack::neutron::api {
     database_connection              => $database_connection,
     sync_db                          => true,
     allow_automatic_l3agent_failover => true,
+    allow_automatic_dhcp_failover    => true,
     service_providers                => $service_providers,
+    enable_proxy_headers_parsing     => $confhaproxy,
   }
 
   # Configure nova notifications system

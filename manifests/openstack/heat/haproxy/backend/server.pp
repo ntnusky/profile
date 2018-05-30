@@ -28,7 +28,7 @@ class profile::openstack::heat::haproxy::backend::server {
   }
 
   @@haproxy::balancermember { "heat-cfn-admin-${::fqdn}":
-    listening_service => 'bk_heat_api_admin',
+    listening_service => 'bk_heat_cfn_admin',
     server_names      => $::hostname,
     ipaddresses       => $ip,
     ports             => '8000',

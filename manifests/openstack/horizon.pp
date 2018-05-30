@@ -70,15 +70,16 @@ class profile::openstack::horizon {
   }
 
   class { '::horizon':
-    allowed_hosts                => [$::fqdn, $server_name],
-    keystone_default_domain      => $ldap_name,
-    keystone_multidomain_support => true,
-    keystone_url                 => $keystone_url,
-    neutron_options              => { enable_firewall => true, },
-    secret_key                   => $django_secret,
-    server_aliases               => [$::fqdn, $server_name],
-    servername                   => $server_name,
-    session_timeout              => 7200,
-    *                            => merge($ssl_settings, $memcache),
+    allowed_hosts                  => [$::fqdn, $server_name],
+    enable_secure_proxy_ssl_header => $haproxy,
+    keystone_default_domain        => $ldap_name,
+    keystone_multidomain_support   => true,
+    keystone_url                   => $keystone_url,
+    neutron_options                => { enable_firewall => true, },
+    secret_key                     => $django_secret,
+    server_aliases                 => [$::fqdn, $server_name],
+    servername                     => $server_name,
+    session_timeout                => 7200,
+    *                              => merge($ssl_settings, $memcache),
   }
 }

@@ -15,6 +15,19 @@ class profile::openstack::nova::firewall::haproxy {
     provider => 'ip6tables',
   }
 
+  firewall { '500 accept IPv4 Nova Metadata':
+    proto  => 'tcp',
+    dport  => '8775',
+    action => 'accept',
+  }
+
+  firewall { '500 accept IPv6 Nova Metadata':
+    proto    => 'tcp',
+    dport    => '8775',
+    action   => 'accept',
+    provider => 'ip6tables',
+  }
+
   firewall { '500 accept IPv4 Nova Placement API':
     proto  => 'tcp',
     dport  => '8778',
@@ -24,6 +37,19 @@ class profile::openstack::nova::firewall::haproxy {
   firewall { '500 accept IPv6 Nova Placement API':
     proto    => 'tcp',
     dport    => '8778',
+    action   => 'accept',
+    provider => 'ip6tables',
+  }
+
+  firewall { '500 accept IPv4 Nova vncproxy':
+    proto  => 'tcp',
+    dport  => '6080',
+    action => 'accept',
+  }
+
+  firewall { '500 accept IPv6 Nova vncproxy':
+    proto    => 'tcp',
+    dport    => '6080',
     action   => 'accept',
     provider => 'ip6tables',
   }

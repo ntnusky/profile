@@ -14,14 +14,20 @@ class profile::openstack::nova::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
     $bind_api = {
       "${ipv4}:8774" => $ssl,
       "${ipv6}:8774" => $ssl,
+    }
+    $bind_metadata = {
+      "${ipv4}:8775" => [],
+      "${ipv6}:8775" => [],
     }
     $bind_place = {
       "${ipv4}:8778" => $ssl,
@@ -31,6 +37,9 @@ class profile::openstack::nova::haproxy::management {
     $bind_api = {
       "${ipv4}:8774" => $ssl,
     }
+    $bind_metadata = {
+      "${ipv4}:8775" => [],
+    }
     $bind_place = {
       "${ipv4}:8778" => $ssl,
     }
@@ -38,15 +47,26 @@ class profile::openstack::nova::haproxy::management {
 
   $ft_api_options = {
     'default_backend' => 'bk_nova_api_admin',
+    'reqadd'          => $proto,
+  }
+  $ft_metadata_options = {
+    'default_backend' => 'bk_nova_metadata',
+    'reqadd'          => 'X-Forwarded-Proto:\ http',
   }
   $ft_place_options = {
     'default_backend' => 'bk_nova_place_admin',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_nova_api_admin':
     bind    => $bind_api,
     mode    => 'http',
     options => $ft_api_options,
+  }
+  haproxy::frontend { 'ft_nova_metadata':
+    bind    => $bind_metadata,
+    mode    => 'http',
+    options => $ft_metadata_options,
   }
   haproxy::frontend { 'ft_nova_place_admin':
     bind    => $bind_place,
@@ -66,6 +86,16 @@ class profile::openstack::nova::haproxy::management {
   haproxy::backend { 'bk_nova_api_admin':
     mode    => 'http',
     options => $backend_options,
+  }
+  haproxy::backend { 'bk_nova_metadata':
+    mode    => 'http',
+    options => {
+      'balance' => 'source',
+      'option'  => [
+        'tcplog',
+        'tcpka',
+      ]
+    },
   }
   haproxy::backend { 'bk_nova_place_admin':
     mode    => 'http',

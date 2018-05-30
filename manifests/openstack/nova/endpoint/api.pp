@@ -3,10 +3,10 @@ class profile::openstack::nova::endpoint::api {
   $nova_password = hiera('profile::nova::keystone::password')
   $region = hiera('profile::region')
 
-  $nova_public_ip = hiera('profile::api::nova::public::ip')
-  $nova_admin_ip = hiera('profile::api::nova::admin::ip')
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $nova_public_ip = hiera('profile::api::nova::public::ip', '127.0.0.1')
+  $nova_admin_ip = hiera('profile::api::nova::admin::ip', '127.0.0.1')
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', '127.0.0.1')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
 
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
   $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
@@ -17,7 +17,6 @@ class profile::openstack::nova::endpoint::api {
   $nova_public   = pick($public_endpoint, "http://${nova_public_ip}")
 
   require ::profile::openstack::repo
-  require ::profile::openstack::nova::base
 
   class { '::nova::keystone::auth':
     password        => $nova_password,

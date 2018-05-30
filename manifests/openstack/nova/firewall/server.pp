@@ -11,6 +11,13 @@ class profile::openstack::nova::firewall::server {
     action => 'accept',
   }
 
+  firewall { '500 accept Nova Metadata':
+    source => $managementnet,
+    proto  => 'tcp',
+    dport  => '8775',
+    action => 'accept',
+  }
+
   firewall { '500 accept Nova placement API':
     source => $managementnet,
     proto  => 'tcp',

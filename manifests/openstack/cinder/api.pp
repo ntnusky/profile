@@ -5,59 +5,52 @@ class profile::openstack::cinder::api {
 
   $keystone_password = hiera('profile::cinder::keystone::password')
 
-  $keystone_public_ip = hiera('profile::api::keystone::public::ip')
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
-  $cinder_public_ip = hiera('profile::api::cinder::public::ip')
-  $cinder_admin_ip = hiera('profile::api::cinder::admin::ip')
-  $memcached_ip = hiera('profile::memcache::ip')
-
+  # Determine the keystone endpoint
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
-  $internal_endpoint = hiera('profile::openstack::endpoint::internal', undef)
   $public_endpoint = hiera('profile::openstack::endpoint::public', undef)
+  $keystone_public_ip = hiera('profile::api::keystone::public::ip', false)
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', false)
+  $keystone_admin  = pick($admin_endpoint, "http://${keystone_admin_ip}")
+  $keystone_public = pick($public_endpoint, "http://${keystone_public_ip}")
 
-  require ::profile::baseconfig::firewall
+  # Retrieve addresses for the memcached servers, either the old IP or the new
+  # list of hosts.
+  $memcached_ip = hiera('profile::memcache::ip', undef)
+  $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
+
+  include ::cinder::db::sync
   require ::profile::openstack::repo
   require ::profile::openstack::cinder::base
-  require ::profile::openstack::cinder::database
   contain ::profile::openstack::cinder::firewall::server
-  contain ::profile::openstack::cinder::keepalived
+  include ::profile::services::memcache::pythonclient
+
+  if($keystone_admin_ip) {
+    contain ::profile::openstack::cinder::keepalived
+  }
 
   if($confhaproxy) {
     contain ::profile::openstack::cinder::haproxy::backend::server
   }
 
-  $cinder_admin    = pick($admin_endpoint, "http://${cinder_admin_ip}")
-  $cinder_internal = pick($internal_endpoint, "http://${cinder_admin_ip}")
-  $cinder_public   = pick($public_endpoint, "http://${cinder_public_ip}")
-  $keystone_admin  = pick($admin_endpoint, "http://${keystone_admin_ip}")
-  $keystone_public = pick($public_endpoint, "http://${keystone_public_ip}")
-
-  class  { '::cinder::keystone::auth':
-    password        => $keystone_password,
-    public_url      => "${cinder_public}:8776/v1/%(tenant_id)s",
-    internal_url    => "${cinder_internal}:8776/v1/%(tenant_id)s",
-    admin_url       => "${cinder_admin}:8776/v1/%(tenant_id)s",
-    public_url_v2   => "${cinder_public}:8776/v2/%(tenant_id)s",
-    internal_url_v2 => "${cinder_internal}:8776/v2/%(tenant_id)s",
-    admin_url_v2    => "${cinder_admin}:8776/v2/%(tenant_id)s",
-    public_url_v3   => "${cinder_public}:8776/v3/%(tenant_id)s",
-    internal_url_v3 => "${cinder_internal}:8776/v3/%(tenant_id)s",
-    admin_url_v3    => "${cinder_admin}:8776/v3/%(tenant_id)s",
-    region          => $region,
+  class { '::cinder::api':
+    # Auth_strategy is false to prevent cinder::api from including
+    # ::cinder::keystone::authtoken.
+    auth_strategy                => false,
+    keystone_enabled             => false,
+    enabled                      => true,
+    default_volume_type          => 'Normal',
+    enable_proxy_headers_parsing => $confhaproxy,
   }
 
   class { '::cinder::keystone::authtoken':
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
     password          => $keystone_password,
-    memcached_servers => $memcached_ip,
+    memcached_servers => $memcache,
     region_name       => $region,
-  }
-
-  class { '::cinder::api':
-    keystone_enabled    => false,
-    auth_strategy       => '',
-    enabled             => true,
-    default_volume_type => 'Normal',
   }
 }

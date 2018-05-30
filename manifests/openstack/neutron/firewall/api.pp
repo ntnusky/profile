@@ -5,9 +5,9 @@ class profile::openstack::neutron::firewall::api {
   $managemnet_net = hiera('profile::networks::management::ipv4::prefix')
 
   firewall { '500 accept incoming admin neutron tcp':
-    source      => $managemnet_net,
-    proto       => 'tcp',
-    dport       => '9696',
-    action      => 'accept',
+    source => $managemnet_net,
+    proto  => 'tcp',
+    dport  => '9696',
+    action => 'accept',
   }
 }

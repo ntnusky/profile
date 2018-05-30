@@ -14,8 +14,10 @@ class profile::openstack::keystone::haproxy::management {
 
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -38,9 +40,11 @@ class profile::openstack::keystone::haproxy::management {
 
   $ft_admin_options = {
     'default_backend' => 'bk_keystone_admin',
+    'reqadd'          => $proto,
   }
   $ft_internal_options = {
     'default_backend' => 'bk_keystone_internal',
+    'reqadd'          => $proto,
   }
 
   haproxy::frontend { 'ft_keystone_admin':

@@ -12,14 +12,12 @@ class profile::openstack::nova::haproxy::services {
   $certfile = hiera('profile::haproxy::services::apicert::certfile',
                     '/etc/ssl/private/haproxy.servicesapi.pem')
 
-  $ft_options = {
-    'default_backend' => 'bk_nova_public',
-  }
-
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
   }
 
   if($ipv6) {
@@ -27,16 +25,26 @@ class profile::openstack::nova::haproxy::services {
       "${ipv4}:8774" => $ssl,
       "${ipv6}:8774" => $ssl,
     }
+    $bindvnc = {
+      "${ipv4}:6080" => $ssl,
+      "${ipv6}:6080" => $ssl,
+    }
   } else {
     $bind = {
       "${ipv4}:8774" => $ssl,
+    }
+    $bindvnc = {
+      "${ipv4}:6080" => $ssl,
     }
   }
 
   haproxy::frontend { 'ft_nova_public':
     bind    => $bind,
     mode    => 'http',
-    options => $ft_options,
+    options => {
+      'default_backend' => 'bk_nova_public',
+      'reqadd'          => $proto,
+    }
   }
 
   haproxy::backend { 'bk_nova_public':
@@ -47,6 +55,25 @@ class profile::openstack::nova::haproxy::services {
         'tcplog',
         'tcpka',
         'httpchk',
+      ],
+    },
+  }
+
+  haproxy::frontend { 'ft_nova_vnc':
+    bind    => $bindvnc,
+    mode    => 'tcp',
+    options => {
+      'default_backend' => 'bk_nova_vnc',
+    }
+  }
+
+  haproxy::backend { 'bk_nova_vnc':
+    mode    => 'tcp',
+    options => {
+      'balance' => 'source',
+      'option'  => [
+        'tcplog',
+        'tcpka',
       ],
     },
   }

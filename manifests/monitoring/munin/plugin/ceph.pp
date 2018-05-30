@@ -1,6 +1,6 @@
 # This class installs munin plugins which monitors the ceph cluster. Should be
 # installed on the ceph monitors.
-class profile::munin::monitoring::plugin::ceph {
+class profile::monitoring::munin::plugin::ceph {
   munin::plugin { 'ceph_total':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/ceph_total',
@@ -33,7 +33,7 @@ class profile::munin::monitoring::plugin::ceph {
     group  => root,
     source => 'puppet:///modules/profile/muninplugins/ceph-collect.sh',
   }
-  
+
   #Install systemd services
   file { '/lib/systemd/system/cephcollectorImages.service':
     ensure => file,

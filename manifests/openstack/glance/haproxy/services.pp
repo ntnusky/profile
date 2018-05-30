@@ -12,14 +12,17 @@ class profile::openstack::glance::haproxy::services {
   $certfile = hiera('profile::haproxy::services::apicert::certfile',
                     '/etc/ssl/private/haproxy.servicesapi.pem')
 
-  $ft_options = {
-    'default_backend' => 'bk_glance_public',
-  }
-
   if($certificate) {
     $ssl = ['ssl', 'crt', $certfile]
+    $proto = 'X-Forwarded-Proto:\ https'
   } else {
     $ssl = []
+    $proto = 'X-Forwarded-Proto:\ http'
+  }
+
+  $ft_options = {
+    'default_backend' => 'bk_glance_public',
+    'reqadd'          => $proto,
   }
 
   if($ipv6) {

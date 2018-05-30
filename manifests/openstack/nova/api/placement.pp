@@ -1,18 +1,15 @@
 # Installs and configures Placement API
-class profile::openstack::nova::placement {
+class profile::openstack::nova::api::placement {
   $placement_password = hiera('profile::placement::keystone::password')
   $region = hiera('profile::region')
-  $nova_admin_ip = hiera('profile::api::nova::admin::ip')
   $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
 
   $admin_endpoint = hiera('profile::openstack::endpoint::admin', undef)
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip')
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
   $keystone_admin    = pick($admin_endpoint, "http://${keystone_admin_ip}")
 
-  contain ::profile::openstack::nova::endpoint::placement
-
   if($confhaproxy) {
-    contain ::profile::openstack::glance::haproxy::backend::placement
+    contain ::profile::openstack::nova::haproxy::backend::placement
   }
 
   class { '::nova::placement':
@@ -22,8 +19,7 @@ class profile::openstack::nova::placement {
   }
 
   class { '::nova::wsgi::apache_placement':
-    servername => $nova_admin_ip,
-    api_port   => 8778,
-    ssl        => false,
+    api_port => 8778,
+    ssl      => false,
   }
 }

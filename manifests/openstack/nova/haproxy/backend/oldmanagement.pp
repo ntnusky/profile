@@ -23,5 +23,13 @@ class profile::openstack::nova::haproxy::backend::oldmanagement {
       ports             => '8778',
       options           => 'check inter 2000 rise 2 fall 5',
     }
+
+    haproxy::balancermember { 'nova-metadata-static':
+      listening_service => 'bk_nova_metadata',
+      server_names      => $names,
+      ipaddresses       => $addresses,
+      ports             => '8775',
+      options           => 'check inter 2000 rise 2 fall 5',
+    }
   }
 }

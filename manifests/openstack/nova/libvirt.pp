@@ -5,7 +5,6 @@ class profile::openstack::nova::libvirt {
 
   $management_if = hiera('profile::interfaces::management')
   $management_ip = getvar("::ipaddress_${management_if}")
-  $nova_public_api = hiera('profile::api::nova::public::ip')
 
   require ::profile::openstack::repo
   require ::profile::openstack::nova::base::compute
