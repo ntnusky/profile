@@ -18,6 +18,7 @@ class profile::ceph::monitor {
   require ::profile::ceph::base
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
+  include ::profile::ceph::key::admin
 
   ceph::mgr { $::hostname :
     key        => $mgr_key,
@@ -33,14 +34,6 @@ class profile::ceph::monitor {
     inject_as_id   => 'mon.',
     inject_keyring => "/var/lib/ceph/mon/ceph-${::hostname}/keyring",
     before         => Anchor['profile::ceph::monitor::end']
-  }
-  ceph::key { 'client.admin':
-    secret  => $admin_key,
-    cap_mon => 'allow *',
-    cap_osd => 'allow *',
-    cap_mds => 'allow',
-    cap_mgr => 'allow *',
-    before  => Anchor['profile::ceph::monitor::end']
   }
   ceph::key { 'client.bootstrap-osd':
     secret  => $bootstrap_osd_key,
