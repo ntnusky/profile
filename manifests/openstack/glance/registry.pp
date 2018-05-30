@@ -18,6 +18,10 @@ class profile::openstack::glance::registry {
   # list of hosts.
   $memcached_ip = hiera('profile::memcache::ip', undef)
   $memcache_servers = hiera_array('profile::memcache::servers', undef)
+  $memcache_servers_real = pick($memcache_servers, [$memcached_ip])
+  $memcache = $memcache_servers_real.map | $server | {
+    "${server}:11211"
+  }
 
   # Determine how we connect to the database
   $mysql_pass = hiera('profile::mysql::glancepass')
@@ -52,7 +56,7 @@ class profile::openstack::glance::registry {
     password          => $keystone_password,
     auth_url          => "${keystone_admin}:35357",
     auth_uri          => "${keystone_public}:5000",
-    memcached_servers => pick($memcache_servers, $memcached_ip),
+    memcached_servers => $memcache, 
     region_name       => $region,
   }
 }
