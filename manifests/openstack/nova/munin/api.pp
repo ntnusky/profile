@@ -3,6 +3,6 @@ class profile::openstack::nova::munin::api {
   $installmunin = hiera('profile::munin::install', true)
 
   if($installmunin) {
-    include ::profile::munin::plugin::nova
+    include ::profile::monitoring::munin::plugin::nova
   }
 }

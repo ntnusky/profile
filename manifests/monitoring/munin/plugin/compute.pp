@@ -3,10 +3,13 @@
 class profile::monitoring::munin::plugin::compute {
   include ::profile::openstack::clients
 
-  $admin_ip = hiera('profile::api::keystone::admin::ip')
+  $internal_endpoint  = hiera('profile::openstack::endpoint::admin', undef)
+  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
+  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
+
   $admin_token = hiera('profile::keystone::admin_token')
   $admin_pass = hiera('profile::keystone::admin_password')
-  $admin_url = "http://${admin_ip}:5000/v3"
+  $admin_url = "${keystone_internal}:5000/v3"
 
   munin::plugin { 'compute_cpu':
     ensure => present,

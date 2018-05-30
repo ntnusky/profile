@@ -3,7 +3,7 @@ class profile::openstack::nova::munin::compute {
   $installmunin = hiera('profile::munin::install', true)
 
   if($installmunin) {
-    include ::profile::munin::plugin::compute
+    include ::profile::monitoring::munin::plugin::compute
   }
 }
 
