@@ -2,12 +2,17 @@
 class profile::openstack::nova::vncproxy {
   include ::nova::deps
   include ::profile::openstack::nova::firewall::vncproxy
-  include ::profile::openstack::nova::haproxy::backend::vnc
   require ::profile::openstack::repo
 
   $cert = hiera('profile::haproxy::services::apicert', false)
   $host = hiera('profile::horizon::server_name')
   $port = hiera('profile::vncproxy::port', 6080)
+
+  $confhaproxy = hiera('profile::openstack::haproxy::configure::backend', true)
+
+  if($confhaproxy) {
+    include ::profile::openstack::nova::haproxy::backend::vnc
+  }
 
   if($cert) {
     $protocol = 'https'
