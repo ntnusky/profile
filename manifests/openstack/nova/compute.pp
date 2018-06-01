@@ -16,6 +16,7 @@ class profile::openstack::nova::compute {
   contain ::profile::openstack::nova::ceph
   contain ::profile::openstack::nova::neutron
   contain ::profile::openstack::nova::libvirt
+  include ::profile::openstack::nova::firewall::compute
   include ::profile::openstack::nova::munin::compute
 
   if($cert) {
