@@ -13,7 +13,7 @@ class profile::services::puppet::server::install {
   }
 
   cron { 'Dashboard-client puppet-environments':
-    command => '/opt/shiftleader/manage.py puppet_report',
+    command => '/opt/shiftleader/clients/puppetEnvReport.sh',
     user    => 'root',
     minute  => '*',
   }
