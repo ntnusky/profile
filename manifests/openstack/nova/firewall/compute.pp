@@ -34,11 +34,30 @@ class profile::openstack::nova::firewall::compute {
     action   => 'accept',
     provider => 'ip6tables',
   }
+  firewall { '502 accept live migration data stream':
+    source => $management_v4,
+    proto  => 'tcp',
+    dport  => '49152-49261',
+    action => 'accept',
+  }
+  firewall { '502 ipv6 accept live migration data stream':
+    source   => $management_v6,
+    proto    => 'tcp',
+    dport    => '49152-49261',
+    action   => 'accept',
+    provider => 'ip6tables',
+  }
   if($extra_net) {
-    firewall { '502 accept live migration':
+    firewall { '503 accept live migration':
       source => $extra_net,
       proto  => 'tcp',
       dport  => '16509',
+      action => 'accept',
+    }
+    firewall { '503 accept live migration data stream':
+      source => $management_v4,
+      proto  => 'tcp',
+      dport  => '49152-49261',
       action => 'accept',
     }
   }
