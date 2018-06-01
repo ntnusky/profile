@@ -55,7 +55,7 @@ class profile::openstack::nova::firewall::compute {
       action => 'accept',
     }
     firewall { '503 accept live migration data stream':
-      source => $management_v4,
+      source => $extra_net,
       proto  => 'tcp',
       dport  => '49152-49261',
       action => 'accept',
