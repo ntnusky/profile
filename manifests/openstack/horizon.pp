@@ -79,9 +79,9 @@ class profile::openstack::horizon {
       enable_firewall => true,
       enable_lb       => true,
     },
-    instance_options               => {
-      create_volume => false,
-    },
+    #instance_options               => {
+    #  create_volume => false,
+    #},
     secret_key                     => $django_secret,
     server_aliases                 => [$::fqdn, $server_name],
     servername                     => $server_name,
