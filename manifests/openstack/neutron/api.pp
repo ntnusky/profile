@@ -78,4 +78,7 @@ class profile::openstack::neutron::api {
     region_name => $region,
     nova_url    => "${nova_internal}:8774/v2",
   }
+
+  class { 'neutron::services::lbaas':
+  }
 }
