@@ -75,7 +75,13 @@ class profile::openstack::horizon {
     keystone_default_domain        => $ldap_name,
     keystone_multidomain_support   => true,
     keystone_url                   => $keystone_url,
-    neutron_options                => { enable_firewall => true, },
+    neutron_options                => {
+      enable_firewall => true,
+      enable_lb       => true,
+    },
+    instance_options               => {
+      create_volume => false,
+    },
     secret_key                     => $django_secret,
     server_aliases                 => [$::fqdn, $server_name],
     servername                     => $server_name,
