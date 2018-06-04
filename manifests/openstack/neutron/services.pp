@@ -17,4 +17,7 @@ class profile::openstack::neutron::services {
   neutron_l3_agent_config {
     'AGENT/extensions': value => 'fwaas';
   }
+
+  class { 'neutron::services::lbaas':
+  }
 }
