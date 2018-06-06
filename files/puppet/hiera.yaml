@@ -15,6 +15,8 @@ hierarchy:
  - name: "Networking data"
    path: "networking.yaml"
  - name: "OpenStack data"
+   path: "ntnuopenstack.yaml"
+ - name: "OpenStack data"
    path: "openstack.yaml"
  - name: "Packages data"
    path: "packages.yaml"
