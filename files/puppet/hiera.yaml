@@ -14,7 +14,7 @@ hierarchy:
    path: "certs.yaml"
  - name: "Networking data"
    path: "networking.yaml"
- - name: "OpenStack data"
+ - name: "OpenStack Profiles data"
    path: "ntnuopenstack.yaml"
  - name: "OpenStack data"
    path: "openstack.yaml"
