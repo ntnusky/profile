@@ -1,8 +1,7 @@
 # Sensu checks for monitoring public APIs externally
 # Should be run on nodes outside of the infrastructure
 class profile::sensu::checks::openstack::publicapi {
-
-  $openstack_api = hiera('profile::openstack::endpoint::public')
+  $openstack_api = hiera('ntnuopenstack::endpoint::public')
 
   sensu::check { 'openstack-identityv3-public-api':
     command     => "check-http.rb -u ${openstack_api}:5000/v3",

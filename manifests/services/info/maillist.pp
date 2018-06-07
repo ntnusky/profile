@@ -2,7 +2,7 @@
 class profile::services::info::maillist {
   $mailfqdn = lookup('profile::info::maillist::fqdn')
 
-  require ::profile::openstack::clients
+  require ::ntnuopenstack::clients
 
   file { '/usr/local/bin/generateMailList.sh':
     ensure  => file,
