@@ -4,7 +4,7 @@ class profile::sensu::uchiwa {
   require ::profile::services::apache
 
   $password = hiera('profile::sensu::uchiwa::password')
-  $api_name = hiera('profile::region')
+  $api_name = hiera('ntnuopenstack::region')
   $uchiwa_url = hiera('profile::sensu::uchiwa::fqdn')
 
   $management_if = hiera('profile::interfaces::management')
