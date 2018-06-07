@@ -7,7 +7,7 @@ class profile::ceph::monitor {
 
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
-    include ::profile::munin::plugin::ceph
+    include ::profile::monitoring::munin::plugin::ceph
   }
 
   $installsensu = hiera('profile::sensu::install', true)

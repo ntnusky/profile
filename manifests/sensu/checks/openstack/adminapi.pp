@@ -1,8 +1,7 @@
 # Sensu checks for monitoring admin APIs internally
 # Should be run on nodes inside of the infrastructure
 class profile::sensu::checks::openstack::adminapi {
-
-  $openstack_api = hiera('profile::openstack::endpoint::admin')
+  $openstack_api = hiera('ntnuopenstack::endpoint::admin')
 
   sensu::check { 'openstack-identityv3-admin-api':
     command     => "check-http.rb -u ${openstack_api}:35357/v3",
