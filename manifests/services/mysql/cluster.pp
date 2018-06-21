@@ -31,9 +31,11 @@ class profile::services::mysql::cluster {
     configure_repo      => false,
     override_options    => {
       'mysqld' => {
-        'port'            => '3306',
-        'bind-address'    => $management_ip,
-        'max_connections' => '1000',
+        'port'              => '3306',
+        'bind-address'      => $management_ip,
+        'max_connections'   => '1000',
+        'net_read_timeout'  => '60',
+        'net_write_timeout' => '120',
       }
     },
     require             => Apt::Source['galera_mariadb'],
