@@ -5,6 +5,9 @@ class profile::services::mysql::cluster {
   $rootpassword = hiera('profile::mysqlcluster::root_password')
   $statuspassword = hiera('profile::mysqlcluster::status_password')
 
+  $net_read_timeout = hiera('profile::mysqlcluster::timeout::net::read', 30)
+  $net_write_timeout = hiera('profile::mysqlcluster::timeout::net::write', 60)
+
   $management_if = hiera('profile::interfaces::management')
   $management_ip = $facts['networking']['interfaces'][$management_if]['ip']
 
@@ -34,8 +37,8 @@ class profile::services::mysql::cluster {
         'port'              => '3306',
         'bind-address'      => $management_ip,
         'max_connections'   => '1000',
-        'net_read_timeout'  => '60',
-        'net_write_timeout' => '120',
+        'net_read_timeout'  => $net_read_timeout,
+        'net_write_timeout' => $net_write_timeout,
       }
     },
     require             => Apt::Source['galera_mariadb'],
