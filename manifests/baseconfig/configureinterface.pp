@@ -5,18 +5,25 @@ define profile::baseconfig::configureinterface {
   $v4gateway = hiera("profile::interfaces::${name}::gateway", undef)
   $v6gateway = hiera("profile::interfaces::${name}::gateway6", 'fe80::1')
 
+  $dns_servers = hiera('profile::dns::nameservers', undef)
+  $dns_search = hiera('profile::dns::searchdomain', undef)
+
   if($method == 'dhcp') {
     network::interface { $name:
-      enable_dhcp => true,
+      enable_dhcp     => true,
+      dns_nameservers => $dns_servers,
+      dns_search      => $dns_search,
     }
   } else {
     $address = hiera("profile::interfaces::${name}::address", undef)
     $netmask = hiera("profile::interfaces::${name}::netmask", undef)
     network::interface{ $name:
-      method    => $method,
-      ipaddress => $address,
-      netmask   => $netmask,
-      gateway   => $v4gateway,
+      method          => $method,
+      ipaddress       => $address,
+      netmask         => $netmask,
+      gateway         => $v4gateway,
+      dns_nameservers => $dns_servers,
+      dns_search      => $dns_search,
     }
   }
 
