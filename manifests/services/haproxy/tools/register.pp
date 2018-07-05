@@ -2,7 +2,7 @@
 define profile::services::haproxy::tools::register (
   String[1] $servername,
   String[1] $backendname,
-  Bool      $export       = true,
+  Boolean   $export       = true,
 ){
   $configfile = lookup({
     'name'          => 'profile::haproxy::tools::configfile',
