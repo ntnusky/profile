@@ -2,14 +2,14 @@
 define profile::services::haproxy::tools::register (
   String[1] $servername,
   String[1] $backendname,
-  Boolean   $export       = true,
+  Boolean   $exportresource = true,
 ){
   $configfile = lookup({
     'name'          => 'profile::haproxy::tools::configfile',
     'default_value' => '/etc/haproxy/toolconfig.csv',
   })
 
-  if($export) {
+  if($exportresource) {
     @@concat::fragment{ "haproxy config ${servername};${backendname}":
       target  => $configfile,
       content => "${servername};${backendname}",
