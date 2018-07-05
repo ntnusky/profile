@@ -19,4 +19,12 @@ class profile::services::haproxy::tools {
     content => '# This file is managed by puppet',
     order   => '01'
   }
+
+  file { '/usr/local/sbin/haproxy-manage.sh':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/profile/haproxy-manage.sh',
+  }
 }
