@@ -8,7 +8,7 @@ define profile::services::haproxy::tools::register (
     'default_value' => '/etc/haproxy/toolconfig.txt',
   })
 
-  @@concat::fragment{ 'haproxytools config header':
+  @@concat::fragment{ "haproxy config ${servername};${backendname}":
     target  => $configfile,
     content => "${servername};${backendname}",
     order   => '10',
