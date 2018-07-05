@@ -11,7 +11,7 @@ define profile::services::haproxy::tools::register (
   @@concat::fragment{ 'haproxytools config header':
     target  => $configfile,
     content => "${servername};${backendname}",
-    order   => '10'
+    order   => '10',
     tag     => "haproxy-${backendname}",
   }
 }
