@@ -1,0 +1,36 @@
+{
+  "name": "ntnusky-profile",
+  "version": "1.2.0",
+  "author": "NTNU IIK",
+  "summary": "Installs, configures, and manages services in our openstack environment.",
+  "license": "",
+  "source": "https://github.com/ntnusky/profile",
+  "project_page": "https://github.com/ntnusky/profile",
+  "dependencies": [
+    { "name":"arioch/keepalived","version_requirement":">= 1.2.5 < 2.0.0" },
+    { "name":"arioch/redis","version_requirement":">= 3.1.0 < 4.0.0" },
+    { "name":"duritong/sysctl","version_requirement":">= 0.0.11 < 1.0.0" },
+    { "name":"example42/network","version_requirement":">= 3.3.8 < 4.0.0" },
+    { "name":"inkblot/ipcalc","version_requirement":">= 2.2.0 < 3.0.0" },
+    { "name":"puppetlabs/concat","version_requirement":">= 1.2.5 < 5.0.0" },
+    { "name":"puppetlabs/stdlib","version_requirement":">= 4.15.0 < 5.0.0" },
+    { "name":"puppetlabs/inifile","version_requirement":">= 1.5.0 < 2.0.0" },
+    { "name":"ntnusky/ntnuopenstack","version_requirement":">= 1.0.0 < 5.0.0" }
+  ],
+  "data_provider": "hiera",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "16.04"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 5.3.0 < 6.0.0"
+    }
+  ],
+  "description": "Configures our openstack environment"
+}
