@@ -2,16 +2,25 @@
 define profile::services::haproxy::tools::register (
   String[1] $servername,
   String[1] $backendname,
+  Bool      $export       = true,
 ){
   $configfile = lookup({
     'name'          => 'profile::haproxy::tools::configfile',
-    'default_value' => '/etc/haproxy/toolconfig.txt',
+    'default_value' => '/etc/haproxy/toolconfig.csv',
   })
 
-  @@concat::fragment{ "haproxy config ${servername};${backendname}":
-    target  => $configfile,
-    content => "${servername};${backendname}",
-    order   => '10',
-    tag     => "haproxy-${backendname}",
+  if($export) {
+    @@concat::fragment{ "haproxy config ${servername};${backendname}":
+      target  => $configfile,
+      content => "${servername};${backendname}",
+      order   => '10',
+      tag     => "haproxy-${backendname}",
+    }
+  } else {
+    concat::fragment{ "haproxy config ${servername};${backendname}":
+      target  => $configfile,
+      content => "${servername};${backendname}",
+      order   => '10',
+    }
   }
 }

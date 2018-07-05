@@ -3,7 +3,7 @@
 class profile::services::haproxy::tools {
   $configfile = lookup({
     'name'          => 'profile::haproxy::tools::configfile',
-    'default_value' => '/etc/haproxy/toolconfig.txt',
+    'default_value' => '/etc/haproxy/toolconfig.csv',
   })
 
   concat { $configfile:
