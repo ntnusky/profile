@@ -41,6 +41,11 @@ class profile::services::redis {
     sentinel_bind    => "${ip} 127.0.0.1",
   }
 
+  profile::services::haproxy::tools::register { "Redis-${::fqdn}":
+    servername  => $::hostname,
+    backendname => 'bk_redis',
+  }
+
   @@haproxy::balancermember { $::fqdn:
     listening_service => 'bk_redis',
     ports             => '6379',

@@ -8,6 +8,8 @@ class profile::services::redis::haproxy {
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
   $redisauth = hiera('profile::redis::masterauth')
 
+  profile::services::haproxy::tools::collect { 'bk_redis': }
+
   $ft_options = {
     'default_backend' => 'bk_redis',
     'option'          => [

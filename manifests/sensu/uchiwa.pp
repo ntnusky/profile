@@ -90,6 +90,11 @@ class profile::sensu::uchiwa {
     notify  => Service[$uchiwa::service_name],
   }
 
+  profile::services::haproxy::tools::register { "Uchiwa-${::fqdn}":
+    servername  => $::hostname,
+    backendname => 'bk_uchiwa',
+  }
+
   @@haproxy::balancermember { $::fqdn:
     listening_service => 'bk_uchiwa',
     ports             => '80',

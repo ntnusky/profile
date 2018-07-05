@@ -6,6 +6,8 @@ class profile::services::puppet::server::haproxy::frontend {
   $ipv4 = hiera('profile::haproxy::management::ipv4')
   $ipv6 = hiera('profile::haproxy::management::ipv6', false)
 
+  profile::services::haproxy::tools::collect { 'bk_puppetserver': }
+
   $ft_options = {
     'default_backend' => 'bk_puppetserver',
   }
