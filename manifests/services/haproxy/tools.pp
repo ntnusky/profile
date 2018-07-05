@@ -7,10 +7,11 @@ class profile::services::haproxy::tools {
   })
 
   concat { $configfile:
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0644',
+    ensure         => present,
+    ensure_newline => true, 
+    owner          => 'root',
+    group          => 'root',
+    mode           => '0644',
   }
 
   concat::fragment{ 'haproxytools config header':
