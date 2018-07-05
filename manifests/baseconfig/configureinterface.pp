@@ -11,9 +11,7 @@ define profile::baseconfig::configureinterface {
 
   if($method == 'dhcp') {
     network::interface { $name:
-      enable_dhcp     => true,
-      dns_nameservers => $dns_servers,
-      dns_search      => $dns_search,
+      enable_dhcp => true,
     }
   } else {
     $address = hiera("profile::interfaces::${name}::address", undef)
