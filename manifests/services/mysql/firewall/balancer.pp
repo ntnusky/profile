@@ -14,7 +14,7 @@ class profile::services::mysql::firewall::balancer {
     }
   }
 
-  if($managementv4) {
+  if($managementv6) {
     firewall { '071 ipv6 Accept incoming MySQL requests':
       source   => $managementv6,
       proto    => 'tcp',
