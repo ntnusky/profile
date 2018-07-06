@@ -4,7 +4,7 @@ define profile::baseconfig::configureinterface {
   $method = hiera("profile::interfaces::${name}::method")
   $v4gateway = hiera("profile::interfaces::${name}::gateway", undef)
   $v6gateway = hiera("profile::interfaces::${name}::gateway6", 'fe80::1')
-  $mtu = hiera("profile::interfaces::${name}::mty", 1500)
+  $mtu = hiera("profile::interfaces::${name}::mtu", 1500)
 
   $dns_servers = hiera('profile::dns::nameservers', undef)
   $dns_search = hiera('profile::dns::searchdomain', undef)
