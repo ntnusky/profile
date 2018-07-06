@@ -6,7 +6,6 @@ class profile::services::haproxy {
 
   $nic = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$nic]['ip']
-  $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes', [])
   $installsensu = hiera('profile::sensu::install', true)
   $sslciphers = "\
 ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:\
