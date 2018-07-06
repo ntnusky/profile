@@ -28,7 +28,7 @@ class profile::services::memcache::firewall {
     }
   }
 
-  if ( ! $sourcev6 ) {
+  if ( $sourcev6 ) {
     $destv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
     firewall { '500 accept ipv6 incoming memcached tcp':
