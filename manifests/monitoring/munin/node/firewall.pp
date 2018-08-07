@@ -1,9 +1,9 @@
 # This class opens the firewall for the munin-node
 class profile::monitoring::munin::node::firewall {
   $management_netv4 = hiera('profile::networks::management::ipv4::prefix')
-  $management_netv6 = hiera('profile::networks::management::ipv6::prefix')
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
 
-  require ::profile::baseconfig::firewall 
+  require ::profile::baseconfig::firewall
 
   firewall { '050 accept incoming Munin':
     proto  => 'tcp',
@@ -11,11 +11,14 @@ class profile::monitoring::munin::node::firewall {
     action => 'accept',
     source => $management_netv4,
   }
-  firewall { '050 v6accept incoming Munin':
-    proto    => 'tcp',
-    dport    => [4949],
-    action   => 'accept',
-    provider => 'ip6tables',
-    source   => $management_netv6,
+
+  if($management_netv6) {
+    firewall { '050 v6accept incoming Munin':
+      proto    => 'tcp',
+      dport    => [4949],
+      action   => 'accept',
+      provider => 'ip6tables',
+      source   => $management_netv6,
+    }
   }
 }

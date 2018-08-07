@@ -2,7 +2,7 @@
 class profile::services::memcache {
   # Variables for keepalived
   $management_if = hiera('profile::interfaces::management')
-  $memcached_port = '11211'
+  $memcached_port = hiera('profile::memcache::port', '11211')
   $installsensu = hiera('profile::sensu::install', true)
   $installmunin = hiera('profile::munin::install', true)
   $use_keepalived = hiera('profile::memcache::keepalived', false)
@@ -14,7 +14,11 @@ class profile::services::memcache {
   } else {
     $memcache_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
     $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
-    $listen = "${memcache_ipv4},${memcache_ipv6}"
+    if ( $memcache_ipv6 =~ /^fe80/ ) {
+      $listen = $memcache_ipv4
+    } else {
+      $listen = "${memcache_ipv4},${memcache_ipv6}"
+    }
   }
 
   contain ::profile::services::memcache::firewall

@@ -6,7 +6,6 @@ class profile::services::haproxy {
 
   $nic = hiera('profile::interfaces::management')
   $ip = $::facts['networking']['interfaces'][$nic]['ip']
-  $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes')
   $installsensu = hiera('profile::sensu::install', true)
   $sslciphers = "\
 ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:\
@@ -48,16 +47,40 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
     },
   }
 
-  firewall { '060 accept haproxy stats':
-    proto  => 'tcp',
-    dport  => 9000,
-    action => 'accept',
+  $ipv4_management_nets = hiera_array('profile::networking::management::ipv4::prefixes', false)
+  $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes', false)
+
+  if($ipv4_management_nets) {
+    $ipv4_management_nets.each |$net| {
+      firewall { "060 accept haproxy stats from ${net}":
+        proto  => 'tcp',
+        dport  => 9000,
+        source => $net,
+        action => 'accept',
+      }
+    }
+  } else {
+    firewall { '060 accept haproxy stats':
+      proto  => 'tcp',
+      dport  => 9000,
+      action => 'accept',
+    }
   }
-  $ipv6_management_nets.each |$net| {
-    firewall { "061 ipv6 accept incoming haproxy stats from ${net}":
+
+  if($ipv6_management_nets) {
+    $ipv6_management_nets.each |$net| {
+      firewall { "061 ipv6 accept incoming haproxy stats from ${net}":
+        proto    => 'tcp',
+        dport    => 9000,
+        source   => $net,
+        action   => 'accept',
+        provider => 'ip6tables',
+      }
+    }
+  } else {
+    firewall { '060 ipv6 accept haproxy stats':
       proto    => 'tcp',
       dport    => 9000,
-      source   => $net,
       action   => 'accept',
       provider => 'ip6tables',
     }

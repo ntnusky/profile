@@ -4,6 +4,10 @@ define profile::baseconfig::configureinterface {
   $method = hiera("profile::interfaces::${name}::method")
   $v4gateway = hiera("profile::interfaces::${name}::gateway", undef)
   $v6gateway = hiera("profile::interfaces::${name}::gateway6", 'fe80::1')
+  $mtu = hiera("profile::interfaces::${name}::mtu", undef)
+
+  $dns_servers = hiera('profile::dns::nameservers', undef)
+  $dns_search = hiera('profile::dns::searchdomain', undef)
 
   if($method == 'dhcp') {
     network::interface { $name:
@@ -12,11 +16,22 @@ define profile::baseconfig::configureinterface {
   } else {
     $address = hiera("profile::interfaces::${name}::address", undef)
     $netmask = hiera("profile::interfaces::${name}::netmask", undef)
+    $primary = hiera("profile::interfaces::${name}::primary", false)
+
+    if($primary) {
+      $gateway_real = $v4gateway
+    } else {
+      $gateway_real = undef
+    }
+
     network::interface{ $name:
-      method    => $method,
-      ipaddress => $address,
-      netmask   => $netmask,
-      gateway   => $v4gateway,
+      method          => $method,
+      ipaddress       => $address,
+      netmask         => $netmask,
+      gateway         => $gateway_real,
+      dns_nameservers => $dns_servers,
+      dns_search      => $dns_search,
+      mtu             => $mtu,
     }
   }
 
@@ -88,15 +103,15 @@ define profile::baseconfig::configureinterface {
 
     network::routing_table { "table-${name}":
       table_id => $table_id,
-    }->
-    network::route { $name:
+    }
+    -> network::route { $name:
       ipaddress => concat($v4netids, $v6netids, $extranetids),
       netmask   => concat($v4masks, $v6masks, $extramasks),
       gateway   => concat($v4gateways, $v6gateways, $extragws),
       table     => concat($v4tables, $v6tables, $extratables),
       family    => concat($v4families, $v6families, $extrafamilies),
-    }->
-    profile::baseconfig::networkrule { $name:
+    }
+    -> profile::baseconfig::networkrule { $name:
       iprule => concat($v4rules, $v6rules),
       family => concat($v4rulef, $v6rulef),
     }
