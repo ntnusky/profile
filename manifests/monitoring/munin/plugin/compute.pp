@@ -7,7 +7,7 @@ class profile::monitoring::munin::plugin::compute {
   $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
   $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
 
-  $admin_token = hiera('ntnuopenstack::keystone::admin_token')
+  $admin_username = hiera('ntnuopenstack::keystone::admin_username', 'admin')
   $admin_pass = hiera('ntnuopenstack::keystone::admin_password')
   $admin_url = "${keystone_internal}:5000/v3"
 
@@ -16,7 +16,7 @@ class profile::monitoring::munin::plugin::compute {
     source => 'puppet:///modules/profile/muninplugins/compute_cpu',
     config => [ 'user nova',
       'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_token}",
+      "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
       "env.OS_AUTH_URL ${admin_url}",
       'env.OS_IDENTITY_API_VERSION 3',
@@ -27,7 +27,7 @@ class profile::monitoring::munin::plugin::compute {
     source => 'puppet:///modules/profile/muninplugins/compute_disk',
     config => [ 'user nova',
       'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_token}",
+      "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
       "env.OS_AUTH_URL ${admin_url}",
       'env.OS_IDENTITY_API_VERSION 3',
@@ -38,7 +38,7 @@ class profile::monitoring::munin::plugin::compute {
     source => 'puppet:///modules/profile/muninplugins/compute_ram',
     config => [ 'user nova',
       'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_token}",
+      "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
       "env.OS_AUTH_URL ${admin_url}",
       'env.OS_IDENTITY_API_VERSION 3',
@@ -49,7 +49,7 @@ class profile::monitoring::munin::plugin::compute {
     source => 'puppet:///modules/profile/muninplugins/compute_vms',
     config => [ 'user nova',
       'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_token}",
+      "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
       "env.OS_AUTH_URL ${admin_url}",
       'env.OS_IDENTITY_API_VERSION 3',
