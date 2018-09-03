@@ -11,7 +11,9 @@ class profile::services::rabbitmq {
   $secret     = hiera('profile::rabbitmq::rabbitsecret')
 
   class { '::rabbitmq':
+    admin_enable             => false,
     erlang_cookie            => $secret,
+    repos_ensure             => true,
     wipe_db_on_cookie_change => true,
   }
   -> rabbitmq_user { $rabbituser:
