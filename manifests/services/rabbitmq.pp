@@ -2,37 +2,55 @@
 class profile::services::rabbitmq {
 
   include ::profile::services::rabbitmq::firewall
-  # VRRP information
-  $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $vrid = hiera('profile::rabbitmq::vrrp::id')
-  $vrpri = hiera('profile::rabbitmq::vrrp::priority')
-  $vrinterval = hiera('profile::rabbitmq::vrrp::interval',2)
+  require ::profile::services::erlang
 
   # Rabbit credentials
   $rabbituser = hiera('profile::rabbitmq::rabbituser')
   $rabbitpass = hiera('profile::rabbitmq::rabbitpass')
   $secret     = hiera('profile::rabbitmq::rabbitsecret')
+  $enable_keepalived = hiera('profile::rabbitmq::keepalived::enable', false)
+  $cluster_nodes = hiera('profile::rabbitmq::servers', false)
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
 
-  # Controller information
-  $if_management = hiera('profile::interfaces::management')
+  if ( $cluster_nodes ) {
+    $cluster_config = {
+      config_cluster => true,
+      cluster_nodes  =>  $cluster_nodes,
+    }
+  } else {
+    $cluster_config = {}
+  }
 
-  # Rabbit IP
-  $rabbit_ip = hiera('profile::rabbitmq::ip')
+  if ( $enable_keepalived ) {
+    require ::profile::services::keepalived::rabbitmq
+  } else {
+    include ::profile::services::keepalived::uninstall
+  }
 
-  # Make sure keepalived is installed before rabbit.
-  require ::profile::services::keepalived
-  require ::profile::services::erlang
+  if ( $enable_keepalived ) and ( $cluster_nodes ) {
+    warning("Both keeaplived and clustering are enabled. You probably don't want that")
+  }
+
+  if ( $management_netv6 ) {
+    $ipv6 = true
+  } else {
+    $ipv6 = false
+  }
 
   class { '::rabbitmq':
+    admin_enable             => false,
     erlang_cookie            => $secret,
+    repos_ensure             => true,
     wipe_db_on_cookie_change => true,
-  }->
-  rabbitmq_user { $rabbituser:
+    ipv6                     => $ipv6,
+    *                        => $cluster_config,
+  }
+  -> rabbitmq_user { $rabbituser:
     admin    => true,
     password => $rabbitpass,
     provider => 'rabbitmqctl',
-  } ->
-  rabbitmq_user_permissions { "${rabbituser}@/":
+  }
+  -> rabbitmq_user_permissions { "${rabbituser}@/":
     configure_permission => '.*',
     write_permission     => '.*',
     read_permission      => '.*',
@@ -40,71 +58,15 @@ class profile::services::rabbitmq {
   }
 
   # Install munin plugins for monitoring.
-  $installMunin = hiera('profile::munin::install', true)
-  if($installMunin) {
-    munin::plugin { 'rabbit_fd':
-      ensure => present,
-      source => 'puppet:///modules/profile/muninplugins/rabbit_fd',
-      config => ['user root'],
-    }
-    munin::plugin { 'rabbit_processes':
-      ensure => present,
-      source => 'puppet:///modules/profile/muninplugins/rabbit_processes',
-      config => ['user root'],
-    }
-    munin::plugin { 'rabbit_memory':
-      ensure => present,
-      source => 'puppet:///modules/profile/muninplugins/rabbit_memory',
-      config => ['user root'],
-    }
-  }
-
-  # Configure rabbitmq to be alowed more than 1024 file descriptors using
-  # systemd.
-  file { '/etc/systemd/system/rabbitmq-server.service.d':
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-  ini_setting { 'Rabbit files':
-    ensure  => present,
-    path    => '/etc/systemd/system/rabbitmq-server.service.d/limits.conf',
-    section => 'Service',
-    setting => 'LimitNOFILE',
-    value   => '16384',
-    notify  => Exec['rabbitmq-systemd-reload'],
-    require => File['/etc/systemd/system/rabbitmq-server.service.d'],
-  }
-  exec { 'rabbitmq-systemd-reload':
-    command     => '/bin/systemctl daemon-reload',
-    notify      => Service['rabbitmq-server'],
-    refreshonly => true,
+  $install_munin = hiera('profile::munin::install', true)
+  if($install_munin) {
+    include ::profile::monitoring::munin::plugin::rabbitmq
   }
 
   # Include rabbitmq configuration for sensu. And the plugin
-  $installSensu = hiera('profile::sensu::install', true)
-  if ($installSensu) {
+  $install_sensu = hiera('profile::sensu::install', true)
+  if ($install_sensu) {
     include ::profile::services::rabbitmq::sensu
     include ::profile::sensu::plugin::rabbitmq
-  }
-
-  # Configure keepalived
-  keepalived::vrrp::script { 'check_rabbitmq':
-    script   =>
-      "bash -c '[[ $(/usr/sbin/rabbitmqctl status | grep -c rabbit) -ge 2 ]]'",
-    interval => $vrinterval,
-  }
-  keepalived::vrrp::instance { 'public-rabbitmq':
-    interface         => $if_management,
-    state             => 'MASTER',
-    virtual_router_id => $vrid,
-    priority          => $vrpri,
-    auth_type         => 'PASS',
-    auth_pass         => $vrrp_password,
-    virtual_ipaddress => [
-      "${rabbit_ip}/32",
-    ],
-    track_script      => 'check_rabbitmq',
   }
 }
