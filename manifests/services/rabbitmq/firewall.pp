@@ -45,7 +45,7 @@ class profile::services::rabbitmq::firewall {
     firewall { '503 accept incoming rabbitmq':
       source      => $extra_net,
       proto       => 'tcp',
-      dport       => 25672,
+      dport       => [4369, 25672],
       action      => 'accept',
     }
   }
