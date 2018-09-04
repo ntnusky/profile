@@ -4,7 +4,6 @@ class profile::services::rabbitmq::firewall {
 
   $management_net = hiera('profile::networks::management::ipv4::prefix')
   $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
-  $extra_net = hiera('profile::networks::management::ipv4::prefix::extra',false)
 
   firewall { '500 accept incoming rabbitmq':
     source      => $management_net,
@@ -32,21 +31,6 @@ class profile::services::rabbitmq::firewall {
       dport       => [4369, 25672],
       action      => 'accept',
       provider    => 'ip6tables',
-    }
-  }
-
-  if ($extra_net) {
-    firewall { '501 accept incoming rabbitmq':
-      source      => $extra_net,
-      proto       => 'tcp',
-      dport       => 5672,
-      action      => 'accept',
-    }
-    firewall { '503 accept incoming rabbitmq':
-      source      => $extra_net,
-      proto       => 'tcp',
-      dport       => [4369, 25672],
-      action      => 'accept',
     }
   }
 }
