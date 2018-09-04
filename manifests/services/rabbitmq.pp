@@ -22,6 +22,10 @@ class profile::services::rabbitmq {
 
   if ( $enable_keepalived ) {
     require ::profile::services::keepalived::rabbitmq
+  } else {
+    package { 'keepalived':
+      ensure => 'purged',
+    }
   }
 
   if ( $enable_keepalived ) and ( $cluster_nodes ) {
