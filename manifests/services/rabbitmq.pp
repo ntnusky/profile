@@ -8,8 +8,9 @@ class profile::services::rabbitmq {
   $rabbituser = hiera('profile::rabbitmq::rabbituser')
   $rabbitpass = hiera('profile::rabbitmq::rabbitpass')
   $secret     = hiera('profile::rabbitmq::rabbitsecret')
-  $enable_keepalived = hiera('profile::rabbitmq::keepalived::enable', true)
+  $enable_keepalived = hiera('profile::rabbitmq::keepalived::enable', false)
   $cluster_nodes = hiera('profile::rabbitmq::servers', false)
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
 
   if ( $cluster_nodes ) {
     $cluster_config = {
@@ -23,19 +24,17 @@ class profile::services::rabbitmq {
   if ( $enable_keepalived ) {
     require ::profile::services::keepalived::rabbitmq
   } else {
-    package { 'keepalived':
-      ensure => 'purged',
-    }
+    include ::profile::services::keepalived::uninstall
   }
 
   if ( $enable_keepalived ) and ( $cluster_nodes ) {
     warning("Both keeaplived and clustering are enabled. You probably don't want that")
   }
 
-  if ( $::facts['networking']['ip6'] =~ /^fe80/ ) {
-    $ipv6 = false
-  } else {
+  if ( $management_netv6 ) {
     $ipv6 = true
+  } else {
+    $ipv6 = false
   }
 
   class { '::rabbitmq':
