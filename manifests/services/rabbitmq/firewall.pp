@@ -28,7 +28,7 @@ class profile::services::rabbitmq::firewall {
     source      => $management_net,
     destination => $destv4,
     proto       => 'tcp',
-    dport       => 25672,
+    dport       => [4369, 25672],
     action      => 'accept',
   }
   if ( $management_netv6 ) {
@@ -44,7 +44,7 @@ class profile::services::rabbitmq::firewall {
       source      => $management_netv6,
       destination => $destv6,
       proto       => 'tcp',
-      dport       => 25672,
+      dport       => [4369, 25672],
       action      => 'accept',
       provider    => 'ip6tables',
     }
