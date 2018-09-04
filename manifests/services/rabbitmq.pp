@@ -32,11 +32,18 @@ class profile::services::rabbitmq {
     warning("Both keeaplived and clustering are enabled. You probably don't want that")
   }
 
+  if ( $::facts['networking']['ip6'] =~ /^fe80/ ) {
+    $ipv6 = false
+  } else {
+    $ipv6 = true
+  }
+
   class { '::rabbitmq':
     admin_enable             => false,
     erlang_cookie            => $secret,
     repos_ensure             => true,
     wipe_db_on_cookie_change => true,
+    ipv6                     => $ipv6,
     *                        => $cluster_config,
   }
   -> rabbitmq_user { $rabbituser:
