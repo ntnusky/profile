@@ -26,7 +26,7 @@ class profile::services::rabbitmq::sensu {
         'ha-mode'      => 'all',
         'ha-sync-mode' => 'automatic',
       },
-      after      => Rabbitmq_vhost['/sensu']
+      require    => Rabbitmq_vhost['/sensu']
     }
   }
 }
