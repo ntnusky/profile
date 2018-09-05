@@ -33,13 +33,15 @@ class profile::sensu::server {
 
   if ( $rabbithosts ) {
     $rabbit_cluster = $rabbithosts.map |$host| {
-      port      => 5672,
-      host      => $host,
-      user      => 'sensu',
-      password  => $sensurabbitpass,
-      vhost     => '/sensu',
-      heartbeat => 2,
-      prefetch  => 1,
+      {
+        port      => 5672,
+        host      => $host,
+        user      => 'sensu',
+        password  => $sensurabbitpass,
+        vhost     => '/sensu',
+        heartbeat => 2,
+        prefetch  => 1,
+      }
     }
     $transport_conf = {
       rabbitmq_cluster => $rabbit_cluster
@@ -52,7 +54,6 @@ class profile::sensu::server {
       rabbitmq_port     => 5672,
     }
   }
-
 
   class { '::sensu':
     transport_reconnect_on_error => true,
