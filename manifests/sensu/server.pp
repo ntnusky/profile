@@ -17,6 +17,7 @@ class profile::sensu::server {
 
   if ( ! $rabbithost ) and ( ! $rabbithosts ) {
     error('You need to specify either a single rabbithost, of a list of hosts')
+  }
 
   if ( $::is_virtual ) {
     $subs = [ 'all' ]
