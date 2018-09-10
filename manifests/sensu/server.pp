@@ -67,6 +67,10 @@ class profile::sensu::server {
     sensu_plugin_provider        => 'sensu_gem',
     subscriptions                => $subscriptions,
     purge                        => true,
+    check_defaults               => {
+      'low_flap_threshold'  => 20,
+      'high_flap_threshold' => 30,
+    },
     *                            => $transport_conf,
   }
 
