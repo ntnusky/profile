@@ -70,7 +70,7 @@ class profile::services::redis {
   if ($installsensu) {
     include ::profile::sensu::plugin::redis
     sensu::subscription { 'redis': }
-    sensu::config { 'redis': {
+    sensu::config { 'redis':
       config => {
         masterauth => $masterauth,
       },
