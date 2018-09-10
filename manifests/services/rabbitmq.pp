@@ -68,5 +68,6 @@ class profile::services::rabbitmq {
   if ($install_sensu) {
     include ::profile::services::rabbitmq::sensu
     include ::profile::sensu::plugin::rabbitmq
+    sensu::subscription { 'rabbitmq': }
   }
 }

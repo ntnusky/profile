@@ -92,5 +92,6 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
   }
   if ($installsensu) {
     include ::profile::sensu::plugin::haproxy
+    sensu::subscription { 'haproxy-servers': }
   }
 }

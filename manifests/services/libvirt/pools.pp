@@ -21,5 +21,6 @@ class profile::services::libvirt::pools {
   $installsensu = hiera('profile::sensu::install', true)
   if ($installsensu) {
     include ::profile::sensu::plugin::lvm
+    sensu::subscription { 'lvm-checks': }
   }
 }

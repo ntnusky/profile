@@ -18,7 +18,11 @@ class profile::sensu::client {
     if ( $::is_virtual ) {
       $subs = [ 'all' ]
     } else {
-      $subs = [ 'all', 'physical-servers' ]
+      if ( $::facts['dmi']['manufacturer'] =~ /Dell/ ) {
+        $subs = [ 'all', 'physical-servers', 'dell-servers']
+      } else {
+        $subs = [ 'all', 'physical-servers' ]
+      }
     }
 
     if ( $subs_from_client_conf != '' )  {
