@@ -32,6 +32,7 @@ class profile::services::memcache {
 
   if ($installsensu) {
     include ::profile::sensu::plugin::memcached
+    sensu::subscription { 'memcached': }
   }
   if($installmunin) {
     include ::profile::monitoring::munin::plugin::memcached

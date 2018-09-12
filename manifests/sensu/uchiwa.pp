@@ -7,14 +7,20 @@ class profile::sensu::uchiwa {
   $api_name = hiera('ntnuopenstack::region')
   $uchiwa_url = hiera('profile::sensu::uchiwa::fqdn')
 
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_if = hiera('profile::interfaces::management')
   $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   $private_key = hiera('profile::sensu::uchiwa::private_key')
   $public_key  = hiera('profile::sensu::uchiwa::public_key')
   $private_key_path = '/etc/sensu/keys/uchiwa.rsa'
   $public_key_path  = '/etc/sensu/keys/uchiwa.rsa.pub'
+
+  if ( $management_netv6 ) {
+    $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+  } else {
+    $management_ipv6 = ''
+  }
 
   class { '::uchiwa':
     user                => 'sensu',

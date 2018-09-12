@@ -13,6 +13,7 @@ class profile::ceph::monitor {
   $installsensu = hiera('profile::sensu::install', true)
   if ($installsensu) {
     include ::profile::sensu::plugin::ceph
+    sensu::subscription { 'roundrobin:ceph': }
   }
 
   require ::profile::ceph::base

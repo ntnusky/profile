@@ -6,6 +6,7 @@ class profile::sensu::checks {
   contain ::profile::sensu::checks::certs
   contain ::profile::sensu::checks::dell
   contain ::profile::sensu::checks::haproxy
+  contain ::profile::sensu::checks::lvm
   contain ::profile::sensu::checks::memcached
   contain ::profile::sensu::checks::mysql
   contain ::profile::sensu::checks::physical
