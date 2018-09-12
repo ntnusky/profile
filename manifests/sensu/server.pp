@@ -16,7 +16,7 @@ class profile::sensu::server {
   $redismasterauth = hiera('profile::redis::masterauth')
 
   if ( ! $rabbithost ) and ( ! $rabbithosts ) {
-    error('You need to specify either a single rabbithost, of a list of hosts')
+    error('You need to specify either a single rabbithost, or a list of hosts')
   }
 
   if ( $::is_virtual ) {
