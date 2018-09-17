@@ -17,6 +17,14 @@ class profile::services::rabbitmq {
       config_cluster => true,
       cluster_nodes  =>  $cluster_nodes,
     }
+
+    rabbitmq_policy { 'ha-all@/':
+      pattern    => '^(?!amq\.).*',
+      definition => {
+        'ha-mode' => 'all',
+      },
+      require    => Class['rabbitmq'],
+    }
   } else {
     $cluster_config = {}
   }
