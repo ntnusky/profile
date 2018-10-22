@@ -3,8 +3,16 @@ class profile::baseconfig::mounts {
   $mounts = hiera_hash('profile::mounts', false)
 
   $mounts.each | $path, $options | {
+    file { $path:
+      ensure => 'directory',
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0700',
+    }
+
     mount { $path:
-      * => $options,
+      require => File[$path],
+      *       => $options,
     }
   }
 }
