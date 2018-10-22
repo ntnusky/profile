@@ -19,6 +19,14 @@ class profile::services::puppet::server::hiera {
     source => 'puppet:///modules/profile/puppet/pull_hiera.sh',
   }
 
+  file { '/usr/local/sbin/killr10k.sh':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/profile/puppet/killr10k.sh',
+  }
+
   file { '/etc/puppetlabs/puppet/hiera.yaml':
     ensure  => present,
     owner   => 'root',
@@ -27,6 +35,12 @@ class profile::services::puppet::server::hiera {
     source  => 'puppet:///modules/profile/puppet/hiera.yaml',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
+  }
+
+  cron { 'Puppet r10k killer':
+    command => '/usr/local/sbin/killr10k.sh',
+    user    => 'root',
+    minute  => '*',
   }
 
   cron { 'Puppet hieradata sync':
