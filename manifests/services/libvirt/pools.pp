@@ -1,13 +1,16 @@
 # Storage pools for libvirt
-# This class requires an empty LVM VG called "vmvg"
-# to be present on your system
+# There should be created a lvm VG, and its name should be delivered trough
+# hiera.
 class profile::services::libvirt::pools {
+  $poolname = hiera('profile::kvm::vmvg::name', false)
 
-  libvirt_pool { 'vmvg':
-    ensure    => present,
-    type      => 'logical',
-    autostart => true,
-    target    => '/dev/vmvg',
+  if($poolname) {
+    libvirt_pool { $poolname:
+      ensure    => present,
+      type      => 'logical',
+      autostart => true,
+      target    => "/dev/${poolname}",
+    }
   }
 
   libvirt_pool { 'default':
