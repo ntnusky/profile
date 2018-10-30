@@ -18,8 +18,9 @@ class profile::sensu::uchiwa {
 
   if ( $management_netv6 ) {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+    $ip = concat([], $management_ipv4, $management_ipv6)
   } else {
-    $management_ipv6 = ''
+    $ip = [$management_ipv4]
   }
 
   class { '::uchiwa':
@@ -45,7 +46,7 @@ class profile::sensu::uchiwa {
     servername          => $uchiwa_url,
     serveraliases       => [$uchiwa_url],
     port                => 80,
-    ip                  => concat([], $management_ipv4, $management_ipv6),
+    ip                  => $ip,
     docroot             => false,
     manage_docroot      => false,
     access_log_format   => 'forwarded',

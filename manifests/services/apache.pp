@@ -5,8 +5,15 @@ class profile::services::apache {
   $default_docroot = hiera('profile::apache::vhost::default::docroot',
       "/var/www/${::fqdn}")
 
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+
+  if ( $management_netv6 ) {
+    $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+    $ip = concat([], $management_ipv4, $management_ipv6)
+  } else {
+    $ip = [$management_ipv4]
+  }
 
   class { '::apache':
     mpm_module    => 'prefork',
@@ -19,12 +26,14 @@ class profile::services::apache {
   }
 
   apache::listen { "${management_ipv4}:80": }
-  apache::listen { "[${management_ipv6}]:80": }
+  if ( $management_netv6 ) {
+    apache::listen { "[${management_ipv6}]:80": }
+  }
 
   apache::vhost { "${::fqdn} http":
     servername    => $::fqdn,
     port          => '80',
-    ip            => concat([], $management_ipv4, $management_ipv6),
+    ip            => $ip,
     add_listen    => false,
     docroot       => $default_docroot,
     docroot_owner => 'www-data',
