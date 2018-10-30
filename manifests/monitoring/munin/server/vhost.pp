@@ -2,9 +2,15 @@
 define profile::monitoring::munin::server::vhost {
   require profile::services::apache
 
+  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_if = hiera('profile::interfaces::management')
   $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+
+  if ( $management_netv6 ) {
+    $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+  } else {
+    $management_ipv6 = ''
+  }
 
   apache::vhost { "${name} http":
     servername        => $name,
@@ -15,7 +21,7 @@ define profile::monitoring::munin::server::vhost {
     docroot_owner     => 'www-data',
     docroot_group     => 'www-data',
     access_log_format => 'forwarded',
-    directories   => [
+    directories       => [
       { path     => '/munin-cgi',
         provider => 'location',
         require  => 'all granted',
@@ -51,7 +57,7 @@ define profile::monitoring::munin::server::vhost {
         options => ['None'],
       },
     ],
-    aliases       => [
+    aliases           => [
       { alias => '/munin-cgi/static',
         path  => '/etc/munin/static',
       },
@@ -65,7 +71,7 @@ define profile::monitoring::munin::server::vhost {
         path        => '/usr/lib/munin/cgi/munin-cgi-html',
       },
     ],
-    rewrites       => [
+    rewrites          => [
       { rewrite_rule => [
           '^/favicon.ico /etc/munin/static/favicon.ico [L]',
         ],
