@@ -20,7 +20,7 @@ class profile::sensu::uchiwa {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     $ip = concat([], $management_ipv4, $management_ipv6)
   } else {
-    $ip = concat([], $management_ipv4)
+    $ip = [$management_ipv4]
   }
 
   class { '::uchiwa':
