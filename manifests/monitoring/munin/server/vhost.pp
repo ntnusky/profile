@@ -8,15 +8,16 @@ define profile::monitoring::munin::server::vhost {
 
   if ( $management_netv6 ) {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+    $ip = concat([], $management_ipv4, $management_ipv6)
   } else {
-    $management_ipv6 = ''
+    $ip = concat([], $management_ipv4)
   }
 
   apache::vhost { "${name} http":
     servername        => $name,
     serveraliases     => [$name],
     port              => '80',
-    ip                => concat([], $management_ipv4, $management_ipv6),
+    ip                => $ip,
     docroot           => '/var/cache/munin/www',
     docroot_owner     => 'www-data',
     docroot_group     => 'www-data',
