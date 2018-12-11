@@ -4,7 +4,8 @@ class profile::services::puppet::server::config {
   $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
   $puppetdb_hostname = hiera('profile::puppetdb::hostname')
   $management_if = hiera('profile::interfaces::management')
-  $master_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $auto_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $master_ip = hiera("profile::interfaces::${management_if}::address", $auto_ip)
   $dash_url = hiera('profile::dashboard::name::v4only')
 
   include ::profile::services::puppet::altnames

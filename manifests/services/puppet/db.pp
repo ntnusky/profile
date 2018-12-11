@@ -11,7 +11,8 @@ class profile::services::puppet::db {
   $dbpass = hiera('profile::puppetdb::database::pass')
 
   $if = hiera('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$if]['ip']
+  $autoip = $::facts['networking']['interfaces'][$if]['ip']
+  $ip = hiera("profile::interfaces::${if}::address", $autoip)
 
   class { '::puppetdb::server':
     database           => 'postgres',

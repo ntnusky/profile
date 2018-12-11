@@ -12,7 +12,8 @@ class profile::services::memcache {
     $memcache_ip = hiera('profile::memcache::ip')
     $listen = $memcache_ip
   } else {
-    $memcache_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+    $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
+    $memcache_ipv4 = hiera("profile::interfaces::${management_if}::address", $autoip)
     $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     if ( $memcache_ipv6 =~ /^fe80/ ) {
       $listen = $memcache_ipv4

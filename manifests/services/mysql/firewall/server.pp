@@ -6,7 +6,8 @@ class profile::services::mysql::firewall::server {
   $extra_net = hiera('profile::networks::management::ipv4::prefix::extra',
       false)
   $management_if = hiera('profile::interfaces::management')
-  $ip = $facts['networking']['interfaces'][$management_if]['ip']
+  $autoip = $facts['networking']['interfaces'][$management_if]['ip']
+  $ip = hiera("profile::interfaces::${management_if}::address", $autoip)
 
   # We only accept incoming requests from the management-net, as all other
   # requests should come in trough the loadbalancers.

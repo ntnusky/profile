@@ -1,7 +1,7 @@
 # Configuring keepalived for the postgres IP
 class profile::services::postgresql::keepalived {
   $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  
+
   $v4ip = hiera('profile::postgres::ipv4')
   $v4id = hiera('profile::postgres::ipv4::id')
   $v4pri = hiera('profile::postgres::ipv4::priority')
@@ -10,7 +10,8 @@ class profile::services::postgresql::keepalived {
   $v6pri = hiera('profile::postgres::ipv6::priority', false)
 
   $management_if = hiera('profile::interfaces::management')
-  $localip = $facts['networking']['interfaces'][$management_if]['ip']
+  $autoip = $facts['networking']['interfaces'][$management_if]['ip']
+  $localip = hiera("profile::interfaces::${management_if}::address", $autoip)
 
   require ::profile::services::keepalived
 
