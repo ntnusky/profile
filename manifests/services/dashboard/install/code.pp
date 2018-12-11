@@ -1,7 +1,8 @@
 # Installs the dashboard
 class profile::services::dashboard::install::code {
-  $revision = lookup('profile::dashboard::revision', {
-    'value_type' => 'String',
+  $revision = lookup({
+    'name'          => 'profile::dashboard::revision',
+    'value_type'    => String,
     'default_value' => 'master',
   })
 
