@@ -10,7 +10,8 @@ class profile::services::dhcp {
   $omapi_port = hiera('profile::dhcp::omapi::port', 7911)
 
   $man_if = hiera('profile::interfaces::management')
-  $management_ip = $facts['networking']['interfaces'][$man_if]['ip']
+  $mip = $facts['networking']['interfaces'][$man_if]['ip']
+  $management_ip = hiera("profile::interfaces::${man_if}::address", $mip)
   $pxe_server = hiera('profile::dhcp::pxe::server', $management_ip)
   $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
 

@@ -1,7 +1,8 @@
 # This class installs and configures the postgresql server 
 class profile::services::postgresql::server {
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
   $database_port = hiera('profile::postgres::backend::port', '5432')
   $postgresql_ipv4 = hiera('profile::postgres::ipv4')
   $postgresql_ipv6 = hiera('profile::postgres::ipv6', [])

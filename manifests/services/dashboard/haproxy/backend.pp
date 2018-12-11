@@ -1,7 +1,8 @@
 # Haproxy backend for shiftleader
 class profile::services::dashboard::haproxy::backend {
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
 
   profile::services::haproxy::tools::register { "Shiftleader-${::fqdn}":
     servername  => $::hostname,

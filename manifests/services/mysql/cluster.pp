@@ -9,7 +9,8 @@ class profile::services::mysql::cluster {
   $net_write_timeout = hiera('profile::mysqlcluster::timeout::net::write', 60)
 
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
 
   apt::source { 'galera_mariadb':
     location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',

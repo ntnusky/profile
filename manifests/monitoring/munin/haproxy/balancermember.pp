@@ -1,7 +1,8 @@
 # Define balancer members for munin haproxy backend
 class profile::monitoring::munin::haproxy::balancermember {
   $management_if = hiera('profile::interfaces::management')
-  $management_ip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
 
   profile::services::haproxy::tools::register { "Munin-${::fqdn}":
     servername  => $::hostname,
