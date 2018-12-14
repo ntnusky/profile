@@ -1,7 +1,7 @@
 #!/bin/bash
 
-url="@slurl/host/tftp/kernels/"
-output="@tftpdir"
+url="<%= @slurl %>/host/tftp/kernels/"
+output="<%= @tftpdir %>"
 
 if [[ -e /tmp/kernels.json ]]; then
   rm /tmp/kernels.json
