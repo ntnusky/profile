@@ -9,15 +9,15 @@ class profile::services::dashboard::clients::tftp {
   $tftpdir = lookup('profile::tftp::root', String, 'first', '/var/lib/tftpboot/')
 
   if($cert) {
-    $proto = "https"
+    $proto = 'https'
   } else {
-    $proto = "http"
+    $proto = 'http'
   }
 
   $slurl="${proto}://${slname}"
 
   cron { 'Dashboard-client tftp':
-    command => "/opt/shiftleader/manage.py create_tftp",
+    command => '/opt/shiftleader/manage.py create_tftp',
     user    => 'root',
     minute  => '*',
   }
