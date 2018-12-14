@@ -28,4 +28,10 @@ class profile::services::dashboard::clients::tftp {
     mode    => '0755',
     content => template('profile/tftpkernels.erb'),
   }
+
+  cron { 'Dashboard-client tftpimages':
+    command => '/usr/local/bin/tftpkernels.sh',
+    user    => 'root',
+    minute  => '*',
+  }
 }
