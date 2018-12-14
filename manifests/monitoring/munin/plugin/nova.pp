@@ -11,6 +11,23 @@ class profile::monitoring::munin::plugin::nova {
   $admin_pass = hiera('ntnuopenstack::keystone::admin_password')
   $admin_url = "${keystone_internal}:5000/v3"
 
+  $public_nets = lookup('ntnuopenstack::neutron::networks::external', Array,
+      'unique', [])
+
+  $public_nets.each | $net | {
+    munin::plugin { "openstack_ipuse_${net}":
+      ensure => present,
+      source => 'puppet:///modules/profile/muninplugins/openstack_ipuse_',
+      config => [ 'user nova',
+        'env.OS_PROJECT_NAME admin',
+        "env.OS_USERNAME ${admin_username}",
+        "env.OS_PASSWORD ${admin_pass}",
+        "env.OS_AUTH_URL ${admin_url}",
+        'env.OS_IDENTITY_API_VERSION 3',
+      ],
+    }
+  }
+
   munin::plugin { 'openstack_projects':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/openstack_projects',
