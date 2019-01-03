@@ -1,8 +1,5 @@
 #!/bin/bash
 
-[[ $0 =~ ([^_]*)$ ]]
-net=$BASH_REMATCH
-
 if [[ $1 == "config" ]]; then
   echo "graph_title IP utilization"
   echo "graph_category openstack"
