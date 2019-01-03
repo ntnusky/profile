@@ -28,6 +28,20 @@ class profile::monitoring::munin::plugin::nova {
     }
   }
 
+  $externals = join($public_nets, ' ')
+  munin::plugin { 'openstack_ipuse':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_ipuse',
+    config => [ 'user nova',
+      'env.OS_PROJECT_NAME admin',
+      "env.OS_USERNAME ${admin_username}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${admin_url}",
+      'env.OS_IDENTITY_API_VERSION 3',
+      "env.EXTERNALS ${externals}",
+    ],
+  }
+
   munin::plugin { 'openstack_projects':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/openstack_projects',
