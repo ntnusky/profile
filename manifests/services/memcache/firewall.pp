@@ -9,7 +9,8 @@ class profile::services::memcache::firewall {
   $sourcev6 = hiera('profile::networks::management::ipv6::prefix', false)
 
   if ( $sourcev4 ) {
-    $destv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+    $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
+    $destv4 = hiera("profile::interfaces::${management_if}::address", $autoip)
 
     firewall { '500 accept incoming memcached tcp':
       source      => $sourcev4,

@@ -6,7 +6,8 @@ class profile::services::redis {
 
   $nodetype = hiera('profile::redis::nodetype')
   $nic = hiera('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$nic]['ip']
+  $autoip = $::facts['networking']['interfaces'][$nic]['ip']
+  $ip = hiera("profile::interfaces::${nic}::address", $autoip)
   $redismaster = hiera('profile::redis::master')
   $installsensu = hiera('profile::sensu::install', true)
   $masterauth = hiera('profile::redis::masterauth')
@@ -30,9 +31,8 @@ class profile::services::redis {
     slaveof             => $slaveof,
     masterauth          => $masterauth,
     requirepass         => $masterauth,
-  } ->
-
-  class { '::redis::sentinel':
+  }
+  -> class { '::redis::sentinel':
     auth_pass        => $masterauth,
     down_after       => 5000,
     failover_timeout => 60000,

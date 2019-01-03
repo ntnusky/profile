@@ -4,7 +4,8 @@ define profile::monitoring::munin::server::vhost {
 
   $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_if = hiera('profile::interfaces::management')
-  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
 
   if ( $management_netv6 ) {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']

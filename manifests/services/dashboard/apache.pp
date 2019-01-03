@@ -5,7 +5,8 @@ class profile::services::dashboard::apache {
   $dashboardname = hiera('profile::dashboard::name')
   $dashboardv4name = hiera('profile::dashboard::name::v4only', false)
   $management_if = hiera('profile::interfaces::management')
-  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   require ::profile::services::apache

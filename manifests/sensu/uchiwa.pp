@@ -9,7 +9,8 @@ class profile::sensu::uchiwa {
 
   $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_if = hiera('profile::interfaces::management')
-  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
 
   $private_key = hiera('profile::sensu::uchiwa::private_key')
   $public_key  = hiera('profile::sensu::uchiwa::public_key')

@@ -5,7 +5,8 @@ class profile::services::postgresql::firewall {
   $management_net = hiera('profile::networks::management::ipv4::prefix')
   $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
   $management_if = hiera('profile::interfaces::management')
-  $ip = $facts['networking']['interfaces'][$management_if]['ip']
+  $autoip = $facts['networking']['interfaces'][$management_if]['ip']
+  $ip = hiera("profile::interfaces::${management_if}::address", $autoip)
   $postgresql_ipv4 = hiera('profile::postgres::ipv4')
   $postgresql_ipv6 = hiera('profile::postgres::ipv6', false)
 

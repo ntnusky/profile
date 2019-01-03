@@ -1,7 +1,8 @@
 # Configures the haproxy backend for this puppetmaster 
 class profile::services::puppet::server::haproxy::backend {
   $if = hiera('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$if]['ip']
+  $autoip = $::facts['networking']['interfaces'][$if]['ip']
+  $ip = hiera("profile::interfaces::${if}::address", $autoip)
 
   profile::services::haproxy::tools::register { "Puppetserver-${::fqdn}":
     servername  => $::hostname,

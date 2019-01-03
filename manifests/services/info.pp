@@ -2,7 +2,8 @@
 class profile::services::info {
   $vhost = lookup('profile::info::maillist::fqdn')
   $management_if = lookup('profile::interfaces::management')
-  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
   $auth_password = lookup('profile::info::auth_password')
   $auth_user = lookup('profile::info::auth_user', String, 'first', 'sympa')

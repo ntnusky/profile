@@ -1,0 +1,33 @@
+#!/bin/bash
+
+url="<%= @slurl %>/host/tftp/kernels/"
+output="<%= @tftpdir %>"
+
+if [[ -e /tmp/kernels.json ]]; then
+  rm /tmp/kernels.json
+fi
+
+if [[ ! -e $output ]]; then
+  mkdir -p $output
+fi
+
+wget -O /tmp/kernels.json $url &> /dev/null
+
+folders=$(jq -r '. | keys[]' /tmp/kernels.json)
+for folder in $folders; do
+  if [[ ! -e $output/$folder ]]; then
+    mkdir $output/$folder
+  fi
+
+  initrdurl=$(jq -r ".[\"$folder\"][\"initrd\"]" /tmp/kernels.json)
+  kernelurl=$(jq -r ".[\"$folder\"][\"kernel\"]" /tmp/kernels.json)
+
+  if [[ ! -e $output/$folder/$(basename $initrdurl) ]]; then
+    wget -O $output/$folder/$(basename $initrdurl) $initrdurl &> /dev/null
+  fi
+  if [[ ! -e $output/$folder/$(basename $kernelurl) ]]; then
+    wget -O $output/$folder/$(basename $kernelurl) $kernelurl &> /dev/null
+  fi
+done
+
+rm /tmp/kernels.json

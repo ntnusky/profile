@@ -6,7 +6,8 @@ class profile::services::apache {
       "/var/www/${::fqdn}")
 
   $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
-  $management_ipv4 = $::facts['networking']['interfaces'][$management_if]['ip']
+  $mip = $facts['networking']['interfaces'][$management_if]['ip']
+  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
 
   if ( $management_netv6 ) {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']

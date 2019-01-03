@@ -1,8 +1,5 @@
 # Installs pgpool for HA postgres
 class profile::services::postgresql::pgpool {
-  $management_if = hiera('profile::interfaces::management')
-  $management_ip = hiera("profile::interfaces::${management_if}::address")
-
   $postgres_ip = hiera('profile::postgres::ip')
   $servers = hiera_hash('profile::postgres::servers')
 
