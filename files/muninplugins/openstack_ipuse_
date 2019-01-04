@@ -1,0 +1,25 @@
+#!/bin/bash
+
+[[ $0 =~ ([^_]*)$ ]]
+net=$BASH_REMATCH
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title IP allocations for $net"
+  echo "graph_category openstack"
+  echo "graph_vlabel IP's"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of allocated and used IP's for the network $net"
+  echo "total.label Available"
+  echo "total.info Number of available IP's"
+  echo "used.label Used"
+  echo "used.info Number of used IP's"
+  exit 0
+fi
+
+value=$(openstack ip availability show $net -f value -c subnet_ip_availability)
+[[ $value =~ total_ips=\'([0-9]+)\' ]]
+echo "total.value ${BASH_REMATCH[1]}"
+
+[[ $value =~ used_ips=\'([0-9]+)\' ]]
+echo "used.value ${BASH_REMATCH[1]}"
