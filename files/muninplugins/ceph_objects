@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH Objects"
+  echo "graph_category ceph"
+  echo "graph_vlabel Objects"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info The number of objects in each ceph pool"
+  
+  for pool in $(ceph osd pool ls); do
+    pn=${pool//./_}
+    echo ${pn}.label $pool
+    echo ${pn}.info Objects in the $pool pool.
+  done
+  exit 0
+fi
+
+for pool in $(ceph osd pool ls); do
+  pn=${pool//./_}
+  
+  data=$(rados df --pool $pool | grep $pool | awk '{print $3}')
+  if [[ $data =~ ^[0-9]+$ ]]; then
+    echo $pn.value ${BASH_REMATCH[0]}
+  else
+    echo $pn.value U 
+  fi
+done

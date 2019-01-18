@@ -9,6 +9,11 @@ class profile::monitoring::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_total',
     config => ['user root'],
   }
+  munin::plugin { 'ceph_objects':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/ceph_objects',
+    config => ['user root'],
+  }
   munin::plugin { 'ceph_osd':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/ceph_osd',
