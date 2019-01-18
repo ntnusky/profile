@@ -50,7 +50,7 @@ class profile::sensu::checks::openstack::publicapi inherits profile::sensu::chec
     $swift_api = $::profile::sensu::checks::openstack::params::swift_public
 
     sensu::check { 'openstack-swift-public-api':
-      command     => "check-http.rb -u ${swift_api}",
+      command     => "check-http.rb -u ${swift_api} --response-code 405",
       interval    => 300,
       standalone  => false,
       subscribers => [ 'os-public-api-checks' ],

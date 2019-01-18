@@ -57,7 +57,7 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
     $swift_api = $::profile::sensu::checks::openstack::params::swift_admin
 
     sensu::check { 'openstack-swift-admin-api':
-      command     => "check-http.rb -u ${swift_api}",
+      command     => "check-http.rb -u ${swift_api} --response-code 405",
       interval    => 300,
       standalone  => false,
       subscribers => [ 'os-admin-api-checks' ],
