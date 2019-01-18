@@ -26,7 +26,7 @@ while [[ 1 -eq 1 ]]; do
   ((j++))
   sleep 1
   if [[ $j -gt 600 ]]; then
-    for i in $(seq 1 3); do
+    for i in $(seq 1 4); do
       value=${values[$i]}
       tail -n 400 $path/ceph-$pool-$value > $path/tmp-ceph-$pool-$value
       rm $path/ceph-$pool-$value
