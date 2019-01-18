@@ -24,6 +24,11 @@ class profile::monitoring::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_usage',
     config => ['user root'],
   }
+  munin::plugin { 'ceph_activity_traffic':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/ceph_activity_traffic',
+    config => ['user root'],
+  }
 
   # Add monitoring for specific pools
   $pools = ['rbd', 'volumes', 'images']

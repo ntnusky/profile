@@ -1,0 +1,31 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH Activity - IOPS"
+  echo "graph_category ceph"
+  echo "graph_vlabel IOPS"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Traffic to/from ceph-pools"
+  
+  for pool in $(ceph osd pool ls); do
+    pn=${pool//./_}
+    echo "${pn}read.label Read"
+    echo "${pn}read.type COUNTER"
+    echo "${pn}read.graph no"
+    echo "${pn}write.label $pn"
+    echo "${pn}write.type COUNTER"
+    echo "${pn}write.negative ${pn}read"
+  done
+  exit 0
+fi
+
+for pool in $(ceph osd pool ls); do
+  pn=${pool//./_}
+  
+  data=$(rados df --pool $pool | grep $pool | awk '{print $9 " " $11}')
+  if [[ $data =~ ([0-9.\]+)\ ([0-9.\]+) ]]; then
+    echo ${pn}read.value ${BASH_REMATCH[1]}
+    echo ${pn}write.value ${BASH_REMATCH[2]}
+  fi
+done
