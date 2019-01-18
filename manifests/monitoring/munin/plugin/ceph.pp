@@ -24,9 +24,9 @@ class profile::monitoring::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_usage',
     config => ['user root'],
   }
-  munin::plugin { 'ceph_activity_traffic':
+  munin::plugin { 'ceph_activity_iops':
     ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/ceph_activity_traffic',
+    source => 'puppet:///modules/profile/muninplugins/ceph_activity_iops',
     config => ['user root'],
   }
 
