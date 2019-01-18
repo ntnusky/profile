@@ -1,8 +1,0 @@
-[Unit]
-Description=Ceph collector - pool rbd
-
-[Service]
-ExecStart=/usr/local/sbin/ceph-collector.sh rbd
-
-[Install]
-WantedBy=multi-user.target
