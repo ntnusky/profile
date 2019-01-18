@@ -11,12 +11,12 @@ if [[ $1 == "config" ]]; then
   
   for pool in $(ceph osd pool ls); do
     pn=${pool//./_}
-    echo "${pn}read.label Read"
+    echo "${pn}read.label $pn"
     echo "${pn}read.type COUNTER"
-    echo "${pn}read.graph no"
+    echo "${pn}read.negative ${pn}write"
     echo "${pn}write.label $pn"
     echo "${pn}write.type COUNTER"
-    echo "${pn}write.negative ${pn}read"
+    echo "${pn}write.graph no"
   done
   exit 0
 fi
