@@ -20,17 +20,17 @@ iopsW=0
 clientio=$(ceph osd pool stats $pool | grep client)
 
 if [[ $? == 0 ]]; then
-  if [[ $clientio =~ ([0-9]*)\ ([kMG])?B/s\ rd ]]; then
+  if [[ $clientio =~ ([0-9\.]*)\ ?([kMG])?i?B/s\ rd ]]; then
     if [[ ${BASH_REMATCH[2]} ]]; then
-      bytesRead=$(( ${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]} ))
+      bytesRead=$(echo "${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]}" | bc)
     else
       bytesRead=${BASH_REMATCH[1]}
     fi
   fi
 
-  if [[ $clientio =~ ([0-9]*)\ ([kMG])?B/s\ wr ]]; then
+  if [[ $clientio =~ ([0-9\.]*)\ ?([kMG])?i?B/s\ wr ]]; then
     if [[ ${BASH_REMATCH[2]} ]]; then
-      bytesWrite=$(( ${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]} ))
+      bytesWrite=$(echo "${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]}" | bc)
     else
       bytesWrite=${BASH_REMATCH[1]}
     fi
@@ -45,7 +45,7 @@ if [[ $? == 0 ]]; then
   fi
 fi
 
-echo $bytesRead
-echo $bytesWrite
-echo $iopsR
-echo $iopsW
+echo ${bytesRead%.*}
+echo ${bytesWrite%.*}
+echo ${iopsR%.*}
+echo ${iopsW%.*}
