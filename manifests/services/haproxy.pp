@@ -16,8 +16,8 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
   $ssloptions = 'no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets'
 
   class { '::haproxy':
-    merge_options  => true,
-    global_options => {
+    merge_options   => true,
+    global_options  => {
       'log'                        => [
         '/dev/log local0',
         '/dev/log local1 notice',
@@ -28,6 +28,9 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
       'ssl-default-server-ciphers' => $sslciphers,
       'ssl-default-server-options' => $ssloptions,
       'stats'                      => 'socket /var/lib/haproxy/stats mode 600 level admin',
+    },
+    default_options => {
+      'option' => [ 'forwardfor', ],
     },
   }
 
