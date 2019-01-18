@@ -11,12 +11,12 @@ if [[ $1 == "config" ]]; then
   
   for pool in $(ceph osd pool ls); do
     pn=${pool//./_}
-    echo "${pn}read.label $pn"
-    echo "${pn}read.type COUNTER"
-    echo "${pn}read.negative ${pn}write"
     echo "${pn}write.label $pn"
     echo "${pn}write.type COUNTER"
     echo "${pn}write.graph no"
+    echo "${pn}read.label $pn"
+    echo "${pn}read.type COUNTER"
+    echo "${pn}read.negative ${pn}write"
   done
   exit 0
 fi
@@ -26,7 +26,7 @@ for pool in $(ceph osd pool ls); do
   
   data=$(rados df --pool $pool | grep $pool | awk '{print $9 " " $11}')
   if [[ $data =~ ([0-9.\]+)\ ([0-9.\]+) ]]; then
-    echo ${pn}read.value ${BASH_REMATCH[1]}
     echo ${pn}write.value ${BASH_REMATCH[2]}
+    echo ${pn}read.value ${BASH_REMATCH[1]}
   fi
 done
