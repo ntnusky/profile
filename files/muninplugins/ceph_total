@@ -1,40 +1,22 @@
-#!/bin/sh
+#!/bin/bash
 
 : << =cut
 
 =head1 NAME
 
-ceph_total - Shows ceph total storage capacity, used raw space and used data
-space
+ceph_total - Shows ceph total storage capacity and used raw space
 
 =head1 CONFIGURATION
 
-[ceph_total]
-env.warning_level Used raw space percentage above warning alert should be issued
-env.critical_level Used raw space percentage above critical alert should be
-issued
-
 =head1 AUTHOR
 
-Mate Gabri <mate@gabri.hu>
 Eigil Obrestad <eigil-git@obrestad.org>
-Lars Erik Pedersen <lars.e.pedersen@ntnu.no>
 
 =head1 LICENSE
 
-GPLv2
+Public domain
 
 =head1 CHANGELOG
-
-13.dec 2017 - Lars Erik - Patch the plugin to support Ceph Luminous (only)
-
-17.oct 2016 - Eigil - Change plugin to report capacity in bytes. Also made the
-plugin work in small clusters where capacity is given in MB instead of GB.
-
-=head1 MAGICK MARKERS
-
- #%# family=auto
- #%# capabilities=autoconf
 
 =cut
 
@@ -43,61 +25,33 @@ if [ "$1" = "autoconf" ]; then
   exit 0
 fi
 
-WARNING_LEVEL=${warning_level:-"80"}
-CRITICAL_LEVEL=${critical_level:-"90"}
-
 if [ "$1" = "config" ]; then
-  
   echo 'graph_title CEPH total capacity'
   echo 'graph_category ceph'
   echo 'graph_vlabel Bytes'
   echo 'graph_info CEPH cluster capacity'
   echo 'graph_args -l 0'
-
-  CAPACITY=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $1}')
-  CAPACITYU=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $2}')
-
-  if [ $CAPACITYU = 'MB' ]; then
-    CAPACITY=$(($CAPACITY*1048576))
-  fi
-  if [ $CAPACITYU = 'GB' ]; then
-    CAPACITY=$(($CAPACITY*1073741824))
-  fi
-  WARNING=$(echo "scale=2;$CAPACITY * ($WARNING_LEVEL/100)" | bc -l | cut -d '.' -f 1)
-  CRITICAL=$(echo "scale=2;$CAPACITY * ($CRITICAL_LEVEL/100)" | bc -l | cut -d '.' -f 1)
   echo "capacity.label Capacity"
   echo "used.label Raw used"
   echo "used.draw AREA"
-  echo "used.warning $WARNING"
-  echo "used.critical $CRITICAL"
-  echo "data.label Data"
-  echo "data.draw AREA"
 
   exit 0
 fi
 
+declare -A factors
+factors[B]=1
+factors[KiB]=1024
+factors[MiB]=1048576
+factors[GiB]=1073741824
+factors[TiB]=1099511627776
+factors[PiB]=1125899906842624
 
-capacity=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $1}')
-capacityU=$(ceph -s | grep avail | cut -d '/' -f 2 | awk '{ print $2}')
-data=$(ceph -s | grep objects: | cut -d ',' -f 2 | awk '{ print $1 }')
-dataU=$(ceph -s | grep objects: | cut -d ',' -f 2 | awk '{ print $2 }')
-used=$(ceph -s | grep avail | awk '{ print $2}')
-usedU=$(ceph -s | grep avail | awk '{ print $3}')
+usage=$(ceph df | grep GLOBAL -A2 | tail -n 1)
 
-if [ $capacityU = "MB" ]; then
-  echo "capacity.value $(($capacity*1048576))"
-elif [ $capacityU = "GB" ]; then
-  echo "capacity.value $(($capacity*1073741824))"
-fi
-
-if [ $dataU = "MB" ]; then
-  echo "data.value $(($data*1048576))"
-elif [ $dataU = "GB" ]; then
-  echo "data.value $(($data*1073741824))"
-fi
-
-if [ $usedU = "MB" ]; then
-  echo "used.value $(($used*1048576))"
-elif [ $usedU = "GB" ]; then
-  echo "used.value $(($used*1073741824))"
+if [[ $usage =~ ([0-9\.]+)([KMGTP]?i?B)\ +([0-9\.]+)([KMGTP]?i?B)\ +([0-9\.]+)([KMGTP]?i?B) ]]; then
+  echo capacity.value $(echo "${BASH_REMATCH[1]} * ${factors[${BASH_REMATCH[2]}]}" | bc)
+  echo used.value $(echo "${BASH_REMATCH[5]} * ${factors[${BASH_REMATCH[6]}]}" | bc)
+else
+  echo "capacity.value U"
+  echo "used.value U"
 fi
