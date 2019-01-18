@@ -30,5 +30,7 @@ for pool in $(ceph osd pool ls); do
   data=$(rados df --pool $pool | grep $pool | awk '{print $2}')
   if [[ $data =~ ([0-9.\]+)([KMGTP]?i?B) ]]; then
     echo $pn.value $(echo "${BASH_REMATCH[1]} * ${factors[${BASH_REMATCH[2]}]}" | bc)
+  else
+    echo $pn.value U 
   fi
 done
