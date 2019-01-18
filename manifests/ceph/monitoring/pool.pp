@@ -12,7 +12,7 @@ define profile::ceph::monitoring::pool {
     owner  => root,
     group  => root,
     notify => Exec['ceph-systemd-reload'],
-    content => epp('ntnuopenstack/cephcollector.service.epp', {
+    content => epp('profile/cephcollector.service.epp', {
       'pool_name' => $name,
     })
   }
