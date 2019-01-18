@@ -3,7 +3,7 @@
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH Activity - IOPS"
   echo "graph_category ceph"
-  echo "graph_vlabel IOPS (+ write / - read)"
+  echo "graph_vlabel IOPS read(+)/write(-)"
   echo "graph_args -l 0"
   echo "graph_scale yes"
   echo "graph_info Traffic to/from ceph-pools"
