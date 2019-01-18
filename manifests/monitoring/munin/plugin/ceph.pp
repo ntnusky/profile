@@ -2,8 +2,8 @@
 # installed on the ceph monitors.
 class profile::monitoring::munin::plugin::ceph {
   require ::profile::monitoring::munin::plugin::ceph::base
-  include ::profile::monitoring::munin::plugin::ceph::systemd
 
+  # Add general ceph-related graphs.
   munin::plugin { 'ceph_total':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/ceph_total',
@@ -20,40 +20,9 @@ class profile::monitoring::munin::plugin::ceph {
     config => ['user root'],
   }
 
-  munin::plugin { 'ceph_traffic_volumes':
-    ensure  => link,
-    target  => 'ceph_traffic_',
-    require => File['/usr/share/munin/plugins/ceph_traffic_'],
-    config  => ['user root'],
-  }
-  munin::plugin { 'ceph_traffic_rbd':
-    ensure  => link,
-    target  => 'ceph_traffic_',
-    require => File['/usr/share/munin/plugins/ceph_traffic_'],
-    config  => ['user root'],
-  }
-  munin::plugin { 'ceph_traffic_images':
-    ensure  => link,
-    target  => 'ceph_traffic_',
-    require => File['/usr/share/munin/plugins/ceph_traffic_'],
-    config  => ['user root'],
-  }
-  munin::plugin { 'ceph_iops_volumes':
-    ensure  => link,
-    target  => 'ceph_iops_',
-    require => File['/usr/share/munin/plugins/ceph_iops_'],
-    config  => ['user root'],
-  }
-  munin::plugin { 'ceph_iops_rbd':
-    ensure  => link,
-    target  => 'ceph_iops_',
-    require => File['/usr/share/munin/plugins/ceph_iops_'],
-    config  => ['user root'],
-  }
-  munin::plugin { 'ceph_iops_images':
-    ensure  => link,
-    target  => 'ceph_iops_',
-    require => File['/usr/share/munin/plugins/ceph_iops_'],
-    config  => ['user root'],
+  # Add monitoring for specific pools
+  $pools = ['rbd', 'volumes', 'images']
+  $pools.each | $pool | {
+    ::profile::ceph::monitoring::pool { "${pool}": }
   }
 }
