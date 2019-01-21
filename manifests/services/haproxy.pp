@@ -30,7 +30,7 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
       'stats'                      => 'socket /var/lib/haproxy/stats mode 600 level admin',
     },
     defaults_options => {
-      'option' => [ 'forwardfor', ],
+      'option' => [ 'forwardfor', 'redispatch', ],
     },
   }
 
