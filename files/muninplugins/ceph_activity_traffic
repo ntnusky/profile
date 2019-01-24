@@ -5,12 +5,12 @@ tmpfile=$(mktemp)
 wget http://127.0.0.1:7000/health_data -O $tmpfile &> /dev/null
 
 if [[ $1 == "config" ]]; then
-  echo "graph_title CEPH Activity - IOPS"
+  echo "graph_title CEPH Activity - Bytes read/written"
   echo "graph_category ceph"
-  echo "graph_vlabel IOPS read(+)/write(-)"
+  echo "graph_vlabel bits/sec read(+)/write(-)"
   echo "graph_args -l 0"
   echo "graph_scale yes"
-  echo "graph_info Traffic to/from ceph-pools"
+  echo "graph_info Read and write operations to ceph-pools"
   echo "graph_width 550"
   
   for pool in $(jq -c '.["df"]["pools"][]' health_data); do
@@ -21,9 +21,11 @@ if [[ $1 == "config" ]]; then
     echo "${name}write.label $name"
     echo "${name}write.type COUNTER"
     echo "${name}write.graph no"
+    echo "${name}write.cdef write,8,*"
     echo "${name}read.label $name"
     echo "${name}read.type COUNTER"
     echo "${name}read.negative ${name}write"
+    echo "${name}read.cdef read,8,*"
   done
   exit 0
 fi
@@ -33,8 +35,8 @@ for pool in $(jq -c '.["df"]["pools"][]' health_data); do
   name=${name//./_}
   name=${name//-/_}
   
-  echo ${name}write.value $(echo $pool | jq '.["stats"]["wr"]')
-  echo ${name}read.value $(echo $pool | jq '.["stats"]["rd"]')
+  echo ${name}write.value $(echo $pool | jq '.["stats"]["wr_bytes"]')
+  echo ${name}read.value $(echo $pool | jq '.["stats"]["rd_bytes"]')
 done
 
 rm $tmpfile
