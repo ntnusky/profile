@@ -29,7 +29,7 @@ class profile::monitoring::munin::plugin::ceph {
   # there.
   $jq = '/usr/bin/jq \'.["enabled_modules"]\''
   exec { 'Enable ceph dashboards':
-    command => 'ceph mgr module enable dashboard',
+    command => '/usr/bin/ceph mgr module enable dashboard',
     unless  => "/usr/bin/ceph mgr module ls | ${jq} | /bin/grep -c 'dashboard'",
   }
 
