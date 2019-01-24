@@ -27,10 +27,10 @@ class profile::monitoring::munin::plugin::ceph {
 
   # Enable the ceph dashboard, as the ceph_activity_* plugins get its data from
   # there.
+  $jq = '/usr/bin/jq \'.["enabled_modules"]\''
   exec { 'Enable ceph dashboards':
     command => 'ceph mgr module enable dashboard',
-    unless  =>
-      'ceph mgr module ls | jq \'.["enabled_modules"]\' | grep -c "dashboard"',
+    unless  => "/usr/bin/ceph mgr module ls | ${jq} | /bin/grep -c 'dashboard'",
   }
 
   # These ceph activity-plugins should replace the ceph-collector(s).sh scripts
