@@ -21,11 +21,9 @@ if [[ $1 == "config" ]]; then
     echo "${name}write.label $name"
     echo "${name}write.type COUNTER"
     echo "${name}write.graph no"
-    echo "${name}write.cdef write,8,*"
     echo "${name}read.label $name"
     echo "${name}read.type COUNTER"
     echo "${name}read.negative ${name}write"
-    echo "${name}read.cdef read,8,*"
   done
   exit 0
 fi
@@ -35,8 +33,10 @@ for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
   name=${name//./_}
   name=${name//-/_}
   
-  echo ${name}write.value $(echo $pool | jq '.["stats"]["wr_bytes"]')
-  echo ${name}read.value $(echo $pool | jq '.["stats"]["rd_bytes"]')
+  wr=$(echo $pool | jq '.["stats"]["wr_bytes"]')
+  rd=$(echo $pool | jq '.["stats"]["rd_bytes"]')
+  echo ${name}write.value $(echo "$wr * 8" | bc)
+  echo ${name}read.value $(echo "$rd * 8" | bc)
 done
 
 rm $tmpfile
