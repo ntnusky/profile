@@ -13,7 +13,7 @@ if [[ $1 == "config" ]]; then
   echo "graph_info Read and write operations to ceph-pools"
   echo "graph_width 550"
   
-  for pool in $(jq -c '.["df"]["pools"][]' health_data); do
+  for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
     name=$(echo $pool | jq -r '.["name"]')
     name=${name//./_}
     name=${name//-/_}
@@ -30,7 +30,7 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-for pool in $(jq -c '.["df"]["pools"][]' health_data); do
+for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
   name=$(echo $pool | jq -r '.["name"]')
   name=${name//./_}
   name=${name//-/_}
