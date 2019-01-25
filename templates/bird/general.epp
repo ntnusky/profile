@@ -1,0 +1,17 @@
+<%- | Integer $kernel_scan = 20,
+      Integer $device_scan = 60,
+| -%>
+log syslog all;
+
+protocol direct {
+  interface "lo";
+}
+
+protocol kernel {
+  persist;
+  scan time <%= $kernel_scan %>;
+}
+
+protocol device {
+  scan time <%= $device_scan %>;
+}

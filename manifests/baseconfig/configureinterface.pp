@@ -1,22 +1,43 @@
 # This definition collects interface configuration from hiera, and configures
 # the interface according to these settings.
 define profile::baseconfig::configureinterface {
-  $method = hiera("profile::interfaces::${name}::method")
-  $v4gateway = hiera("profile::interfaces::${name}::gateway", undef)
-  $v6gateway = hiera("profile::interfaces::${name}::gateway6", 'fe80::1')
-  $mtu = hiera("profile::interfaces::${name}::mtu", undef)
+  $method = lookup("profile::interfaces::${name}::method")
+  $v4gateway = lookup("profile::interfaces::${name}::gateway", {
+    'default_value' => undef
+  })
+  $v6gateway = lookup("profile::interfaces::${name}::gateway6", {
+    'default_value' => 'fe80::1',
+    'value_type' => String,
+  })
+  $mtu = lookup("profile::interfaces::${name}::mtu", {
+    'default_value' => undef 
+  })
 
-  $dns_servers = hiera('profile::dns::nameservers', undef)
-  $dns_search = hiera('profile::dns::searchdomain', undef)
+  $dns_servers = lookup('profile::dns::nameservers', {
+    'default_value' => undef,
+  })
+  $dns_search = lookup('profile::dns::searchdomain', {
+    'default_value' => undef
+  })
+
+  $staticv6 = lookup("profile::interfaces::${name}::ipv6::address", {
+    'default_value' => false,
+  })
 
   if($method == 'dhcp') {
     network::interface { $name:
       enable_dhcp => true,
     }
   } else {
-    $address = hiera("profile::interfaces::${name}::address", undef)
-    $netmask = hiera("profile::interfaces::${name}::netmask", undef)
-    $primary = hiera("profile::interfaces::${name}::primary", false)
+    $address = lookup("profile::interfaces::${name}::address", {
+      'default_value' => undef 
+    })
+    $netmask = lookup("profile::interfaces::${name}::netmask", {
+      'default_value' => undef
+    })
+    $primary = lookup("profile::interfaces::${name}::primary", {
+      'default_value' => false
+    })
 
     if($primary) {
       $gateway_real = $v4gateway
@@ -35,8 +56,28 @@ define profile::baseconfig::configureinterface {
     }
   }
 
+  if($staticv6){
+    $v6mask = lookup("profile::interfaces::${name}::ipv6::mask", {
+      'default_value' => 64,
+      'value_type'    => Integer,
+    })
+
+    concat::fragment { "interface-v6-${name}":
+      target  => '/etc/network/interfaces',
+      content => epp('profile/interface.ipv6.epp', {
+        'interface' => $name,
+        'v6address' => $staticv6,
+        'v6mask'    => $v6mask,
+      }),
+      order   => 15,
+    }
+  }
+
   # Add extra routes based on hieradata
-  $routes = hiera_hash("profile::interfaces::${name}::routes", false)
+  $routes = lookup("profile::interfaces::${name}::routes", {
+    'default_value' => false,
+    'merge'         => 'hash',
+  })
   if($routes) {
     $extranetids = $routes.map | $net, $gw | {
       ip_address($net)
@@ -61,7 +102,9 @@ define profile::baseconfig::configureinterface {
     $extratables = []
   }
 
-  $table_id = hiera("profile::interfaces::${name}::tableid", false)
+  $table_id = lookup("profile::interfaces::${name}::tableid", {
+    'default_value' => false
+  })
   if ($table_id) {
     if($::facts['networking']['interfaces'][$name]['ip']) {
       $net4id = $::facts['networking']['interfaces'][$name]['network']

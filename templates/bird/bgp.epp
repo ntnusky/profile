@@ -1,0 +1,11 @@
+<%- | String $filtername,
+      Integer $aslocal,
+      Integer $asremote,
+      String $neighbourIP,
+| -%>
+protocol bgp {
+  export filter <%= $filtername %>;
+  local as <%= $aslocal %>;
+  neighbor <%= $neighbourIP %> as <%= $asremote %>;
+}
+
