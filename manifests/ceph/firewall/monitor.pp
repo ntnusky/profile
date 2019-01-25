@@ -3,15 +3,15 @@ class profile::ceph::firewall::monitor {
   require ::profile::baseconfig::firewall
 
   $ceph_public = lookup('profile::ceph::public_networks', {
-    'variable_type' => Array,
+    'value_type' => Array,
     'default_value' => [],
   })
   $mgmtv4_nets = lookup('profile::networking::management::ipv4::prefixes', {
-    'variable_type' => Array,
+    'value_type' => Array,
     'default_value' => [],
   })
   $mgmtv6_nets = lookup('profile::networking::management::ipv6::prefixes', {
-    'variable_type' => Array,
+    'value_type' => Array,
     'default_value' => [],
   })
   $storage_interface = lookup('profile::interfaces::storage', String)
