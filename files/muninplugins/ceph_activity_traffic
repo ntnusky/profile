@@ -5,12 +5,12 @@ tmpfile=$(mktemp)
 wget http://127.0.0.1:7000/health_data -O $tmpfile &> /dev/null
 
 if [[ $1 == "config" ]]; then
-  echo "graph_title CEPH Activity - IOPS"
+  echo "graph_title CEPH Activity - Bytes read/written"
   echo "graph_category ceph"
-  echo "graph_vlabel IOPS read(+)/write(-)"
+  echo "graph_vlabel bits/sec read(+)/write(-)"
   echo "graph_args -l 0"
   echo "graph_scale yes"
-  echo "graph_info Traffic to/from ceph-pools"
+  echo "graph_info Read and write operations to ceph-pools"
   echo "graph_width 550"
   
   for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
@@ -34,7 +34,10 @@ for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
   name=${name//./_}
   name=${name//-/_}
   
-  echo ${name}write.value $(echo $pool | jq '.["stats"]["wr"]')
-  echo ${name}read.value $(echo $pool | jq '.["stats"]["rd"]')
+  wr=$(echo $pool | jq '.["stats"]["wr_bytes"]')
+  rd=$(echo $pool | jq '.["stats"]["rd_bytes"]')
+  echo ${name}write.value $(echo "$wr * 8" | bc)
+  echo ${name}read.value $(echo "$rd * 8" | bc)
 done
+
 rm $tmpfile
