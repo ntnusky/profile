@@ -25,6 +25,7 @@ if [[ $1 == "config" ]]; then
     echo "${name}read.type COUNTER"
     echo "${name}read.negative ${name}write"
   done
+  rm $tmpfile
   exit 0
 fi
 
@@ -36,5 +37,4 @@ for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
   echo ${name}write.value $(echo $pool | jq '.["stats"]["wr"]')
   echo ${name}read.value $(echo $pool | jq '.["stats"]["rd"]')
 done
-
 rm $tmpfile
