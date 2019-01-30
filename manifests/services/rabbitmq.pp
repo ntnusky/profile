@@ -13,10 +13,10 @@ class profile::services::rabbitmq {
   })
   $enable_keepalived = lookup('profile::rabbitmq::keepalived::enable', {
     'default_value' => false,
-  )}
+  })
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'default_value' => false,
-  )}
+  })
 
   if ( $cluster_nodes ) {
     $cluster_config = {
