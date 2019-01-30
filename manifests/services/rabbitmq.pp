@@ -46,7 +46,6 @@ class profile::services::rabbitmq {
   }
 
   class { '::rabbitmq':
-    admin_enable             => false,
     erlang_cookie            => $secret,
     repos_ensure             => true,
     wipe_db_on_cookie_change => true,
