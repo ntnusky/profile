@@ -5,12 +5,18 @@ class profile::services::rabbitmq {
   require ::profile::services::erlang
 
   # Rabbit credentials
-  $rabbituser = hiera('profile::rabbitmq::rabbituser')
-  $rabbitpass = hiera('profile::rabbitmq::rabbitpass')
-  $secret     = hiera('profile::rabbitmq::rabbitsecret')
-  $enable_keepalived = hiera('profile::rabbitmq::keepalived::enable', false)
-  $cluster_nodes = hiera('profile::rabbitmq::servers', false)
-  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
+  $rabbituser = lookup('profile::rabbitmq::rabbituser')
+  $rabbitpass = lookup('profile::rabbitmq::rabbitpass')
+  $secret     = lookup('profile::rabbitmq::rabbitsecret')
+  $cluster_nodes = lookup('profile::rabbitmq::servers', {
+    'default_value' => false,
+  })
+  $enable_keepalived = lookup('profile::rabbitmq::keepalived::enable', {
+    'default_value' => false,
+  )}
+  $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
+    'default_value' => false,
+  )}
 
   if ( $cluster_nodes ) {
     $cluster_config = {
