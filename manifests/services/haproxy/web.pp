@@ -62,7 +62,7 @@ class profile::services::haproxy::web {
   }
 
   $base_bind = $addresses.map | $address | {
-    "${address}:80" => []
+    {"${address}:80" => []}
   }
 
   if($certificate) {
@@ -75,7 +75,7 @@ class profile::services::haproxy::web {
     }
 
     $ssl_bind = $addresses.map | $address | {
-      "${address}:443" => ['ssl', 'crt', $certfile]
+      {"${address}:443" => ['ssl', 'crt', $certfile]}
     }
   } else {
     $redirect = {}
