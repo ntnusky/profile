@@ -35,11 +35,11 @@ class profile::services::haproxy::web {
   $certificate = lookup("profile::haproxy::${profile}::webcert", {
     'default_value' => false,
   })
-  $certfile = hiera("profile::haproxy::${profile}::webcert::certfile", {
+  $certfile = lookup("profile::haproxy::${profile}::webcert::certfile", {
     'default_value' => '/etc/ssl/private/haproxy.pem',
     'value_type'    => String,
   })
-  $nossl = hiera("profile::haproxy::${profile}::nossl", {
+  $nossl = lookup("profile::haproxy::${profile}::nossl", {
     'value_type'    => Variant[Boolean, String],
     'default_value' => false,
   })
