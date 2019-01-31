@@ -1,10 +1,10 @@
 # Keepalived config for public haproxy servers
 class profile::services::keepalived::haproxy::services {
-  $v4_ip = lookup('profile::haproxy::management::ipv4', {
+  $v4_ip = lookup('profile::haproxy::services::ipv4', {
     'value_type' => Variant[String, Boolean],
     'default_value' => false,
   })
-  $v6_ip = lookup('profile::haproxy::management::ipv6', {
+  $v6_ip = lookup('profile::haproxy::services::ipv6', {
     'value_type' => Variant[String, Boolean],
     'default_value' => false,
   })
@@ -13,7 +13,7 @@ class profile::services::keepalived::haproxy::services {
     require ::profile::services::keepalived
 
     $vrrp_password = lookup('profile::keepalived::vrrp_password')
-    $services_if = lookup('profile::interfaces::management')
+    $services_if = lookup('profile::interfaces::services')
 
     keepalived::vrrp::script { 'check_haproxy':
       script => '/usr/bin/killall -0 haproxy',
@@ -21,8 +21,8 @@ class profile::services::keepalived::haproxy::services {
   }
 
   if ( $v4_ip ) {
-    $v4_id = lookup('profile::haproxy::management::ipv4::id')
-    $v4_priority = lookup('profile::haproxy::management::ipv4::priority')
+    $v4_id = lookup('profile::haproxy::services::ipv4::id')
+    $v4_priority = lookup('profile::haproxy::services::ipv4::priority')
 
     keepalived::vrrp::instance { 'services-haproxy-v4':
       interface         => $services_if,
@@ -37,8 +37,8 @@ class profile::services::keepalived::haproxy::services {
   }
 
   if ( $v6_ip ) {
-    $v6_id = lookup('profile::haproxy::management::ipv6::id')
-    $v6_priority = lookup('profile::haproxy::management::ipv6::priority')
+    $v6_id = lookup('profile::haproxy::services::ipv6::id')
+    $v6_priority = lookup('profile::haproxy::services::ipv6::priority')
 
     keepalived::vrrp::instance { 'services-haproxy-v6':
       interface         => $services_if,
