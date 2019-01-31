@@ -11,7 +11,7 @@ class profile::services::haproxy::web {
     'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
     'default_value' => false,
   })
-  $anycastv6 = lookup("profile::anycast::${profile}::ipv4", {
+  $anycastv6 = lookup("profile::anycast::${profile}::ipv6", {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })
