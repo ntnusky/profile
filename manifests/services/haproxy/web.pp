@@ -3,14 +3,46 @@ class profile::services::haproxy::web {
   include ::profile::services::apache::firewall
   require ::profile::services::haproxy
 
-  $profile = hiera('profile::haproxy::web::profile')
-  $domains = hiera_hash("profile::haproxy::${profile}::domains")
-  $ipv4 = hiera("profile::haproxy::${profile}::ipv4")
-  $ipv6 = hiera("profile::haproxy::${profile}::ipv6", false)
-  $certificate = hiera("profile::haproxy::${profile}::webcert", false)
-  $certfile = hiera("profile::haproxy::${profile}::webcert::certfile",
-                    '/etc/ssl/private/haproxy.pem')
-  $nossl = hiera("profile::haproxy::${profile}::nossl", false)
+  # Is this a management or a services loadbalancer?
+  $profile = lookup('profile::haproxy::web::profile')
+
+  # Collect the addresses to bind to; or get false if the address is not used.
+  $anycastv4 = lookup("profile::anycast::${profile}::ipv4", {
+    'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
+    'default_value' => false,
+  })
+  $anycastv6 = lookup("profile::anycast::${profile}::ipv4", {
+    'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
+    'default_value' => false,
+  })
+  $keepalivedipv4 = lookup("profile::haproxy::${profile}::ipv4", {
+    'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
+    'default_value' => false,
+  })
+  $keepalivedipv6 = lookup("profile::haproxy::${profile}::ipv6", {
+    'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
+    'default_value' => false,
+  })
+  $a = concat([], $anycastv4, $anycastv6, $keepalivedipv4, $keepalivedipv6)
+  $addresses = delete($a, false)
+
+  # Collect domains to serve
+  $domains = lookup("profile::haproxy::${profile}::domains", {
+    'value_type' => Hash,
+    'merge'      => 'hash',
+  })
+
+  $certificate = lookup("profile::haproxy::${profile}::webcert", {
+    'default_value' => false,
+  })
+  $certfile = hiera("profile::haproxy::${profile}::webcert::certfile", {
+    'default_value' => '/etc/ssl/private/haproxy.pem',
+    'value_type'    => String,
+  })
+  $nossl = hiera("profile::haproxy::${profile}::nossl", {
+    'value_type'    => Variant[Boolean, String],
+    'default_value' => false,
+  })
 
   $acl = $domains.map |String $domain, String $name| {
     "host_${name} hdr_dom(host) -m beg ${domain}"
@@ -29,16 +61,8 @@ class profile::services::haproxy::web {
     'reqadd'      => 'X-Forwarded-Proto:\ https if { ssl_fc }',
   }
 
-  $bindv4 = {
-    "${ipv4}:80" => [],
-  }
-
-  if($ipv6) {
-    $bindv6 = {
-      "${ipv6}:80" => [],
-    }
-  } else {
-    $bindv6 = {}
+  $base_bind = $addresses.map | $address | {
+    "${address}:80" => []
   }
 
   if($certificate) {
@@ -50,21 +74,16 @@ class profile::services::haproxy::web {
       $redirect = { 'redirect' => 'scheme https code 301 if !{ ssl_fc }' }
     }
 
-    if($ipv6) {
-      $bindssl = {
-        "${ipv4}:443" => ['ssl', 'crt', $certfile],
-        "${ipv6}:443" => ['ssl', 'crt', $certfile],
-      }
-    } else {
-      $bindssl = { "${ipv4}:443" => ['ssl', 'crt', $certfile]  }
+    $ssl_bind = $addresses.map | $address | {
+      "${address}:443" => ['ssl', 'crt', $certfile]
     }
-
   } else {
     $redirect = {}
-    $bindssl = {}
+    $ssl_bind = {}
   }
+
   $options = deep_merge($baseoptions, $redirect)
-  $bind = deep_merge($bindv4, $bindv6, $bindssl)
+  $bind = deep_merge($base_bind, $ssl_bind)
 
   ::haproxy::frontend { 'ft_web':
     bind    => $bind,
