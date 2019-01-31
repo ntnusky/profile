@@ -1,9 +1,11 @@
 # Configures a generic haproxy frontend
 define profile::services::haproxy::frontend (
-  String  $profile,
-  Integer $port,
-  Hash    $ftoptions = {},
-  Hash    $bkoptions = {},
+  String                   $profile,
+  Integer                  $port,
+  String                   $mode      = 'tcp',
+  Variant[Boolean, String] $certfile  = false,
+  Hash                     $ftoptions = {},
+  Hash                     $bkoptions = {},
 ) {
   require ::profile::services::haproxy
 
@@ -27,9 +29,30 @@ define profile::services::haproxy::frontend (
   $a = concat([], $anycastv4, $anycastv6, $keepalivedipv4, $keepalivedipv6)
   $addresses = delete($a, false)
 
+  # Only allow encryption of when in HTTP mode.
+  if($certfile and $mode == 'tcp') {
+    fail('Haproxy cannot encrypt non-SSL sockets')
+  }
+
+  # Determine suitable options for http-mode. Addin headers to indicate that the
+  # traffic was indeed encrypted in front of the loadbalancer, if that was the
+  # case.
+  if($mode == 'http') {
+    if($certfile) {
+      $sslpar = ['ssl', 'crt', $certfile]
+      $proto = { 'reqadd' => 'X-Forwarded-Proto:\ https' }
+    } else {
+      $sslpar = []
+      $proto = { 'reqadd' => 'X-Forwarded-Proto:\ http' }
+    }
+  } else {
+    $sslpar = []
+    $proto = {}
+  }
+
   # Construct a suitable hash with bind information
   $bind = $addresses.reduce({}) | $memo, $address | {
-    $memo + {"${address}:${port}" => []}
+    $memo + {"${address}:${port}" => $sslpar}
   }
 
   # Collect lists of servers behind this frontend. Used by the haproxy
@@ -50,11 +73,11 @@ define profile::services::haproxy::frontend (
   # Define a haproxy frontend+backend pair
   haproxy::frontend { "ft_${name}":
     bind    => $bind,
-    mode    => 'tcp',
-    options => deep_merge($ftbaseoptions, $ftoptions),
+    mode    => $mode,
+    options => deep_merge($ftbaseoptions, $proto, $ftoptions),
   }
   haproxy::backend { "bk_${name}":
-    mode    => 'tcp',
+    mode    => $mode,
     options => deep_merge($bkbaseoptions, $bkoptions),
   }
 }

@@ -10,6 +10,7 @@ class profile::services::redis::haproxy {
     ftoptions => {
       'option' => [
         'clitcpka',
+        'tcplog',
         'srvtcpka',
       ],
     },
