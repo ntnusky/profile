@@ -55,6 +55,6 @@ define profile::services::haproxy::frontend (
   }
   haproxy::backend { "bk_${name}":
     mode    => 'tcp',
-    options => deep_merge($bkbaseoptions + $bkoptions),
+    options => deep_merge($bkbaseoptions, $bkoptions),
   }
 }
