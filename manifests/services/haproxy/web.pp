@@ -61,8 +61,8 @@ class profile::services::haproxy::web {
     'reqadd'      => 'X-Forwarded-Proto:\ https if { ssl_fc }',
   }
 
-  $base_bind = $addresses.map | $address | {
-    {"${address}:80" => []}
+  $base_bind = $addresses.reduce({}) | $memo, $address | {
+    $memo + {"${address}:80" => []}
   }
 
   if($certificate) {
@@ -74,8 +74,8 @@ class profile::services::haproxy::web {
       $redirect = { 'redirect' => 'scheme https code 301 if !{ ssl_fc }' }
     }
 
-    $ssl_bind = $addresses.map | $address | {
-      {"${address}:443" => ['ssl', 'crt', $certfile]}
+    $ssl_bind = $addresses.reduce({}) | $memo, $address | {
+      $memo + {"${address}:443" => ['ssl', 'crt', $certfile]}
     }
   } else {
     $redirect = {}
