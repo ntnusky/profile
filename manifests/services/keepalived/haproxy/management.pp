@@ -49,6 +49,6 @@ class profile::services::keepalived::haproxy::management {
       auth_pass         => $vrrp_password,
       virtual_ipaddress => ["${v6_ip}/64"],
       track_script      => 'check_haproxy',
-    } 
+    }
   }
 }

@@ -13,7 +13,7 @@ class profile::services::keepalived::haproxy::services {
     require ::profile::services::keepalived
 
     $vrrp_password = lookup('profile::keepalived::vrrp_password')
-    $management_if = lookup('profile::interfaces::management')
+    $services_if = lookup('profile::interfaces::management')
 
     keepalived::vrrp::script { 'check_haproxy':
       script => '/usr/bin/killall -0 haproxy',
