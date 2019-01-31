@@ -4,7 +4,7 @@ class profile::services::redis::haproxy {
 
   $redisauth = lookup('profile::redis::masterauth')
 
-  ::profile::services::haproxy::frontend { 'mysqlcluster':
+  ::profile::services::haproxy::frontend { 'redis':
     profile   => 'management',
     port      => 6379,
     ftoptions => {

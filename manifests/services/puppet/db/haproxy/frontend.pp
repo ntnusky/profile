@@ -2,8 +2,8 @@
 class profile::services::puppet::db::haproxy::frontend {
   include ::profile::services::puppet::db::firewall
 
-  ::profile::services::haproxy::frontend { 'puppetserver':
+  ::profile::services::haproxy::frontend { 'puppetdb':
     profile => 'management',
-    port    => 8140,
+    port    => 8081,
   }
 }
