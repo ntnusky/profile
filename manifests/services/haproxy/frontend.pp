@@ -29,11 +29,6 @@ define profile::services::haproxy::frontend (
   $a = concat([], $anycastv4, $anycastv6, $keepalivedipv4, $keepalivedipv6)
   $addresses = delete($a, false)
 
-  # Only allow encryption of when in HTTP mode.
-  if($certfile and $mode == 'tcp') {
-    fail('Haproxy cannot encrypt non-SSL sockets')
-  }
-
   # Determine suitable options for http-mode. Addin headers to indicate that the
   # traffic was indeed encrypted in front of the loadbalancer, if that was the
   # case.
@@ -46,7 +41,11 @@ define profile::services::haproxy::frontend (
       $proto = { 'reqadd' => 'X-Forwarded-Proto:\ http' }
     }
   } else {
-    $sslpar = []
+    if($certfile) {
+      $sslpar = ['ssl', 'crt', $certfile]
+    } else {
+      $sslpar = []
+    }
     $proto = {}
   }
 
