@@ -9,6 +9,7 @@ fi
 
 declare -A units
 units[k]=1024
+units[K]=1024
 units[M]=1048576
 units[G]=1073741824
 
@@ -20,7 +21,7 @@ iopsW=0
 clientio=$(ceph osd pool stats $pool | grep client)
 
 if [[ $? == 0 ]]; then
-  if [[ $clientio =~ ([0-9\.]*)\ ?([kMG])?i?B/s\ rd ]]; then
+  if [[ $clientio =~ ([0-9\.]*)\ ?([kKMG])?i?B/s\ rd ]]; then
     if [[ ${BASH_REMATCH[2]} ]]; then
       bytesRead=$(echo "${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]}" | bc)
     else
@@ -28,7 +29,7 @@ if [[ $? == 0 ]]; then
     fi
   fi
 
-  if [[ $clientio =~ ([0-9\.]*)\ ?([kMG])?i?B/s\ wr ]]; then
+  if [[ $clientio =~ ([0-9\.]*)\ ?([kKMG])?i?B/s\ wr ]]; then
     if [[ ${BASH_REMATCH[2]} ]]; then
       bytesWrite=$(echo "${BASH_REMATCH[1]} * ${units[${BASH_REMATCH[2]}]}" | bc)
     else
@@ -36,11 +37,11 @@ if [[ $? == 0 ]]; then
     fi
   fi
 
-  if [[ $clientio =~ ([0-9]*)\ op/s\ rd ]]; then
+  if [[ $clientio =~ ([0-9]*)\ ?op/s\ rd ]]; then
     iopsR=${BASH_REMATCH[1]}
   fi
 
-  if [[ $clientio =~ ([0-9]*)\ op/s\ wr ]]; then
+  if [[ $clientio =~ ([0-9]*)\ ?op/s\ wr ]]; then
     iopsW=${BASH_REMATCH[1]}
   fi
 fi
