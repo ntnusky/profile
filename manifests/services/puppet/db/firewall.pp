@@ -2,25 +2,31 @@
 class profile::services::puppet::db::firewall {
   require ::firewall
 
-  $managementv4 = hiera('profile::networks::management::ipv4::prefix', false)
-  $managementv6 = hiera('profile::networks::management::ipv6::prefix', false)
+  $infrav4 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+    'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
+    'merge'      => 'unique',
+  })
+  $infrav6 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+    'value_type' => Array[Stdlib::IP::Address::V6::CIDR],
+    'merge'      => 'unique',
+  })
 
-  if($managementv4) {
-    firewall { '051 Accept incoming puppetdb':
+  $infrav4.each | $net | {
+    firewall { "051 Accept incoming puppetdb from ${net}":
       proto  => 'tcp',
       dport  => 8081,
       action => 'accept',
-      source => $managementv4,
+      source => $net,
     }
   }
 
-  if($managementv6) {
-    firewall { '051 ipv6 Accept incoming puppetdb':
+  $infrav6.each | $net | {
+    firewall { "051 Accept incoming puppetdb from ${net}":
       proto    => 'tcp',
       dport    => 8081,
       action   => 'accept',
+      source   => $net,
       provider => 'ip6tables',
-      source   => $managementv6,
     }
   }
 }
