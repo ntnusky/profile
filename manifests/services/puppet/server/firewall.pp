@@ -6,7 +6,7 @@ class profile::services::puppet::server::firewall {
     'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
     'merge'      => 'unique',
   })
-  $infrav6 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+  $infrav6 = lookup('profile::networking::infrastructure::ipv6::prefixes', {
     'value_type' => Array[Stdlib::IP::Address::V6::CIDR],
     'merge'      => 'unique',
   })
