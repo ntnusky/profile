@@ -5,13 +5,13 @@ define profile::baseconfig::firewall::service::global (
 ) {
   require ::profile::baseconfig::firewall
 
-  firewall { "5 Accept global access to service ${name}":
+  firewall { "5 Accept global v4 access to service ${name}":
     proto  => $protocol,
     dport  => $port,
     action => 'accept',
   }
 
-  firewall { "5 Accept global access to service ${name}":
+  firewall { "5 Accept global v6 access to service ${name}":
     proto    => $protocol,
     dport    => $port,
     action   => 'accept',
