@@ -1,7 +1,7 @@
 # Punch a hole in the firewall to allow global access to a service
 define profile::baseconfig::firewall::service::global (
-  Variant[Integer, Array[Integer]] $port,
-  String                           $protocol,
+  Variant[Integer, Array[Integer], String] $port,
+  String                                   $protocol,
 ) {
   require ::profile::baseconfig::firewall
 

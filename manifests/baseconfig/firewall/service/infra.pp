@@ -1,8 +1,8 @@
 # Punch a hole in the firewall to allow all our infra-net access to a certain
 # service.
 define profile::baseconfig::firewall::service::infra (
-  Variant[Integer, Array[Integer]] $port,
-  String                           $protocol,
+  Variant[Integer, Array[Integer], String] $port,
+  String                                   $protocol,
 ) {
   require ::profile::baseconfig::firewall
 
