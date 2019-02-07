@@ -2,10 +2,8 @@
 class profile::services::tftp::firewall {
   # TFTP also uses higher-numbered ports for the actual data-transfer; but this
   # is handled by the defult allow ESTABLISHED incoming rule from baseconfig.
-  firewall { '400 accept incoming TFTP':
-    proto  => 'udp',
-    dport  => [69],
-    action => 'accept',
+  ::profile::baseconfig::firewall::service::global { 'TFTP':
+    protocol => 'udp',
+    port     => 69,
   }
-  require ::profile::baseconfig::firewall 
 }

@@ -1,27 +1,11 @@
 # This class configures firewall rules for DNS 
 class profile::services::dns::firewall {
-  require ::profile::baseconfig::firewall 
-
-  firewall { '400 accept incoming DNS':
-    proto  => 'udp',
-    dport  => [53],
-    action => 'accept',
+  ::profile::baseconfig::firewall::service::global { 'TCP DNS':
+    port     => 53,
+    protocol => 'tcp',
   }
-  firewall { '401 accept incoming DNS':
-    proto  => 'tcp',
-    dport  => [53],
-    action => 'accept',
-  }
-  firewall { '400 ipv6 accept incoming DNS':
-    proto    => 'udp',
-    dport    => [53],
-    action   => 'accept',
-    provider => 'ip6tables',
-  }
-  firewall { '401 ipv6 accept incoming DNS':
-    proto    => 'tcp',
-    dport    => [53],
-    action   => 'accept',
-    provider => 'ip6tables',
+  ::profile::baseconfig::firewall::service::global { 'UDP DNS':
+    port     => 53,
+    protocol => 'udp',
   }
 }
