@@ -7,8 +7,9 @@ class profile::services::puppet::db::firewall {
     'merge'      => 'unique',
   })
   $infrav6 = lookup('profile::networking::infrastructure::ipv6::prefixes', {
-    'value_type' => Array[Stdlib::IP::Address::V6::CIDR],
-    'merge'      => 'unique',
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+    'merge'         => 'unique',
+    'default_value' => [],
   })
 
   $infrav4.each | $net | {

@@ -1,36 +1,46 @@
 # Configure firewall for rabbitmq servers
 class profile::services::rabbitmq::firewall {
-  require ::firewall
+  require ::profile::baseconfig::firewall
 
-  $management_net = hiera('profile::networks::management::ipv4::prefix')
-  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
+  $infrav4 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+    'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
+    'merge'      => 'unique',
+  })
+  $infrav6 = lookup('profile::networking::infrastructure::ipv6::prefixes', {
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+    'merge'         => 'unique',
+    'default_value' => [],
+  })
 
-  firewall { '500 accept incoming rabbitmq':
-    source      => $management_net,
-    proto       => 'tcp',
-    dport       => 5672,
-    action      => 'accept',
-  }
-  firewall { '502 accept incoming rabbitmqcluster':
-    source      => $management_net,
-    proto       => 'tcp',
-    dport       => [4369, 25672],
-    action      => 'accept',
-  }
-  if ( $management_netv6 ) {
-    firewall { '500 ipv6 accept incoming rabbitmq':
-      source      => $management_netv6,
-      proto       => 'tcp',
-      dport       => 5672,
-      action      => 'accept',
-      provider    => 'ip6tables',
+  $infrav4.each | $net | {
+    firewall { "500 accept incoming rabbitmq from ${net}":
+      source => $net,
+      proto  => 'tcp',
+      dport  => 5672,
+      action => 'accept',
     }
-    firewall { '502 ipv6 accept incoming rabbitmqcluster':
-      source      => $management_netv6,
-      proto       => 'tcp',
-      dport       => [4369, 25672],
-      action      => 'accept',
-      provider    => 'ip6tables',
+    firewall { "502 accept incoming rabbitmqcluster from ${net}":
+      source => $net,
+      proto  => 'tcp',
+      dport  => [4369, 25672],
+      action => 'accept',
+    }
+  }
+
+  $infrav6.each | $net | {
+    firewall { "500 accept incoming rabbitmq from ${net}":
+      source   => $net,
+      proto    => 'tcp',
+      dport    => 5672,
+      action   => 'accept',
+      provider => 'ip6tables',
+    }
+    firewall { "502 accept incoming rabbitmqcluster from ${net}":
+      source   => $net,
+      proto    => 'tcp',
+      dport    => [4369, 25672],
+      action   => 'accept',
+      provider => 'ip6tables',
     }
   }
 }

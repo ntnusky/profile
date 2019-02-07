@@ -1,26 +1,33 @@
 # Configure firewall for redis servers
 class profile::services::redis::firewall {
-  require ::firewall
+  require ::profile::baseconfig::firewall
 
-  $managementv4 = hiera('profile::networks::management::ipv4::prefix', false)
-  $managementv6 = hiera('profile::networks::management::ipv6::prefix', false)
+  $infrav4 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+    'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
+    'merge'      => 'unique',
+  })
+  $infrav6 = lookup('profile::networking::infrastructure::ipv6::prefixes', {
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+    'merge'         => 'unique',
+    'default_value' => [],
+  })
 
-  if($managementv4) {
-    firewall { '050 accept redis-server':
+  $infrav4.each | $net | {
+    firewall { "050 accept redis-server from ${net}":
       proto  => 'tcp',
       dport  => 6379,
       action => 'accept',
-      source => $managementv4,
+      source => $net,
     }
   }
 
-  if($managementv6) {
-    firewall { '050 ipv6 accept redis-server':
+  $infrav6.each | $net | {
+    firewall { "050 accept redis-server from ${net}":
       proto    => 'tcp',
       dport    => 6379,
       action   => 'accept',
+      source   => $net,
       provider => 'ip6tables',
-      source   => $managementv6,
     }
   }
 }

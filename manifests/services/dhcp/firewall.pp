@@ -1,6 +1,16 @@
 # This class configures firewall rules for DHCP 
 class profile::services::dhcp::firewall {
-  $management_net = hiera('profile::networks::management::ipv4::prefix')
+  require ::profile::baseconfig::firewall
+
+  $infrav4 = lookup('profile::networking::infrastructure::ipv4::prefixes', {
+    'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
+    'merge'      => 'unique',
+  })
+  $infrav6 = lookup('profile::networking::infrastructure::ipv6::prefixes', {
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+    'merge'         => 'unique',
+    'default_value' => [],
+  })
 
   firewall { '400 accept incoming DHCP':
     proto  => 'udp',
@@ -9,12 +19,21 @@ class profile::services::dhcp::firewall {
     action => 'accept',
   }
 
-  firewall { '400 Accept incoming OMAPI requests':
-    proto       => 'tcp',
-    dport       => 7911,
-    action      => 'accept',
-    source      => $management_net,
+  $infrav4.each | $net | {
+    firewall { "400 Accept incoming OMAPI requests from ${net}":
+      proto  => 'tcp',
+      dport  => 7911,
+      action => 'accept',
+      source => $net,
+    }
   }
-
-  require ::profile::baseconfig::firewall 
+  $infrav6.each | $net | {
+    firewall { "400 Accept incoming OMAPI requests from ${net}":
+      proto    => 'tcp',
+      dport    => 7911,
+      action   => 'accept',
+      source   => $net,
+      provider => 'ip6tables',
+    }
+  }
 }
