@@ -13,7 +13,7 @@ class profile::ceph::client {
       value => true;
   }
 
-  ensure_packages ( 'rbd-nbd', {
+  ensure_packages ( ['rbd-nbd'], {
     'ensure' => 'present',
   })
 }
