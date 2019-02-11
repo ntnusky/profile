@@ -12,4 +12,8 @@ class profile::ceph::client {
     'client/rbd cache writethrough until flush':
       value => true;
   }
+
+  ensure_packages ( 'rbd-nbd', {
+    'ensure' => 'present',
+  })
 }
