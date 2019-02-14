@@ -3,7 +3,7 @@
 class profile::ceph::client {
   $admin_key = hiera('profile::ceph::admin_key')
 
-  require ::profile::ceph::base
+  include ::profile::ceph::base
   include ::profile::ceph::key::admin
 
   ceph_config {
