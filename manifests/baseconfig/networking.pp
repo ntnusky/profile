@@ -7,7 +7,7 @@ class profile::baseconfig::networking {
     profile::baseconfig::configureinterface { $if_to_configure: }
   }
 
-  # Trust ICMP redirects. This is sage as long as the secure_redirect is set
+  # Trust ICMP redirects. This is safe as long as the secure_redirect is set
   # because the host would then only trust redirects from hosts acting as a
   # gateway.
   sysctl::value { 'net.ipv4.conf.all.accept_redirects':
