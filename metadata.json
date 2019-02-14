@@ -1,6 +1,6 @@
 {
   "name": "ntnusky-profile",
-  "version": "1.2.0",
+  "version": "1.6.0",
   "author": "NTNU IIK",
   "summary": "Installs, configures, and manages services in our openstack environment.",
   "license": "",
@@ -13,7 +13,7 @@
     { "name":"example42/network","version_requirement":">= 3.3.8 < 4.0.0" },
     { "name":"inkblot/ipcalc","version_requirement":">= 2.2.0 < 3.0.0" },
     { "name":"puppetlabs/concat","version_requirement":">= 1.2.5 < 5.0.0" },
-    { "name":"puppetlabs/stdlib","version_requirement":">= 4.24.0 < 5.0.0" },
+    { "name":"puppetlabs/stdlib","version_requirement":">= 4.25.0 < 6.0.0" },
     { "name":"puppetlabs/inifile","version_requirement":">= 1.5.0 < 2.0.0" },
     { "name":"ntnusky/ntnuopenstack","version_requirement":">= 1.0.0 < 5.0.0" },
     { "name":"puppet/rabbitmq","version_requirement":">= 8.2.2 < 9.0.0" }
