@@ -1,0 +1,9 @@
+<%- | String $interface,
+      String $v6address,
+      Integer $v6mask,
+| -%>
+# The interface <%= $interface %> have a static IPv6 address
+iface <%= $interface %> inet6 static
+    address <%= $v6address %>
+    netmask <%= $v6mask %>
+

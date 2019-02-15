@@ -7,6 +7,16 @@ class profile::baseconfig::networking {
     profile::baseconfig::configureinterface { $if_to_configure: }
   }
 
+  # Trust ICMP redirects. This is safe as long as the secure_redirect is set
+  # because the host would then only trust redirects from hosts acting as a
+  # gateway.
+  sysctl::value { 'net.ipv4.conf.all.accept_redirects':
+    value => '1',
+  }
+  sysctl::value { 'net.ipv6.conf.all.accept_redirects':
+    value => '1',
+  }
+
   # Disable the rpfilter if that is desirable. This is needed if we are not
   # using multiple routing-tables on hosts where there is more than one nic.
   $rp_filter = hiera('profile::networking::rpfilter', false)

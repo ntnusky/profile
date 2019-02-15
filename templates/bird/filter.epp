@@ -1,0 +1,8 @@
+<%- | Array $prefixes,
+      String $name,
+| -%>
+filter <%= $name %> {
+<% $prefixes.each |$prefix| { -%>
+  if net = <%= $prefix %> then accept;
+<% } -%>
+}

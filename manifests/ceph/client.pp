@@ -3,7 +3,7 @@
 class profile::ceph::client {
   $admin_key = hiera('profile::ceph::admin_key')
 
-  require ::profile::ceph::base
+  include ::profile::ceph::base
   include ::profile::ceph::key::admin
 
   ceph_config {
@@ -12,4 +12,8 @@ class profile::ceph::client {
     'client/rbd cache writethrough until flush':
       value => true;
   }
+
+  ensure_packages ( ['rbd-nbd'], {
+    'ensure' => 'present',
+  })
 }

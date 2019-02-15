@@ -1,33 +1,45 @@
 # Keepalived config for public haproxy servers
 class profile::services::keepalived::haproxy::services {
-  require ::profile::services::keepalived
+  $v4_ip = lookup('profile::haproxy::services::ipv4', {
+    'value_type' => Variant[String, Boolean],
+    'default_value' => false,
+  })
+  $v6_ip = lookup('profile::haproxy::services::ipv6', {
+    'value_type' => Variant[String, Boolean],
+    'default_value' => false,
+  })
 
-  $v4_ip = hiera('profile::haproxy::services::ipv4')
-  $v4_id = hiera('profile::haproxy::services::ipv4::id')
-  $v4_priority = hiera('profile::haproxy::services::ipv4::priority')
-  $v6_ip = hiera('profile::haproxy::services::ipv6', false)
-  $v6_id = hiera('profile::haproxy::services::ipv6::id', false)
-  $v6_priority = hiera('profile::haproxy::services::ipv6::priority', false)
+  if ( $v4_ip or $v6_ip ) {
+    require ::profile::services::keepalived
 
-  $vrrp_password = hiera('profile::keepalived::vrrp_password')
-  $services_if = hiera('profile::interfaces::services')
+    $vrrp_password = lookup('profile::keepalived::vrrp_password')
+    $services_if = lookup('profile::interfaces::services')
 
-  keepalived::vrrp::script { 'check_haproxy':
-    script => '/usr/bin/killall -0 haproxy',
+    keepalived::vrrp::script { 'check_haproxy':
+      script => '/usr/bin/killall -0 haproxy',
+    }
   }
 
-  keepalived::vrrp::instance { 'services-haproxy-v4':
-    interface         => $services_if,
-    state             => 'BACKUP',
-    virtual_router_id => $v4_id,
-    priority          => $v4_priority,
-    auth_type         => 'PASS',
-    auth_pass         => $vrrp_password,
-    virtual_ipaddress => ["${v4_ip}/32"],
-    track_script      => 'check_haproxy',
+  if ( $v4_ip ) {
+    $v4_id = lookup('profile::haproxy::services::ipv4::id')
+    $v4_priority = lookup('profile::haproxy::services::ipv4::priority')
+
+    keepalived::vrrp::instance { 'services-haproxy-v4':
+      interface         => $services_if,
+      state             => 'BACKUP',
+      virtual_router_id => $v4_id,
+      priority          => $v4_priority,
+      auth_type         => 'PASS',
+      auth_pass         => $vrrp_password,
+      virtual_ipaddress => ["${v4_ip}/32"],
+      track_script      => 'check_haproxy',
+    }
   }
 
   if ( $v6_ip ) {
+    $v6_id = lookup('profile::haproxy::services::ipv6::id')
+    $v6_priority = lookup('profile::haproxy::services::ipv6::priority')
+
     keepalived::vrrp::instance { 'services-haproxy-v6':
       interface         => $services_if,
       state             => 'BACKUP',

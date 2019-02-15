@@ -1,20 +1,11 @@
 # This class configures firewall rules for DHCP 
 class profile::services::dhcp::firewall {
-  $management_net = hiera('profile::networks::management::ipv4::prefix')
-
-  firewall { '400 accept incoming DHCP':
-    proto  => 'udp',
-    sport  => [67,68],
-    dport  => [67,68],
-    action => 'accept',
+  ::profile::baseconfig::firewall::service::infra { 'DHCP OMAPI':
+    protocol => 'tcp',
+    port     => 7911,
   }
-
-  firewall { '400 Accept incoming OMAPI requests':
-    proto       => 'tcp',
-    dport       => 7911,
-    action      => 'accept',
-    source      => $management_net,
+  ::profile::baseconfig::firewall::service::global { 'DHCP':
+    protocol => 'udp',
+    port     => [67,68],
   }
-
-  require ::profile::baseconfig::firewall 
 }

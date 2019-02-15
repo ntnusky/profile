@@ -1,47 +1,23 @@
 # Haproxy config for redis
-
 class profile::services::redis::haproxy {
-  require ::profile::services::haproxy
   include ::profile::services::redis::firewall
 
-  $ipv4 = hiera('profile::haproxy::management::ipv4')
-  $ipv6 = hiera('profile::haproxy::management::ipv6', false)
-  $redisauth = hiera('profile::redis::masterauth')
+  $redisauth = lookup('profile::redis::masterauth')
 
-  profile::services::haproxy::tools::collect { 'bk_redis': }
-
-  $ft_options = {
-    'default_backend' => 'bk_redis',
-    'option'          => [
-      'clitcpka',
-      'srvtcpka',
-    ],
-  }
-
-  if($ipv6) {
-    haproxy::frontend { 'ft_redis':
-      bind    => {
-        "${ipv4}:6379" => [],
-        "${ipv6}:6379" => [],
-      },
-      mode    => 'tcp',
-      options => $ft_options,
-    }
-  } else {
-    haproxy::frontend { 'ft_redis':
-      ipaddress => $ipv4,
-      ports     => '6379',
-      mode      => 'tcp',
-      options   => $ft_options,
-    }
-  }
-
-  haproxy::backend { 'bk_redis':
-    options => {
+  ::profile::services::haproxy::frontend { 'redis':
+    profile   => 'management',
+    port      => 6379,
+    ftoptions => {
+      'option' => [
+        'clitcpka',
+        'tcplog',
+        'srvtcpka',
+      ],
+    },
+    bkoptions => {
       'option'    => [
         'log-health-checks',
         'tcp-check',
-        'tcplog',
       ],
       'tcp-check' => [
         'connect',
