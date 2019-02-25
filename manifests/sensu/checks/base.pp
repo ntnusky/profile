@@ -1,7 +1,7 @@
 # Sensu checks intended for all nodes
 class profile::sensu::checks::base {
 
-  $puppet_runinterval = Integer(hiera('profile::puppet::runinterval')[0,-2])*60
+  $puppet_runinterval = Integer(lookup('profile::puppet::runinterval')[0,-2])*60
   $puppetwarn = $puppet_runinterval*3
   $puppetcrit = $puppet_runinterval*10
 
@@ -33,8 +33,15 @@ class profile::sensu::checks::base {
     subscribers => [ 'all' ],
   }
 
-    sensu::check { 'puppetrun':
+  sensu::check { 'puppetrun':
     command     => "sudo check-puppet-last-run.rb -r -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'all' ],
+  }
+
+  sensu::check { 'puppet-process':
+    command     => 'check-process.rb -p "puppet" -x "mcollective|puppetserver|puppetdb" -i 300 -w1 -c2'.
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
