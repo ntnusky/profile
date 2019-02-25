@@ -11,7 +11,10 @@ class profile::sensu::uchiwa {
     'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
     'default_value' => false,
   })
-  $management_if = lookup('profile::interfaces::management', false)
+  $management_if = lookup('profile::interfaces::management', {
+    'value_type'    => Variant[String, Boolean],
+    'default_value' => false,
+  })
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::interfaces::${management_if}::address", {
     'value_type'    => Stdlib::IP::Address::V4,
