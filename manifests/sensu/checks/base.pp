@@ -41,7 +41,7 @@ class profile::sensu::checks::base {
   }
 
   sensu::check { 'puppet-process':
-    command     => 'check-process.rb -p "puppet" -x "mcollective|puppetserver|puppetdb" -i 300 -w1 -c2'.
+    command     => 'check-process.rb -p "puppet" -x "mcollective|puppetserver|puppetdb" -i 300 -w1 -c2',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
