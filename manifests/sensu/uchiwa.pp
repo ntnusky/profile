@@ -15,8 +15,8 @@ class profile::sensu::uchiwa {
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::interfaces::${management_if}::address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
-  )}
+    'default_value' => $mip,
+  })
 
   $private_key = lookup('profile::sensu::uchiwa::private_key', String)
   $public_key  = lookup('profile::sensu::uchiwa::public_key', String)
