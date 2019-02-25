@@ -2,7 +2,7 @@
 # And web availability checks
 class profile::sensu::checks::certs {
 
-  $domains = lookup('profile::sensu::checks::tlsexpiry', Hash[Stdlib::Fqdn, String])
+  $domains = lookup('profile::sensu::checks::tlsexpiry', Hash[String, String])
 
   $domains.each | $domain, $displayname | {
     sensu::check { "tls-expiry-${displayname}":
