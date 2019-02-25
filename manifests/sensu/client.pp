@@ -1,13 +1,25 @@
 # Install and configure sensu-client
 class profile::sensu::client {
-  $mgmt_nic = hiera('profile::interfaces::management', false)
+  $mgmt_nic = lookup('profile::interfaces::management', {
+    'value_type'   => Variant[String, Boolean],
+    'default_type' => false,
+  })
 
   if($mgmt_nic) {
-    $rabbithost = hiera('profile::rabbitmq::ip', false)
-    $rabbithosts = hiera('profile::rabbitmq::servers',false)
-    $sensurabbitpass = hiera('profile::sensu::rabbit_password')
+    $rabbithost = lookup('profile::rabbitmq::ip', {
+      'value_type' => Variant[Stdlib::IP::Address::V4, Boolean],
+      'default_value' => false,
+    })
+    $rabbithosts = lookup('profile::rabbitmq::servers', {
+      'value_type'    => Variant[Array[String], Boolean],
+      'default_value' => false,
+    })
+    $sensurabbitpass = lookup('profile::sensu::rabbit_password', String)
     $client_ip = getvar("::ipaddress_${mgmt_nic}")
-    $subs_from_client_conf = hiera('sensu::subscriptions','')
+    $subs_from_client_conf = lookup('sensu::subscriptions', {
+      'value_type'    => Variant[Array[String], String],
+      'default_value' => '',
+    })
 
     include ::profile::sensu::plugins
 
