@@ -2,7 +2,7 @@
 class profile::sensu::client {
   $mgmt_nic = lookup('profile::interfaces::management', {
     'value_type'   => Variant[String, Boolean],
-    'default_type' => false,
+    'default_value' => false,
   })
 
   if($mgmt_nic) {
