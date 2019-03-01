@@ -1,7 +1,7 @@
 # Base plugins for all sensu-clients
 class profile::sensu::plugins {
 
-  $baseplugins = hiera_array('profile::sensu::plugins')
+  $baseplugins = lookup('profile::sensu::plugins', { merge => unique })
 
   sensu::plugin { $baseplugins:
     type => 'package',

@@ -3,17 +3,26 @@ class profile::sensu::uchiwa {
 
   require ::profile::services::apache
 
-  $password = hiera('profile::sensu::uchiwa::password')
-  $api_name = hiera('ntnuopenstack::region')
-  $uchiwa_url = hiera('profile::sensu::uchiwa::fqdn')
+  $password = lookup('profile::sensu::uchiwa::password', String)
+  $api_name = lookup('ntnuopenstack::region', String)
+  $uchiwa_url = lookup('profile::sensu::uchiwa::fqdn', Stdlib::Fqdn)
 
-  $management_netv6 = hiera('profile::networks::management::ipv6::prefix', false)
-  $management_if = hiera('profile::interfaces::management')
+  $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
+    'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
+    'default_value' => false,
+  })
+  $management_if = lookup('profile::interfaces::management', {
+    'value_type'    => Variant[String, Boolean],
+    'default_value' => false,
+  })
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv4 = hiera("profile::interfaces::${management_if}::address", $mip)
+  $management_ipv4 = lookup("profile::interfaces::${management_if}::address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $mip,
+  })
 
-  $private_key = hiera('profile::sensu::uchiwa::private_key')
-  $public_key  = hiera('profile::sensu::uchiwa::public_key')
+  $private_key = lookup('profile::sensu::uchiwa::private_key', String)
+  $public_key  = lookup('profile::sensu::uchiwa::public_key', String)
   $private_key_path = '/etc/sensu/keys/uchiwa.rsa'
   $public_key_path  = '/etc/sensu/keys/uchiwa.rsa.pub'
 

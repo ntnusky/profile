@@ -2,7 +2,7 @@
 # And web availability checks
 class profile::sensu::checks::web {
 
-  $domains = hiera_hash('profile::sensu::checks::web')
+  $domains = lookup('profile::sensu::checks::web', Hash[Stdlib::Fqdn, String])
 
   $domains.each | $domain, $displayname | {
     sensu::check { "web-${displayname}":

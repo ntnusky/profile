@@ -8,4 +8,8 @@ class profile::services::rabbitmq::firewall {
     protocol => 'tcp',
     port     => [4369, 25672],
   }
+  ::profile::baseconfig::firewall::service::infra { 'RabbitMQ-Clustering-CLI':
+    protocol => 'tcp',
+    port     => '35672-35682',
+  }
 }

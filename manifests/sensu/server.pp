@@ -1,19 +1,28 @@
 # Install and configure sensu-server and dashboard
 class profile::sensu::server {
 
-  $rabbithost = hiera('profile::rabbitmq::ip', false)
-  $rabbithosts = hiera('profile::rabbitmq::servers',false)
-  $sensurabbitpass = hiera('profile::sensu::rabbit_password')
-  $mgmt_nic = hiera('profile::interfaces::management')
-  $sensu_url = hiera('profile::sensu::mailer::url')
-  $mail_from = hiera('profile::sensu::mailer::mail_from')
-  $mail_to = hiera('profile::sensu::mailer::mail_to')
-  $smtp_address = hiera('profile::sensu::mailer::smtp_address')
-  $smtp_port = hiera('profile::sensu::mailer::smtp_port')
-  $smtp_domain = hiera('profile::sensu::mailer::smtp_domain')
-  $subs_from_client_conf = hiera('sensu::subscriptions','')
-  $redishost = hiera('profile::redis::ip')
-  $redismasterauth = hiera('profile::redis::masterauth')
+  $rabbithost = lookup('profile::rabbitmq::ip', {
+    'value_type'   => Variant[Stdlib::IP::Address::V4, Boolean],
+    'default_value' => false,
+  })
+  $rabbithosts = lookup('profile::rabbitmq::servers', {
+    'value_type'    => Variant[Array[String], Boolean],
+    'default_value' => false,
+  })
+  $sensurabbitpass = lookup('profile::sensu::rabbit_password', String)
+  $mgmt_nic = lookup('profile::interfaces::management', String)
+  $sensu_url = lookup('profile::sensu::mailer::url', Variant[Stdlib::Httpsurl, Stdlib::Httpurl])
+  $mail_from = lookup('profile::sensu::mailer::mail_from', String)
+  $mail_to = lookup('profile::sensu::mailer::mail_to', Array[String])
+  $smtp_address = lookup('profile::sensu::mailer::smtp_address', Stdlib::Fqdn)
+  $smtp_port = lookup('profile::sensu::mailer::smtp_port', Integer)
+  $smtp_domain = lookup('profile::sensu::mailer::smtp_domain', Stdlib::Fqdn)
+  $subs_from_client_conf = lookup('sensu::subscriptions', {
+    'value_type'    => Variant[Array[String], String],
+    'default_value' => '',
+  })
+  $redishost = lookup('profile::redis::ip', Variant[Stdlib::IP::Address, Stdlib::Fqdn])
+  $redismasterauth = lookup('profile::redis::masterauth', String)
 
   if ( ! $rabbithost ) and ( ! $rabbithosts ) {
     error('You need to specify either a single rabbithost, or a list of hosts')
