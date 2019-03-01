@@ -11,10 +11,12 @@ class profile::monitoring::munin::plugin::nova {
   $admin_pass = hiera('ntnuopenstack::keystone::admin_password')
   $admin_url = "${keystone_internal}:5000/v3"
 
-  $public_nets = lookup('ntnuopenstack::neutron::networks::external', Array,
-      'unique', [])
+  $externalnets = lookup('ntnuopenstack::neutron::networks::external', {
+    'value_type' => Hash,
+  })
 
-  $public_nets.each | $net | {
+  $externalnets.each | $key, $data | {
+    $net = $data['name']
     munin::plugin { "openstack_ipuse_${net}":
       ensure => present,
       source => 'puppet:///modules/profile/muninplugins/openstack_ipuse_',
@@ -28,7 +30,9 @@ class profile::monitoring::munin::plugin::nova {
     }
   }
 
-  $externals = join($public_nets, ' ')
+  $externalnames = $externalnets.map | $key, $data | { $data['name'] }
+  $externals = join($externalnames, ' ')
+
   munin::plugin { 'openstack_ipuse':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/openstack_ipuse',
