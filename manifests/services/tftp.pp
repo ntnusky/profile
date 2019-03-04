@@ -1,8 +1,10 @@
 # This class installs a tftpserver and configures it to have its root at
 # /var/lib/tftpboot.
 class profile::services::tftp {
-  $rootdir = hiera('profile::tftp::root', '/var/lib/tftpboot/') 
-  $images = hiera('profile::pxe::images')
+  $rootdir = lookup('profile::tftp::root', {
+    'default_value' => '/var/lib/tftpboot/',
+    'value_type'    => Stdlib::Unixpath,
+  })
 
   include ::profile::services::dashboard::clients::tftp
   include ::profile::services::tftp::acl
@@ -35,6 +37,4 @@ class profile::services::tftp {
     source  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
     require => Package['syslinux'],
   }
-
-  ::profile::services::tftp::image { $images : }
 }
