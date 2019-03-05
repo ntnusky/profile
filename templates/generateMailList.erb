@@ -3,8 +3,8 @@
 VHOST=<%= scope.call_function('lookup', ['profile::info::maillist::fqdn']) %>
 LOCALFILE="/var/www/$VHOST/mail/mail.txt"
 TODAY=$(date +%F)
-OS_PASSWORD=<%= scope.call_function('lookup', ['profile::keystone::admin_password']) %>
-OS_AUTH_URL=<%= scope.call_function('lookup', ['profile::openstack::endpoint::public']) %>:5000/v3
+OS_PASSWORD=<%= scope.call_function('lookup', ['ntnuopenstack::keystone::admin_password']) %>
+OS_AUTH_URL=<%= scope.call_function('lookup', ['ntnuopenstack::endpoint::public']) %>:5000/v3
 OSCMD="openstack --os-username admin --os-password $OS_PASSWORD --os-project-name admin --os-auth-url $OS_AUTH_URL --os-identity-api-version 3"
 
 declare -a mails=()
