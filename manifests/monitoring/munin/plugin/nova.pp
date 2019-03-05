@@ -3,13 +3,18 @@
 class profile::monitoring::munin::plugin::nova {
   include ::ntnuopenstack::clients
 
-  $internal_endpoint  = hiera('ntnuopenstack::endpoint::admin', undef)
-  $keystone_admin_ip = hiera('profile::api::keystone::admin::ip', '127.0.0.1')
-  $keystone_internal = pick($internal_endpoint, "http://${keystone_admin_ip}")
+  $keystone_location = lookup('ntnuopenstack::keystone::endpoint::internal', {
+    'value_type' => Stdlib::Httpurl,
+  })
+  $keystone_url = "${keystone_location}:5000/v3"
 
-  $admin_username = hiera('ntnuopenstack::keystone::admin_username', 'admin')
-  $admin_pass = hiera('ntnuopenstack::keystone::admin_password')
-  $admin_url = "${keystone_internal}:5000/v3"
+  $admin_username = lookup('ntnuopenstack::keystone::admin_username', {
+    'value_type'    => String,
+    'default_value' => 'admin',
+  })
+  $admin_pass = lookup('ntnuopenstack::keystone::admin_password', {
+    'value_type' => String,
+  })
 
   $externalnets = lookup('ntnuopenstack::neutron::networks::external', {
     'value_type' => Hash,
@@ -24,7 +29,7 @@ class profile::monitoring::munin::plugin::nova {
         'env.OS_PROJECT_NAME admin',
         "env.OS_USERNAME ${admin_username}",
         "env.OS_PASSWORD ${admin_pass}",
-        "env.OS_AUTH_URL ${admin_url}",
+        "env.OS_AUTH_URL ${keystone_url}",
         'env.OS_IDENTITY_API_VERSION 3',
       ],
     }
@@ -40,7 +45,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
       "env.EXTERNALS ${externals}",
     ],
@@ -53,7 +58,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -65,7 +70,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -77,7 +82,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -89,7 +94,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -101,7 +106,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -113,7 +118,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
@@ -125,7 +130,7 @@ class profile::monitoring::munin::plugin::nova {
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
       "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${admin_url}",
+      "env.OS_AUTH_URL ${keystone_url}",
       'env.OS_IDENTITY_API_VERSION 3',
     ],
   }
