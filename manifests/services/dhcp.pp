@@ -2,16 +2,16 @@
 class profile::services::dhcp {
   $searchdomain = lookup('profile::dhcp::searchdomain', Stdlib::Fqdn)
   $ntp_servers = lookup('profile::ntp::servers', {
-    'value_type' => Array[Variant[Stdlib::Fqdn, Stdlib::IP::Address]]
-    'merge'      => 'unique'
+    'value_type' => Array[Variant[Stdlib::Fqdn, Stdlib::IP::Address]],
+    'merge'      => 'unique',
   })
   $interfaces = lookup('profile::dhcp::server::interfaces', {
-    'value_type' => Array[String]
-    'merge'      => 'unique'
+    'value_type' => Array[String],
+    'merge'      => 'unique',
   })
   $networks = lookup('profile::networks', {
-    'value_type' => Array[String]
-    'merge'      => 'unique'
+    'value_type' => Array[String],
+    'merge'      => 'unique',
   })
 
   $omapi_name = lookup('profile::dhcp::omapi::name', String)
@@ -38,7 +38,7 @@ class profile::services::dhcp {
 
   $nameservers = lookup('profile::dns::resolvers', {
     'value_type' => Array[Stdlib::IP::Address::V4],
-    'merge'      => 'unique'
+    'merge'      => 'unique',
   })
 
   include ::profile::services::dhcp::firewall
