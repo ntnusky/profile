@@ -1,21 +1,45 @@
 # Installs and configures a DHCP server.
 class profile::services::dhcp {
-  $searchdomain = hiera('profile::dhcp::searchdomain')
-  $ntp_servers = hiera_array('profile::ntp::servers')
-  $interfaces = hiera_array('profile::interfaces')
-  $networks = hiera_array('profile::networks')
+  $searchdomain = lookup('profile::dhcp::searchdomain', Stdlib::Fqdn)
+  $ntp_servers = lookup('profile::ntp::servers', {
+    'value_type' => Array[Variant[Stdlib::Fqdn, Stdlib::IP::Address]]
+    'merge'      => 'unique'
+  })
+  $interfaces = lookup('profile::dhcp::server::interfaces', {
+    'value_type' => Array[String]
+    'merge'      => 'unique'
+  })
+  $networks = lookup('profile::networks', {
+    'value_type' => Array[String]
+    'merge'      => 'unique'
+  })
 
-  $omapi_name = hiera('profile::dhcp::omapi::name')
-  $omapi_key = hiera('profile::dhcp::omapi::key')
-  $omapi_port = hiera('profile::dhcp::omapi::port', 7911)
+  $omapi_name = lookup('profile::dhcp::omapi::name', String)
+  $omapi_key = lookup('profile::dhcp::omapi::key', String)
+  $omapi_port = lookup('profile::dhcp::omapi::port', {
+    'value_type'    => Integer,
+    'default_value' => 7911,
+  })
 
-  $man_if = hiera('profile::interfaces::management')
+  $man_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$man_if]['ip']
-  $management_ip = hiera("profile::interfaces::${man_if}::address", $mip)
-  $pxe_server = hiera('profile::dhcp::pxe::server', $management_ip)
-  $pxe_file = hiera('profile::dhcp::pxe::file', 'pxelinux.0')
+  $management_ip = lookup("profile::interfaces::${man_if}::address", {
+    'default_value' => $mip,
+    'value_type'    => Stdlib::IP::Address::V4,
+  })
+  $pxe_server = lookup('profile::dhcp::pxe::server', { 
+    'default_value' => $management_ip,
+    'value_type'    => Stdlib::IP::Address::V4,
+  })
+  $pxe_file = lookup('profile::dhcp::pxe::file', {
+    'default_value' => 'pxelinux.0',
+    'value_type'    => String,
+  })
 
-  $nameservers = hiera_array('profile::dns::resolvers')
+  $nameservers = lookup('profile::dns::resolvers', {
+    'value_type' => Array[Stdlib::IP::Address::V4],
+    'merge'      => 'unique'
+  })
 
   include ::profile::services::dhcp::firewall
 

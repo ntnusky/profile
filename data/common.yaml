@@ -1,0 +1,2 @@
+---
+profile::dhcp::server::interfaces: "%{alias('profile::interfaces')}"
