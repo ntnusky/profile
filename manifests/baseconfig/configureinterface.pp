@@ -10,7 +10,7 @@ define profile::baseconfig::configureinterface {
     'value_type' => String,
   })
   $mtu = lookup("profile::interfaces::${name}::mtu", {
-    'default_value' => undef 
+    'default_value' => undef
   })
 
   $dns_servers = lookup('profile::dns::nameservers', {
@@ -31,13 +31,14 @@ define profile::baseconfig::configureinterface {
       network::interface { $name:
         enable_dhcp => true,
       }
+    }
     elsif($distro == '18.04') {
       class { '::netplan':
         ethernets => {
           $name => {
             'dhcp4' => true,
           }
-        }
+        },
       }
     }
   } else {
