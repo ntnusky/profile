@@ -24,13 +24,25 @@ define profile::baseconfig::configureinterface {
     'default_value' => false,
   })
 
+  $distro = $facts['os']['release']['major']
+
   if($method == 'dhcp') {
-    network::interface { $name:
-      enable_dhcp => true,
+    if($distro == '16.04') {
+      network::interface { $name:
+        enable_dhcp => true,
+      }
+    elsif($distro == '18.04') {
+      class { '::netplan':
+        ethernets => {
+          $name => {
+            'dhcp4' => true,
+          }
+        }
+      }
     }
   } else {
     $address = lookup("profile::interfaces::${name}::address", {
-      'default_value' => undef 
+      'default_value' => undef
     })
     $netmask = lookup("profile::interfaces::${name}::netmask", {
       'default_value' => undef
