@@ -18,7 +18,12 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       $address = pick_default($params['ipv4']['address'], undef)
       $netmask = pick_default($params['ipv4']['netmask'], undef)
       $primary = pick_default($params['ipv4']['primary'], false)
-      $mtu     = pick_default($params['mtu'], undef)
+
+      if($params['mtu']) {
+        $mtu = $params['mtu']
+      } else {
+        $mtu = undef
+      }
 
       if($primary) {
         $gateway = $params['ipv4']['gateway']
