@@ -15,7 +15,9 @@ class profile::baseconfig::networking {
   if($if_to_configure) {
     $distro = $facts['os']['release']['major']
     if($distro == '16.04') {
-      include ::profile::baseconfig::network::ifupdown
+      class { '::profile::baseconfig::network::ifupdown':
+        nics => $if_to_configure,
+      }
     }
     elsif($distro == '18.04') {
       class { '::profile::baseconfig::network::netplan':
