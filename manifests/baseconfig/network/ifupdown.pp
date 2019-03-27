@@ -27,7 +27,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         $v4gateway = undef
       }
 
-      network::interface { "v4-${nic]":
+      network::interface { "v4-${nic}":
         interface       => $nic,
         method          => $method,
         ipaddress       => $v4address,
