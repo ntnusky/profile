@@ -13,7 +13,7 @@ class profile::baseconfig::networking {
     'value_type'    => Variant[Hash,Boolean]
   })
   if($if_to_configure) {
-    if(os_version_gte('Ubuntu', '16.04'))
+    if(os_version_gte('Ubuntu', '16.04')) {
       class { '::profile::baseconfig::network::netplan':
         nics => $if_to_configure,
       }
