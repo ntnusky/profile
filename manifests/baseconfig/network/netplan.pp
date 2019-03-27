@@ -38,7 +38,8 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'search'    => $dns_search,
         },
         'mtu'         => $params['ipv4']['mtu']
-      }
+      } }
+    }
   }
 
   class { '::netplan':
