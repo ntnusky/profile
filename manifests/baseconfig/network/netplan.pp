@@ -21,7 +21,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $v4cidr = undef
       }
 
-      if($nics[$nic[0]]['ipv6']['address']) {
+      if($nics[$nic[0]]['ipv6']) {
         $v6cidr = $nics[$nic[0]]['ipv6']['address']
       } else {
         $v6cidr = undef
