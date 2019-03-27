@@ -14,13 +14,20 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     }
     else {
       if($nics[$nic[0]]['ipv4']['address']) {
-        $address = $nics[$nic[0]]['ipv4']['address']
-        $mask = netmask_to_masklen($nics[$nic[0]]['ipv4']['netmask'])
-        $cidr = [ "${address}/${mask}" ]
+        $v4address = $nics[$nic[0]]['ipv4']['address']
+        $v4mask = netmask_to_masklen($nics[$nic[0]]['ipv4']['netmask'])
+        $v4cidr = [ "${address}/${mask}" ]
       } else {
-        $cidr = undef
+        $v4cidr = undef
       }
 
+      if($nics[$nic[0]]['ipv6']['address']) {
+        $v6cidr = $nics[$nic[0]]['ipv6']['address']
+      } else {
+        $v6cidr = undef
+      }
+
+      $addresses = $v4cidr + $v6cidr
       $primary = $nics[$nic[0]]['ipv4']['primary']
       $mtu = $nics[$nic[0]]['mtu']
 
@@ -31,7 +38,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       }
 
       $memo + { $nic[0] => {
-        'addresses'   => $cidr,
+        'addresses'   => $addresses,
         'gateway4'    => $gateway,
         'nameservers' => {
           'addresses' => split($dns_servers, ' '),
