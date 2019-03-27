@@ -27,7 +27,8 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         $v4gateway = undef
       }
 
-      network::interface { $nic:
+      network::interface { "v4-${nic]":
+        interface       => $nic,
         method          => $method,
         ipaddress       => $v4address,
         netmask         => $v4netmask,
@@ -41,7 +42,8 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       $pattern = '^([\w:]+)\/(\d+)$'
       $v6address = regsubst($params['ipv6']['address'], $pattern, '\1')
       $v6netmask = regsubst($params['ipv6']['address'], $pattern, '\2')
-      network::interface { $nic:
+      network::interface { "v6-${nic}":
+        interface => $nic,
         method    => $method,
         family    => 'inet6',
         ipaddress => $v6address,
