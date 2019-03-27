@@ -13,12 +13,13 @@ class profile::baseconfig::networking {
     'value_type'    => Variant[Hash,Boolean]
   })
   if($if_to_configure) {
-    if(os_version_gte('Ubuntu', '16')) {
+    $distro = $facts['os']['release']['major']
+    if($distro == '18.04') {
       class { '::profile::baseconfig::network::netplan':
         nics => $if_to_configure,
       }
     }
-    else {
+    elsif($distro == '16.04') {
       class { '::profile::baseconfig::network::ifupdown':
         nics => $if_to_configure,
       }
