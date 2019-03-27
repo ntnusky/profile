@@ -34,7 +34,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         'addresses'   => $cidr,
         'gateway4'    => $gateway,
         'nameservers' => {
-          'addresses' => split($dns_servers, ' ')
+          'addresses' => split($dns_servers, ' '),
           'search'    => $dns_search,
         },
         'mtu'         => $params['ipv4']['mtu']
