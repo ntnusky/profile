@@ -16,25 +16,36 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     }
     else {
       # These will all default to undef if not present in the hash from hiera
-      $address = $params['ipv4']['address']
-      $netmask = $params['ipv4']['netmask']
+      $v4address = $params['ipv4']['address']
+      $v4netmask = $params['ipv4']['netmask']
       $primary = $params['ipv4']['primary']
       $mtu = $params['mtu']
 
       if($primary) {
-        $gateway = $params['ipv4']['gateway']
+        $v4gateway = $params['ipv4']['gateway']
       } else {
-        $gateway = undef
+        $v4gateway = undef
       }
 
       network::interface { $nic:
         method          => $method,
-        ipaddress       => $address,
-        netmask         => $netmask,
-        gateway         => $gateway,
+        ipaddress       => $v4address,
+        netmask         => $v4netmask,
+        gateway         => $v4gateway,
         dns_nameservers => $dns_servers,
         dns_search      => $dns_search,
         mtu             => $mtu
+      }
+    }
+    if($params['ipv6']) {
+      $pattern = '^([\w:]+)\/(\d+)$'
+      $v6address = regsubst($params['ipv6']['address'], $pattern, '\1')
+      $v6netmask = regsubst($params['ipv6']['address'], $pattern, '\2')
+      network::interface { $nic:
+        method    => $method,
+        family    => 'inet6',
+        ipaddress => $v6address,
+        netmask   => $v6netmask,
       }
     }
   }
