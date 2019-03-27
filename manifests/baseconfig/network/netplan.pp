@@ -16,7 +16,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       if($nics[$nic[0]]['ipv4']['address']) {
         $address = $nics[$nic[0]]['ipv4']['address']
         $mask = netmask_to_masklen($nics[$nic[0]]['ipv4']['netmask'])
-        $cidr = "${address}/${mask}"
+        $cidr = [ "${address}/${mask}" ]
       } else {
         $cidr = undef
       }
@@ -35,7 +35,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         'gateway4'    => $gateway,
         'nameservers' => {
           'addresses' => split($dns_servers, ' '),
-          'search'    => $dns_search,
+          'search'    => [ $dns_search ],
         },
         'mtu'         => $nics[$nic[0]]['ipv4']['mtu']
       } }
