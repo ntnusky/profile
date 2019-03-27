@@ -18,13 +18,13 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $v4mask = netmask_to_masklen($nics[$nic[0]]['ipv4']['netmask'])
         $v4cidr = [ "${address}/${mask}" ]
       } else {
-        $v4cidr = undef
+        $v4cidr = []
       }
 
       if($nics[$nic[0]]['ipv6']) {
-        $v6cidr = $nics[$nic[0]]['ipv6']['address']
+        $v6cidr = [ $nics[$nic[0]]['ipv6']['address'] ]
       } else {
-        $v6cidr = undef
+        $v6cidr = []
       }
 
       $addresses = $v4cidr + $v6cidr
