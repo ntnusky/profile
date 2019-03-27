@@ -15,16 +15,11 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       }
     }
     else {
-      $address = pick_default($params['ipv4']['address'], undef)
-      $netmask = pick_default($params['ipv4']['netmask'], undef)
-      $primary = pick_default($params['ipv4']['primary'], false)
+      # These will all default to undef if not present in the hash from hiera
+      $address = $params['ipv4']['address']
+      $netmask = $params['ipv4']['netmask']
+      $primary = $params['ipv4']['primary']
       $mtu = $params['mtu']
-
-      #if($params['mtu']) {
-      #  $mtu = $params['mtu']
-      #} else {
-      #  $mtu = undef
-      #}
 
       if($primary) {
         $gateway = $params['ipv4']['gateway']
