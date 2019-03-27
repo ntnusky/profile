@@ -16,7 +16,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       if($nics[$nic[0]]['ipv4']['address']) {
         $v4address = $nics[$nic[0]]['ipv4']['address']
         $v4mask = netmask_to_masklen($nics[$nic[0]]['ipv4']['netmask'])
-        $v4cidr = [ "${v4address}/${mask}" ]
+        $v4cidr = [ "${v4address}/${v4mask}" ]
       } else {
         $v4cidr = []
       }
