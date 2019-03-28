@@ -21,7 +21,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'table' => $table_id,
         }
         $v4policy = {
-          'to'    => '0.0.0.0/0'
+          'to'    => '0.0.0.0/0',
           'from'  => "${net4id}/${net4mask}",
           'table' => $table_id,
         }
