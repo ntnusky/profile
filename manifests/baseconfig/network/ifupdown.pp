@@ -8,6 +8,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
   })
 
   $nics.each | $nic, $params | {
+    $v4gateway = $params['ipv4']['gateway']
     $method = $params['ipv4']['method']
     if($method == 'dhcp') {
       network::interface { $nic:
@@ -18,7 +19,6 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       # These will all default to undef if not present in the hash from hiera
       $v4address = $params['ipv4']['address']
       $v4netmask = $params['ipv4']['netmask']
-      $v4gateway = $params['ipv4']['gateway']
       $v6gateway = pick($params['ipv6']['gateway'], 'fe80::1')
       $primary = $params['ipv4']['primary']
       $mtu = $params['mtu']
