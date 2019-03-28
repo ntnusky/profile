@@ -10,7 +10,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
   $nics.each | $nic, $params | {
     $v4gateway = $params['ipv4']['gateway']
     if ('ipv6' in $params) {
-      $v6gateway = pick(params['ipv6']['gateway'],'fe80::1')
+      $v6gateway = pick($params['ipv6']['gateway'],'fe80::1')
     } else {
       $v6gateway = 'fe80::1'
     }
