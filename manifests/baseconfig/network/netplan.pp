@@ -30,7 +30,11 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       }
       if($::facts['networking']['interfaces'][$nic]['ip6']) {
         $net6id = $::facts['networking']['interfaces'][$nic]['network6']
-        $v6gateway = pick($nics[$nic]['ipv6']['gateway'], 'fe80::1')
+        if($nics[$nic]['ipv6']) {
+          $v6gateway = $nics[$nic]['ipv6']['gateway']
+        } else {
+          $v6gateway = 'fe80::1'
+        }
         $v6route = {
           'to'    => "${net6id}/64",
           'via'   => $v6gateway,
