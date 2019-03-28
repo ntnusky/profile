@@ -44,7 +44,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'addresses' => split($dns_servers, ' '),
           'search'    => [ $dns_search ],
         },
-        'mtu'         => $nics[$nic[0]]['ipv4']['mtu']
+        'mtu'         => $nics[$nic[0]]['mtu']
       } }
     }
   }
