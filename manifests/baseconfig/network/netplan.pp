@@ -26,7 +26,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'table' => $table_id,
         }
       } else {
-        $v4routes = undef
+        $v4route = undef
         $v4policy = undef
       }
       if($::facts['networking']['interfaces'][$nic]['ip6']) {
@@ -50,8 +50,13 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $v6route = undef
         $v6policy = undef
       }
-      $routes = [ $v4route, $v6route ]
-      $policies = [ $v4policy, $v6policy ]
+      if($v4route) or ($v6route) {
+        $routes = [ $v4route, $v6route ]
+        $policies = [ $v4policy, $v6policy ]
+      } else {
+        $routes = undef
+        $policies = undef
+      }
     }
     $method = $nics[$nic]['ipv4']['method']
     if($method == 'dhcp') {
