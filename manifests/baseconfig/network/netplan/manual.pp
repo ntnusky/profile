@@ -15,4 +15,7 @@ define profile::baseconfig::network::netplan::manual (
     content => template('profile/manual-netplan-nic.erb'),
     notify  => Service['systemd-networkd'],
   }
+  service { 'systemd-networkd':
+    ensure    => 'running',
+  }
 }
