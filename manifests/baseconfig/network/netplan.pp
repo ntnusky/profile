@@ -1,5 +1,9 @@
 # Configure networking with netplan
 class profile::baseconfig::network::netplan (Hash $nics) {
+  class { '::systemd':
+    manage_networkd => true,
+  }
+
   $dns_servers = lookup('profile::dns::nameservers', {
     'default_value' => undef,
   })
