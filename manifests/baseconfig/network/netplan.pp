@@ -68,6 +68,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     }
     elsif($method == 'manual') {
       profile::baseconfig::network::netplan::manual { $nic: }
+      $memo + undef
     }
     else {
       if($nics[$nic]['ipv4']['address']) {
