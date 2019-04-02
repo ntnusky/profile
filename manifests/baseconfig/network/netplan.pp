@@ -110,7 +110,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'search'    => [ $dns_search ],
         },
         'mtu'            => $nics[$nic]['mtu'],
-        'routes'        => $routes,
+        'routes'         => $routes,
         'routing_policy' => $policies,
       } }
     }
