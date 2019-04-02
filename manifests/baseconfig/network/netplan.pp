@@ -67,7 +67,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       } }
     }
     elsif($method == 'manual') {
-      profile::baseconfig::network::netplan::manual { $nics[$nic]: }
+      profile::baseconfig::network::netplan::manual { $nic: }
     }
     else {
       if($nics[$nic]['ipv4']['address']) {
