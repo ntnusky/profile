@@ -66,6 +66,9 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         'routing_policy' => $policies,
       } }
     }
+    elsif($method == 'manual') {
+      profile::baseconfig::network::netplan::manual { $nics[$nic]: }
+    }
     else {
       if($nics[$nic]['ipv4']['address']) {
         $v4address = $nics[$nic]['ipv4']['address']
