@@ -67,7 +67,10 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       } }
     }
     elsif($method == 'manual') {
-      profile::baseconfig::network::netplan::manual { $nic: }
+      systemd::network{ "${nic}.network":
+        content         => template('profile/manual-netplan-nic.erb'),
+        restart_service => true,
+      }
       $memo + {}
     }
     else {
