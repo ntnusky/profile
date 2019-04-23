@@ -4,4 +4,8 @@ class profile::services::redis::firewall {
     protocol => 'tcp',
     port     => 6379,
   }
+  ::profile::baseconfig::firewall::service::infra { 'Redis-sentinel':
+    protocol => 'tcp',
+    port     => 26379,
+  }
 }

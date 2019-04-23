@@ -2,7 +2,7 @@
 
 class profile::services::redis {
 
-  require ::firewall
+  contain ::profile::services::redis::firewall
 
   $nodetype = lookup('profile::redis::nodetype', Enum['master', 'slave'])
   $nic = lookup('profile::interfaces::management', String)
@@ -55,17 +55,6 @@ class profile::services::redis {
     options           => [
       'backup check inter 1s',
     ],
-  }
-
-  firewall { '050 accept redis-server':
-    proto  => 'tcp',
-    dport  => 6379,
-    action => 'accept',
-  }
-  firewall { '051 accept redis-sentinel':
-    proto  => 'tcp',
-    dport  => 26379,
-    action => 'accept',
   }
 
   if ($installsensu) {
