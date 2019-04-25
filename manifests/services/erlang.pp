@@ -1,6 +1,6 @@
 # Module to install erlang from Erlangs repositories
 class profile::services::erlang {
-  $version = lookup('profile::services::erlang::version' {
+  $version = lookup('profile::services::erlang::version', {
     'default_version' => '1:21.3.6-1',
   })
   apt::source { 'erlang':
