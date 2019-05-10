@@ -1,9 +1,5 @@
 # Configure networking with netplan
 class profile::baseconfig::network::netplan (Hash $nics) {
-  class { '::systemd':
-    manage_networkd => true,
-  }
-
   $dns_servers = lookup('profile::dns::nameservers', {
     'default_value' => undef,
   })
@@ -71,11 +67,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
       } }
     }
     elsif($method == 'manual') {
-      systemd::network{ "${nic}.network":
-        content         => template('profile/manual-netplan-nic.erb'),
-        restart_service => true,
-      }
-      $memo + {}
+      $memo + { $nic => {} }
     }
     else {
       if($nics[$nic]['ipv4']['address']) {
