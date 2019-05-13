@@ -1,7 +1,7 @@
 # Installs munin-plugins for general monitoring of the host.
 class profile::monitoring::munin::plugin::general {
   $interfaces = lookup('profile::baseconfig::network::interfaces', {
-    'value_type'    => Hash,
+    'value_type'    => Variant[Hash,Boolean]
     'default_value' => false
   })
   if($interfaces) {
