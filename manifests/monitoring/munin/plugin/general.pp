@@ -1,8 +1,11 @@
 # Installs munin-plugins for general monitoring of the host.
 class profile::monitoring::munin::plugin::general {
-  $interfacesToConfigure = hiera_array("profile::interfaces", false)
-  if($interfacesToConfigure) {
-    $interfacesToConfigure.each | $if | {
+  $interfaces = lookup('profile::baseconfig::network::interfaces', {
+    'type'          => Hash,
+    'default_value' => false
+  })
+  if($interfaces {
+    keys($interfaces).each | $if | {
       munin::plugin { "if_${if}":
         ensure => link,
         target => 'if_',
@@ -50,8 +53,8 @@ class profile::monitoring::munin::plugin::general {
     ensure => link,
   }
   munin::plugin { 'multiping':
-    ensure       => link,
-    config       => [
+    ensure => link,
+    config => [
       'env.host ntnu.no gjovik-gw1.uninett.no ntnu-gw-l0.nettel.ntnu.no',
     ],
   }
