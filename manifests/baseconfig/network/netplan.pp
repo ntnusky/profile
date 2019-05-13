@@ -12,7 +12,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $table_id = $nics[$nic]['tableid']
     $mac = $::facts['networking']['interfaces'][$nic]['mac']
     $match = { 'macaddress' => $mac }
-    $mtu   = {'mtu' => $nics[$nic]['mtu'] }
+    $mtu = $nics[$nic]['mtu']
 
     if($table_id) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
