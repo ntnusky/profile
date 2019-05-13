@@ -61,6 +61,9 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $routes   = { 'routes'         => undef }
         $policies = { 'routing_policy' => undef }
       }
+    } else {
+        $routes   = { 'routes'         => undef }
+        $policies = { 'routing_policy' => undef }
     }
 
     $common = $match + $mtu + $routes + $policies
