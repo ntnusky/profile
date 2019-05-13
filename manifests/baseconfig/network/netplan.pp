@@ -12,6 +12,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $table_id = $nics[$nic]['tableid']
     $mac = $::facts['networking']['interfaces'][$nic]['mac']
     $match = { 'macaddress' => $mac }
+    $mtu   = {'mtu' => $nics[$nic]['mtu'] }
 
     if($table_id) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
@@ -69,11 +70,13 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         'routes'         => $routes,
         'routing_policy' => $policies,
         'match'          => $match,
+        'mtu'            => $mtu,
       } }
     }
     elsif($method == 'manual') {
       $memo + { $nic => {
         'match' => $match,
+        'mtu'   => $mtu,
       } }
     }
     else {
@@ -93,7 +96,6 @@ class profile::baseconfig::network::netplan (Hash $nics) {
 
       $addresses = $v4cidr + $v6cidr
       $primary = $nics[$nic]['ipv4']['primary']
-      $mtu = $nics[$nic]['mtu']
 
       if($primary) {
         $gateway = $nics[$nic]['ipv4']['gateway']
@@ -108,7 +110,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'addresses' => split($dns_servers, ' '),
           'search'    => [ $dns_search ],
         },
-        'mtu'            => $nics[$nic]['mtu'],
+        'mtu'            => $mtu,
         'routes'         => $routes,
         'routing_policy' => $policies,
         'match'          => $match,
