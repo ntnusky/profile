@@ -2,12 +2,6 @@
 # hiera.
 class profile::baseconfig::networking {
   # Configure interfaces as instructed in hiera.
-
-  #$if_to_configure = hiera('profile::interfaces', false)
-  #if($if_to_configure) {
-  #  profile::baseconfig::configureinterface { $if_to_configure: }
-  #}
-
   $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
     'default_value' => false,
     'value_type'    => Variant[Hash,Boolean]
