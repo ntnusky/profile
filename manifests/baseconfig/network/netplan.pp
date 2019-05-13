@@ -68,9 +68,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $method = $nics[$nic]['ipv4']['method']
     if($method == 'dhcp') {
       $dhcp = { 'dhcp4' => true }
-      $memo + { $nic => {
-        $dhcp + $common
-      } }
+      $memo + { $nic => $dhcp + $common }
     }
     elsif($method == 'manual') {
       $memo + { $nic => $common }
