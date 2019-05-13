@@ -10,6 +10,9 @@ class profile::baseconfig::network::netplan (Hash $nics) {
   $ethernets = $nics.reduce({}) | $memo, $n | {
     $nic = $n[0]
     $table_id = $nics[$nic]['tableid']
+    $mac = $::facts['networking']['interfaces'][$nic]['mac']
+    $match = { 'macaddress' => $mac }
+
     if($table_id) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
         $net4id = $::facts['networking']['interfaces'][$nic]['network']
@@ -58,16 +61,20 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $policies = undef
       }
     }
+
     $method = $nics[$nic]['ipv4']['method']
     if($method == 'dhcp') {
       $memo + { $nic => {
         'dhcp4'          => true,
         'routes'         => $routes,
         'routing_policy' => $policies,
+        'match'          => $match,
       } }
     }
     elsif($method == 'manual') {
-      $memo + { $nic => undef }
+      $memo + { $nic => {
+        'match' => $match,
+      }
     }
     else {
       if($nics[$nic]['ipv4']['address']) {
@@ -104,6 +111,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         'mtu'            => $nics[$nic]['mtu'],
         'routes'         => $routes,
         'routing_policy' => $policies,
+        'match'          => $match,
       } }
     }
   }
