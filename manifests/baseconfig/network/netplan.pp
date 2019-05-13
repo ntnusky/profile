@@ -11,8 +11,8 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $nic = $n[0]
     $table_id = $nics[$nic]['tableid']
     $mac = $::facts['networking']['interfaces'][$nic]['mac']
-    $match = { 'macaddress' => $mac }
-    $mtu = $nics[$nic]['mtu']
+    $match = { 'match' => {'macaddress' => $mac} }
+    $mtu   = { 'mtu'   => $nics[$nic]['mtu'] }
 
     if($table_id) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
@@ -55,29 +55,25 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $v6policy = undef
       }
       if($v4route) or ($v6route) {
-        $routes = [ $v4route, $v6route ]
-        $policies = [ $v4policy, $v6policy ]
+        $routes   = { 'routes'         => [ $v4route, $v6route ] }
+        $policies = { 'routing_policy' => [ $v4policy, $v6policy ] }
       } else {
-        $routes = undef
-        $policies = undef
+        $routes   = { 'routes'         => undef }
+        $policies = { 'routing_policy' => undef }
       }
     }
 
+    $common = $match + $mtu + $routes + $policies
+
     $method = $nics[$nic]['ipv4']['method']
     if($method == 'dhcp') {
+      $dhcp = { 'dhcp4' => true }
       $memo + { $nic => {
-        'dhcp4'          => true,
-        'routes'         => $routes,
-        'routing_policy' => $policies,
-        'match'          => $match,
-        'mtu'            => $mtu,
+        $dhcp + $common
       } }
     }
     elsif($method == 'manual') {
-      $memo + { $nic => {
-        'match' => $match,
-        'mtu'   => $mtu,
-      } }
+      $memo + { $nic => $common }
     }
     else {
       if($nics[$nic]['ipv4']['address']) {
@@ -110,11 +106,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           'addresses' => split($dns_servers, ' '),
           'search'    => [ $dns_search ],
         },
-        'mtu'            => $mtu,
-        'routes'         => $routes,
-        'routing_policy' => $policies,
-        'match'          => $match,
-      } }
+      } + $common }
     }
   }
 
