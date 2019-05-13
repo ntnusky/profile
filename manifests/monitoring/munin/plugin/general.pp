@@ -4,7 +4,7 @@ class profile::monitoring::munin::plugin::general {
     'type'          => Hash,
     'default_value' => false
   })
-  if($interfaces {
+  if($interfaces) {
     keys($interfaces).each | $if | {
       munin::plugin { "if_${if}":
         ensure => link,
