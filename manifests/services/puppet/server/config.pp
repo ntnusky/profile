@@ -1,12 +1,18 @@
 # Configures the puppetmaster
 class profile::services::puppet::server::config {
-  $puppetca = hiera('profile::puppet::caserver')
-  $usepuppetdb = hiera('profile::puppetdb::masterconfig', true)
-  $puppetdb_hostname = hiera('profile::puppetdb::hostname')
-  $management_if = hiera('profile::interfaces::management')
+  $puppetca = lookup('profile::puppet::caserver', Stdlib::Fqdn)
+  $usepuppetdb = lookup('profile::puppetdb::masterconfig', {
+    'value_type'    => Boolean,
+    'default_value' => true
+    })
+  $puppetdb_hostname = lookup('profile::puppetdb::hostname', Stdlib::Fqdn)
+  $management_if = lookup('profile::interfaces::management', String)
   $auto_ip = $::facts['networking']['interfaces'][$management_if]['ip']
-  $master_ip = hiera("profile::interfaces::${management_if}::address", $auto_ip)
-  $dash_url = hiera('profile::dashboard::name::v4only')
+  $master_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $auto_ip
+    })
+  $dash_url = lookup('profile::dashboard::name::v4only', Stdlib::Fqdn)
 
   include ::profile::services::puppet::altnames
 

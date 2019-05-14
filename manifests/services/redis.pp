@@ -4,22 +4,25 @@ class profile::services::redis {
 
   require ::firewall
 
-  $nodetype = hiera('profile::redis::nodetype')
-  $nic = hiera('profile::interfaces::management')
+  $nodetype = lookup('profile::redis::nodetype', Enum['slave', 'master'])
+  $nic = lookup('profile::interfaces::management', String)
   $autoip = $::facts['networking']['interfaces'][$nic]['ip']
-  $ip = hiera("profile::interfaces::${nic}::address", $autoip)
-  $redismaster = hiera('profile::redis::master')
-  $installsensu = hiera('profile::sensu::install', true)
-  $masterauth = hiera('profile::redis::masterauth')
+  $ip = lookup("profile::baseconfig::network::interfaces.${nic}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $autoip
+    })
+  $redismaster = lookup('profile::redis::master', Stdlib::IP::Address::V4)
+  $installsensu = lookup('profile::sensu::install', {
+    'value_type'    => Boolean,
+    'default_value' => true
+    })
+  $masterauth = lookup('profile::redis::masterauth', String)
 
   if ( $nodetype == 'slave' ) {
     $slaveof = "${redismaster} 6379"
   }
   elsif ( $nodetype == 'master') {
     $slaveof = undef
-  }
-  else {
-    fail('Wrong redis node type. Only master or slave are valid')
   }
 
   class { '::redis':

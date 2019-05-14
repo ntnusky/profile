@@ -1,14 +1,23 @@
-# This class installs and configures the postgresql server 
+# This class installs and configures the postgresql server
 class profile::services::postgresql::server {
-  $management_if = hiera('profile::interfaces::management')
+  $management_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
-  $database_port = hiera('profile::postgres::backend::port', '5432')
-  $postgresql_ipv4 = hiera('profile::postgres::ipv4')
-  $postgresql_ipv6 = hiera('profile::postgres::ipv6', [])
-  $password = hiera('profile::postgres::password')
-  $replicator_password = hiera('profile::postgres::replicatorpassword')
-  $master_server = hiera('profile::postgres::masterserver')
+  $management_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $mip
+    })
+  $database_port = lookup('profile::postgres::backend::port', {
+    'value_type'    => Stdlib::Port,
+    'default_value' => 5432
+    })
+  $postgresql_ipv4 = lookup('profile::postgres::ipv4')
+  $postgresql_ipv6 = lookup('profile::postgres::ipv6', {
+    'value_type'    => Variant[Stdlib::IP::Address::V6, Array],
+    'default_value' => []
+    })
+  $password = lookup('profile::postgres::password', String)
+  $replicator_password = lookup('profile::postgres::replicatorpassword', String)
+  $master_server = lookup('profile::postgres::masterserver', String)
 
   if($::fqdn == $master_server) {
     $confpassword = $password

@@ -1,17 +1,28 @@
 # Configuring keepalived for the postgres IP
 class profile::services::postgresql::keepalived {
-  $vrrp_password = hiera('profile::keepalived::vrrp_password')
+  $vrrp_password = lookup('profile::keepalived::vrrp_password', String)
 
-  $v4ip = hiera('profile::postgres::ipv4')
-  $v4id = hiera('profile::postgres::ipv4::id')
-  $v4pri = hiera('profile::postgres::ipv4::priority')
-  $v6ip = hiera('profile::postgres::ipv6', false)
-  $v6id = hiera('profile::postgres::ipv6::id', false)
-  $v6pri = hiera('profile::postgres::ipv6::priority', false)
-
-  $management_if = hiera('profile::interfaces::management')
+  $v4ip = lookup('profile::postgres::ipv4', Stdlib::IP::Address::V4)
+  $v4id = lookup('profile::postgres::ipv4::id', Integer)
+  $v4pri = lookup('profile::postgres::ipv4::priority', Integer)
+  $v6ip = lookup('profile::postgres::ipv6', {
+    'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
+    'default_value' => false
+    })
+  $v6id = lookup('profile::postgres::ipv6::id', {
+    'value_type'    => Variant[Integer, Boolean],
+    'default_value' => false
+    })
+  $v6pri = lookup('profile::postgres::ipv6::priority', {
+    'value_type'    => Variant[Integer, Boolean],
+    'default_value' => false
+    })
+  $management_if = lookup('profile::interfaces::management')
   $autoip = $facts['networking']['interfaces'][$management_if]['ip']
-  $localip = hiera("profile::interfaces::${management_if}::address", $autoip)
+  $localip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $autoip
+    })
 
   require ::profile::services::keepalived
 

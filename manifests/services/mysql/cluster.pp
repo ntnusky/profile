@@ -1,16 +1,25 @@
 # Installing galera and mariadb cluster
 class profile::services::mysql::cluster {
-  $servers = hiera('profile::mysqlcluster::servers')
-  $master  = hiera('profile::mysqlcluster::master')
-  $rootpassword = hiera('profile::mysqlcluster::root_password')
-  $statuspassword = hiera('profile::mysqlcluster::status_password')
+  $servers = lookup('profile::mysqlcluster::servers', Array[Stdlib::IP::Address::V4])
+  $master  = lookup('profile::mysqlcluster::master', Stdlib::Fqdn)
+  $rootpassword = lookup('profile::mysqlcluster::root_password', String)
+  $statuspassword = lookup('profile::mysqlcluster::status_password', String)
 
-  $net_read_timeout = hiera('profile::mysqlcluster::timeout::net::read', 30)
-  $net_write_timeout = hiera('profile::mysqlcluster::timeout::net::write', 60)
+  $net_read_timeout = lookup('profile::mysqlcluster::timeout::net::read', {
+    'value_type'    => Integer,
+    'default_value' => 30
+    })
+  $net_write_timeout = lookup('profile::mysqlcluster::timeout::net::write', {
+    'value_type'    => Integer,
+    'default_value' => 60
+    })
 
-  $management_if = hiera('profile::interfaces::management')
+  $management_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ip = hiera("profile::interfaces::${management_if}::address", $mip)
+  $management_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $mip
+    })
 
   apt::source { 'galera_mariadb':
     location   => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
