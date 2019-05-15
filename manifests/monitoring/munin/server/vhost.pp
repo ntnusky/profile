@@ -3,7 +3,7 @@ define profile::monitoring::munin::server::vhost {
   require profile::services::apache
 
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
-    'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean]
+    'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
     'default_value' => false
   })
   $management_if = lookup('profile::interfaces::management', String)
