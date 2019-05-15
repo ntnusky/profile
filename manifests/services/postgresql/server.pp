@@ -44,7 +44,7 @@ class profile::services::postgresql::server {
     ip_mask_deny_postgres_user => '0.0.0.0/32',
     ip_mask_allow_all_users    => '0.0.0.0/0',
     listen_addresses           => join($ips, ','),
-    port                       => scanf($database_port, '%i')[0],
+    port                       => $database_port,
     postgres_password          => $confpassword,
     manage_pg_ident_conf       => false,
   }
