@@ -9,7 +9,7 @@ class profile::monitoring::munin::plugin::general {
       munin::plugin { "if_${if}":
         ensure => link,
         target => 'if_',
-        config => ['user root'],
+        config => ['user root', 'env.speed 10000'],
       }
       munin::plugin { "if_err_${if}":
         ensure => link,
