@@ -2,7 +2,7 @@
 
 class profile::services::redis {
 
-  require ::firewall
+  contain ::profile::services::redis::firewall
 
   $nodetype = lookup('profile::redis::nodetype', Enum['slave', 'master'])
   $nic = lookup('profile::interfaces::management', String)
@@ -29,7 +29,7 @@ class profile::services::redis {
     config_owner        => 'redis',
     config_group        => 'redis',
     manage_repo         => true,
-    bind                => "${ip} 127.0.0.1",
+    bind                => [ $ip, '127.0.0.1' ],
     min_slaves_to_write => 1,
     slaveof             => $slaveof,
     masterauth          => $masterauth,
@@ -57,17 +57,6 @@ class profile::services::redis {
     options           => [
       'backup check inter 1s',
     ],
-  }
-
-  firewall { '050 accept redis-server':
-    proto  => 'tcp',
-    dport  => 6379,
-    action => 'accept',
-  }
-  firewall { '051 accept redis-sentinel':
-    proto  => 'tcp',
-    dport  => 26379,
-    action => 'accept',
   }
 
   if ($installsensu) {
