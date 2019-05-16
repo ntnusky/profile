@@ -4,14 +4,16 @@ class profile::services::redis {
 
   contain ::profile::services::redis::firewall
 
-  $nodetype = lookup('profile::redis::nodetype', Enum['master', 'slave'])
+  $nodetype = lookup('profile::redis::nodetype', Enum['slave', 'master'])
   $nic = lookup('profile::interfaces::management', String)
   $autoip = $::facts['networking']['interfaces'][$nic]['ip']
-  $ip = lookup("profile::interfaces::${nic}::address", {
+  $ip = lookup("profile::baseconfig::network::interfaces.${nic}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
     'default_value' => $autoip,
   })
-  $redismaster = lookup('profile::redis::master', Stdlib::IP::Address)
+  $redismaster = lookup('profile::redis::master', Stdlib::IP::Address::V4)
   $installsensu = lookup('profile::sensu::install', {
+    'value_type'    => Boolean,
     'default_value' => true,
   })
   $masterauth = lookup('profile::redis::masterauth', String)

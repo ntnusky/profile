@@ -7,7 +7,7 @@ class profile::bird::config::ipv6 {
   # interface, or use the IP set in hiera, if there are an IP in hiera.
   $management_if = lookup('profile::interfaces::management', String)
   $management_auto4 = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv4 = lookup("profile::interfaces::${management_if}::address", {
+  $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => String,
     'default_value' => $management_auto4,
   })

@@ -16,7 +16,7 @@ class profile::sensu::uchiwa {
     'default_value' => false,
   })
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ipv4 = lookup("profile::interfaces::${management_if}::address", {
+  $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
     'default_value' => $mip,
   })

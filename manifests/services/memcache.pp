@@ -1,19 +1,34 @@
 # This class installs and configures a simple memcached server
 class profile::services::memcache {
   # Variables for keepalived
-  $management_if = hiera('profile::interfaces::management')
-  $memcached_port = hiera('profile::memcache::port', '11211')
-  $installsensu = hiera('profile::sensu::install', true)
-  $installmunin = hiera('profile::munin::install', true)
-  $use_keepalived = hiera('profile::memcache::keepalived', false)
+  $management_if = lookup('profile::interfaces::management', String)
+  $memcached_port = lookup('profile::memcache::port', {
+    'value_type'    => Stdlib::Port,
+    'default_value' => 11211,
+  })
+  $installsensu = lookup('profile::sensu::install', {
+    'value_type'    => Boolean,
+    'default_value' => true,
+  })
+  $installmunin = lookup('profile::munin::install', {
+    'value_type'    => Boolean,
+    'default_value' => true,
+  })
+  $use_keepalived = lookup('profile::memcache::keepalived', {
+    'value_type'    => Boolean,
+    'default_value' => false,
+  })
 
   if ( $use_keepalived ) {
     contain ::profile::services::memcache::keepalived
-    $memcache_ip = hiera('profile::memcache::ip')
+    $memcache_ip = lookup('profile::memcache::ip', Stdlib::IP::Address::V4)
     $listen = $memcache_ip
   } else {
     $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
-    $memcache_ipv4 = hiera("profile::interfaces::${management_if}::address", $autoip)
+    $memcache_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+      'value_type'    => Stdlib::IP::Address::V4,
+      'default_value' => $autoip,
+    })
     $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     if ( $memcache_ipv6 =~ /^fe80/ ) {
       $listen = $memcache_ipv4

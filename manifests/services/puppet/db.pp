@@ -4,15 +4,22 @@ class profile::services::puppet::db {
   include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
 
-  $dbhost = hiera('profile::postgres::ipv4')
-  $dbport = hiera('profile::postgres::port', '5432')
-  $dbname = hiera('profile::puppetdb::database::name')
-  $dbuser = hiera('profile::puppetdb::database::user')
-  $dbpass = hiera('profile::puppetdb::database::pass')
+  $dbhost = lookup('profile::postgres::ipv4', Stdlib::IP::Address::V4)
+  $dbname = lookup('profile::puppetdb::database::name', String)
+  $dbuser = lookup('profile::puppetdb::database::user', String)
+  $dbpass = lookup('profile::puppetdb::database::pass', String)
+  $dbport = lookup('profile::postgres::port', {
+    'value_type'    => Stdlib::Port,
+    'default_value' => 5432,
+  })
 
-  $if = hiera('profile::interfaces::management')
+  $if = lookup('profile::interfaces::management', String)
   $autoip = $::facts['networking']['interfaces'][$if]['ip']
-  $ip = hiera("profile::interfaces::${if}::address", $autoip)
+  $ip = lookup("profile::baseconfig::network::interfaces.${if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $autoip,
+  })
+
 
   class { '::puppetdb::server':
     database           => 'postgres',

@@ -1,0 +1,27 @@
+---
+profile::baseconfig::network::interfaces:
+  ens3:
+    tableid: 1
+    ipv4:
+      method: 'dhcp'
+  ens9:
+    tableid: 2
+    mtu: 1500
+    ipv4:
+      method: 'static'
+      address: '192.168.1.100'
+      netmask: '255.255.255.0'
+      gateway: '192.168.1.1'
+  lo:0:
+    ipv4:
+      method: 'static'
+      address: '1.1.1.1'
+      netmask: '255.255.255.255'
+    ipv6:
+      method: 'static'
+      address: '2001:db8::face/128'
+
+# Method can be eiter 'dhcp', 'static' or 'manual'
+# When using 'static', address, netmask and gateway are required
+# For static IPv6, please give address in CIDR format
+# When using static addressing on a single interface, set "primary: true" as well

@@ -2,9 +2,22 @@
 # hiera.
 class profile::baseconfig::networking {
   # Configure interfaces as instructed in hiera.
-  $if_to_configure = hiera('profile::interfaces', false)
+  $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
+    'default_value' => false,
+    'value_type'    => Variant[Hash,Boolean],
+  })
   if($if_to_configure) {
-    profile::baseconfig::configureinterface { $if_to_configure: }
+    $distro = $facts['os']['release']['major']
+    if($distro == '18.04') {
+      class { '::profile::baseconfig::network::netplan':
+        nics => $if_to_configure,
+      }
+    }
+    elsif($distro == '16.04') {
+      class { '::profile::baseconfig::network::ifupdown':
+        nics => $if_to_configure,
+      }
+    }
   }
 
   # Trust ICMP redirects. This is safe as long as the secure_redirect is set
