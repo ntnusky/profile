@@ -12,10 +12,6 @@ class profile::services::postgresql::keepalived {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })
-  $v6id = lookup('profile::postgres::ipv6::id', {
-    'value_type'    => Variant[Integer, Boolean],
-    'default_value' => false,
-  })
   $v6pri = lookup('profile::postgres::ipv6::priority', {
     'value_type'    => Integer
     'default_value' => 100,
