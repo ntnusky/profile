@@ -4,7 +4,10 @@ class profile::services::postgresql::keepalived {
 
   $v4ip = lookup('profile::postgres::ipv4', Stdlib::IP::Address::V4)
   $v4id = lookup('profile::postgres::ipv4::id', Integer)
-  $v4pri = lookup('profile::postgres::ipv4::priority', Integer)
+  $v4pri = lookup('profile::postgres::ipv4::priority', {
+    'value_type'    => Integer,
+    'default_value' => 100,
+  })
   $v6ip = lookup('profile::postgres::ipv6', {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
@@ -14,8 +17,8 @@ class profile::services::postgresql::keepalived {
     'default_value' => false,
   })
   $v6pri = lookup('profile::postgres::ipv6::priority', {
-    'value_type'    => Variant[Integer, Boolean],
-    'default_value' => false,
+    'value_type'    => Integer
+    'default_value' => 100,
   })
   $management_if = lookup('profile::interfaces::management')
   $autoip = $facts['networking']['interfaces'][$management_if]['ip']
@@ -54,6 +57,8 @@ class profile::services::postgresql::keepalived {
   }
 
   if($v6ip) {
+    $v6id = lookup('profile::postgres::ipv6::id', Integer)
+
     keepalived::vrrp::instance { 'postgresql-database-ipv6':
       interface         => $management_if,
       state             => 'MASTER',
