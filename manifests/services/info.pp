@@ -5,8 +5,8 @@ class profile::services::info {
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
-    })
+    'default_value' => $mip,
+  })
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
   $auth_password = lookup('profile::info::auth_password', String)
   $auth_user = lookup('profile::info::auth_user', String, 'first', 'sympa')

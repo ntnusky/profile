@@ -9,23 +9,23 @@ class profile::services::dhcp {
   $omapi_key = lookup('profile::dhcp::omapi::key', String)
   $omapi_port = lookup('profile::dhcp::omapi::port', {
     'value_type'    => Stdlib::Port,
-    'default_value' => 7911
-    })
+    'default_value' => 7911,
+  })
 
   $man_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$man_if]['ip']
   $management_ip = lookup("profile::baseconfig::network::interfaces.${man_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
-    })
+    'default_value' => $mip,
+  })
   $pxe_server = lookup('profile::dhcp::pxe::server', {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $management_ip
-    })
+    'default_value' => $management_ip,
+  })
   $pxe_file = lookup('profile::dhcp::pxe::file', {
     'value_type'    => String,
-    'default_value' => 'pxelinux.0'
-    })
+    'default_value' => 'pxelinux.0',
+  })
 
   $nameservers = lookup('profile::dns::resolvers', Array[Stdlib::IP::Address::V4])
 

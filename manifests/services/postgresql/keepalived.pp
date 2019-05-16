@@ -7,22 +7,22 @@ class profile::services::postgresql::keepalived {
   $v4pri = lookup('profile::postgres::ipv4::priority', Integer)
   $v6ip = lookup('profile::postgres::ipv6', {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
-    'default_value' => false
-    })
+    'default_value' => false,
+  })
   $v6id = lookup('profile::postgres::ipv6::id', {
     'value_type'    => Variant[Integer, Boolean],
-    'default_value' => false
-    })
+    'default_value' => false,
+  })
   $v6pri = lookup('profile::postgres::ipv6::priority', {
     'value_type'    => Variant[Integer, Boolean],
-    'default_value' => false
-    })
+    'default_value' => false,
+  })
   $management_if = lookup('profile::interfaces::management')
   $autoip = $facts['networking']['interfaces'][$management_if]['ip']
   $localip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $autoip
-    })
+    'default_value' => $autoip,
+  })
 
   require ::profile::services::keepalived
 

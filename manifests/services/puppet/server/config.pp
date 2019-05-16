@@ -3,15 +3,15 @@ class profile::services::puppet::server::config {
   $puppetca = lookup('profile::puppet::caserver', Stdlib::Fqdn)
   $usepuppetdb = lookup('profile::puppetdb::masterconfig', {
     'value_type'    => Boolean,
-    'default_value' => true
-    })
+    'default_value' => true,
+  })
   $puppetdb_hostname = lookup('profile::puppetdb::hostname', Stdlib::Fqdn)
   $management_if = lookup('profile::interfaces::management', String)
   $auto_ip = $::facts['networking']['interfaces'][$management_if]['ip']
   $master_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $auto_ip
-    })
+    'default_value' => $auto_ip,
+  })
   $dash_url = lookup('profile::dashboard::name::v4only', Stdlib::Fqdn)
 
   include ::profile::services::puppet::altnames

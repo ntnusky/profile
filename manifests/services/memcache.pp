@@ -3,21 +3,21 @@ class profile::services::memcache {
   # Variables for keepalived
   $management_if = lookup('profile::interfaces::management', String)
   $memcached_port = lookup('profile::memcache::port', {
-    'value_type'    => Integer,
-    'default_value' => 11211
-    })
+    'value_type'    => Stdlib::Port,
+    'default_value' => 11211,
+  })
   $installsensu = lookup('profile::sensu::install', {
     'value_type'    => Boolean,
-    'default_value' => true
-    })
+    'default_value' => true,
+  })
   $installmunin = lookup('profile::munin::install', {
     'value_type'    => Boolean,
-    'default_value' => true
-    })
+    'default_value' => true,
+  })
   $use_keepalived = lookup('profile::memcache::keepalived', {
     'value_type'    => Boolean,
-    'default_value' => false
-    })
+    'default_value' => false,
+  })
 
   if ( $use_keepalived ) {
     contain ::profile::services::memcache::keepalived
@@ -26,8 +26,8 @@ class profile::services::memcache {
   } else {
     $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
     $memcache_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
-    'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $autoip
+      'value_type'    => Stdlib::IP::Address::V4,
+      'default_value' => $autoip,
     })
     $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     if ( $memcache_ipv6 =~ /^fe80/ ) {

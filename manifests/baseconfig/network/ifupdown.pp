@@ -4,7 +4,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     'default_value' => undef,
   })
   $dns_search = lookup('profile::dns::searchdomain', {
-    'default_value' => undef
+    'default_value' => undef,
   })
 
   $nics.each | $nic, $params | {

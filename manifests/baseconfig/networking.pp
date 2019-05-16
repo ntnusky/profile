@@ -4,7 +4,7 @@ class profile::baseconfig::networking {
   # Configure interfaces as instructed in hiera.
   $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
     'default_value' => false,
-    'value_type'    => Variant[Hash,Boolean]
+    'value_type'    => Variant[Hash,Boolean],
   })
   if($if_to_configure) {
     $distro = $facts['os']['release']['major']

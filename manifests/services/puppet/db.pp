@@ -10,15 +10,15 @@ class profile::services::puppet::db {
   $dbpass = lookup('profile::puppetdb::database::pass', String)
   $dbport = lookup('profile::postgres::port', {
     'value_type'    => Stdlib::Port,
-    'default_value' => 5432
-    })
+    'default_value' => 5432,
+  })
 
   $if = lookup('profile::interfaces::management', String)
   $autoip = $::facts['networking']['interfaces'][$if]['ip']
   $ip = lookup("profile::baseconfig::network::interfaces.${if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $autoip
-    })
+    'default_value' => $autoip,
+  })
 
 
   class { '::puppetdb::server':

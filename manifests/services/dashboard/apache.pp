@@ -2,19 +2,19 @@
 class profile::services::dashboard::apache {
   $configfile = lookup('profile::dashboard::configfile', {
     'value_type'    => Stdlib::Absolutepath,
-    'default_value' => '/etc/shiftleader/settings.ini'
-    })
+    'default_value' => '/etc/shiftleader/settings.ini',
+  })
   $dashboardname = lookup('profile::dashboard::name', Stdlib::Fqdn)
   $dashboardv4name = lookup('profile::dashboard::name::v4only', {
     'value_type'    => Variant[Stdlib::Fqdn, Boolean],
-    'default_value' => false
-    })
+    'default_value' => false,
+  })
   $management_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
-    })
+    'default_value' => $mip,
+  })
   $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
 
   require ::profile::services::apache

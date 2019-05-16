@@ -4,8 +4,8 @@ class profile::services::dashboard::haproxy::backend {
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
-    })
+    'default_value' => $mip,
+  })
 
   profile::services::haproxy::tools::register { "Shiftleader-${::fqdn}":
     servername  => $::hostname,

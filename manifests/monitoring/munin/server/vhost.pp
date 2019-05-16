@@ -4,13 +4,13 @@ define profile::monitoring::munin::server::vhost {
 
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
-    'default_value' => false
+    'default_value' => false,
   })
   $management_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip
+    'default_value' => $mip,
   })
 
   if ( $management_netv6 ) {

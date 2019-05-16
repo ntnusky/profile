@@ -4,8 +4,8 @@ class profile::services::puppet::db::haproxy::backend {
   $autoip = $::facts['networking']['interfaces'][$if]['ip']
   $ip = lookup("profile::baseconfig::network::interfaces.${if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $autoip
-    })
+    'default_value' => $autoip,
+  })
 
   profile::services::haproxy::tools::register { "PuppetDB-${::fqdn}":
     servername  => $::hostname,

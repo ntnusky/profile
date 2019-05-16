@@ -2,7 +2,7 @@
 class profile::monitoring::munin::plugin::general {
   $interfaces = lookup('profile::baseconfig::network::interfaces', {
     'value_type'    => Variant[Hash,Boolean],
-    'default_value' => false
+    'default_value' => false,
   })
   if($interfaces) {
     keys($interfaces).each | $if | {
