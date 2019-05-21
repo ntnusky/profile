@@ -10,9 +10,13 @@ class profile::baseconfig::network::netplan (Hash $nics) {
   $ethernets = $nics.reduce({}) | $memo, $n | {
     $nic = $n[0]
     $table_id = $nics[$nic]['tableid']
-    $mac = $::facts['networking']['interfaces'][$nic]['mac']
-    $match = { 'match' => {'macaddress' => $mac} }
     $mtu   = { 'mtu'   => $nics[$nic]['mtu'] }
+    if ( $nic =~ /^lo/ ) {
+      $match = {}
+    } else {
+      $mac = $::facts['networking']['interfaces'][$nic]['mac']
+      $match = { 'match' => {'macaddress' => $mac} }
+    }
 
     if($table_id) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
