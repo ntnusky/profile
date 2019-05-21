@@ -119,7 +119,6 @@ class profile::sensu::uchiwa {
     server_names      => $::hostname,
     options           => [
       'check inter 5s',
-      'cookie',
     ],
   }
 
