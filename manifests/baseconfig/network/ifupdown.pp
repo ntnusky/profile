@@ -81,7 +81,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       if($::facts['networking']['interfaces'][$nic]['ip6']) {
         $net6id = $::facts['networking']['interfaces'][$nic]['network6']
         $v6netids = ['::', $net6id]
-        $v6masks = ['0', '64']
+        $v6masks = ['::', 'ffff:ffff:ffff:ffff::']
         $v6gateways = [$v6gateway, false]
         $v6tables = ["table-${nic}", "table-${nic}"]
         $v6families = ['inet6', 'inet6']
