@@ -13,7 +13,7 @@ class profile::services::postgresql::keepalived {
     'default_value' => false,
   })
   $v6pri = lookup('profile::postgres::ipv6::priority', {
-    'value_type'    => Integer
+    'value_type'    => Integer,
     'default_value' => 100,
   })
   $management_if = lookup('profile::interfaces::management')
