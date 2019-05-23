@@ -1,23 +1,26 @@
 # This class installs and configures puppet.
 class profile::baseconfig::puppet {
-  $environment = hiera('profile::puppet::environment')
-  $configtimeout = hiera('profile:puppet::configtimeout', '3m')
-  $aptkey = hiera('profile::puppet::aptkey')
-  $runinterval = hiera('profile::puppet::runinterval', '30m')
-  $puppetserver = hiera('profile::puppet::hostname')
-  $caserver = hiera('profile::puppet::caserver')
+  $environment = looukp('profile::puppet::environment', String)
+  $configtimeout = lookup('profile:puppet::configtimeout', {
+    'default_value' => '3m',
+    'value_type'    => String,
+  })
+  $aptkey = lookup('profile::puppet::aptkey', String)
+  $runinterval = lookup('profile::puppet::runinterval', {
+    'default_value' => '30m',
+    'value_type'    => String,
+  })
+  $puppetserver = lookup('profile::puppet::hostname', Stdlib::Fqdn)
+  $caserver = lookup('profile::puppet::caserver', Stdlib::Fqdn)
 
-  if($::puppetversion < '4') {
-    $agentconfigfile = '/etc/puppet/puppet.conf'
-    $agentpackage = 'puppet'
-  } else {
-    $agentconfigfile = '/etc/puppetlabs/puppet/puppet.conf'
-    $agentpackage = 'puppet-agent'
-  }
+  $agentconfigfile = '/etc/puppetlabs/puppet/puppet.conf'
+  $agentpackage = 'puppet-agent'
 
   package { $agentpackage:
     ensure => 'present',
   }
+
+  include ::profile::services::puppet::altnames
 
   # This environment is not the one really used, as that is decided by
   # foreman's ENC, but puppet gets really sad if this setting points to a
