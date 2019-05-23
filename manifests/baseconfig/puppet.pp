@@ -1,6 +1,6 @@
 # This class installs and configures puppet.
 class profile::baseconfig::puppet {
-  $environment = looukp('profile::puppet::environment', String)
+  $environment = lookup('profile::puppet::environment', String)
   $configtimeout = lookup('profile:puppet::configtimeout', {
     'default_value' => '3m',
     'value_type'    => String,
