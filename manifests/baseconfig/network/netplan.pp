@@ -23,6 +23,11 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $net4id = $::facts['networking']['interfaces'][$nic]['network']
         $net4mask = netmask_to_masklen($::facts['networking']['interfaces'][$nic]['netmask'])
         $v4gateway = $nics[$nic]['ipv4']['gateway']
+        $v4defroute = {
+          'to'    => '0.0.0.0/0',
+          'via'   => $v4gateway,
+          'table' => $table_id,
+        }
         $v4route = {
           'to'    => "${net4id}/${net4mask}",
           'via'   => $v4gateway,
@@ -35,6 +40,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         }
       } else {
         $v4route = undef
+        $v4defroute = undef
         $v4policy = undef
       }
       if($::facts['networking']['interfaces'][$nic]['ip6']) {
@@ -43,6 +49,11 @@ class profile::baseconfig::network::netplan (Hash $nics) {
           $v6gateway = $nics[$nic]['ipv6']['gateway']
         } else {
           $v6gateway = 'fe80::1'
+        }
+        $v6defroute = {
+          'to'    => '::/0',
+          'via'   => $v6gateway,
+          'table' => $table_id,
         }
         $v6route = {
           'to'    => "${net6id}/64",
@@ -56,10 +67,11 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         }
       } else {
         $v6route = undef
+        $v6defroute = undef
         $v6policy = undef
       }
       if($v4route) or ($v6route) {
-        $routes   = { 'routes'         => [ $v4route, $v6route ] }
+        $routes   = { 'routes'         => [ $v4route, $v4defroute, $v6defroute, $v6route ] }
         $policies = { 'routing_policy' => [ $v4policy, $v6policy ] }
       } else {
         $routes   = { 'routes'         => undef }
