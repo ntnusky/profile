@@ -8,7 +8,6 @@ class profile::services::dashboard::haproxy::frontend {
     mode    => 'http',
     options => {
       'balance' => 'source',
-      'cookie'  => 'SERVERID insert indirect nocache',
       'option'  => [
         'httplog',
         'log-health-checks',

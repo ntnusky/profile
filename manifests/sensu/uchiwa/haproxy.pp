@@ -8,7 +8,6 @@ class profile::sensu::uchiwa::haproxy {
     mode    => 'http',
     options => {
       'balance' => 'source',
-      'cookie'  => 'SERVERID insert indirect nocache',
       'option'  => [
         'httplog',
         'log-health-checks',

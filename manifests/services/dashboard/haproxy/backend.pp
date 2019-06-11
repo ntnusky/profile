@@ -19,7 +19,6 @@ class profile::services::dashboard::haproxy::backend {
     server_names      => $::hostname,
     options           => [
       'check inter 5s',
-      'cookie',
     ],
   }
 }
