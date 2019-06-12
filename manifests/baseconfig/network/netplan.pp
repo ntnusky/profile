@@ -30,7 +30,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         }
         $v4route = {
           'to'    => "${net4id}/${net4mask}",
-          'via'   => $v4gateway,
+          'scope' => 'link',
           'table' => $table_id,
         }
         $v4policy = {
@@ -57,7 +57,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         }
         $v6route = {
           'to'    => "${net6id}/64",
-          'via'   => $v6gateway,
+          'scope' => 'link',
           'table' => $table_id,
         }
         $v6policy = {
