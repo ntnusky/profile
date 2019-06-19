@@ -24,7 +24,7 @@ class profile::baseconfig::networking {
   $bridges = lookup('profile::baseconfig::network::bridges', {
     'value_type'    => Hash[String, Hash],
     'default_value' => {},
-  }
+  })
   $bridges.each | $name, $configuration | {
     # Create a bridge
     ::profile::infrastructure::ovs::bridge { $name : }
