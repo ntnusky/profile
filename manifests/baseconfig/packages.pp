@@ -1,14 +1,21 @@
 # This class installs varios basic tools.
 class profile::baseconfig::packages {
-  $basepackages = hiera_array('profile::baseconfig::packages')
+  $basepackages = lookup('profile::baseconfig::packages',{
+    'value_type' => Array[String],
+    'merge'      => 'unique',
+  })
 
+  $machinetools = lookup('profile::baseconfig::machinetools::install', {
+    'value_type'    => Boolean,
+    'default_value' => true,
+  })
   # If it is an HP machine, install hpacucli.
-  if($::bios_vendor == 'HP') {
+  if($::bios_vendor == 'HP' and $machinetools) {
     include ::hpacucli
   }
 
   # If it is an Dell machine, install dell's utilities
-  if($::bios_vendor == 'Dell Inc.') {
+  if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
     include ::hwraid
 

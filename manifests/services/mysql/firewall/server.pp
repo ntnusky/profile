@@ -1,6 +1,6 @@
 #Configures the firewall for the mysql servers
 class profile::services::mysql::firewall::server {
-  ::profile::baseconfig::firewall::service::infra { 'MYSQL':
+  ::profile::baseconfig::firewall::service::infra { 'MYSQL-SERVER':
     protocol => 'tcp',
     port     => 3306,
   }
