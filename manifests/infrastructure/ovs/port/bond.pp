@@ -10,7 +10,7 @@ define profile::infrastructure::ovs::port::bond (
 
   exec { "/usr/local/bin/create-vswitch-lacp.sh.sh ${bridge} ${args}":
     unless  => "/usr/local/bin/verify-vswitch-lacp.sh.sh ${args}",
-    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
     require => Profile::Infrastructure::Ovs::Bridge[$bridge],
   }
 }
