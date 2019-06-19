@@ -1,8 +1,15 @@
 # Installs and configures a DHCP server.
 class profile::services::dhcp {
   $searchdomain = lookup('profile::dhcp::searchdomain', Stdlib::Fqdn)
-  $ntp_servers = lookup('profile::ntp::servers', Array[Stdlib::Fqdn])
+  $ntp_servers = lookup('profile::ntp::servers', {
+    'value_type' => Array[Variant[Stdlib::Fqdn, Stdlib::IP::Address]]
+    'merge'      => 'unique'
+  })
   $interfaces = keys(lookup('profile::baseconfig::network::interfaces', Hash))
+  $dhcp_interfaces = lookup('profile::dhcp::server::interfaces', {
+    'value_type'    => Array[String],
+    'default_value' => $interfaces,
+  })
   $networks = lookup('profile::networks', Array[String])
 
   $omapi_name = lookup('profile::dhcp::omapi::name', String)
@@ -27,13 +34,16 @@ class profile::services::dhcp {
     'default_value' => 'pxelinux.0',
   })
 
-  $nameservers = lookup('profile::dns::resolvers', Array[Stdlib::IP::Address::V4])
+  $nameservers = lookup('profile::dns::resolvers', {
+    'value_type' => Array[Stdlib::IP::Address::V4],
+    'merge'      => 'unique'
+  })
 
   include ::profile::services::dhcp::firewall
 
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
-    interfaces       => $interfaces,
+    interfaces       => $dhcp_interfaces,
     nameservers      => $nameservers,
     ntpservers       => $ntp_servers,
     omapi_key        => $omapi_key,
