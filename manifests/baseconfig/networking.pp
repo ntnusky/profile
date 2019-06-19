@@ -34,7 +34,7 @@ class profile::baseconfig::networking {
       if($configuration['external']['type'] == 'bond') {
         ::profile::infrastructure::ovs::port::bond { $configuration['external']['name']:
           bridge  => $name,
-          members => ($configuration['external']['members'],
+          members => $configuration['external']['members'],
         }
       }
     }
