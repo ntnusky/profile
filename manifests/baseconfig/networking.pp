@@ -20,6 +20,27 @@ class profile::baseconfig::networking {
     }
   }
 
+  # Configure ovs-bridges as instructed in hiera
+  $bridges = lookup('profile::baseconfig::network::bridges', {
+    'value_type'    => Hash[String, Hash],
+    'default_value' => {},
+  }
+  $bridges.each | $name, $configuration | {
+    # Create a bridge
+    ::profile::infrastructure::ovs::bridge { $name : }
+
+    # If the bridge should have an external connection
+    if($configuration['external']) {
+      if($configuration['external']['type'] == 'bond') {
+        ::profile::infrastructure::ovs::port::bond { $configuration['external']['name']:
+          bridge  => $name,
+          members => ($configuration['external']['members'],
+        }
+      }
+    }
+    # TODO: Add functionality for connecting a single interface.
+  }
+
   # Trust ICMP redirects. This is safe as long as the secure_redirect is set
   # because the host would then only trust redirects from hosts acting as a
   # gateway.
