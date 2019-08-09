@@ -31,7 +31,7 @@ define profile::infrastructure::ovs::port::bond (
     } elsif($distro == '16.04') {
       ::network::interface { "manual-up-${member}":
         interface => $member,
-        method    => $manual,
+        method    => 'manual', 
       }
     }
   }
