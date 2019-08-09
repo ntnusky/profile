@@ -24,7 +24,7 @@ define profile::infrastructure::ovs::port::bond (
         group   => root,
         content => epp('profile/netplan/manual.epp', {
           'ifname' => $member,
-        },
+        }),
         notify  => Exec['netplan_apply'],
         require => Class['::netplan'],
       }
