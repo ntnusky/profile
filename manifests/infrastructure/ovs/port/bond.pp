@@ -29,7 +29,7 @@ define profile::infrastructure::ovs::port::bond (
         require => Class['::netplan'],
       }
     } elsif($distro == '16.04') {
-      ::network::interface { "manual-up-${nic}":
+      ::network::interface { "manual-up-${member}":
         interface => $member,
         method    => $manual,
       }
