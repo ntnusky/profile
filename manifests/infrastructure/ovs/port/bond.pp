@@ -18,7 +18,7 @@ define profile::infrastructure::ovs::port::bond (
   $members.each | $member | {
     if($distro == '18.04') {
       file { "/etc/netplan/02-bondmember-${member}.yaml":
-        ensue   => file,
+        ensure  => file,
         mode    => '0644',
         owner   => root,
         group   => root,
