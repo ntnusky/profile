@@ -26,7 +26,6 @@ define profile::infrastructure::ovs::port::bond (
           'ifname' => $member,
         }),
         notify  => Exec['netplan_apply'],
-        require => Class['::netplan'],
       }
     } elsif($distro == '16.04') {
       ::network::interface { "manual-up-${member}":
