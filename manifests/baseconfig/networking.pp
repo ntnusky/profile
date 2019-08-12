@@ -37,8 +37,12 @@ class profile::baseconfig::networking {
           members => $configuration['external']['members'],
         }
       }
+      if($configuration['external']['type'] == 'interface') {
+        ::profile::infrastructure::ovs::port::interface { $configuration['external']['name']:
+          bridge => $name,
+        }
+      }
     }
-    # TODO: Add functionality for connecting a single interface.
   }
 
   # Trust ICMP redirects. This is safe as long as the secure_redirect is set

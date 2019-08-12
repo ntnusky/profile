@@ -14,7 +14,6 @@ class profile::services::dhcp {
     'value_type' => Array[String],
     'merge'      => 'unique',
   })
-  $networks = lookup('profile::networks', Array[String])
 
   $omapi_name = lookup('profile::dhcp::omapi::name', String)
   $omapi_key = lookup('profile::dhcp::omapi::key', String)

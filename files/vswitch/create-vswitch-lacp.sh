@@ -35,7 +35,7 @@ if ovs-vsctl list-ports $bridge | grep $bond &> /dev/null; then
 
   if [[ ! -z $bonderror ]]; then
     echo "At least one interface is missing in the bond. Re-creating it."
-    ovs-vsctl del-port $brindge $bond -- add-bond $bridge $bond $@ lacp=active
+    ovs-vsctl del-port $bridge $bond -- add-bond $bridge $bond $@ lacp=active
   fi
 else 
   toRemove=()

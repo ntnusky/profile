@@ -1,3 +1,4 @@
+# Create an openvswitch bridge
 define profile::infrastructure::ovs::bridge {
   require ::vswitch::ovs
 
