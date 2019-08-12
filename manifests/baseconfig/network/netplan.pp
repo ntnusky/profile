@@ -11,7 +11,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $nic = $n[0]
     $table_id = $nics[$nic]['tableid']
     $mtu   = { 'mtu'   => $nics[$nic]['mtu'] }
-    if ( $nic =~ /^lo/ ) {
+    if ( $nic =~ /^(lo|infra)/ ) {
       $match = {}
     } else {
       $mac = $::facts['networking']['interfaces'][$nic]['mac']
