@@ -22,7 +22,7 @@ class profile::ceph::firewall::monitor {
       source  => $net,
       iniface => $storage_interface,
       proto   => 'tcp',
-      dport   => [ '6789' ],
+      dport   => [ '3300', '6789' ],
       action  => 'accept',
     }
   }
