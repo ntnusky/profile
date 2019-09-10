@@ -42,5 +42,19 @@ class profile::ceph::monitor {
     before  => Anchor['profile::ceph::monitor::end']
   }
 
+  file { '/usr/local/sbin/insightsKillSwitch.sh':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+    source => 'puppet:///modules/profile/ceph/insightsKillSwitch.sh',
+  }
+
+  cron { 'Ceph insights killswitch':
+    command => '/usr/local/sbin/insightsKillSwitch.sh',
+    user    => 'root',
+    minute  => '*',
+  }
+
   anchor{'profile::ceph::monitor::end':}
 }
