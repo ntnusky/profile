@@ -8,7 +8,7 @@ if [[ $1 == "config" ]]; then
   echo 'graph_info CEPH cluster capacity'
   echo 'graph_args -l 0'
   echo "capacity.label Capacity"
-  echo "free.label Capacity"
+  echo "free.label Free"
   echo "data.label Data stored"
 
   exit 0
