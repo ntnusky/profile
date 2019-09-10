@@ -19,10 +19,12 @@ if [[ $1 == "config" ]]; then
     name=${name//-/_}
 
     echo "${name}write.label $realname"
-    echo "${name}write.type COUNTER"
+    echo "${name}write.type DERIVE"
+    echo "${name}write.min 0"
     echo "${name}write.graph no"
     echo "${name}read.label $realname"
-    echo "${name}read.type COUNTER"
+    echo "${name}read.type DERIVE"
+    echo "${name}read.min 0"
     echo "${name}read.negative ${name}write"
   done
   rm $tmpfile
