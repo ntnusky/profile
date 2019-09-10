@@ -5,17 +5,17 @@ tmpfile=$(mktemp)
 ceph insights > $tmpfile
 
 if [[ $1 == "config" ]]; then
-  echo "graph_title CEPH Objects"
+  echo "graph_title CEPH Storage"
   echo "graph_category ceph"
-  echo "graph_vlabel Objects"
+  echo "graph_vlabel Bytes"
   echo "graph_args -l 0"
   echo "graph_scale yes"
-  echo "graph_info The number of objects in each ceph pool"
+  echo "graph_info The number of bytes in each ceph pool"
   
   for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
     name=$(echo $pool | jq -r '.["name"]')
-    name=${name//-/_}
     name=${name//./_}
+    name=${name//-/_}
     
     echo ${name}.label $(echo $pool | jq -r '.["name"]')
     echo ${name}.info Objects in the $(echo $pool | jq -r '.["name"]') pool.
@@ -28,7 +28,7 @@ for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
   name=${name//./_}
   name=${name//-/_}
   
-  echo ${name}.value $(echo $pool | jq '.["stats"]["objects"]')
+  echo ${name}.value $(echo $pool | jq '.["stats"]["bytes_used"]')
 done
 
 rm $tmpfile

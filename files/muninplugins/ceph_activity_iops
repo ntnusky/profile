@@ -2,7 +2,7 @@
 set -e
 
 tmpfile=$(mktemp)
-wget http://127.0.0.1:7000/health_data -O $tmpfile &> /dev/null
+ceph insights > $tmpfile
 
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH Activity - IOPS"

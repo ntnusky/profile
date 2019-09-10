@@ -19,18 +19,10 @@ class profile::monitoring::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_osd',
     config => ['user root'],
   }
-  munin::plugin { 'ceph_usage':
+  munin::plugin { 'ceph_storage':
     ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/ceph_usage',
+    source => 'puppet:///modules/profile/muninplugins/ceph_storage',
     config => ['user root'],
-  }
-
-  # Enable the ceph dashboard, as the ceph_activity_* plugins get its data from
-  # there.
-  $jq = '/usr/bin/jq \'.["enabled_modules"]\''
-  exec { 'Enable ceph dashboards':
-    command => '/usr/bin/ceph mgr module enable dashboard',
-    unless  => "/usr/bin/ceph mgr module ls | ${jq} | /bin/grep -c 'dashboard'",
   }
 
   # These ceph activity-plugins should replace the ceph-collector(s).sh scripts
