@@ -25,12 +25,12 @@ while read -r osd; do
   up=$(echo $osd | jq '.["up"]')
   in=$(echo $osd | jq '.["in"]')
 
-  ((osds++))
+  osds=$((osds + 1))
   if [ $up -eq 1 ]; then
-    ((ups++))
+    ups=$((ups + 1))
   fi
   if [ $in -eq 1 ]; then
-    ((ins++))
+    ins=$((ins + 1))
   fi
 done < <(ceph insights | jq -c '.["osd_dump"]["osds"][]') 
 
