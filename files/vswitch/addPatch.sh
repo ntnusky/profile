@@ -112,7 +112,8 @@ if [[ $exists -eq 1 && $(ovs-vsctl get interface $dstPort type) != "patch" ]]; t
 fi
 # Verify that the port is connected to the correct peer
 if [[ $exists -eq 1 && \
-    $(ovs-vsctl get interface $dstPort options:peer) != "\"$srcPort\"" ]]; then
+    $(ovs-vsctl get interface $dstPort options:peer) != "\"$srcPort\"" && \
+    $(ovs-vsctl get interface $dstPort options:peer) != "$srcPort" ]]; then
   echo "The port $dstPort is does not have the peer $srcPort configured"
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
