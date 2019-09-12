@@ -25,26 +25,26 @@ class profile::services::libvirt::networks {
     profile::infrastructure::ovs::bridge { "br-${shortname}": }
 
     if('vlanid' in $data) {
-      profile::infrastructure::ovs::patch::vlan { 
+      profile::infrastructure::ovs::patch::vlan {
           "patch br-${shortname} to ${bridge}":
         source_bridge      => $bridge,
         source_vlan        => $data['vlanid'],
         destination_bridge => "br-${shortname}",
       }
     } else {
-      profile::infrastructure::ovs::patch::simple { 
+      profile::infrastructure::ovs::patch::simple {
           "patch br-${shortname} to ${bridge}":
         source_bridge      => $bridge,
         destination_bridge => "br-${shortname}",
       }
     }
 
-    ::libvirt::network { $network:
+    ::libvirt::network { "${netname}":
       ensure                => 'running',
       autostart             => true,
       forward_mode          => 'bridge',
       forward_interfaces    => [ "br-${shortname}", ],
-      trust_guest_rxfilters => true, 
+      trust_guest_rxfilters => true,
     }
     sysctl::value { "net.ipv6.conf.br-${shortname}.autoconf":
       value   => '0',
