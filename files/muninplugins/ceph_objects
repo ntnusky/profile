@@ -20,6 +20,7 @@ if [[ $1 == "config" ]]; then
     echo ${name}.label $(echo $pool | jq -r '.["name"]')
     echo ${name}.info Objects in the $(echo $pool | jq -r '.["name"]') pool.
   done
+  rm $tmpfile
   exit 0
 fi
 
