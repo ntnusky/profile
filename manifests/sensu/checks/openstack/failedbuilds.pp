@@ -7,7 +7,7 @@ class profile::sensu::checks::openstack::failedbuilds {
   })
 
   sensu::check { 'openstack-compute-failed-builds':
-    command     => "/etc/sensu/plugins/extra/check_failed_builds.py --host ${db_host} --user ${db_user} --password :::os.nova-db-pw::",
+    command     => "/etc/sensu/plugins/extra/check_failed_builds.py --host ${db_host} --user ${db_user} --password :::os.nova-db-pw:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-compute' ],
