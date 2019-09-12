@@ -2,7 +2,7 @@
 set -e
 
 tmpfile=$(mktemp)
-wget http://127.0.0.1:7000/health_data -O $tmpfile &> /dev/null
+ceph insights > $tmpfile
 
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH Activity - IOPS"
@@ -14,15 +14,17 @@ if [[ $1 == "config" ]]; then
   echo "graph_width 550"
   
   for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
-    name=$(echo $pool | jq -r '.["name"]')
-    name=${name//./_}
+    realname=$(echo $pool | jq -r '.["name"]')
+    name=${realname//./_}
     name=${name//-/_}
 
-    echo "${name}write.label $name"
-    echo "${name}write.type COUNTER"
+    echo "${name}write.label $realname"
+    echo "${name}write.type DERIVE"
+    echo "${name}write.min 0"
     echo "${name}write.graph no"
-    echo "${name}read.label $name"
-    echo "${name}read.type COUNTER"
+    echo "${name}read.label $realname"
+    echo "${name}read.type DERIVE"
+    echo "${name}read.min 0"
     echo "${name}read.negative ${name}write"
   done
   rm $tmpfile
