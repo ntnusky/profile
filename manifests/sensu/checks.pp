@@ -17,5 +17,6 @@ class profile::sensu::checks {
   contain ::profile::sensu::checks::openstack::adminapi
   contain ::profile::sensu::checks::openstack::floatingip
   contain ::profile::sensu::checks::openstack::publicapi
+  contain ::profile::sensu::checks::openstack::failedbuilds
 
 }
