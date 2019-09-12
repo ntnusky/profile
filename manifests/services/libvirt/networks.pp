@@ -16,9 +16,9 @@ class profile::services::libvirt::networks {
     'default_value' => {},
     'merge'         => 'deep',
     'value_type'    => Hash[String, Hash],
-  }
+  })
 
-  $kvm_networks.each | $netname, $data | {
+  $kvm_networks.each | String $netname, Hash $data | {
     $shortname = $netname[0,12]
     $bridge = $data['bridge']
 
