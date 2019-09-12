@@ -25,7 +25,6 @@ try:
 except FileNotFoundError:
     previous_failed_builds = 0
 
-
 try:
     connection = pymysql.connect(host=dbhost,
                                  user=dbuser,
