@@ -40,7 +40,7 @@ try:
             print("CRITICAL - Nova failed build count has increased from {} to {}".format(previous_failed_builds, current_failed_builds))
             exitcode=2
         else:
-            print("OK - Nova failed build count is not increasing")
+            print("OK - Nova failed build count is {}, and it's not increasing".format(current_failed_builds))
             exitcode=0
         with open(tmpfilepath, 'w') as tmpfile:
             tmpfile.write(str(current_failed_builds))
