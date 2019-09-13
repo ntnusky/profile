@@ -72,7 +72,7 @@ fi
 if [[ $exists -eq 1 && \
     $(ovs-vsctl get interface $srcPort options:peer) != "\"$dstPort\"" && \
     $(ovs-vsctl get interface $srcPort options:peer) != "$dstPort" ]]; then
-  echo "The port $srcPort is does not have the peer $dstPort configured"
+  echo "The port $srcPort does not have the peer $dstPort configured"
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $srcPort options:peer=$dstPort
@@ -114,7 +114,7 @@ fi
 if [[ $exists -eq 1 && \
     $(ovs-vsctl get interface $dstPort options:peer) != "\"$srcPort\"" && \
     $(ovs-vsctl get interface $dstPort options:peer) != "$srcPort" ]]; then
-  echo "The port $dstPort is does not have the peer $srcPort configured"
+  echo "The port $dstPort does not have the peer $srcPort configured"
   STATUS=$MISSING
   if [[ $verify -eq 0 ]]; then
     ovs-vsctl set interface $dstPort options:peer=$srcPort
