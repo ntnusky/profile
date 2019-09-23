@@ -21,8 +21,6 @@ class profile::services::mysql::cluster {
     'default_value' => $mip,
   })
 
-  require ::profile::services::mysql::firewall::server
-
   apt::source { 'galera_mariadb':
     location => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
     repos    => 'main',
@@ -55,6 +53,9 @@ class profile::services::mysql::cluster {
         'net_write_timeout' => $net_write_timeout,
       }
     },
-    require             => Apt::Source['galera_mariadb'],
+    require             => [
+      Apt::Source['galera_mariadb'],
+      Class['::profile::services::mysql::firewall::server'],
+    ],
   }
 }
