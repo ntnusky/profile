@@ -2,7 +2,6 @@
 class profile::services::mysql {
   include ::profile::services::mysql::backup
   include ::profile::services::mysql::cluster
-  include ::profile::services::mysql::firewall::server
   include ::profile::services::mysql::haproxy::backend
   include ::profile::services::mysql::users
 

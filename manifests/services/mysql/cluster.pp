@@ -21,6 +21,8 @@ class profile::services::mysql::cluster {
     'default_value' => $mip,
   })
 
+  require ::profile::services::mysql::firewall::server
+
   apt::source { 'galera_mariadb':
     location => 'http://lon1.mirrors.digitalocean.com/mariadb/repo/10.0/ubuntu',
     repos    => 'main',
