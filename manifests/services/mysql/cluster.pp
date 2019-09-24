@@ -53,6 +53,9 @@ class profile::services::mysql::cluster {
         'net_write_timeout' => $net_write_timeout,
       }
     },
-    require             => Apt::Source['galera_mariadb'],
+    require             => [
+      Apt::Source['galera_mariadb'],
+      Class['::profile::services::mysql::firewall::server'],
+    ],
   }
 }
