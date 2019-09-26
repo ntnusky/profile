@@ -31,15 +31,27 @@ class profile::baseconfig::networking {
 
     # If the bridge should have an external connection
     if($configuration['external']) {
+      # The connection might be a bond consisting of multiple physical
+      # interfaces:
       if($configuration['external']['type'] == 'bond') {
         ::profile::infrastructure::ovs::port::bond { $configuration['external']['name']:
           bridge  => $name,
           members => $configuration['external']['members'],
         }
       }
+      # The connection might be a single interface
       if($configuration['external']['type'] == 'interface') {
         ::profile::infrastructure::ovs::port::interface { $configuration['external']['name']:
           bridge => $name,
+        }
+      }
+      # The connection might be a patch connected to a certain VLAN of another
+      # ovs-bridge.
+      if($configuration['external']['type'] == 'vlan-patch') {
+        ::profile::infrastructure::ovs::patch::vlan {"${name}-vlan-patch":
+          source_bridge      => $configuration['external']['bridge'],
+          source_vlan        => $configuration['external']['vlan'],
+          destination_bridge => $name,
         }
       }
     }
