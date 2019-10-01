@@ -10,6 +10,7 @@ define profile::infrastructure::ovs::port::interface (
     bridge => $bridge,
   }
 
+  $distro = $facts['os']['release']['major']
   if($distro == '18.04') {
     file { "/etc/netplan/02-vswitch-${interface}.yaml":
       ensure  => file,
