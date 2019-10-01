@@ -9,4 +9,22 @@ define profile::infrastructure::ovs::port::interface (
     ensure => 'present',
     bridge => $bridge,
   }
+
+  if($distro == '18.04') {
+    file { "/etc/netplan/02-vswitch-${interface}.yaml":
+      ensure  => file,
+      mode    => '0644',
+      owner   => root,
+      group   => root,
+      content => epp('profile/netplan/manual.epp', {
+        'ifname' => $interface,
+      }),
+      notify  => Exec['netplan_apply'],
+    }
+  } elsif($distro == '16.04') {
+    ::network::interface { "manual-up-${interface}":
+      interface => $interface,
+      method    => 'manual', 
+    }
+  }
 }
