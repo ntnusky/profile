@@ -1,6 +1,7 @@
 # Class to test some ovs issues
 class profile::ovstull {
   require ::ntnuopenstack::repo
+  require ::vswitch::ovs
 
   vs_bridge { 'tullebru':
     ensure => present,
