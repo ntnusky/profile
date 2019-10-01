@@ -19,7 +19,11 @@ define profile::infrastructure::ovs::patch (
   # Make sure there is a bridge connected to the physical interface.
   if ! defined(Profile::Infrastructure::Ovs::Bridge["br-vlan-${physical_if}"]) {
     ::profile::infrastructure::ovs::bridge { "br-vlan-${physical_if}" : }
-    ::profile::infrastructure::ovs::port::interface { $physical_if: }
+  }
+  if ! defined(Profile::Infrastructure::Ovs::Port::Interface[$physical_if]) {
+    ::profile::infrastructure::ovs::port::interface { $physical_if:
+      require => Profile::Infrastructure::Ovs::Bridge["br-vlan-${physical_if}"],
+    }
   }
 
   # Connect a patch between the supplied bridge and the bridge connected to the
