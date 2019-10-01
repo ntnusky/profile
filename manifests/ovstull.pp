@@ -5,7 +5,7 @@ class profile::ovstull {
   vs_bridge { 'tullebru':
     ensure => present,
   }
-  vs_interface { 'ens9':
+  vs_port { 'ens9':
     ensure => present,
     bridge => 'tullebru',
   }
