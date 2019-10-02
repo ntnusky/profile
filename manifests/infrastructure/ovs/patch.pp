@@ -26,10 +26,10 @@ define profile::infrastructure::ovs::patch (
 
   # Connect a patch between the supplied bridge and the bridge connected to the
   # physical interface.
-  #$scriptArgs = "br-vlan-${physical_if} ${ovs_bridge} ${vlan_id}"
-  #exec { "/usr/local/bin/addPatch.sh ${scriptArgs}":
-  #  unless  => "/usr/local/bin/addPatch.sh ${scriptArgs} --verify",
-  #  path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-  #  require => Profile::Infrastructure::Ovs::Bridge["br-vlan-${physical_if}"],
-  #}
+  $scriptArgs = "br-vlan-${physical_if} ${ovs_bridge} ${vlan_id}"
+  exec { "/usr/local/bin/addPatch.sh ${scriptArgs}":
+    unless  => "/usr/local/bin/addPatch.sh ${scriptArgs} --verify",
+    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+    require => Profile::Infrastructure::Ovs::Bridge["br-vlan-${physical_if}"],
+  }
 }
