@@ -5,15 +5,14 @@ define profile::infrastructure::ovs::port::interface (
 ) {
   require ::vswitch::ovs
 
-  notify { "IF: ${interface}" : }
-  notify { "BR: ${bridge}" : }
-
+  # Connects the physical interface to the bridge
   vs_port { $interface :
     ensure  => 'present',
     bridge  => $bridge,
     require => Vs_bridge[$bridge],
   }
 
+  # Make sure that the physical port is configured to be up.
   $distro = $facts['os']['release']['major']
   if($distro == '18.04') {
     file { "/etc/netplan/02-vswitch-${interface}.yaml":
