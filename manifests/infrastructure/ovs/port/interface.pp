@@ -9,8 +9,9 @@ define profile::infrastructure::ovs::port::interface (
   notify { "BR: ${bridge}" : }
 
   vs_port { $interface :
-    ensure => 'present',
-    bridge => $bridge,
+    ensure  => 'present',
+    bridge  => $bridge,
+    require => Vs_bridge[$bridge],
   }
 
   $distro = $facts['os']['release']['major']
