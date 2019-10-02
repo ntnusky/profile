@@ -5,6 +5,9 @@ define profile::infrastructure::ovs::port::interface (
 ) {
   require ::vswitch::ovs
 
+  notify { "IF: ${interface}" : }
+  notify { "BR: ${bridge}" : }
+
   vs_port { $interface :
     ensure => 'present',
     bridge => $bridge,
