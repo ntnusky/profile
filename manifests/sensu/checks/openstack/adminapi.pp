@@ -10,12 +10,6 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
     standalone  => false,
     subscribers => [ 'os-admin-api-checks' ],
   }
-  sensu::check { 'openstack-identity-admin-api':
-    command     => "check-http.rb -u ${api}:35357/v2.0",
-    interval    => 300,
-    standalone  => false,
-    subscribers => [ 'os-admin-api-checks' ],
-  }
   sensu::check { 'openstack-network-admin-api':
     command     => "check-http.rb -u ${api}:9696/v2.0 --response-code 401",
     interval    => 300,
