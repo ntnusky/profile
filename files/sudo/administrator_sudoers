@@ -1,7 +1,7 @@
 Defaults:%administrator secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/puppetlabs/bin:/usr/ntnusky/tools"
 
 # Allow the administrator to halt and reboot the machine
-%administrator ALL=(root): /sbin/halt, /sbin/shutdown, /sbin/reboot
+%administrator ALL=(root) /sbin/halt, /sbin/shutdown, /sbin/reboot
 
 # Allow the admnistrator to perform a puppet-run
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent -t *
