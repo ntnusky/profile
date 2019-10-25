@@ -11,4 +11,9 @@ class profile::baseconfig::sudo {
     priority => 15,
     source   => 'puppet:///modules/profile/sudo/sensu_sudoers',
   }
+
+  sudo::conf { 'administrator':
+    priority => 20,
+    content  => 'Defaults:administrator	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/puppetlabs/bin:/usr/ntnusky/tools"',
+  }
 }
