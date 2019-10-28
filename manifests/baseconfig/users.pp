@@ -11,6 +11,10 @@ class profile::baseconfig::users {
     ensure => present,
     gid    => 700,
   }
+  group { 'administrator':
+    ensure => present,
+    gid    => 701,
+  }
 
   # Modify root's attributes
   file { '/root/.ssh':

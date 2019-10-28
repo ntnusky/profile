@@ -28,7 +28,19 @@ define profile::infrastructure::ovs::port::interface (
   } elsif($distro == '16.04') {
     ::network::interface { "manual-up-${interface}":
       interface => $interface,
-      method    => 'manual', 
+      method    => 'manual',
     }
+  }
+
+  # Add monitoring for the physical port
+  munin::plugin { "if_${interface}":
+    ensure => link,
+    target => 'if_',
+    config => ['user root', 'env.speed 10000'],
+  }
+  munin::plugin { "if_err_${interface}":
+    ensure => link,
+    target => 'if_err_',
+    config => ['user nobody'],
   }
 }

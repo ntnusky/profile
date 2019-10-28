@@ -71,8 +71,10 @@ class profile::baseconfig::network::netplan (Hash $nics) {
         $v6policy = undef
       }
       if($v4route) or ($v6route) {
-        $routes   = { 'routes'         => [ $v4route, $v4defroute, $v6defroute, $v6route ] }
-        $policies = { 'routing_policy' => [ $v4policy, $v6policy ] }
+        $routes   = { 
+          'routes' => [ $v4route, $v4defroute, $v6defroute, $v6route ] - undef
+        }
+        $policies = { 'routing_policy' => [ $v4policy, $v6policy ] - undef }
       } else {
         $routes   = { 'routes'         => undef }
         $policies = { 'routing_policy' => undef }
