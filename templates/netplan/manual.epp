@@ -1,7 +1,7 @@
-<%- | String  $ifname,
-      String  $mac = '',
-      Integer $mtu = 1500,
-      String  $drivername = '',
+<%- | String            $ifname,
+      Optional[String]  $mac = '',
+      Optional[Integer] $mtu = 1500,
+      Optional[String]  $drivername = '',
 | -%>
 network:
   version: 2
