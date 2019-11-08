@@ -1,7 +1,19 @@
 <%- | String  $ifname,
+      String  $mac = '',
+      Integer $mtu = 1500,
+      String  $drivername = '',
 | -%>
 network:
   version: 2
   renderer: networkd
   ethernets:
+<% if $drivername == '' or $mac == '' { -%>
     <%= $ifname %>: {}
+<% } else { -%>
+    <%= $ifname %>:
+      match:
+        driver: "<%= $drivername %>"
+        macaddress: "<%= $mac %>"
+      mtu: <%= $mtu %>
+<% } -%>
+

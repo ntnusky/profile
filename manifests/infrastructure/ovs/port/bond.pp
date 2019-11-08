@@ -1,13 +1,22 @@
 # Connects multiple physical interfaces to a openvswitch as a LACP bond. 
 define profile::infrastructure::ovs::port::bond (
-  String        $bridge,
-  Array[String] $members,
+  String                       $bridge,
+  Array[Variant[String, Hash]] $members,
+  Integer                      $mtu = 1500,
 ) {
   require ::profile::infrastructure::ovs::script::bond
 
+  if($members =~ String) {
+    $ifnames = $members
+    $drivers = {}
+  } else {
+    $ifnames = keys($members)
+    $drivers = $members
+  }
+
   # Use the create-vswitch-lacp.sh.sh script to create the bond, and connect it
   # to the bridge.
-  $memberstring = join($members, ' ')
+  $memberstring = join($ifnames, ' ')
   $args = "${name} ${memberstring}"
   exec { "/usr/local/bin/create-vswitch-lacp.sh.sh ${bridge} ${args}":
     unless  => "/usr/local/bin/verify-vswitch-lacp.sh.sh ${args}",
@@ -17,33 +26,47 @@ define profile::infrastructure::ovs::port::bond (
 
   # Iterate through all the member ports:
   $distro = $facts['os']['release']['major']
-  $members.each | $member | {
+  $ifnames.each | $ifname | {
     # Make sure the physical port is up
     if($distro == '18.04') {
-      file { "/etc/netplan/02-bondmember-${member}.yaml":
+      # If a particular driver is supplied; add it.
+      if($drivers[$ifname]) {
+        $driver = {'drivername' => $drivers[$ifname]['driver']}
+      } else {
+        $driver = {}
+      }
+
+      # Add basic parameters 
+      $parameters = {
+        'ifname' => $ifname,
+        'mtu'    => $mtu,
+      }
+
+      # Add netplan-config for the interface
+      file { "/etc/netplan/02-bondmember-${ifname}.yaml":
         ensure  => file,
         mode    => '0644',
         owner   => root,
         group   => root,
-        content => epp('profile/netplan/manual.epp', {
-          'ifname' => $member,
-        }),
+        content => epp('profile/netplan/manual.epp', $parameters + $driver),
         notify  => Exec['netplan_apply'],
       }
     } elsif($distro == '16.04') {
-      ::network::interface { "manual-up-${member}":
-        interface => $member,
+      # Add ifupdown-config for the interface
+      ::network::interface { "manual-up-${ifname}":
+        interface => $ifname,
         method    => 'manual',
+        mtu       => $mtu,
       }
     }
 
     # Add monitoring for the physical port
-    munin::plugin { "if_${member}":
+    munin::plugin { "if_${ifname}":
       ensure => link,
       target => 'if_',
       config => ['user root', 'env.speed 10000'],
     }
-    munin::plugin { "if_err_${member}":
+    munin::plugin { "if_err_${ifname}":
       ensure => link,
       target => 'if_err_',
       config => ['user nobody'],
