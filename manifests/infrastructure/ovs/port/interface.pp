@@ -16,7 +16,7 @@ define profile::infrastructure::ovs::port::interface (
 
   if($::facts['networking']['interfaces'][$interface]) {
     $mac = {
-      'macaddress' => $::facts['networking']['interfaces'][$interface]['mac'],
+      'mac' => $::facts['networking']['interfaces'][$interface]['mac'],
     }
   } else {
     $mac = {}
