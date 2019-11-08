@@ -9,9 +9,10 @@ define profile::infrastructure::ovs::bridge (
   }
 
   if($mtu) {
-    $getcmd = "/usr/bin/ovs-vsctl get interface ${name} mtu_request"
-    exec { "/usr/bin/ovs-vsctl set interface ${name} mtu_request=${mtu}":
+    $getcmd = "ovs-vsctl get interface ${name} mtu_request"
+    exec { "ovs-vsctl set interface ${name} mtu_request=${mtu}":
       unless  => "[ \$(${getcmd}) -eq ${mtu} ]",
+      path    => '/usr/bin',
       require => Vs_bridge[$name],
     }
   }
