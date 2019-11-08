@@ -12,7 +12,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
     $table_id = $nics[$nic]['tableid']
     $mtu   = { 'mtu'   => $nics[$nic]['mtu'] }
     if ( $nic =~ /^(lo|infra)/ or $nics[$nic]['nomatch'] or
-        not $::facts['networking']['interfaces'][$nic]) {
+        ! $nic in $::facts['networking']['interfaces']) {
       $match = {}
     } else {
       $mac = $::facts['networking']['interfaces'][$nic]['mac']
@@ -21,7 +21,7 @@ class profile::baseconfig::network::netplan (Hash $nics) {
 
     # If the interface should have its own routing-table, and it already exists,
     # configure the routing-table adding gateways etc.
-    if($table_id and $::facts['networking']['interfaces'][$nic]) {
+    if($table_id and $nic in $::facts['networking']['interfaces']) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
         $net4id = $::facts['networking']['interfaces'][$nic]['network']
         $net4mask = netmask_to_masklen($::facts['networking']['interfaces'][$nic]['netmask'])
