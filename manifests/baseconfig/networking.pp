@@ -27,22 +27,40 @@ class profile::baseconfig::networking {
   })
   $bridges.each | $name, $configuration | {
     # Create a bridge
-    ::profile::infrastructure::ovs::bridge { $name : }
+    ::profile::infrastructure::ovs::bridge { $name :
+      mtu => $configuration['mtu'],
+    }
 
     # If the bridge should have an external connection
     if($configuration['external']) {
+      if($configuration['external']['mtu']) {
+        $mtu = $configuration['external']['mtu']
+      } else {
+        $mtu = 1500
+      }
+      if($configuration['external']['driver']) {
+        $driver = $configuration['external']['driver']
+      } else {
+        $driver = ''
+      }
+
       # The connection might be a bond consisting of multiple physical
       # interfaces:
       if($configuration['external']['type'] == 'bond') {
-        ::profile::infrastructure::ovs::port::bond { $configuration['external']['name']:
+        ::profile::infrastructure::ovs::port::bond {
+            $configuration['external']['name']:
           bridge  => $name,
           members => $configuration['external']['members'],
+          mtu     => $mtu,
         }
       }
       # The connection might be a single interface
       if($configuration['external']['type'] == 'interface') {
-        ::profile::infrastructure::ovs::port::interface { $configuration['external']['name']:
+        ::profile::infrastructure::ovs::port::interface {
+            $configuration['external']['name']:
           bridge => $name,
+          driver => $driver,
+          mtu    => $mtu,
         }
       }
       # The connection might be a patch connected to a certain VLAN of another
