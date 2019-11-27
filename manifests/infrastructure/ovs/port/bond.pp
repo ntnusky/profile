@@ -1,7 +1,7 @@
 # Connects multiple physical interfaces to a openvswitch as a LACP bond. 
 define profile::infrastructure::ovs::port::bond (
   String                       $bridge,
-  Array[Variant[String, Hash]] $members,
+  Variant[Array[String], Hash] $members,
   Integer                      $mtu = 1500,
 ) {
   require ::profile::infrastructure::ovs::script::bond
