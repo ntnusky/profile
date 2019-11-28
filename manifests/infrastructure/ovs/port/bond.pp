@@ -6,7 +6,7 @@ define profile::infrastructure::ovs::port::bond (
 ) {
   require ::profile::infrastructure::ovs::script::bond
 
-  if($members =~ String) {
+  if($members =~ Array) {
     $ifnames = $members
     $drivers = {}
   } else {
