@@ -33,7 +33,10 @@ define profile::infrastructure::ovs::port::bond (
       if($ifdata[$ifname]) {
         $match = {
           'drivername' => $ifdata[$ifname]['driver'],
-          'mac'        => $ifdata[$ifname]['mac'],
+          'mac'        => pick(
+            $ifdata[$ifname]['mac'],
+            $::facter['networking']['interfaces'][$ifname]['mac'],
+          ),
         }
       } else {
         $match = {}
