@@ -49,4 +49,12 @@ else
   echo "Creating $bond with the interfaces: $@"
   ovs-vsctl $cmd add-bond $bridge $bond $@ lacp=active
 fi
+
+# Set the bond to load-balance TCP streams
+ovs-vsctl set port $bond bond_mode=balance-tc
+
+# In case the switch fails to negotiate LACP; fall back to regular active-backup
+# bonding.
+ovs-vsctl set port $bond other_config:lacp-fallback-ab=true
+
 exit 0
