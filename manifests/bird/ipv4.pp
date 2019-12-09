@@ -35,7 +35,7 @@ class profile::bird::ipv4 {
     }
 
     $neighbours.each | $peer | {
-      ::profile::bird::config::bgp { 'v4anycast':
+      ::profile::bird::config::bgp { "v4anycast-${peer}":
         configfile  => '/etc/bird/bird.conf',
         filtername  => 'v4anycast',
         aslocal     => $local_as,
