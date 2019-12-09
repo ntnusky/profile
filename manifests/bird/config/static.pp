@@ -1,7 +1,7 @@
 # Adds static-routes for bird
 define profile::bird::config::static (
   String $configfile,
-  Array $prefixes,
+  Hash $prefixes,
 ) {
   concat::fragment { "Bird Static ${name}":
     target  => $configfile,

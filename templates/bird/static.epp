@@ -1,4 +1,4 @@
-<%- | Array $prefixes,
+<%- | Hash $prefixes,
 | -%>
 protocol static {
 <% $prefixes.each |$prefix, $data| { -%>
