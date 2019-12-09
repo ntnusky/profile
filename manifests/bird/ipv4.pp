@@ -27,6 +27,13 @@ class profile::bird::ipv4 {
       'value_type'    => Array[String],
       'default_value' => [],
     })
+    $statics = lookup('profile::bird::ipv4::static', {
+      'value_type'    => Variant[
+        Boolean,
+        Hash[Stdlib::IP::Address::V4::CIDR, Hash],
+      ],
+      'default_value' => false
+    })
 
     if($neighbour) {
       $neighbours = $_neighbours <<  $neighbour
@@ -48,6 +55,13 @@ class profile::bird::ipv4 {
     ::profile::bird::config::filter { 'v4anycast':
       configfile => '/etc/bird/bird.conf',
       prefixes   => [ "${anycastv4}/32" ],
+    }
+
+    if($statics) {
+      ::profile::bird::config::static { 'v4anycast':
+        configfile => '/etc/bird/bird.conf',
+        prefixes   => $statics,
+      }
     }
   }
 }
