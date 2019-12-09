@@ -15,16 +15,34 @@ class profile::bird::ipv4 {
     $remote_as = lookup('profile::bird::anycast::ipv4::bgp::as::remote', {
       'value_type'    => Integer,
     })
+    $multihop = lookup('profile::bird::anycast::ipv4::bgp::multihop', {
+      'value_type'    => Integer,
+      'default_value' => 1,
+    })
     $neighbour = lookup('profile::bird::anycast::ipv4::bgp::peer', {
-      'value_type'    => String,
+      'value_type'    => Variant[String, Boolean],
+      'default_value' => false,
+    })
+    $_neighbours = lookup('profile::bird::anycast::ipv4::bgp::peers', {
+      'value_type'    => Array[String],
+      'default_value' => [],
     })
 
-    ::profile::bird::config::bgp { 'v4anycast':
-      configfile  => '/etc/bird/bird.conf',
-      filtername  => 'v4anycast',
-      aslocal     => $local_as,
-      asremote    => $remote_as,
-      neighbourip => $neighbour,
+    if($neighbour) {
+      $neighbours = $_neighbours <<  $neighbour
+    } else {
+      $neighbours = $_neighbours
+    }
+
+    $neighbours.each | $peer | {
+      ::profile::bird::config::bgp { 'v4anycast':
+        configfile  => '/etc/bird/bird.conf',
+        filtername  => 'v4anycast',
+        aslocal     => $local_as,
+        asremote    => $remote_as,
+        multihop    => $multihop,
+        neighbourip => $peer,
+      }
     }
 
     ::profile::bird::config::filter { 'v4anycast':
