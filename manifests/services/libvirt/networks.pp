@@ -22,7 +22,15 @@ class profile::services::libvirt::networks {
     $shortname = $netname[0,12]
     $bridge = $data['bridge']
 
-    profile::infrastructure::ovs::bridge { "br-${shortname}": }
+    if('mtu' in $data) {
+      $mtu = $data['mtu']
+    } else {
+      $mtu = undef
+    }
+
+    profile::infrastructure::ovs::bridge { "br-${shortname}": 
+      mtu => $mtu,
+    }
 
     if('vlanid' in $data) {
       profile::infrastructure::ovs::patch::vlan {
