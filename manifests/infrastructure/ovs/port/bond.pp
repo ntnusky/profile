@@ -1,17 +1,17 @@
 # Connects multiple physical interfaces to a openvswitch as a LACP bond. 
 define profile::infrastructure::ovs::port::bond (
   String                       $bridge,
-  Array[Variant[String, Hash]] $members,
+  Variant[Array[String], Hash] $members,
   Integer                      $mtu = 1500,
 ) {
   require ::profile::infrastructure::ovs::script::bond
 
-  if($members =~ String) {
+  if($members =~ Array) {
     $ifnames = $members
-    $drivers = {}
+    $ifdata = {}
   } else {
     $ifnames = keys($members)
-    $drivers = $members
+    $ifdata = $members
   }
 
   # Use the create-vswitch-lacp.sh.sh script to create the bond, and connect it
@@ -30,10 +30,16 @@ define profile::infrastructure::ovs::port::bond (
     # Make sure the physical port is up
     if($distro == '18.04') {
       # If a particular driver is supplied; add it.
-      if($drivers[$ifname]) {
-        $driver = {'drivername' => $drivers[$ifname]['driver']}
+      if($ifdata[$ifname]) {
+        $match = {
+          'drivername' => $ifdata[$ifname]['driver'],
+          'mac'        => pick(
+            $ifdata[$ifname]['mac'],
+            $::facts['networking']['interfaces'][$ifname]['mac'],
+          ),
+        }
       } else {
-        $driver = {}
+        $match = {}
       }
 
       # Add basic parameters 
@@ -48,7 +54,7 @@ define profile::infrastructure::ovs::port::bond (
         mode    => '0644',
         owner   => root,
         group   => root,
-        content => epp('profile/netplan/manual.epp', $parameters + $driver),
+        content => epp('profile/netplan/manual.epp', $parameters + $match),
         notify  => Exec['netplan_apply'],
       }
     } elsif($distro == '16.04') {
