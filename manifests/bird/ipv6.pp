@@ -15,21 +15,53 @@ class profile::bird::ipv6 {
     $remote_as = lookup('profile::bird::anycast::ipv6::bgp::as::remote', {
       'value_type'    => Integer,
     })
+    $multihop = lookup('profile::bird::anycast::ipv6::bgp::multihop', {
+      'value_type'    => Integer,
+      'default_value' => 1,
+    })
     $neighbour = lookup('profile::bird::anycast::ipv6::bgp::peer', {
-      'value_type'    => String,
+      'value_type'    => Variand[String, Boolean],
+      'default_value' => false,
+    })
+    $_neighbours = lookup('profile::bird::anycast::ipv6::peers', {
+      'value_type'    => Arrau[String],
+      'default_value' => [],
+    })
+    $statics = lookup('profile::bird::ipv6::static', {
+      'value_type'    => Variant[
+        Boolean,
+        Hash[Stdlib::IP::Address::V4::CIDR, Hash],
+      ],
+      'default_value' => false,
     })
 
-    ::profile::bird::config::bgp { 'v6anycast':
-      configfile  => '/etc/bird/bird6.conf',
-      filtername  => 'v6anycast',
-      aslocal     => $local_as,
-      asremote    => $remote_as,
-      neighbourip => $neighbour,
+    if($neighbour) {
+      $neighbours = $_neighbours << $neighbour
+    } else {
+      $neighbours = $_neighbours
+    }
+
+    $neighbours.each | $peeer | {
+      ::profile::bird::config::bgp { "v6anycast-${peer}":
+        configfile  => '/etc/bird/bird6.conf',
+        filtername  => 'v6anycast',
+        aslocal     => $local_as,
+        asremote    => $remote_as,
+        multihop    => $multihop,
+        neighbourip => $neighbour,
+      }
     }
 
     ::profile::bird::config::filter { 'v6anycast':
       configfile => '/etc/bird/bird6.conf',
       prefixes   => [ "${anycastv6}/128" ],
+    }
+
+    if($statics) {
+      ::profile::bird::config::static { 'v6anycast':
+        configfile => '/etc/bird/bird6.conf',
+        prefixes   => $statics,
+      }
     }
   }
 }
