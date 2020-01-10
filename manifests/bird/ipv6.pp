@@ -20,11 +20,11 @@ class profile::bird::ipv6 {
       'default_value' => 1,
     })
     $neighbour = lookup('profile::bird::anycast::ipv6::bgp::peer', {
-      'value_type'    => Variand[String, Boolean],
+      'value_type'    => Variant[String, Boolean],
       'default_value' => false,
     })
     $_neighbours = lookup('profile::bird::anycast::ipv6::peers', {
-      'value_type'    => Arrau[String],
+      'value_type'    => Array[String],
       'default_value' => [],
     })
     $statics = lookup('profile::bird::ipv6::static', {
