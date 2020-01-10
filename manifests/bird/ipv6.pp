@@ -41,14 +41,14 @@ class profile::bird::ipv6 {
       $neighbours = $_neighbours
     }
 
-    $neighbours.each | $peeer | {
+    $neighbours.each | $peer | {
       ::profile::bird::config::bgp { "v6anycast-${peer}":
         configfile  => '/etc/bird/bird6.conf',
         filtername  => 'v6anycast',
         aslocal     => $local_as,
         asremote    => $remote_as,
         multihop    => $multihop,
-        neighbourip => $neighbour,
+        neighbourip => $peer,
       }
     }
 
