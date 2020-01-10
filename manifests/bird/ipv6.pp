@@ -30,7 +30,7 @@ class profile::bird::ipv6 {
     $statics = lookup('profile::bird::ipv6::static', {
       'value_type'    => Variant[
         Boolean,
-        Hash[Stdlib::IP::Address::V4::CIDR, Hash],
+        Hash[Stdlib::IP::Address::V6::CIDR, Hash],
       ],
       'default_value' => false,
     })
