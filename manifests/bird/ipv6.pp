@@ -23,7 +23,7 @@ class profile::bird::ipv6 {
       'value_type'    => Variant[String, Boolean],
       'default_value' => false,
     })
-    $_neighbours = lookup('profile::bird::anycast::ipv6::peers', {
+    $_neighbours = lookup('profile::bird::anycast::ipv6::bgp::peers', {
       'value_type'    => Array[String],
       'default_value' => [],
     })
