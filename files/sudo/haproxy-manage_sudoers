@@ -1,0 +1,7 @@
+# Allow the administrator to use the haproxy-manage scripts to manipulate the
+# loadbalancers.
+%administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent --test * 
+
+# Allow the administrators to start/stop haproxy and birds
+%administrator ALL=(root) /bin/systemctl (stop|start) (haproxy|bird|bird6)
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status (haproxy|bird|bird6)
