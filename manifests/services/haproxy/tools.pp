@@ -20,6 +20,11 @@ class profile::services::haproxy::tools {
     order   => '01'
   }
 
+  sudo::conf { 'haproxy-manage':
+    priority => 50,
+    source   => 'puppet:///modules/profile/sudo/haproxy-manage_sudoers',
+  }
+
   file { '/usr/local/sbin/haproxy-manage.sh':
     ensure => present,
     owner  => 'root',
