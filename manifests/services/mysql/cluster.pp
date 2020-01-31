@@ -34,12 +34,13 @@ class profile::services::mysql::cluster {
     status_check        => false,
     validate_connection => false,
     override_options    => {
-      'mysqld' => {
-        'port'              => '3306',
-        'bind-address'      => $management_ip,
-        'max_connections'   => '1000',
-        'net_read_timeout'  => $net_read_timeout,
-        'net_write_timeout' => $net_write_timeout,
+      'mysqld'                   => {
+        'port'                   => '3306',
+        'bind-address'           => $management_ip,
+        'max_connections'        => '1000',
+        'net_read_timeout'       => $net_read_timeout,
+        'net_write_timeout'      => $net_write_timeout,
+        'wsrep_provider_options' => 'gcache.size=2G',
       }
     },
     require             => [
