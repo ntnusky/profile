@@ -40,7 +40,7 @@ class profile::services::mysql::cluster {
         'max_connections'        => '1000',
         'net_read_timeout'       => $net_read_timeout,
         'net_write_timeout'      => $net_write_timeout,
-        'wsrep_provider_options' => 'gcache.size=2G',
+        'wsrep_provider_options' => '"gcache.size=2G"',
       }
     },
     require             => [
