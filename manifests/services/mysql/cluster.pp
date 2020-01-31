@@ -22,15 +22,17 @@ class profile::services::mysql::cluster {
   })
 
   class { '::galera' :
-    galera_servers     => $servers,
-    galera_master      => $master,
-    status_password    => $statuspassword,
-    vendor_type        => 'mariadb',
-    vendor_version     => $mariadb_version,
-    root_password      => $rootpassword,
-    local_ip           => $management_ip,
-    configure_firewall => false,
-    configure_repo     => true,
+    galera_servers      => $servers,
+    galera_master       => $master,
+    status_password     => $statuspassword,
+    vendor_type         => 'mariadb',
+    vendor_version      => $mariadb_version,
+    root_password       => $rootpassword,
+    local_ip            => $management_ip,
+    configure_firewall  => false,
+    configure_repo      => true,
+    status_check        => false,
+    validate_connection => false,
     override_options   => {
       'mysqld' => {
         'port'              => '3306',
