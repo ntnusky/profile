@@ -33,7 +33,7 @@ class profile::services::mysql::cluster {
     configure_repo      => true,
     status_check        => false,
     validate_connection => false,
-    override_options   => {
+    override_options    => {
       'mysqld' => {
         'port'              => '3306',
         'bind-address'      => $management_ip,
@@ -42,7 +42,7 @@ class profile::services::mysql::cluster {
         'net_write_timeout' => $net_write_timeout,
       }
     },
-    require            => [
+    require             => [
       Class['::profile::services::mysql::firewall::server'],
     ],
   }
