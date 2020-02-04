@@ -34,7 +34,7 @@ logger "[PUPPET-CertClean] Got a list of ${noHosts} hosts from puppetca"
 # Loop trough all hosts which has a puppetcert, but is not listed in
 # shiftleader:
 toRevoke=()
-for host in $(echo ${allslhosts[@]} ${allslhosts[@]} ${allcahosts[@]} | \
+for host in $(echo "${allslhosts[@]}" "${allslhosts[@]}" "${allcahosts[@]}" | \
     tr ' ' '\n' | sort | uniq -u); do
   logger "[PUPPET-CertClean] The host $host not in shiftleader anymore"
   # add the host to the list of certs to be revoked
@@ -45,8 +45,7 @@ done
 installinghosts=$(/opt/shiftleader/manage.py hostlist installing | sort)
 for host in $installinghosts; do
   # If the host in installing have a puppet cert:
-  /opt/puppetlabs/bin/puppet cert print $host &> /dev/null
-  if [[ $? -eq 0 ]]; then
+  if /opt/puppetlabs/bin/puppet cert print "$host"; then
     logger "[PUPPET-CertClean] The host $host is reinstalling"
     # add the host to the list of certs to be revoked
     toRevoke=(${toRevoke[@]} $host)
@@ -59,16 +58,16 @@ logger "[PUPPET-CertClean] There are ${#toRevoke[@]} certificates which should b
 if [[ ${#toRevoke[@]} -gt 10 ]]; then
   logger "[PUPPET-CertClean] Aborting as there are too many certs to be revoked." 
   echo "Aborting! There are more than 10 certs shceduled for revocation:"
-  for host in ${toRevoke[@]}; do
+  for host in "${toRevoke[@]}"; do
     echo " - $host"
   done
   exit 2
 fi
 
 # Revoke the certificates identified for revokion.
-for host in ${toRevoke[@]}; do
+for host in "${toRevoke[@]}"; do
   logger "[PUPPET-CertClean] Revoking the certificate for $host" 
-  /opt/puppetlabs/bin/puppet cert clean $host
+  /opt/puppetlabs/bin/puppet cert clean "$host"
 done
 
 logger "[PUPPET-CertClean] Finished to clean puppet certificates"
