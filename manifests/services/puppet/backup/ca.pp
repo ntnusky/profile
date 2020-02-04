@@ -2,6 +2,11 @@
 class profile::services::puppet::backup::ca {
   include ::profile::services::puppet::backup::folders
 
+  $adminmail = lookup('profile::admin::maillist', {
+    'value_type'    => String,
+    'default_value' => 'root',
+  }
+
   file { '/usr/local/sbin/cabackup.sh':
     ensure => present,
     owner  => 'root',
@@ -11,9 +16,10 @@ class profile::services::puppet::backup::ca {
   }
 
   cron { 'Puppet cabackup':
-    command => '/usr/local/sbin/cabackup.sh',
-    user    => 'root',
-    hour    => '13',
-    minute  => '37',
+    command     => '/usr/local/sbin/cabackup.sh',
+    environment => "MAILTO=${adminmail}",
+    hour        => '13',
+    minute      => '37',
+    user        => 'root',
   }
 }

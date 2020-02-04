@@ -1,6 +1,11 @@
 # Configures the puppetmaster to use hiera, and set up hiera replication between
 # puppet masters
 class profile::services::puppet::server::hiera {
+  $adminmail = lookup('profile::admin::maillist', {
+    'value_type'    => String,
+    'default_value' => 'root',
+  }
+
   @@ssh_authorized_key { "puppetmaster-${::fqdn}":
     user    => 'root',
     type    => 'ssh-rsa',
@@ -38,15 +43,17 @@ class profile::services::puppet::server::hiera {
   }
 
   cron { 'Puppet r10k killer':
-    command => '/usr/local/sbin/killr10k.sh',
-    user    => 'root',
-    minute  => '*',
+    command     => '/usr/local/sbin/killr10k.sh',
+    environment => "MAILTO=${adminmail}",
+    minute      => '*',
+    user        => 'root',
   }
 
   cron { 'Puppet hieradata sync':
-    command => '/usr/local/sbin/pull_hiera.sh',
-    user    => 'root',
-    minute  => '*',
+    command     => '/usr/local/sbin/pull_hiera.sh',
+    environment => "MAILTO=${adminmail}",
+    minute      => '*',
+    user        => 'root',
   }
 
   file { '/root/hieradata':
