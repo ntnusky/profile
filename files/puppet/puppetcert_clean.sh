@@ -23,8 +23,8 @@ if [[ $noHosts -le 1 ]]; then
 fi
 
 # Get a list over all hosts with a valid puppet client certificate
-allcahosts=$(/opt/puppetlabs/bin/puppet cert list --all | awk '{print $2}' | \
-    cut -d '"' -f 2)
+allcahosts=$(/opt/puppetlabs/bin/puppet cert list --all 2> /dev/null | \
+    awk '{print $2}' | cut -d '"' -f 2)
 noHosts=0
 for host in $allcahosts; do
   ((noHosts++))
