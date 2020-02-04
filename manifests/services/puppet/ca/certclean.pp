@@ -4,7 +4,7 @@ class profile::services::puppet::ca::certclean {
   $adminmail = lookup('profile::admin::maillist', {
     'value_type'    => String,
     'default_value' => 'root',
-  }
+  })
 
   file { '/usr/local/sbin/puppetcert_clean.sh':
     ensure => present,

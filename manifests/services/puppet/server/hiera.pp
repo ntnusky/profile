@@ -4,7 +4,7 @@ class profile::services::puppet::server::hiera {
   $adminmail = lookup('profile::admin::maillist', {
     'value_type'    => String,
     'default_value' => 'root',
-  }
+  })
 
   @@ssh_authorized_key { "puppetmaster-${::fqdn}":
     user    => 'root',

@@ -5,7 +5,7 @@ class profile::services::puppet::backup::ca {
   $adminmail = lookup('profile::admin::maillist', {
     'value_type'    => String,
     'default_value' => 'root',
-  }
+  })
 
   file { '/usr/local/sbin/cabackup.sh':
     ensure => present,

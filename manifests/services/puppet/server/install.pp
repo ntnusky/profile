@@ -6,7 +6,7 @@ class profile::services::puppet::server::install {
   $adminmail = lookup('profile::admin::maillist', {
     'value_type'    => String,
     'default_value' => 'root',
-  }
+  })
 
   package { 'puppetserver':
     ensure => 'present',
