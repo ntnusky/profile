@@ -39,6 +39,25 @@ for user in $users; do
 	fi
 done
 
+# Iterate through VMs in MISC-project if it exists
+if [[ $($OSCMD project show MISC 2>/dev/null) ]]; then
+	vms=$($OSCMD server list -f value -c ID --project MISC)
+	for vm in $vms; do
+		properties=$($OSCMD server show -f value -c properties $vm)
+		if [[ $properties =~ @ ]]; then
+			mail=$(echo $properties | grep -oE "contact='\S+'," | cut -d "'" -f2)
+		else
+			echo "[WARNING] VM with ID $vm has no email details"
+		fi
+
+		if [[ -n $mail ]]; then
+			echo "Found $mail from MISC-vm $vm"
+			mails=("${mails[@]}" "$mail")
+			echo "-----------------------------------------"
+		fi
+	done
+fi
+
 if [ -f $LOCALFILE ]; then
 	mv $LOCALFILE{,-$TODAY}
 fi
