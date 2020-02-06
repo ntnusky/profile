@@ -19,4 +19,10 @@ for interface in $@; do
   fi
 done
 
+if [[ $(ovs-appctl bond/show $bond | grep bond_mode | awk '{ print $2 }') != \
+    'balance-tcp' ]]; then
+  echo "The bond-type is not load-balancing"
+  exit 4
+fi
+
 exit 0

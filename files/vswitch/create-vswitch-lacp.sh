@@ -51,7 +51,7 @@ else
 fi
 
 # Set the bond to load-balance TCP streams
-ovs-vsctl set port $bond bond_mode=balance-tc
+ovs-vsctl set port $bond bond_mode=balance-tcp
 
 # In case the switch fails to negotiate LACP; fall back to regular active-backup
 # bonding.
