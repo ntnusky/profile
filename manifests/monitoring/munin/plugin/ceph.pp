@@ -4,11 +4,6 @@ class profile::monitoring::munin::plugin::ceph {
   require ::profile::monitoring::munin::plugin::ceph::base
 
   # Add general ceph-related graphs.
-  munin::plugin { 'ceph_total':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/ceph_total',
-    config => ['user root'],
-  }
   munin::plugin { 'ceph_objects':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/ceph_objects',
@@ -19,9 +14,19 @@ class profile::monitoring::munin::plugin::ceph {
     source => 'puppet:///modules/profile/muninplugins/ceph_osd',
     config => ['user root'],
   }
+  munin::plugin { 'ceph_pg':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/ceph_pg',
+    config => ['user root'],
+  }
   munin::plugin { 'ceph_storage':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/ceph_storage',
+    config => ['user root'],
+  }
+  munin::plugin { 'ceph_total':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/ceph_total',
     config => ['user root'],
   }
 
