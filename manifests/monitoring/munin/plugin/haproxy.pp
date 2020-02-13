@@ -9,6 +9,7 @@ class profile::monitoring::munin::plugin::haproxy {
   
   munin::plugin { "haproxy_ng":
     ensure => link,
+    source => 'puppet:///modules/profile/muninplugins/haproxy_ng',
     config => ['env.url http://localhost:9000/haproxy-status;csv;norefresh'],
   }
 }
