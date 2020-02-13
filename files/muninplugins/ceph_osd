@@ -21,18 +21,15 @@ osds=0
 ups=0
 ins=0
 
-while read -r osd; do
-  up=$(echo $osd | jq '.["up"]')
-  in=$(echo $osd | jq '.["in"]')
-
-  osds=$((osds + 1))
-  if [ $up -eq 1 ]; then
-    ups=$((ups + 1))
-  fi
-  if [ $in -eq 1 ]; then
-    ins=$((ins + 1))
-  fi
-done < <(ceph insights | jq -c '.["osd_dump"]["osds"][]') 
+for osd in $(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq '.["osdmap"]["osds"][]' -c); do
+  ((osds += 1))
+  if [[ $(echo "$osd" | jq -r '.["up"]') -eq '1' ]]; then
+    ((ups += 1))
+  fi 
+  if [[ $(echo "$osd" | jq -r '.["in"]') -eq '1' ]]; then
+    ((ins += 1))
+  fi 
+done
 
 echo "osds.value $osds" 
 echo "up.value $ups" 

@@ -14,11 +14,11 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-tmpfile=$(mktemp)
-ceph insights > $tmpfile
+data=$(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq -c '.["osd_sum"]["statfs"]')
 
-echo "capacity.value $(cat $tmpfile | jq '.["df"]["stats"]["total_bytes"]')"
-echo "free.value $(cat $tmpfile | jq '.["df"]["stats"]["total_avail_bytes"]')"
-echo "data.value $(cat $tmpfile | jq '.["df"]["stats"]["total_used_raw_bytes"]')"
+size=$(echo "$data" | jq '.["total"]')
+free=$(echo "$data" | jq '.["available"]')
 
-rm $tmpfile
+echo "capacity.value $size"
+echo "free.value $free"
+echo "data.value $((size-free))"

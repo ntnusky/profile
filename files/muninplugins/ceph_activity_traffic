@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
 
-tmpfile=$(mktemp)
-ceph insights > $tmpfile
+pools=$(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
 
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH Activity - Bits read/written"
@@ -13,11 +12,11 @@ if [[ $1 == "config" ]]; then
   echo "graph_info Read and write traffic to ceph-pools"
   echo "graph_width 550"
   
-  for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
-    realname=$(echo $pool | jq -r '.["name"]')
+  for pool in $pools; do
+    realname=$(echo "$pool" | jq -r '.["pool_name"]')
     name=${realname//./_}
     name=${name//-/_}
-
+    
     echo "${name}write.label $realname"
     echo "${name}write.type DERIVE"
     echo "${name}write.min 0"
@@ -27,19 +26,21 @@ if [[ $1 == "config" ]]; then
     echo "${name}read.min 0"
     echo "${name}read.negative ${name}write"
   done
-  rm $tmpfile
   exit 0
 fi
 
-for pool in $(jq -c '.["df"]["pools"][]' $tmpfile); do
-  name=$(echo $pool | jq -r '.["name"]')
+declare -A poolids
+for pool in $pools; do
+  poolids[$(echo "$pool" | jq -r '.["pool"]')]=$(echo "$pool" | jq -r '.["pool_name"]')
+done
+
+for data in $(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq '.["pool_stats"][]' -c); do
+  name=${poolids[$(echo "$data" | jq -r '.["poolid"]')]}
   name=${name//./_}
   name=${name//-/_}
   
-  wr=$(echo $pool | jq '.["stats"]["wr_bytes"]')
-  rd=$(echo $pool | jq '.["stats"]["rd_bytes"]')
-  echo ${name}write.value $(echo "$wr * 8" | bc)
-  echo ${name}read.value $(echo "$rd * 8" | bc)
+  kbwrite=$(echo "$data" | jq '.["stat_sum"]["num_write_kb"]')
+  kbread=$(echo "$data" | jq '.["stat_sum"]["num_read_kb"]')
+  echo "${name}write.value $(echo "$kbwrite * 1024 * 8" | bc)"
+  echo "${name}read.value $(echo "$kbread * 1024 * 8" | bc)"
 done
-
-rm $tmpfile
