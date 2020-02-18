@@ -5,6 +5,7 @@ define profile::bird::config::bgp (
   Integer $aslocal,
   Integer $asremote,
   String $neighbourip,
+  Integer $multihop = 1,
 ) {
   concat::fragment { "Bird BGP ${name}":
     target  => $configfile,
@@ -13,6 +14,7 @@ define profile::bird::config::bgp (
       'aslocal'     => $aslocal,
       'asremote'    => $asremote,
       'neighbourIP' => $neighbourip,
+      'multihop'    => $multihop,
     }),
     order   => '15'
   }

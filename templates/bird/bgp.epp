@@ -2,9 +2,11 @@
       Integer $aslocal,
       Integer $asremote,
       String $neighbourIP,
+      Integer $multihop,
 | -%>
 protocol bgp {
   export filter <%= $filtername %>;
+  multihop <%= $multihop %>;
   local as <%= $aslocal %>;
   neighbor <%= $neighbourIP %> as <%= $asremote %>;
 }

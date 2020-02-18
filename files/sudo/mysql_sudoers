@@ -1,0 +1,13 @@
+# sudo config for mysql and related services
+Defaults:%administrator always_set_home
+
+# Allow the administrator to use mysql client and managing the service
+%administrator ALL=(root) /usr/bin/mysql
+%administrator ALL=(root) /bin/systemctl start mariadb
+%administrator ALL=(root) /bin/systemctl stop mariadb
+%administrator ALL=(root) /bin/systemctl restart mariadb
+
+# Things you can do without password
+%administrator ALL=(root) NOPASSWD: /usr/local/sbin/mysqlbackup.sh
+%administrator ALL=(root) NOPASSWD: /usr/bin/mysql -e SHOW\ STATUS
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status mariadb

@@ -1,15 +1,19 @@
-# This class creates an openvswitch bridge which terminates a physical interface
-# which is connected to a trunk port of a physical switch. Other virtual
-# switches might patch in to this bridge.
-define profile::infrastructure::ovs::bridge {
+# Create an openvswitch bridge
+define profile::infrastructure::ovs::bridge (
+  Variant[Integer, Undef] $mtu = undef,
+) {
   require ::vswitch::ovs
 
-  vs_bridge { "br-vlan-${name}":
+  vs_bridge { $name:
     ensure => 'present',
   }
 
-  vs_port { $name :
-    ensure => 'present',
-    bridge => "br-vlan-${name}",
+  if($mtu) {
+    $getcmd = "ovs-vsctl get interface ${name} mtu_request"
+    exec { "ovs-vsctl set interface ${name} mtu_request=${mtu}":
+      unless  => "[ \$(${getcmd}) -eq ${mtu} ]",
+      path    => '/usr/bin',
+      require => Vs_bridge[$name],
+    }
   }
 }

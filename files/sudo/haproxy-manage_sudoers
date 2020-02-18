@@ -1,0 +1,17 @@
+# Allow the administrator to use the haproxy-manage scripts to manipulate the
+# loadbalancers.
+%administrator ALL=(root) NOPASSWD: /usr/local/sbin/haproxy-manage.sh 
+
+# Allow the administrators to start/stop haproxy and birds
+%administrator ALL=(root) /bin/systemctl stop bird
+%administrator ALL=(root) /bin/systemctl start bird
+%administrator ALL=(root) /bin/systemctl restart bird
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status bird
+%administrator ALL=(root) /bin/systemctl stop bird6
+%administrator ALL=(root) /bin/systemctl start bird6
+%administrator ALL=(root) /bin/systemctl restart bird6
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status bird6
+%administrator ALL=(root) /bin/systemctl stop haproxy
+%administrator ALL=(root) /bin/systemctl start haproxy
+%administrator ALL=(root) /bin/systemctl restart haproxy
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status haproxy

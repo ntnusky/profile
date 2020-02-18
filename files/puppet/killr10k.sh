@@ -9,7 +9,7 @@ maxminutes=30
 
 while IFS='' read -r line || [[ -n "$line" ]]; do
   if [[ $line =~ \
-      ^(([0-9]{0,2})\-?([0-9]{2}):([0-9]{2}):[0-9]{2})\ ([0-9]+)\ (.*)$ ]]
+      ^(([0-9]{0,2})\-?([0-9]{2}):([0-9]{2}):[0-9]{2})\ +([0-9]+)\ (.*)$ ]]
   then
     pid=${BASH_REMATCH[5]}
 
@@ -31,8 +31,8 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 
     # If enough minutes, print a message and kill the process.
     if [[ $minutes -gt $maxminutes ]]; then
-      echo R10k process $pid was killed, as it had more than $maxminutes \
-          minutes CPU time.
+      logger "[r10k-killer] process $pid was killed, as it had more than" \
+          "$maxminutes minutes CPU time."
       kill -9 $pid
     fi
   fi

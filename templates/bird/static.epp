@@ -1,0 +1,7 @@
+<%- | Hash $prefixes,
+| -%>
+protocol static {
+<% $prefixes.each |$prefix, $data| { -%>
+  route <%= $prefix %> via <%= $data['next-hop'] %>;
+<% } -%>
+}

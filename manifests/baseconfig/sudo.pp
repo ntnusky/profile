@@ -11,4 +11,9 @@ class profile::baseconfig::sudo {
     priority => 15,
     source   => 'puppet:///modules/profile/sudo/sensu_sudoers',
   }
+
+  sudo::conf { 'administrator':
+    priority => 11,
+    source   => 'puppet:///modules/profile/sudo/administrator_sudoers',
+  }
 }

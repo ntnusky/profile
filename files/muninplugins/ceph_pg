@@ -1,0 +1,31 @@
+#!/bin/bash
+set -e
+
+pools=$(ceph tell "mon.$(hostname)"  report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH PG's"
+  echo "graph_category ceph"
+  echo "graph_vlabel PG's"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info The number of placement groups in each ceph pool"
+  
+  for pool in $pools; do
+    name=$(echo "$pool" | jq -r '.["pool_name"]')
+    name=${name//./_}
+    name=${name//-/_}
+    
+    echo "${name}.label $(echo "$pool" | jq -r '.["pool_name"]')"
+    echo "${name}.info Objects in the $(echo "$pool" | jq -r '.["pool_name"]') pool."
+  done
+  exit 0
+fi
+
+for pool in $pools; do
+  name=$(echo "$pool" | jq -r '.["pool_name"]')
+  name=${name//./_}
+  name=${name//-/_}
+
+  echo "${name}.value $(echo "$pool" | jq -r '.["pg_num"]')"
+done

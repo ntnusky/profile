@@ -15,7 +15,7 @@ if [[ $1 == "config" ]]; then
 fi
 
 for net in $EXTERNALS; do
-  value=$(openstack ip availability show $net -f value -c subnet_ip_availability)
+  value=$(openstack ip availability show $net -f value -c subnet_ip_availability | grep "ip_version='4'")
 
   [[ $value =~ total_ips=\'([0-9]+)\' ]]
   total=${BASH_REMATCH[1]}

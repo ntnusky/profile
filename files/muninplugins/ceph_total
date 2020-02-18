@@ -1,57 +1,24 @@
 #!/bin/bash
+set -e
 
-: << =cut
-
-=head1 NAME
-
-ceph_total - Shows ceph total storage capacity and used raw space
-
-=head1 CONFIGURATION
-
-=head1 AUTHOR
-
-Eigil Obrestad <eigil-git@obrestad.org>
-
-=head1 LICENSE
-
-Public domain
-
-=head1 CHANGELOG
-
-=cut
-
-if [ "$1" = "autoconf" ]; then
-  echo yes
-  exit 0
-fi
-
-if [ "$1" = "config" ]; then
+if [[ $1 == "config" ]]; then
   echo 'graph_title CEPH total capacity'
   echo 'graph_category ceph'
   echo 'graph_vlabel Bytes'
   echo 'graph_info CEPH cluster capacity'
   echo 'graph_args -l 0'
   echo "capacity.label Capacity"
-  echo "used.label Raw used"
-  echo "used.draw AREA"
+  echo "free.label Free"
+  echo "data.label Data stored"
 
   exit 0
 fi
 
-declare -A factors
-factors[B]=1
-factors[KiB]=1024
-factors[MiB]=1048576
-factors[GiB]=1073741824
-factors[TiB]=1099511627776
-factors[PiB]=1125899906842624
+data=$(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq -c '.["osd_sum"]["statfs"]')
 
-usage=$(ceph df | grep GLOBAL -A2 | tail -n 1)
+size=$(echo "$data" | jq '.["total"]')
+free=$(echo "$data" | jq '.["available"]')
 
-if [[ $usage =~ ([0-9\.]+)([KMGTP]?i?B)\ +([0-9\.]+)([KMGTP]?i?B)\ +([0-9\.]+)([KMGTP]?i?B) ]]; then
-  echo capacity.value $(echo "${BASH_REMATCH[1]} * ${factors[${BASH_REMATCH[2]}]}" | bc)
-  echo used.value $(echo "${BASH_REMATCH[5]} * ${factors[${BASH_REMATCH[6]}]}" | bc)
-else
-  echo "capacity.value U"
-  echo "used.value U"
-fi
+echo "capacity.value $size"
+echo "free.value $free"
+echo "data.value $((size-free))"

@@ -6,7 +6,7 @@ define profile::ceph::monitoring::pool {
   include ::profile::systemd::reload
 
   $collectors = lookup('profile::monitoring::ceph::collectors', {
-    'default_value' => true,
+    'default_value' => false,
   })
 
   if($collectors) {

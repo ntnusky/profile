@@ -16,77 +16,6 @@ class profile::monitoring::munin::plugin::nova {
     'value_type' => String,
   })
 
-  $externalnets = lookup('ntnuopenstack::neutron::networks::external', {
-    'value_type' => Hash,
-  })
-
-  $externalnets.each | $key, $data | {
-    $net = $data['name']
-    munin::plugin { "openstack_ipuse_${net}":
-      ensure => present,
-      source => 'puppet:///modules/profile/muninplugins/openstack_ipuse_',
-      config => [ 'user nova',
-        'env.OS_PROJECT_NAME admin',
-        "env.OS_USERNAME ${admin_username}",
-        "env.OS_PASSWORD ${admin_pass}",
-        "env.OS_AUTH_URL ${keystone_url}",
-        'env.OS_IDENTITY_API_VERSION 3',
-      ],
-    }
-  }
-
-  $externalnames = $externalnets.map | $key, $data | { $data['name'] }
-  $externals = join($externalnames, ' ')
-
-  munin::plugin { 'openstack_ipuse':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/openstack_ipuse',
-    config => [ 'user nova',
-      'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_username}",
-      "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${keystone_url}",
-      'env.OS_IDENTITY_API_VERSION 3',
-      "env.EXTERNALS ${externals}",
-    ],
-  }
-
-  munin::plugin { 'openstack_projects':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/openstack_projects',
-    config => [ 'user nova',
-      'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_username}",
-      "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${keystone_url}",
-      'env.OS_IDENTITY_API_VERSION 3',
-    ],
-  }
-
-  munin::plugin { 'openstack_server_status':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/openstack_server_status',
-    config => [ 'user nova',
-      'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_username}",
-      "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${keystone_url}",
-      'env.OS_IDENTITY_API_VERSION 3',
-    ],
-  }
-
-  munin::plugin { 'openstack_floatingip':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/openstack_floatingip',
-    config => [ 'user nova',
-      'env.OS_PROJECT_NAME admin',
-      "env.OS_USERNAME ${admin_username}",
-      "env.OS_PASSWORD ${admin_pass}",
-      "env.OS_AUTH_URL ${keystone_url}",
-      'env.OS_IDENTITY_API_VERSION 3',
-    ],
-  }
-
   munin::plugin { 'openstack_cpu':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/openstack_cpu',
@@ -114,6 +43,30 @@ class profile::monitoring::munin::plugin::nova {
   munin::plugin { 'openstack_hypervisors':
     ensure => present,
     source => 'puppet:///modules/profile/muninplugins/openstack_hypervisors',
+    config => [ 'user nova',
+      'env.OS_PROJECT_NAME admin',
+      "env.OS_USERNAME ${admin_username}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${keystone_url}",
+      'env.OS_IDENTITY_API_VERSION 3',
+    ],
+  }
+
+  munin::plugin { 'openstack_os_instances':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_os_instances',
+    config => [ 'user nova',
+      'env.OS_PROJECT_NAME admin',
+      "env.OS_USERNAME ${admin_username}",
+      "env.OS_PASSWORD ${admin_pass}",
+      "env.OS_AUTH_URL ${keystone_url}",
+      'env.OS_IDENTITY_API_VERSION 3',
+    ],
+  }
+
+  munin::plugin { 'openstack_server_status':
+    ensure => present,
+    source => 'puppet:///modules/profile/muninplugins/openstack_server_status',
     config => [ 'user nova',
       'env.OS_PROJECT_NAME admin',
       "env.OS_USERNAME ${admin_username}",
