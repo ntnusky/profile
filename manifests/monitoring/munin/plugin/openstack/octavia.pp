@@ -6,6 +6,7 @@ class profile::monitoring::munin::plugin::openstack::octavia {
   ]
 
   ::profile::monitoring::munin::plugin::openstack::generic { $plugins:
-    plugin_user => 'octavia',
+    keystone_user => 'admin',
+    plugin_user   => 'octavia',
   }
 }

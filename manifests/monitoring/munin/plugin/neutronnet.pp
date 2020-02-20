@@ -1,8 +1,7 @@
 # This class installs munin-plugins for our neutronnet nodes.
+#
+# The class is simply a redirect to the new class with a new name. This class
+# will be removed in the future!
 class profile::monitoring::munin::plugin::neutronnet {
-  munin::plugin { 'openstack_neutron_nstypes':
-    ensure => present,
-    source => 'puppet:///modules/profile/muninplugins/openstack_neutron_nstypes',
-    config => [ 'user neutron' ],
-  }
+  contain ::profile::monitoring::munin::plugin::openstack::neutronnet
 }
