@@ -7,6 +7,10 @@ class profile::sensu::checks::openstack::params {
     'default_value' => false,
   })
 
+  $octavia = lookup('ntnuopenstack::octavia::keystone::password', {
+    'default_value' => false,
+  })
+
   if($swift) {
     $swiftname = lookup('ntnuopenstack::swift::dns::name', {
       'default_value' => false,
