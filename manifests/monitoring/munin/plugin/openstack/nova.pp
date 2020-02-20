@@ -11,7 +11,6 @@ class profile::monitoring::munin::plugin::openstack::nova {
   ]
 
   ::profile::monitoring::munin::plugin::openstack::generic { $plugins:
-    keystone_user => 'admin',
-    plugin_user   => 'nova',
+    plugin_user => 'nova',
   }
 }

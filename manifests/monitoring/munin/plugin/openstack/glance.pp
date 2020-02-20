@@ -5,7 +5,6 @@ class profile::monitoring::munin::plugin::openstack::glance {
   ]
 
   ::profile::monitoring::munin::plugin::openstack::generic { $plugins:
-    keystone_user => 'admin',
-    plugin_user   => 'glance',
+    plugin_user => 'glance',
   }
 }
