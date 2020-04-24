@@ -50,6 +50,24 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
     subscribers => [ 'os-admin-api-checks' ],
   }
 
+  if ($::profile::sensu::checks::openstack::params::barbican) {
+    sensu::check { 'openstack-key-manager-admin-api':
+      command     => "${script} ${params} -e ${api}:9311/v1",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-admin-api-checks' ],
+    }
+  }
+
+  if ($::profile::sensu::checks::openstack::params::octavia) {
+    sensu::check { 'openstack-load-balancer-admin-api':
+      command     => "${script} ${params} -e ${api}:9876",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-admin-api-checks' ],
+    }
+  }
+
   if ($::profile::sensu::checks::openstack::params::swift) {
     $swift_api = $::profile::sensu::checks::openstack::params::swift_admin
 

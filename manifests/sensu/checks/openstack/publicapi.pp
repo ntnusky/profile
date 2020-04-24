@@ -44,6 +44,24 @@ class profile::sensu::checks::openstack::publicapi inherits profile::sensu::chec
     subscribers => [ 'os-public-api-checks' ],
   }
 
+  if ($::profile::sensu::checks::openstack::params::barbican) {
+    sensu::check { 'openstack-key-manager-public-api':
+      command     => "${script} ${params} -e ${api}:9311/v1",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-public-api-checks' ],
+    }
+  }
+
+  if ($::profile::sensu::checks::openstack::params::octavia) {
+    sensu::check { 'openstack-load-balancer-public-api':
+      command     => "${script} ${params} -e ${api}:9876",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-public-api-checks' ],
+    }
+  }
+
   if ($::profile::sensu::checks::openstack::params::swift) {
     $swift_api = $::profile::sensu::checks::openstack::params::swift_public
 

@@ -3,7 +3,13 @@ class profile::sensu::checks::openstack::params {
   $openstack_admin_api = lookup('ntnuopenstack::endpoint::admin')
   $openstack_public_api = lookup('ntnuopenstack::endpoint::public')
 
-  $swift  = lookup('ntnuopenstack::swift::keystone::password', {
+  $barbican = lookup('ntnuopenstack::barbican::keystone::password', {
+    'default_value' => false,
+  })
+  $octavia = lookup('ntnuopenstack::octavia::keystone::password', {
+    'default_value' => false,
+  })
+  $swift = lookup('ntnuopenstack::swift::keystone::password', {
     'default_value' => false,
   })
 
