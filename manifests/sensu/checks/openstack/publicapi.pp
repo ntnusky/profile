@@ -3,7 +3,7 @@
 class profile::sensu::checks::openstack::publicapi inherits profile::sensu::checks::openstack::params {
 
   $api = $::profile::sensu::checks::openstack::params::openstack_public_api
-  $script = '/etc/sensu/plugins/extra/check_openstack_apis.sh'
+  $script = '/etc/sensu/plugins/extra/check_openstack_api.sh'
   $auth = "${api}:5000/v3"
   $params = "-u :::os.apicheck.user::: -p :::os.apicheck.password::: -k ${auth}"
 
