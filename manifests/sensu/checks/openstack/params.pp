@@ -26,11 +26,11 @@ class profile::sensu::checks::openstack::params {
       } else {
         $proto='http'
       }
-      $swift_admin = "${proto}://${swiftname}/swift/v1"
+      $swift_admin = "${proto}://${swiftname}"
       $swift_public = $swift_admin
     } else {
-      $swift_admin =  "${openstack_admin_api}:7480/swift/v1"
-      $swift_public = "${openstack_public_api}:7480/swfit/v1"
+      $swift_admin =  "${openstack_admin_api}:7480"
+      $swift_public = "${openstack_public_api}:7480"
     }
   }
 }
