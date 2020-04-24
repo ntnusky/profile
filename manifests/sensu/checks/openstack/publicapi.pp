@@ -32,7 +32,7 @@ class profile::sensu::checks::openstack::publicapi inherits profile::sensu::chec
     subscribers => [ 'os-public-api-checks' ],
   }
   sensu::check { 'openstack-volumev3-public-api':
-    command     => "${script} ${params} -e ${api}:8776",
+    command     => "${script} ${params} -e ${api}:8776/v3/",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-public-api-checks' ],

@@ -32,7 +32,7 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
     subscribers => [ 'os-admin-api-checks' ],
   }
   sensu::check { 'openstack-volumev3-admin-api':
-    command     => "${script} ${params} -e ${api}:8776/v3",
+    command     => "${script} ${params} -e ${api}:8776/v3/",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'os-admin-api-checks' ],
