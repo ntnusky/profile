@@ -72,13 +72,4 @@ class profile::sensu::checks::openstack::publicapi inherits profile::sensu::chec
       subscribers => [ 'os-public-api-checks' ],
     }
   }
-
-  if ($::profile::sensu::checks::openstack::params::octavia) {
-    sensu::check { 'openstack-octavia-public-api':
-      command     => "check-http.rb -u ${api}:9876",
-      interval    => 300,
-      standalone  => false,
-      subscribers => [ 'os-public-api-checks' ],
-    }
-  }
 }
