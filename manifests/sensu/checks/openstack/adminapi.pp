@@ -78,13 +78,4 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
       subscribers => [ 'os-admin-api-checks' ],
     }
   }
-
-  if ($::profile::sensu::checks::openstack::params::octavia) {
-    sensu::check { 'openstack-octavia-admin-api':
-      command     => "check-http.rb -u ${api}:9876",
-      interval    => 300,
-      standalone  => false,
-      subscribers => [ 'os-admin-api-checks' ],
-    }
-  }
 }
