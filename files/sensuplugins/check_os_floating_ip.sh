@@ -36,9 +36,9 @@ if [ -z $critical ]; then
   critical=50
 fi
 
-stats=$(neutron net-ip-availability-list --network-name $subnet -f value -c total_ips -c used_ips)
-total=$(echo $stats | cut -d' ' -f1)
-used=$(echo $stats | cut -d' ' -f2)
+stats=$(openstack ip availability list -f value -c 'Network Name' -c 'Total IPs' -c 'Used IPs' | grep $subnet)
+total=$(echo $stats | cut -d' ' -f2)
+used=$(echo $stats | cut -d' ' -f3)
 
 if [ ! -z "${stats}" ]; then
   free=$(($total - $used))
