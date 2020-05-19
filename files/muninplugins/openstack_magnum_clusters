@@ -1,0 +1,35 @@
+#!/bin/bash
+
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Magnum clusters"
+  echo "graph_category openstack"
+  echo "graph_vlabel #"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of deployed Magnum clusters of each COE"
+
+  echo "kubernetes.label kubernetes"
+  echo "swarm.label swarm"
+  echo "swarm-mode.label swarm-mode"
+
+  exit 0
+fi
+
+declare -A coes
+
+coes[swarm]=0
+coes[swarm-mode]=0
+coes[kubernetes]=0
+
+
+for c in $(openstack coe cluster list -f value -c uuid); do
+  template=$(openstack coe cluster show $c -f value -c cluster_template_id)
+  coe=$(openstack coe cluster template show $template -f value -c coe)
+
+  ((coes[$coe]++))
+done
+
+echo "kubernetes.value ${coes['kubernetes']}"
+echo "swarm.value ${coes['swarm']}"
+echo "swarm-mode.value ${coes['swarm-mode']}"
