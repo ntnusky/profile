@@ -53,6 +53,15 @@ class profile::sensu::checks::openstack::publicapi inherits profile::sensu::chec
     }
   }
 
+  if ($::profile::sensu::checks::openstack::params::magnum) {
+    sensu::check { 'openstack-container-infra-public-api':
+      command     => "${script} ${params} -e ${api}:9511/v1",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-public-api-checks' ],
+    }
+  }
+
   if ($::profile::sensu::checks::openstack::params::octavia) {
     sensu::check { 'openstack-load-balancer-public-api':
       command     => "${script} ${params} -e ${api}:9876",

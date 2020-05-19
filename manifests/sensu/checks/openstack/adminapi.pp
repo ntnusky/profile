@@ -59,6 +59,15 @@ class profile::sensu::checks::openstack::adminapi inherits profile::sensu::check
     }
   }
 
+  if ($::profile::sensu::checks::openstack::params::magnum) {
+    sensu::check { 'openstack-container-infra-admin-api':
+      command     => "${script} ${params} -e ${api}:9511/v1",
+      interval    => 300,
+      standalone  => false,
+      subscribers => [ 'os-admin-api-checks' ],
+    }
+  }
+
   if ($::profile::sensu::checks::openstack::params::octavia) {
     sensu::check { 'openstack-load-balancer-admin-api':
       command     => "${script} ${params} -e ${api}:9876",
