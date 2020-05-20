@@ -2,7 +2,7 @@
 
 if [[ $1 == "config" ]]; then
   echo "graph_title Magnum nodes"
-  echo "grap_category openstack"
+  echo "graph_category openstack"
   echo "graph_vlabel Nodes"
   echo "graph_args -l 0"
   echo "graph_scale yes"
