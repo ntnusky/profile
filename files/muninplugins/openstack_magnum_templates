@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title Magnum template usage"
+  echo "graph_category openstack"
+  echo "graph_vlabel #"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info Amount of deployed clusters per public template"
+
+  while read -r name; do
+    label=${name// /_}
+    label=${label//./_}
+    echo "${label}.label ${name}"
+  done < <(openstack coe cluster template list -f value --fields Public | grep True | cut -d' ' -f2)
+  echo "other.label other"
+
+  exit 0
+fi
+
+declare -A publicTemplates
+declare -A counts
+
+while read -r line; do
+  uuid=$(echo "$line" | awk '{print $1}')
+  name=$(echo "$line" | awk '{for (i=2; i<NF; i++) printf $i " "; print $NF}')
+
+  publicTemplates[$uuid]="${name}"
+  counts[$uuid]=0
+done < <(openstack coe cluster template list -f value --fields Public | grep True | cut -d' ' -f1,2)
+
+counts['other']=0
+
+for c in $(openstack coe cluster list -f value -c uuid); do
+  template=$(openstack coe cluster show $c -f value -c cluster_template_id)
+  if [ -z ${publicTemplates[$template]} ]; then
+    ((counts['other']++))
+  else
+    ((counts[$template]++))
+  fi
+done
+
+for uuid in "${!counts[@]}"; do
+  if [ -z ${publicTemplates[$uuid]} ]; then
+    echo "other.value ${counts['other']}"
+  else
+    label=${publicTemplates[$uuid]// /_}
+    label=${label//./_}
+    echo "${label}.value ${counts[$uuid]}"
+  fi
+done
