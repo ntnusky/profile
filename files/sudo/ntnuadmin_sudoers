@@ -1,2 +1,0 @@
-# Common sudo group for all OS variants
-%ntnuadmin ALL=(ALL:ALL) ALL

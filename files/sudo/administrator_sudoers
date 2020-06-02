@@ -1,5 +1,8 @@
 Defaults:%administrator secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/puppetlabs/bin:/usr/ntnusky/tools"
 
+# Remove this when the specified config is coplete
+%administrator ALL=(ALL:ALL) ALL
+
 # Allow the administrator to halt and reboot the machine
 %administrator ALL=(root) /sbin/halt, /sbin/shutdown, /sbin/reboot
 
