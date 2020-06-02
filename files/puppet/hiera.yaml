@@ -11,7 +11,7 @@ hierarchy:
  - name: "Per-Node data"
    path: "nodes/%{trusted.certname}.yaml"
  - name: "OS-specific data"
-   glob: "${facts.os.name}/*.yaml"
+   glob: "%{facts.os.name}/*.yaml"
  - name: "Global data"
    glob: "*.yaml"
 
