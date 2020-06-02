@@ -15,6 +15,10 @@ class profile::baseconfig::users {
     ensure => present,
     gid    => 701,
   }
+  group { 'ntnuadmin':
+    ensure => present,
+    gid    => 702,
+  }
 
   # Modify root's attributes
   file { '/root/.ssh':

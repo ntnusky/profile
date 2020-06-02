@@ -16,4 +16,10 @@ class profile::baseconfig::sudo {
     priority => 11,
     source   => 'puppet:///modules/profile/sudo/administrator_sudoers',
   }
+
+  sudo::conf { 'ntnuadmin':
+    priority => 12,
+    source   => 'puppet:///modules/profile/sudo/ntnuadmin_sudoers',
+  }
+
 }
