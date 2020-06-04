@@ -7,6 +7,46 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     'default_value' => undef,
   })
 
+  # "Strikk og binders" DNS-conf for RHEL like systems
+  if ($dns_servers) {
+    $dns_server_array = split($dns_servers, ' ')
+    # Because three is enough...
+    if (size($dns_server_array) > 3) {
+      $real_dns_server_array = $dns_server_array[0,3]
+    }
+    else {
+      $real_dns_server_array = $dns_server_array
+    }
+  }
+  else {
+    $real_dns_server_array = undef
+  }
+
+  case $facts['operatingsystem'] {
+    'CentOS': {
+      if ($real_dns_server_array) {
+        $dns_config = {
+          dns1   => $real_dns_server_array[0],
+          dns2   => $real_dns_server_array[1],
+          dns3   => $real_dns_server_array[2],
+          domain => $dns_search,
+        }
+      }
+      else {
+        $dns_config = {}
+      }
+    }
+    'Ubuntu': {
+      $dns_config = {
+        dns_nameservers => $dns_servers,
+        dns_search      => $dns_search,
+      }
+    }
+    default: {
+      $dns_config = {}
+    }
+  }
+
   $nics.each | $nic, $params | {
     $v4gateway = $params['ipv4']['gateway']
     if ('ipv6' in $params) {
@@ -35,14 +75,13 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       }
 
       network::interface { "v4-${nic}":
-        interface       => $nic,
-        method          => $method,
-        ipaddress       => $v4address,
-        netmask         => $v4netmask,
-        gateway         => $gateway_real,
-        dns_nameservers => $dns_servers,
-        dns_search      => $dns_search,
-        mtu             => $mtu
+        interface => $nic,
+        method    => $method,
+        ipaddress => $v4address,
+        netmask   => $v4netmask,
+        gateway   => $gateway_real,
+        mtu       => $mtu,
+        *         => $dns_config,
       }
     }
     if($params['ipv6']) {
