@@ -124,7 +124,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         table     => concat($v4tables, $v6tables),
         family    => concat($v4families, $v6families),
       }
-      -> profile::baseconfig::networkrule { $nic:
+      -> network::rule { $nic:
         iprule => concat($v4rules, $v6rules),
         family => concat($v4rulef, $v6rulef),
       }
