@@ -33,7 +33,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     }
     $method = $params['ipv4']['method']
     if($method == 'dhcp') {
-      network::interface { "v4-${nic}":
+      network::interface { "${nic}":
         interface   => $nic,
         enable_dhcp => true,
       }
@@ -51,7 +51,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         $gateway_real = undef
       }
 
-      network::interface { "v4-${nic}":
+      network::interface { "${nic}":
         interface => $nic,
         method    => $method,
         ipaddress => $v4address,
