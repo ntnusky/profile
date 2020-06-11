@@ -33,9 +33,10 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     }
     $method = $params['ipv4']['method']
     if($method == 'dhcp') {
-      network::interface { "${nic}":
-        interface   => $nic,
-        enable_dhcp => true,
+      network::interface { $nic:
+        interface     => $nic,
+        enable_dhcp   => true,
+        nm_controlled => 'no',
       }
     }
     else {
@@ -51,14 +52,15 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         $gateway_real = undef
       }
 
-      network::interface { "${nic}":
-        interface => $nic,
-        method    => $method,
-        ipaddress => $v4address,
-        netmask   => $v4netmask,
-        gateway   => $gateway_real,
-        mtu       => $mtu,
-        *         => $dns_config,
+      network::interface { $nic:
+        interface     => $nic,
+        method        => $method,
+        ipaddress     => $v4address,
+        netmask       => $v4netmask,
+        gateway       => $gateway_real,
+        mtu           => $mtu,
+        nm_controlled => 'no',
+        *             => $dns_config,
       }
     }
     if($params['ipv6']) {
@@ -66,11 +68,12 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       $v6address = regsubst($params['ipv6']['address'], $pattern, '\1')
       $v6netmask = regsubst($params['ipv6']['address'], $pattern, '\2')
       network::interface { "v6-${nic}":
-        interface => $nic,
-        method    => $method,
-        family    => 'inet6',
-        ipaddress => $v6address,
-        netmask   => $v6netmask,
+        interface     => $nic,
+        method        => $method,
+        family        => 'inet6',
+        ipaddress     => $v6address,
+        netmask       => $v6netmask,
+        nm_controlled => 'no',
       }
     }
 
