@@ -78,7 +78,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     }
 
     $table_id = $params['tableid']
-    if($table_id) {
+    if($table_id and $nic in $::facts['networking']['interface']) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
         $net4id = $::facts['networking']['interfaces'][$nic]['network']
         $net4mask = $::facts['networking']['interfaces'][$nic]['netmask']
