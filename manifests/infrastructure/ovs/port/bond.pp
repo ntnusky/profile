@@ -1,4 +1,4 @@
-# Connects multiple ph  ysical interfaces to a openvswitch as a LACP bond. 
+# Connects multiple physical interfaces to a openvswitch as a LACP bond.
 define profile::infrastructure::ovs::port::bond (
   String                       $bridge,
   Variant[Array[String], Hash] $members,
