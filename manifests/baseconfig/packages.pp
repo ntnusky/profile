@@ -17,15 +17,32 @@ class profile::baseconfig::packages {
   # If it is an Dell machine, install dell's utilities
   if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
-    include ::hwraid
 
-    $megaclipackages = [ 'megacli', 'mpt-status' ]
-    package { $megaclipackages :
-      ensure  => 'present',
-      require => [
-        Class['::hwraid'],
-        Class['::srvadmin'],
-      ]
+    case $osfamily {
+      'Debian': {
+        include ::hwraid
+        $megaclipackages = [ 'megacli', 'mpt-status' ]
+        package { $megaclipackages :
+          ensure  => 'present',
+          require => [
+            Class['::hwraid'],
+            Class['::srvadmin'],
+          ]
+        }
+      }
+      'RedHat': {
+        package { 'mpt-status':
+          ensure   => 'present',
+          provider => 'rpm',
+          source   => 'http://rpm.iik.ntnu.no/mpt-status-1.2.0-4.el7.centos.x86_64.rpm',
+        }
+        package { 'megacli':
+          ensure   => 'present',
+          provider => 'rpm',
+          source   => 'http://rpm.iik.ntnu.no/MegaCli-8.07.14-1.noarch.rpm',
+        }
+      }
+      default: { fail("${::osfamiliy} not supported") }
     }
   }
 
