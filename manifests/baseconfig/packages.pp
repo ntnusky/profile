@@ -36,7 +36,7 @@ class profile::baseconfig::packages {
           provider => 'rpm',
           source   => 'http://rpm.iik.ntnu.no/mpt-status-1.2.0-4.el7.centos.x86_64.rpm',
         }
-        package { 'megacli':
+        package { 'MegaCli':
           ensure   => 'present',
           provider => 'rpm',
           source   => 'http://rpm.iik.ntnu.no/MegaCli-8.07.14-1.noarch.rpm',
