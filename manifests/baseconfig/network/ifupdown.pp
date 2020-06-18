@@ -7,6 +7,23 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     'default_value' => undef,
   })
 
+  # "Strikk og binders" DNS-conf for RHEL like systems
+  if ($dns_servers) {
+    $dns_server_array = split($dns_servers, ' ')
+  }
+  else {
+    $dns_server_array = []
+  }
+
+  $dns_config = {
+    dns1            => $dns_server_array[0],
+    dns2            => $dns_server_array[1],
+    dns3            => $dns_server_array[2],
+    domain          => $dns_search,
+    dns_nameservers => $dns_servers,
+    dns_search      => $dns_search,
+  }
+
   $nics.each | $nic, $params | {
     $v4gateway = $params['ipv4']['gateway']
     if ('ipv6' in $params) {
@@ -17,7 +34,9 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
     $method = $params['ipv4']['method']
     if($method == 'dhcp') {
       network::interface { $nic:
-        enable_dhcp => true,
+        interface     => $nic,
+        enable_dhcp   => true,
+        nm_controlled => 'no',
       }
     }
     else {
@@ -33,15 +52,15 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         $gateway_real = undef
       }
 
-      network::interface { "v4-${nic}":
-        interface       => $nic,
-        method          => $method,
-        ipaddress       => $v4address,
-        netmask         => $v4netmask,
-        gateway         => $gateway_real,
-        dns_nameservers => $dns_servers,
-        dns_search      => $dns_search,
-        mtu             => $mtu
+      network::interface { $nic:
+        interface     => $nic,
+        method        => $method,
+        ipaddress     => $v4address,
+        netmask       => $v4netmask,
+        gateway       => $gateway_real,
+        mtu           => $mtu,
+        nm_controlled => 'no',
+        *             => $dns_config,
       }
     }
     if($params['ipv6']) {
@@ -49,16 +68,17 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
       $v6address = regsubst($params['ipv6']['address'], $pattern, '\1')
       $v6netmask = regsubst($params['ipv6']['address'], $pattern, '\2')
       network::interface { "v6-${nic}":
-        interface => $nic,
-        method    => $method,
-        family    => 'inet6',
-        ipaddress => $v6address,
-        netmask   => $v6netmask,
+        interface     => $nic,
+        method        => $method,
+        family        => 'inet6',
+        ipaddress     => $v6address,
+        netmask       => $v6netmask,
+        nm_controlled => 'no',
       }
     }
 
     $table_id = $params['tableid']
-    if($table_id) {
+    if($table_id and $nic in $::facts['networking']['interface']) {
       if($::facts['networking']['interfaces'][$nic]['ip']) {
         $net4id = $::facts['networking']['interfaces'][$nic]['network']
         $net4mask = $::facts['networking']['interfaces'][$nic]['netmask']
@@ -107,7 +127,7 @@ class profile::baseconfig::network::ifupdown (Hash $nics) {
         table     => concat($v4tables, $v6tables),
         family    => concat($v4families, $v6families),
       }
-      -> profile::baseconfig::networkrule { $nic:
+      -> network::rule { $nic:
         iprule => concat($v4rules, $v6rules),
         family => concat($v4rulef, $v6rulef),
       }

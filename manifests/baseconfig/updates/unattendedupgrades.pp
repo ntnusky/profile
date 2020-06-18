@@ -7,7 +7,7 @@
 #  unattended_upgrades::upgrade: 7
 #
 
-class profile::baseconfig::unattendedupgrades {
+class profile::baseconfig::updates::unattendedupgrades {
   class { '::unattended_upgrades':
     minimal_steps => false,
   }

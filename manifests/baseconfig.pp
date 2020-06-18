@@ -9,7 +9,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::puppet
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
-  include ::profile::baseconfig::unattendedupgrades
+  include ::profile::baseconfig::updates
 
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
