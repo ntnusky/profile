@@ -21,7 +21,7 @@ class profile::ceph::base {
   $bluestore_cache_size = hiera('profile::ceph::bluestore::cache::size', undef)
 
   # Install the ceph repos first
-  require ::ceph::repo
+  require ::profile::ceph::repo
 
   if($cluster_networks) {
     $cluster_networks_real = join($cluster_networks, ', ')

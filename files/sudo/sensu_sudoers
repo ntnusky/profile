@@ -4,5 +4,5 @@ sensu ALL=(ALL) NOPASSWD: /usr/sbin/smartctl
 sensu ALL=(ALL) NOPASSWD: /usr/sbin/ssacli
 sensu ALL=(ALL) NOPASSWD: /usr/sbin/mpt-status
 sensu ALL=(ALL) NOPASSWD: /usr/sbin/megacli
-sensu ALL=(ALL) NOPASSWD: /usr/sbin/mpt-status
+sensu ALL=(ALL) NOPASSWD: /opt/MegaRAID/MegaCli/MegaCli64
 sensu ALL=(ALL) NOPASSWD: /sbin/dmsetup

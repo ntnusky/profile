@@ -1,4 +1,4 @@
-# Connects multiple physical interfaces to a openvswitch as a LACP bond. 
+# Connects multiple physical interfaces to a openvswitch as a LACP bond.
 define profile::infrastructure::ovs::port::bond (
   String                       $bridge,
   Variant[Array[String], Hash] $members,
@@ -64,7 +64,20 @@ define profile::infrastructure::ovs::port::bond (
         method    => 'manual',
         mtu       => $mtu,
       }
+    } elsif($distro == '7' or $distro == '8') {
+      # CentOS
+      $mac = $::facts['networking']['interfaces'][$ifname]['mac']
+      ::network::interface { $ifname:
+        interface  => $ifname,
+        hwaddr     => $mac,
+        type       => 'OVSPort',
+        devicetype => 'ovs',
+        ovs_bridge => $bridge,
+        onboot     => 'yes',
+        mtu        => $mtu,
+      }
     }
+
 
     # Add monitoring for the physical port
     munin::plugin { "if_${ifname}":
