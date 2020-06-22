@@ -6,6 +6,9 @@ class profile::sensu::checks::openstack::params {
   $barbican = lookup('ntnuopenstack::barbican::keystone::password', {
     'default_value' => false,
   })
+  $magnum = lookup('ntnuopenstack::magnum::keystone::password', {
+    'default_value' => false,
+  })
   $octavia = lookup('ntnuopenstack::octavia::keystone::password', {
     'default_value' => false,
   })

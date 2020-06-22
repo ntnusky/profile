@@ -6,6 +6,9 @@ define profile::monitoring::munin::plugin::openstack::generic (
   $plugin_file = $name,
 ) {
   include ::ntnuopenstack::clients
+  if ($::osfamily == 'RedHat') {
+    include ::profile::monitoring::munin::plugin::openstack::selinux
+  }
 
   $keystone_location = lookup('ntnuopenstack::keystone::endpoint::internal', {
     'value_type' => Stdlib::Httpurl,
