@@ -7,6 +7,7 @@ require {
 	type munin_plugin_state_t;
 	type munin_t;
   type hostname_exec_t;
+  type osapi_compute_port_t;
 	class tcp_socket name_connect;
 	class dir { add_name search write };
 	class file { execute execute_no_trans getattr open read };
