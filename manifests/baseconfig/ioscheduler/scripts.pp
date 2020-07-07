@@ -6,7 +6,7 @@ class profile::baseconfig::ioscheduler::scripts {
   ]
 
   $scripts.each | $script | {
-    file { '/usr/local/bin/${script}':
+    file { "/usr/local/bin/${script}":
       ensure => file,
       source => 'puppet:///modules/profile/utilities/${script}',
       mode   => '0555',
