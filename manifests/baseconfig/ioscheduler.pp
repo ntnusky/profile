@@ -17,7 +17,7 @@ class profile::baseconfig::ioscheduler {
   $hdds.each | $hdd | {
     exec { "set ${hdd} to HDD-scheduler":
       command => "echo deadline > /sys/block/${hdd}/queue/scheduler",
-      unless  => "verify-io-scheduler.sh ${ssd} deadline",
+      unless  => "verify-io-scheduler.sh ${hdd} deadline",
       path    => '/usr/local/bin:/bin',
     }
   }
