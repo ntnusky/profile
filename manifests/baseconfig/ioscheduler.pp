@@ -7,7 +7,7 @@ class profile::baseconfig::ioscheduler {
       Enum['noop', 'deadline', 'cfq'], 'first', 'noop')
 
   $hdds = lookup('profile::disk::hdds', Array[String], 'unique', [])
-  $hddqueue = lookup('profile::disk::ssd::queue', Integer, 'first', 512) 
+  $hddqueue = lookup('profile::disk::hdd::queue', Integer, 'first', 512) 
   $hddscheduler = lookup('profile::disk::hdd::scheduler', 
       Enum['noop', 'deadline', 'cfq'], 'first', 'cfq')
 
