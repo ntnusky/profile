@@ -11,9 +11,9 @@ class profile::baseconfig::ioscheduler {
   $hddscheduler = lookup('profile::disk::hdd::scheduler', 
       Enum['noop', 'deadline', 'cfq'], 'first', 'cfq')
 
-  require ::profile::baseconfig::ioscheduler::scripts
-
   $ssds.each | $ssd | {
+    require ::profile::baseconfig::ioscheduler::scripts
+
     exec { "set ${ssd} to io-scheduler ${ssdscheduler}":
       command => "echo ${ssdscheduler} > /sys/block/${ssd}/queue/scheduler",
       unless  => "verify-io-scheduler.sh ${ssd} ${ssdscheduler}",
@@ -27,6 +27,8 @@ class profile::baseconfig::ioscheduler {
   }
 
   $hdds.each | $hdd | {
+    require ::profile::baseconfig::ioscheduler::scripts
+
     exec { "set ${hdd} to io-scheduler ${hddscheduler}":
       command => "echo ${hddscheduler} > /sys/block/${hdd}/queue/scheduler",
       unless  => "verify-io-scheduler.sh ${hdd} ${hddscheduler}",
