@@ -1,21 +1,38 @@
-# Creates user 'larserik'
+# Creates user based on lots of keys in hiera. 
 define profile::baseconfig::createuser {
-  $uid = hiera("profile::user::${name}::uid")
-  $ensure = hiera("profile::user::${name}::ensure", 'present')
-  $groups = hiera("profile::user::${name}::groups", [])
-  $hash = hiera("profile::user::${name}::hash", '*')
-  $keys = hiera("profile::user::${name}::keys", false)
+  $uid = lookup("profile::user::${name}::uid", Integer)
+  $ensure = lookup("profile::user::${name}::ensure", {
+    'value_type'    => String,
+    'default_value' => 'present',
+  })
+  $groups = lookup("profile::user::${name}::groups", {
+    'value_type'    => Array[String],
+    'default_value' => [],
+  })
+  $hash = lookup("profile::user::${name}::hash", {
+    'value_type'    => String,
+    'default_value' => '*',
+  })
+  $keys = lookup("profile::user::${name}::keys", {
+    'value_type'    => Variant[Bool, Array[String]],
+    'default_value' => false,
+  })
+  $purge_keys = lookup("profile::user::${name}::purge::keys", {
+    'value_type'    => Boolean,
+    'default_value' => true,
+  })
 
   user { $name:
-    ensure     => $ensure,
-    gid        => 'users',
-    require    => Group['users'],
-    groups     => $groups,
-    uid        => $uid,
-    shell      => '/bin/bash',
-    home       => "/home/${name}",
-    managehome => true,
-    password   => $hash,
+    ensure         => $ensure,
+    gid            => 'users',
+    groups         => $groups,
+    home           => "/home/${name}",
+    managehome     => true,
+    password       => $hash,
+    purge_ssh_keys => $purge_keys,
+    require        => Group['users'],
+    shell          => '/bin/bash',
+    uid            => $uid,
   }
 
   if ( $ensure == 'present' ) {
