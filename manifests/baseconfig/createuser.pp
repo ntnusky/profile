@@ -14,7 +14,7 @@ define profile::baseconfig::createuser {
     'default_value' => '*',
   })
   $keys = lookup("profile::user::${name}::keys", {
-    'value_type'    => Variant[Bool, Array[String]],
+    'value_type'    => Variant[Boolean, Array[String]],
     'default_value' => false,
   })
   $purge_keys = lookup("profile::user::${name}::purge::keys", {
