@@ -3,6 +3,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::firewall
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
+  include ::profile::baseconfig::logging
   include ::profile::baseconfig::mounts
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
