@@ -24,8 +24,9 @@ class profile::baseconfig {
     include ::profile::sensu::client
   }
 
-  # If the machine is a physical machine, install ipmitool
+  # If the machine is a physical machine, install ipmitool and hw-mgmt-tools
   if($facts['is_virtual'] == false) {
     include ::profile::utilities::ipmitool
+    include ::profile::utilities::machinetools
   }
 }
