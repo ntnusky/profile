@@ -12,19 +12,20 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::updates
 
+  # If munin should be installed, install and configure the munin-node
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
     include ::profile::monitoring::munin::node
   }
 
+  # If sensu should be installed, install and configure the sensu-client agent
   $installsensu = hiera('profile::sensu::install', true)
   if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
     include ::profile::sensu::client
   }
 
-  # The ping vg hack is not needed anymore, as we now use multiple routing
-  # tables.
-  cron { 'gwrefresh':
-    ensure => absent,
+  # If the machine is a physical machine, install ipmitool
+  if($facts['is_virtual'] == false) {
+    include ::profile::utilities::ipmitool
   }
 }
