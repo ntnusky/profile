@@ -1,4 +1,4 @@
-# This class installs varios basic tools.
+# This class installs varios base-packages.
 class profile::baseconfig::packages {
   $basepackages = lookup('profile::baseconfig::packages',{
     'value_type' => Array[String],
@@ -20,20 +20,5 @@ class profile::baseconfig::packages {
   # Install pip3 so that we can use it as an package-provider
   package { 'python3-pip':
     ensure => 'present',
-  }
-
-  # Install our homemade administration scripts
-  file { '/usr/ntnusky':
-    ensure => directory,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0770',
-  }
-  vcsrepo { '/usr/ntnusky/tools':
-    ensure   => latest,
-    provider => git,
-    source   => 'https://github.com/ntnusky/tools.git',
-    revision => master,
-    require  => File['/usr/ntnusky'],
   }
 }

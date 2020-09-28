@@ -12,6 +12,8 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::updates
 
+  include ::profile::utilities::ntnuskytools
+
   # If munin should be installed, install and configure the munin-node
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
