@@ -68,13 +68,14 @@ define profile::infrastructure::ovs::port::bond (
       # CentOS
       $mac = $::facts['networking']['interfaces'][$ifname]['mac']
       ::network::interface { $ifname:
-        interface  => $ifname,
-        hwaddr     => $mac,
-        type       => 'OVSPort',
-        devicetype => 'ovs',
-        ovs_bridge => $bridge,
-        onboot     => 'yes',
-        mtu        => $mtu,
+        interface     => $ifname,
+        hwaddr        => $mac,
+        type          => 'OVSPort',
+        devicetype    => 'ovs',
+        ovs_bridge    => $bridge,
+        onboot        => 'yes',
+        mtu           => $mtu,
+        nm_controlled => 'no',
       }
     }
 
