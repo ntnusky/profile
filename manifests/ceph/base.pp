@@ -20,6 +20,8 @@ class profile::ceph::base {
   $journal_size =  hiera('profile::ceph::journal::size', undef)
   $bluestore_cache_size = hiera('profile::ceph::bluestore::cache::size', undef)
 
+  # Configure logging
+  include ::profile::ceph::logging
   # Install the ceph repos first
   require ::profile::ceph::repo
 
