@@ -8,21 +8,24 @@ if [[ $1 == "config" ]]; then
   echo "graph_scale no"
   echo "graph_info Amount of IPs in use from external networks"
   for net in $EXTERNALS; do
-    echo ${net/\-/}.label $net
-    echo ${net/\-/}.info IPs utilized from $net
+    echo "${net/\-/}.label $net"
+    echo "${net/\-/}.info IPs utilized from $net"
   done
   exit 0
 fi
 
 for net in $EXTERNALS; do
-  value=$(openstack ip availability show $net -f value -c subnet_ip_availability | grep "ip_version='4'")
-
-  [[ $value =~ total_ips=\'([0-9]+)\' ]]
-  total=${BASH_REMATCH[1]}
-
-  [[ $value =~ used_ips=\'([0-9]+)\' ]]
-  used=${BASH_REMATCH[1]}
+  used=0
+  total=0
+  
+  for subnet in $(openstack ip availability show "$net" -f value -c subnet_ip_availability | tr "'" '"' | jq '.[]' -c); do
+      version=$(echo "$subnet" | jq '.["ip_version"]')
+      if [[ $version -eq 4 ]]; then
+        ((total+=$(echo "$subnet" | jq '.["total_ips"]')))
+        ((used+=$(echo "$subnet" | jq '.["used_ips"]')))
+      fi
+  done
 
   value=$(echo "scale=2;${used}*100/${total}" | bc)
-  echo ${net/\-/}.value $value
+  echo "${net/\-/}.value $value"
 done
