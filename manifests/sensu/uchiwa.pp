@@ -52,7 +52,7 @@ class profile::sensu::uchiwa {
   include ::apache::mod::proxy
   include ::apache::mod::proxy_html
 
-  apache::vhost { "${uchiwa_url} http":
+  apache::vhost { "${uchiwa_url}-http":
     servername          => $uchiwa_url,
     serveraliases       => [$uchiwa_url],
     port                => 80,

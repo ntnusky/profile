@@ -20,7 +20,7 @@ define profile::monitoring::munin::server::vhost {
     $ip = [$management_ipv4]
   }
 
-  apache::vhost { "${name} http":
+  apache::vhost { "${name}-http":
     servername        => $name,
     serveraliases     => [$name],
     port              => '80',
