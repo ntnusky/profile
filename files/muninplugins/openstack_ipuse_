@@ -12,9 +12,9 @@ if [[ $1 == "config" ]]; then
   echo "graph_info Amount of allocated and used IP's for the network $net"
   echo "total.label Available"
   echo "total.info Number of available IPv4 addresses"
-  echo "used.label Used"
+  echo "used.label Used IPv4"
   echo "used.info Number of used IPv4 addresses"
-  echo "used6.label Used"
+  echo "used6.label Used IPv6"
   echo "used6.info Number of used IPv6 addresses"
   exit 0
 fi
