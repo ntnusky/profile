@@ -23,7 +23,7 @@ used4=0
 used6=0
 total=0
 
-for subnet in $(openstack ip availability show ntnu-global -f value -c subnet_ip_availability | tr "'" '"' | jq '.[]' -c); do
+for subnet in $(openstack ip availability show "$net" -f value -c subnet_ip_availability | tr "'" '"' | jq '.[]' -c); do
     version=$(echo "$subnet" | jq '.["ip_version"]')
     if [[ $version -eq 4 ]]; then
       ((total+=$(echo "$subnet" | jq '.["total_ips"]')))
