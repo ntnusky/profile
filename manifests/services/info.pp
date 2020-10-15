@@ -15,7 +15,7 @@ class profile::services::info {
   require ::profile::services::apache
   contain ::profile::services::info::maillist
 
-  apache::vhost { "${vhost} http":
+  apache::vhost { "${vhost}-http":
     servername        => $vhost,
     port              => '80',
     ip                => concat([], $management_ipv4, $management_ipv6),

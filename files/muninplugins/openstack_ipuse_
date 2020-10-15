@@ -11,15 +11,28 @@ if [[ $1 == "config" ]]; then
   echo "graph_scale yes"
   echo "graph_info Amount of allocated and used IP's for the network $net"
   echo "total.label Available"
-  echo "total.info Number of available IP's"
-  echo "used.label Used"
-  echo "used.info Number of used IP's"
+  echo "total.info Number of available IPv4 addresses"
+  echo "used.label Used IPv4"
+  echo "used.info Number of used IPv4 addresses"
+  echo "used6.label Used IPv6"
+  echo "used6.info Number of used IPv6 addresses"
   exit 0
 fi
 
-value=$(openstack ip availability show $net -f value -c subnet_ip_availability | grep "ip_version='4'")
-[[ $value =~ total_ips=\'([0-9]+)\' ]]
-echo "total.value ${BASH_REMATCH[1]}"
+used4=0
+used6=0
+total=0
 
-[[ $value =~ used_ips=\'([0-9]+)\' ]]
-echo "used.value ${BASH_REMATCH[1]}"
+for subnet in $(openstack ip availability show ntnu-global -f value -c subnet_ip_availability | tr "'" '"' | jq '.[]' -c); do
+    version=$(echo "$subnet" | jq '.["ip_version"]')
+    if [[ $version -eq 4 ]]; then
+      ((total+=$(echo "$subnet" | jq '.["total_ips"]')))
+      ((used4+=$(echo "$subnet" | jq '.["used_ips"]')))
+    elif [[ $version -eq 6 ]]; then
+      ((used6+=$(echo "$subnet" | jq '.["used_ips"]')))
+    fi
+done
+
+echo "used.value $used4" 
+echo "used6.value $used6" 
+echo "total.value $total" 
