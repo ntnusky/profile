@@ -4,6 +4,7 @@ class profile::monitoring::munin::server {
   $munin_urls = hiera('profile::munin::urls')
 
   contain ::profile::monitoring::munin::haproxy::balancermember
+  include ::profile::monitoring::munin::plugin::snmp
 
   class{ '::munin::master':
     extra_config => [
