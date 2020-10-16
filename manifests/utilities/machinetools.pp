@@ -27,10 +27,8 @@ class profile::utilities::machinetools {
         }
       }
       'RedHat': {
-        package { 'mpt-status':
+        package { 'ncurses-compat-libs':
           ensure   => 'present',
-          provider => 'rpm',
-          source   => 'http://rpm.iik.ntnu.no/mpt-status-1.2.0-4.el7.centos.x86_64.rpm',
         }
         package { 'MegaCli':
           ensure   => 'present',
