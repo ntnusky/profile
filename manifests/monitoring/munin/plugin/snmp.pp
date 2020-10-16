@@ -22,16 +22,20 @@ class profile::monitoring::munin::plugin::snmp {
       }
     }
 
-    $data['interfaces'].each | $id, $data | {
+    $data['interfaces'].each | $id, $ifdata | {
       munin::plugin { "snmp_${host}_if_${id}":
         ensure => link,
         target => '/usr/share/munin/plugins/snmp__if_',
         config => ["env.community ${community}"],
       }
-      munin::plugin { "snmp_${host}_if_err_${id}":
-        ensure => link,
-        target => '/usr/share/munin/plugins/snmp__if_err_',
-        config => ["env.community ${community}"],
+
+      $errors = pick($ifdata['errors'], false)
+      if($errors) {
+        munin::plugin { "snmp_${host}_if_err_${id}":
+          ensure => link,
+          target => '/usr/share/munin/plugins/snmp__if_err_',
+          config => ["env.community ${community}"],
+        }
       }
     }
   }
