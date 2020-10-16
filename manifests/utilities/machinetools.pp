@@ -14,7 +14,7 @@ class profile::utilities::machinetools {
   if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
 
-    case $osfamily {
+    case $::osfamily {
       'Debian': {
         include ::hwraid
         $megaclipackages = [ 'megacli', 'mpt-status' ]
