@@ -1,9 +1,9 @@
-#! /usr/bin/python
+#!/usr/bin/python3
 import sys
 import yaml
 
 statusfile = open('/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml', 'r')
-y = yaml.load(statusfile)
+y = yaml.safe_load(statusfile)
 
 if('config' in sys.argv):
   print("graph_title Puppet runtime")
