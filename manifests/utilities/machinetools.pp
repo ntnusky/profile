@@ -14,7 +14,7 @@ class profile::utilities::machinetools {
   if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
 
-    case $osfamily {
+    case $::osfamily {
       'Debian': {
         include ::hwraid
         $megaclipackages = [ 'megacli', 'mpt-status' ]
@@ -27,10 +27,8 @@ class profile::utilities::machinetools {
         }
       }
       'RedHat': {
-        package { 'mpt-status':
+        package { 'ncurses-compat-libs':
           ensure   => 'present',
-          provider => 'rpm',
-          source   => 'http://rpm.iik.ntnu.no/mpt-status-1.2.0-4.el7.centos.x86_64.rpm',
         }
         package { 'MegaCli':
           ensure   => 'present',
