@@ -47,10 +47,16 @@ class profile::sensu::checks::base {
     subscribers => [ 'all' ],
   }
 
-  sensu::check { 'ntp-offset':
+  sensu::check { 'ntp-offset-ntpd':
     command     => 'check-ntp.rb -w :::ntp.warn|10::: -c :::ntp.crit|100:::',
     interval    => 300,
     standalone  => false,
-    subscribers => [ 'all' ],
+    subscribers => [ 'ntpd' ],
+  }
+  sensu::check { 'ntp-offset-chrony':
+    command     => 'check-chrony.rb --warn-offset :::ntp.warn|10::: --crit-offset :::ntp.crit|100:::',
+    interval    => 300,
+    standalone  => false,
+    subscribers => [ 'chrony' ],
   }
 }
