@@ -14,7 +14,7 @@ class profile::sensu::checks::openstack::failedbuilds {
   }
 
   $pymysql_pkg = $::osfamily ? {
-    'RedHat' => 'python36-PyMySQL',
+    'RedHat' => 'python3-PyMySQL',
     'Debian' => 'python3-pymysql',
     default  => '',
   }

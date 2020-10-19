@@ -5,7 +5,7 @@ class profile::monitoring::munin::plugin::puppet {
     'RedHat': {
       $python_yaml = 'python3-pyyaml'
     }
-    'Ubuntu': {
+    'Debian': {
       $python_yaml = 'python3-yaml'
     }
     default: {
