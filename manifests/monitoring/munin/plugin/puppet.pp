@@ -1,7 +1,20 @@
 # This class installs the munin plugins which monitors puppet statistics 
 class profile::monitoring::munin::plugin::puppet {
+
+  case $::osfamily {
+    'RedHat': {
+      $python_yaml = 'python3-pyyaml'
+    }
+    'Debian': {
+      $python_yaml = 'python3-yaml'
+    }
+    default: {
+      fail("Unsupported os family: ${::osfamily}")
+    }
+  }
+
   ensure_packages ( [
-      'python-yaml',
+      $python_yaml,
     ], {
       'ensure' => 'present',
     }
