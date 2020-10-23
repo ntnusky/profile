@@ -2,10 +2,10 @@
       String $command
 | -%>
 [Unit]
-Description=$description
+Description=<%= $description %>
 
 [Service]
-ExecStart=$command
+ExecStart=<%= $command %>
 
 [Install]
 WantedBy=multi-user.target
