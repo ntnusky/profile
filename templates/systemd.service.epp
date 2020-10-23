@@ -1,0 +1,11 @@
+<%- | String $description,
+      String $command
+| -%>
+[Unit]
+Description=$description
+
+[Service]
+ExecStart=$command
+
+[Install]
+WantedBy=multi-user.target

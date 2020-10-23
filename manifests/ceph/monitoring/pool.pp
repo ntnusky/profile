@@ -23,7 +23,7 @@ define profile::ceph::monitoring::pool {
     mode    => '0644',
     owner   => root,
     group   => root,
-    notify  => Exec['ceph-systemd-reload'],
+    notify  => Exec['systemd-reload'],
     content => epp('profile/cephcollector.service.epp', {
       'pool_name' => $name,
     })
@@ -37,7 +37,7 @@ define profile::ceph::monitoring::pool {
     require  => [
       File["/lib/systemd/system/cephcollector.${name}.service"],
       File['/usr/local/sbin/ceph-collector.sh'],
-      Exec['ceph-systemd-reload'],
+      Exec['systemd-reload'],
     ],
   }
 
