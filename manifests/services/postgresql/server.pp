@@ -51,25 +51,12 @@ class profile::services::postgresql::server {
 
   class { '::postgresql::server::contrib': }
 
-
-  postgresql::server::config_entry { 'wal_level':
-    value => 'hot_standby',
-  }
-
-  postgresql::server::config_entry { 'max_wal_senders':
-    value => '3',
-  }
-
-  postgresql::server::config_entry { 'checkpoint_segments':
-    ensure => 'absent',
-  }
-
-  postgresql::server::config_entry { 'max_connections':
-    value => '250',
-  }
-
-  postgresql::server::config_entry { 'wal_keep_segments':
-    value => '8',
+  postgresql::server::config_entry {
+    'checkpoint_segments': ensure => 'absent';
+    'max_connections':     value  => '250';
+    'max_wal_senders':     value  => '3';
+    'wal_keep_segments':   value  => '8';
+    'wal_level':           value  => 'hot_standby';
   }
 
   @@postgresql::server::pg_hba_rule { "allow ${management_ip} for replication":
