@@ -16,10 +16,10 @@ class profile::services::puppet::server::install {
     remote => $r10krepo,
   }
 
+  # As this deployment should be migrated to a daemon-based approach, the old
+  # cronjob should be removed.
+  # TODO: At a later release, this block can be removed
   cron { 'Dashboard-client puppet-environments':
-    command     => '/opt/shiftleader/clients/puppetEnvReport.sh',
-    environment => "MAILTO=${adminmail}",
-    minute      => '*',
-    user        => 'root',
+    ensure => 'absent'
   }
 }

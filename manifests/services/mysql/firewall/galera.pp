@@ -1,9 +1,5 @@
-#Configures the firewall for the mysql servers
-class profile::services::mysql::firewall::server {
-  ::profile::baseconfig::firewall::service::infra { 'MYSQL-SERVER':
-    protocol => 'tcp',
-    port     => 3306,
-  }
+#Configures the firewall for the galera servers
+class profile::services::mysql::firewall::galera {
   ::profile::baseconfig::firewall::service::infra { 'MYSQL TCP Replication':
     protocol => 'tcp',
     port     => [4567, 4568, 4444, 9000],

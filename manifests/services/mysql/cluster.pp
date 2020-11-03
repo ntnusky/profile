@@ -21,6 +21,14 @@ class profile::services::mysql::cluster {
     'default_value' => $mip,
   })
 
+  include ::profile::services::mysql::backup
+  include ::profile::services::mysql::firewall::mysql
+  include ::profile::services::mysql::firewall::galera
+  include ::profile::services::mysql::haproxy::backend
+  include ::profile::services::mysql::monitoring
+  include ::profile::services::mysql::users
+  include ::profile::services::mysql::sudo
+
   class { '::galera' :
     galera_servers      => $servers,
     galera_master       => $master,
@@ -44,7 +52,13 @@ class profile::services::mysql::cluster {
       }
     },
     require             => [
-      Class['::profile::services::mysql::firewall::server'],
+      Class['::profile::services::mysql::firewall::mysql'],
+      Class['::profile::services::mysql::firewall::galera'],
     ],
+  }
+
+  mysql_user { "root@${master}":
+    ensure  => 'absent',
+    require => Class['::galera'],
   }
 }
