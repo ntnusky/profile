@@ -73,7 +73,7 @@ class profile::services::puppet::server::config {
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
     setting => 'reporturl',
-    value   => "http://${dash_url}/puppet/report/",
+    value   => "http://${dash_url}/web/puppet/report/",
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
