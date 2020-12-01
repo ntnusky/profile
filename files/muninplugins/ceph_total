@@ -14,7 +14,7 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-data=$(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq -c '.["osd_sum"]["statfs"]')
+data=$(ceph report 2> /dev/null  | jq -c '.["osd_sum"]["statfs"]')
 
 size=$(echo "$data" | jq '.["total"]')
 free=$(echo "$data" | jq '.["available"]')

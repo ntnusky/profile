@@ -21,7 +21,7 @@ osds=0
 ups=0
 ins=0
 
-for osd in $(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq '.["osdmap"]["osds"][]' -c); do
+for osd in $(ceph report 2> /dev/null  | jq '.["osdmap"]["osds"][]' -c); do
   ((osds += 1))
   if [[ $(echo "$osd" | jq -r '.["up"]') -eq '1' ]]; then
     ((ups += 1))

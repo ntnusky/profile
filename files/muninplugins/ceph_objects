@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-pools=$(ceph tell "mon.$(hostname)" report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
+pools=$(ceph report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
 
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH Objects"
@@ -27,7 +27,7 @@ for pool in $pools; do
   poolids[$(echo "$pool" | jq -r '.["pool"]')]=$(echo "$pool" | jq -r '.["pool_name"]')
 done
 
-for data in $(ceph tell "mon.$(hostname)" report 2> /dev/null | jq '.["pool_stats"][]' -c); do
+for data in $(ceph report 2> /dev/null | jq '.["pool_stats"][]' -c); do
   name=${poolids[$(echo "$data" | jq -r '.["poolid"]')]}
   name=${name//./_}
   name=${name//-/_}
