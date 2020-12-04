@@ -1,0 +1,34 @@
+#!/usr/bin/python3
+import sys
+from munin_vgpu import getRunInfo
+
+card, gpus, vgpus = getRunInfo()
+
+if('config' in sys.argv):
+  print("graph_title VGU Memory-BW-utilization")
+  print("graph_category vgpu")
+  print("graph_vlabel Percent")
+  print("graph_args -l 0")
+  print("graph_scale yes")
+  print("graph_info GPU-to-memory-utilization per VGPU")
+
+  for i in range(0, vgpus):
+    try:
+      instance = card['VGPUs'][gpus[i]]['VM UUID']
+    except:
+      instance = 'Unknown'
+
+    print("vgpu%d.label VGPU %d" % (i, i))
+    print("vgpu%d.info GPU-to-memory utilization for VGPU %d. Currently instance %s" % (i, i, instance))
+  sys.exit(0)
+
+values = []
+for gpuid in gpus:
+  vgpu = card['VGPUs'][gpuid]
+  values.append(int(vgpu['Utilization']['Memory'].rstrip('% ')))
+
+for i in range(0, vgpus):
+  try:
+    print("vgpu%d.value %s" % (i, values[i]))
+  except:
+    print("vgpu%d.value U" % i)

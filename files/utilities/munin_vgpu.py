@@ -1,0 +1,82 @@
+#!/usr/bin/python3
+import os
+import re
+import subprocess
+import sys
+
+def getParsedData():
+  process = subprocess.Popen(['nvidia-smi', 'vgpu', '-q'],
+                       stdout=subprocess.PIPE, 
+                       stderr=subprocess.PIPE)
+  stdout, stderr = process.communicate()
+  
+  data = {}
+  current = None
+  stack = []
+  indent = 0
+  
+  for l in stdout.splitlines():
+    line = l.decode("utf-8")
+  
+    if(len(line.lstrip().rstrip()) == 0):
+      continue
+  
+    # If the line signals that we start a new GPU, reset data-structures
+    gpuline = re.match(r"^GPU (.*)", line)
+    if(gpuline):
+      data[gpuline.group(1)] = {}
+      current = data[gpuline.group(1)]
+      indent = 4
+      continue
+  
+    # If the current line is indented less than the last one; go up a level
+    while(not line.startswith(" " * indent)):
+      current = stack.pop() 
+      indent -= 4
+  
+    try:
+      # Split key/value and remove whitespace
+      key, value = line.split(':')
+      key = key.rstrip().lstrip()
+      value = value.rstrip().lstrip()
+      if(len(value) == 0):
+        raise ValueError
+      if(key == "vGPU ID"):
+        if("VGPUs" not in current):
+          current["VGPUs"] = {}
+        current["VGPUs"][value] = {}
+        stack.append(current)
+        current = current["VGPUs"][value]
+        indent = indent + 4
+      else:
+        current[key] = value
+    except ValueError:
+      key = line.rstrip(': ').lstrip()
+      current[key] = {}
+      stack.append(current)
+      current = current[key]
+      indent += 4
+
+  return data
+
+def getRunInfo():
+  data = getParsedData() 
+
+  try:
+    gpu = os.environ['GPU'].upper()
+    vgpu_type = os.environ['VGPUTYPE'] 
+    card = data[gpu]
+    gpus = list(card['VGPUs'].keys())
+    gpus.sort()
+  except:
+    sys.exit(1)
+  
+  pcieaddr = re.search(r'([0-9a-f]{4}:.*)', gpu.lower()).group(1)
+  path = '/sys/class/mdev_bus/%s/mdev_supported_types/%s/description' % (
+    pcieaddr, vgpu_type
+  )
+  desc = open(path)
+  vgpus = int(re.search(r'max_instance=([0-9]*)', desc.read()).group(1))
+  desc.close()
+
+  return card, gpus, vgpus
