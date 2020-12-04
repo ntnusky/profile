@@ -24,8 +24,10 @@ tmpfile=$(mktemp /tmp/munin-ceph-XXXXXXXX)
 ceph report 2> /dev/null  | jq '.["osd_sum_by_class"]' > $tmpfile 
 
 for class in $classes; do
-  echo "${class}T.value" $(cat $tmpfile | jq ".[\"$class\"][\"kb\"]")
-  echo "${class}U.value" $(cat $tmpfile | jq ".[\"$class\"][\"kb_used\"]")
+  total=$(cat $tmpfile | jq ".[\"$class\"][\"kb\"]")
+  used=$(cat $tmpfile | jq ".[\"$class\"][\"kb_used\"]")
+  echo "${class}T.value" $(($total * 1024))
+  echo "${class}U.value" $(($used * 1024)) 
 done
 
 rm $tmpfile 
