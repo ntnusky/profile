@@ -9,6 +9,7 @@ class profile::monitoring::munin::plugin::ceph {
     'ceph_class_osd',
     'ceph_class_pg',
     'ceph_class_storage',
+    'ceph_class_utilization',
     'ceph_objects',
     'ceph_osd',
     'ceph_pg',
