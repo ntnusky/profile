@@ -64,12 +64,18 @@ def getRunInfo():
 
   try:
     gpu = os.environ['GPU'].upper()
+    if(gpu.startswith('0000:')):
+      gpu = "0000%s" % gpu
     vgpu_type = os.environ['VGPUTYPE'] 
     card = data[gpu]
-    gpus = list(card['VGPUs'].keys())
-    gpus.sort()
   except:
     sys.exit(1)
+
+  try:
+    gpus = list(card['VGPUs'].keys())
+    gpus.sort()
+  except KeyError:
+    gpus = None
   
   pcieaddr = re.search(r'([0-9a-f]{4}:.*)', gpu.lower()).group(1)
   path = '/sys/class/mdev_bus/%s/mdev_supported_types/%s/description' % (
