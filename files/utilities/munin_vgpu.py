@@ -75,7 +75,7 @@ def getRunInfo():
     gpus = list(card['VGPUs'].keys())
     gpus.sort()
   except KeyError:
-    gpus = None
+    gpus = []
   
   pcieaddr = re.search(r'([0-9a-f]{4}:.*)', gpu.lower()).group(1)
   path = '/sys/class/mdev_bus/%s/mdev_supported_types/%s/description' % (
