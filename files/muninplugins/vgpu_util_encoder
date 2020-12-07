@@ -2,7 +2,7 @@
 import sys
 from munin_vgpu import getRunInfo
 
-card, gpus, vgpus = getRunInfo()
+card, gpus, vgpus, ram = getRunInfo()
 
 if('config' in sys.argv):
   print("graph_title VGU Encoder utilization")

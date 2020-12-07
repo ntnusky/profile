@@ -2,7 +2,7 @@
 import sys
 from munin_vgpu import getRunInfo
 
-card, gpus, vgpus = getRunInfo()
+card, gpus, vgpus, ram = getRunInfo()
 
 if('config' in sys.argv):
   print("graph_title VGU Memory utilization")
@@ -25,14 +25,12 @@ if('config' in sys.argv):
     print("vgpu%d.info Utilized memory on VGPU %d. Currently instance %s" % (i, i, instance))
   sys.exit(0)
 
-total = None
 values = []
 for gpuid in gpus:
   vgpu = card['VGPUs'][gpuid]
-  total = vgpu['FB Memory Usage']['Total'].rstrip('MiB ')
   values.append(vgpu['FB Memory Usage']['Used'].rstrip('MiB '))
 
-print("total.value %d" % (int(total) * (1024 ** 2)))
+print("total.value %d" % ram)
 for i in range(0, vgpus):
   try:
     print("vgpu%d.value %d" % (i, int(values[i]) * (1024 ** 2)))

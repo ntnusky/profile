@@ -67,9 +67,15 @@ def getRunInfo():
     if(gpu.startswith('0000:')):
       gpu = "0000%s" % gpu
     vgpu_type = os.environ['VGPUTYPE'] 
-    card = data[gpu]
   except:
     sys.exit(1)
+  
+  if(gpu in data):
+    card = data[gpu]
+  elif("%s0" % gpu.rstrip('0123456789ABCDEF') in data):
+    card = data["%s0" % gpu.rstrip('0123456789ABCDEF')]
+  else:
+    sys.exit(2)
 
   try:
     gpus = list(card['VGPUs'].keys())
@@ -82,7 +88,10 @@ def getRunInfo():
     pcieaddr, vgpu_type
   )
   desc = open(path)
-  vgpus = int(re.search(r'max_instance=([0-9]*)', desc.read()).group(1))
+  content = desc.read()
   desc.close()
 
-  return card, gpus, vgpus
+  vgpus = int(re.search(r'max_instance=([0-9]*)', content).group(1))
+  ram = int(re.search(r'framebuffer=([0-9]*)M', content).group(1)) * 1024 * 1024
+
+  return card, gpus, vgpus, ram
