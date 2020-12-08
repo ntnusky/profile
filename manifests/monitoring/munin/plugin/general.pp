@@ -4,6 +4,25 @@ class profile::monitoring::munin::plugin::general {
     'value_type'    => Variant[Hash,Boolean],
     'default_value' => false,
   })
+  $generic = [
+    'cpu',
+    'df_inode',
+    'diskstats',
+    'entropy',
+    'forks',
+    'interrupts',
+    'load',
+    'memory',
+    'open_files',
+    'open_inodes',
+    'processes',
+    'proc_pri',
+    'swap',
+    'threads',
+    'uptime',
+    'users',
+  ]
+
   if($interfaces) {
     keys($interfaces).each | $if | {
       munin::plugin { "if_${if}":
@@ -19,73 +38,39 @@ class profile::monitoring::munin::plugin::general {
     }
   }
 
-  munin::plugin { 'apt':
-    ensure => link,
-    config => ['user root'],
+  case $::osfamily {
+    'RedHat': {
+      $osspecific = ['yum']
+    }
+    'Debian': {
+      $osspecific = ['ntp_offset']
+
+      munin::plugin { 'apt':
+        ensure => link,
+        config => ['user root'],
+      }
+    }
+    default: {
+      $osspecific = []
+    }
   }
-  munin::plugin { 'cpu':
-    ensure => link,
+
+  $plugins =  $osspecific + $generic
+  $plugins.each | $plugin | {
+    munin::plugin { $plugin:
+      ensure => link,
+    }
   }
+
   munin::plugin { 'df':
     ensure       => link,
     config       => ['env.warning 80', 'env.critical 90'],
     config_label => 'df*',
-  }
-  munin::plugin { 'df_inode':
-    ensure => link,
-  }
-  munin::plugin { 'diskstats':
-    ensure => link,
-  }
-  munin::plugin { 'entropy':
-    ensure => link,
-  }
-  munin::plugin { 'forks':
-    ensure => link,
-  }
-  munin::plugin { 'interrupts':
-    ensure => link,
-  }
-  munin::plugin { 'load':
-    ensure => link,
-  }
-  munin::plugin { 'memory':
-    ensure => link,
   }
   munin::plugin { 'multiping':
     ensure => link,
     config => [
       'env.host ntnu.no gjovik-gw1.uninett.no ntnu-gw-l0.nettel.ntnu.no',
     ],
-  }
-  munin::plugin { 'netstat':
-    ensure => link,
-  }
-  munin::plugin { 'ntp_offset':
-    ensure => link,
-  }
-  munin::plugin { 'open_files':
-    ensure => link,
-  }
-  munin::plugin { 'open_inodes':
-    ensure => link,
-  }
-  munin::plugin { 'processes':
-    ensure => link,
-  }
-  munin::plugin { 'proc_pri':
-    ensure => link,
-  }
-  munin::plugin { 'swap':
-    ensure => link,
-  }
-  munin::plugin { 'threads':
-    ensure => link,
-  }
-  munin::plugin { 'uptime':
-    ensure => link,
-  }
-  munin::plugin { 'users':
-    ensure => link,
   }
 }
