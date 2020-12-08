@@ -12,30 +12,18 @@ class profile::monitoring::munin::plugin::vgpu {
     'vgpu_util_memory',
   ]
 
-  $plugins.each | $plugin | {
-    file { "/usr/share/munin/plugins/${plugin}":
-      ensure => present,
-      mode   => '0755',
-      owner  => root,
-      group  => root,
-      source => "puppet:///modules/profile/muninplugins/${plugin}",
+  $config_data = flatten($gpus.map | $vgpu_type, $addresses | {
+    $addresses.map | $address | {
+      $id = fqdn_rand(999, "${address} ${vgpu_type}")
+      "env.GPU${id} ${address} ${vgpu_type}"
     }
-  }
+  })
 
-  $gpus.each | $vgpu_type, $addresses | {
-    $addresses.each | $address | {
-      $plugins.each | $plugin | {
-        munin::plugin { "${plugin}-${address}":
-          ensure  => link,
-          target  => $plugin,
-          require => File["/usr/share/munin/plugins/${plugin}"],
-          config  => [
-            'user nova',
-            "env.GPU ${address}",
-            "env.VGPUTYPE ${vgpu_type}",
-          ],
-        }
-      }
+  $plugins.each | $plugin | {
+    munin::plugin { $plugin:
+      ensure => present,
+      source => "puppet:///modules/profile/muninplugins/${plugin}",
+      config => [ 'user nova' ] + $config_data,
     }
   }
 }

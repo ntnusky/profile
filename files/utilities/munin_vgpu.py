@@ -4,7 +4,7 @@ import re
 import subprocess
 import sys
 
-def getParsedData():
+def parseNvidiaSMI():
   process = subprocess.Popen(['nvidia-smi', 'vgpu', '-q'],
                        stdout=subprocess.PIPE, 
                        stderr=subprocess.PIPE)
@@ -59,39 +59,61 @@ def getParsedData():
 
   return data
 
-def getRunInfo():
-  data = getParsedData() 
+# Parse ENV to retrieve VGPU-types for certain PCI-devices.
+def getGPUTypes():
+  pattern = re.compile(r'^GPU(\d+)$')
+  gpus = {}
+  for key in os.environ:
+    match = pattern.match(key)
+    if(match):
+      gpus[os.environ[key]] = os.environ["%sT" % key].lower()
+  return gpus
 
-  try:
-    gpu = os.environ['GPU'].upper()
-    if(gpu.startswith('0000:')):
-      gpu = "0000%s" % gpu
-    vgpu_type = os.environ['VGPUTYPE'] 
-  except:
-    sys.exit(1)
-  
-  if(gpu in data):
-    card = data[gpu]
-  elif("%s0" % gpu.rstrip('0123456789ABCDEF') in data):
-    card = data["%s0" % gpu.rstrip('0123456789ABCDEF')]
-  else:
-    sys.exit(2)
-
-  try:
-    gpus = list(card['VGPUs'].keys())
-    gpus.sort()
-  except KeyError:
-    gpus = []
-  
-  pcieaddr = re.search(r'([0-9a-f]{4}:.*)', gpu.lower()).group(1)
+# Open the VGPU description-file to get VGPU parameters.
+def getVGPUDescription(gpu, vgpu_type):
   path = '/sys/class/mdev_bus/%s/mdev_supported_types/%s/description' % (
-    pcieaddr, vgpu_type
+    gpu, vgpu_type
   )
   desc = open(path)
   content = desc.read()
   desc.close()
 
-  vgpus = int(re.search(r'max_instance=([0-9]*)', content).group(1))
-  ram = int(re.search(r'framebuffer=([0-9]*)M', content).group(1)) * 1024 * 1024
+  return content
 
-  return card, gpus, vgpus, ram
+# Get the VGPU RAM-amount for a certain flavor on a certain GPU. 
+def getVGPURAM(gpu, vgpu_type):
+  content = getVGPUDescription(gpu, vgpu_type)
+  return int(re.search(r'framebuffer=([0-9]*)M', content).group(1)) * 1024 * 1024
+
+# Get the max available VGPU's of a certain flavor on a certain GPU
+def getMaxVGPUs(gpu, vgpu_type):
+  content = getVGPUDescription(gpu, vgpu_type)
+  return int(re.search(r'max_instance=([0-9]*)', content).group(1))
+
+# Get the short address from a long address; or get closest match if sr-iov.
+def getPGPU(data, address):
+  # Iterate through addresses, and see if an exact match is found.
+  for gpu in data:
+    if(address in gpu.lower()):
+      return gpu
+
+  # Iterate through addresses, and see if we find a similar address, where only
+  # the last part differs.
+  address = '.'.join(address.split('.')[:-1])
+  for gpu in data:
+    if(address in gpu.lower()):
+      return gpu
+
+# Get data from nvidia-smi, and enrich it with parameters from sysfs.
+def getGPUData():
+  data = parseNvidiaSMI()
+  types = getGPUTypes()
+
+  for t in types:
+    pgpu = getPGPU(data, t)
+
+    data[pgpu]['type'] = types[t]
+    data[pgpu]['vgpu_instances'] = getMaxVGPUs(t, types[t])
+    data[pgpu]['vgpu_ram'] = getVGPURAM(t, types[t])
+
+  return data

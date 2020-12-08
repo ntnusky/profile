@@ -1,38 +1,55 @@
 #!/usr/bin/python3
 import sys
-from munin_vgpu import getRunInfo
+from munin_vgpu import getGPUData
 
-card, gpus, vgpus, ram = getRunInfo()
+data = getGPUData()
+gpus = list(data.keys())
+gpus.sort()
 
 if('config' in sys.argv):
-  print("graph_title VGU Memory utilization")
+  print("graph_title VGPU Memory use")
   print("graph_category vgpu")
   print("graph_vlabel Bytes")
   print("graph_args -l 0 --base 1024")
   print("graph_scale yes")
-  print("graph_info Memory utilized on the VGPU's.")
+  print("graph_info Memory used on the VGPU's.")
 
-  print("total.label VGPU memory")
-  print("total.info Total memory available on each VGPU")
-
-  for i in range(0, vgpus):
+  gpuid = 0
+  for gpu in gpus:
     try:
-      instance = card['VGPUs'][gpus[i]]['VM UUID']
-    except:
-      instance = 'Unknown'
+      vgpus = list(data[gpu]['VGPUs'].keys())
+      vgpus.sort()
+    except KeyError:
+      vgpus = []
 
-    print("vgpu%d.label VGPU %d" % (i, i))
-    print("vgpu%d.info Utilized memory on VGPU %d. Currently instance %s" % (i, i, instance))
+    for i in range(0, data[gpu]['vgpu_instances']):
+      try:
+        instance = "attached to %s" % data[gpu]['VGPUs'][vgpus[i]]['VM UUID']
+      except:
+        instance = 'unused'
+
+      vgpu = "%d-%d" % (gpuid, i)
+      print("vgpu%s.label VGPU %s (max %dG)" % (vgpu, vgpu,
+            int(data[gpu]['vgpu_ram']) / 1024 ** 3))
+      print("vgpu%s.info Used memory on VGPU %s. Currently %s" % (
+            vgpu, vgpu, instance))
+
+    gpuid += 1
   sys.exit(0)
 
-values = []
-for gpuid in gpus:
-  vgpu = card['VGPUs'][gpuid]
-  values.append(vgpu['FB Memory Usage']['Used'].rstrip('MiB '))
-
-print("total.value %d" % ram)
-for i in range(0, vgpus):
+gpuid = 0
+for gpu in gpus:
   try:
-    print("vgpu%d.value %d" % (i, int(values[i]) * (1024 ** 2)))
-  except:
-    print("vgpu%d.value U" % i)
+    vgpus = list(data[gpu]['VGPUs'].keys())
+    vgpus.sort()
+  except KeyError:
+    vgpus = []
+
+  for i in range(0, data[gpu]['vgpu_instances']):
+    vgpu = "%d-%d" % (gpuid, i)
+    try:
+      mb = data[gpu]['VGPUs'][vgpus[i]]['FB Memory Usage']['Used'].rstrip('MiB ')
+      print("vgpu%s.value %d" % (vgpu, int(mb) * (1024 ** 2)))
+    except KeyError:
+      print("vgpu%s.value U" % vgpu)
+  gpuid += 1
