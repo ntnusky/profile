@@ -49,6 +49,6 @@ for gpu in gpus:
     try:
       value = data[gpu]['VGPUs'][vgpus[i]]['Utilization']['Decoder'].rstrip('% ')
       print("vgpu%s.value %s" % (vgpu, value))
-    except KeyError:
+    except (KeyError, IndexError):
       print("vgpu%s.value U" % vgpu)
   gpuid += 1

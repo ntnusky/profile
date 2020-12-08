@@ -50,6 +50,6 @@ for gpu in gpus:
     try:
       mb = data[gpu]['VGPUs'][vgpus[i]]['FB Memory Usage']['Used'].rstrip('MiB ')
       print("vgpu%s.value %d" % (vgpu, int(mb) * (1024 ** 2)))
-    except KeyError:
+    except (KeyError, IndexError):
       print("vgpu%s.value U" % vgpu)
   gpuid += 1
