@@ -66,7 +66,8 @@ def getGPUTypes():
   for key in os.environ:
     match = pattern.match(key)
     if(match):
-      gpus[os.environ[key]] = os.environ["%sT" % key].lower()
+      a, t = os.environ[key].split(' ')
+      gpus[a] = t
   return gpus
 
 # Open the VGPU description-file to get VGPU parameters.
