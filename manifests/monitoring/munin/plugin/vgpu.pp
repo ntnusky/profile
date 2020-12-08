@@ -25,7 +25,7 @@ class profile::monitoring::munin::plugin::vgpu {
   $config_data = flatten($gpus.map | $vgpu_type, $addresses | {
     $addresses.map | $address | {
       $id = fqdn_rand(999, "${address} ${vgpu_type}")
-      "env.GPU${id} \"${address} ${vgpu_type}\""
+      "env.GPU${id} ${address} ${vgpu_type}"
     }
   })
 
