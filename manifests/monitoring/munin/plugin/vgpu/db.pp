@@ -16,9 +16,6 @@ class profile::monitoring::munin::plugin::vgpu::db {
     'value_type'    => Variant[String, Boolean],
     'default_value' => false,
   })
-  $database_grant = lookup('profile::munin::vgpu::database::grant', '%')
-  $database_user = lookup('profile::munin::vgpu::database::user')
-  $database_pass = lookup('profile::munin::vgpu::database::pass')
 
   if($database_pass) {
     mysql_database { $database_name:
