@@ -13,28 +13,31 @@ class profile::monitoring::munin::plugin::vgpu::db {
     'default_value' => 'munin-vgpu',
   })
   $database_pass = lookup('profile::munin::vgpu::database::pass', {
-    'value_type'    => String,
+    'value_type'    => Variant[String, Boolean],
+    'default_value' => false,
   })
   $database_grant = lookup('profile::munin::vgpu::database::grant', '%')
   $database_user = lookup('profile::munin::vgpu::database::user')
   $database_pass = lookup('profile::munin::vgpu::database::pass')
 
-  mysql_database { $database_name:
-    ensure  => present,
-    charset => 'utf8',
-    collate => 'utf8_general_ci',
-    require => [ Class['::mysql::server'] ],
-  }
+  if($database_pass) {
+    mysql_database { $database_name:
+      ensure  => present,
+      charset => 'utf8',
+      collate => 'utf8_general_ci',
+      require => [ Class['::mysql::server'] ],
+    }
 
-  mysql_user { "${database_user}@${database_grant}":
-    password_hash => mysql_password($database_pass),
-    require       => Mysql_database[$database_name],
-  }
+    mysql_user { "${database_user}@${database_grant}":
+      password_hash => mysql_password($database_pass),
+      require       => Mysql_database[$database_name],
+    }
 
-  mysql_grant { "${database_user}@${database_grant}/${database_name}.*":
-    privileges => ['ALL'],
-    table      => "${database_name}.*",
-    require    => Mysql_user["${database_user}@${database_grant}"],
-    user       => "${database_user}@${database_grant}",
+    mysql_grant { "${database_user}@${database_grant}/${database_name}.*":
+      privileges => ['ALL'],
+      table      => "${database_name}.*",
+      require    => Mysql_user["${database_user}@${database_grant}"],
+      user       => "${database_user}@${database_grant}",
+    }
   }
 }
