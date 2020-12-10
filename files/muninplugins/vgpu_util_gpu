@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 import sys
-from munin_vgpu import getGPUData
+from munin_vgpu import getGPUData, registerHistory
 
 data = getGPUData()
 gpus = list(data.keys())
@@ -49,6 +49,8 @@ for gpu in gpus:
     try:
       value = data[gpu]['VGPUs'][vgpus[i]]['Utilization']['Gpu'].rstrip('% ')
       print("vgpu%s.value %s" % (vgpu, value))
+      registerHistory(gpu, i, data[gpu]['VGPUs'][vgpus[i]]['VM UUID'])
     except (KeyError, IndexError):
       print("vgpu%s.value U" % vgpu)
+      registerHistory(gpu, i, None)
   gpuid += 1

@@ -2,6 +2,22 @@
 class profile::monitoring::munin::plugin::vgpu {
   require ::profile::monitoring::munin::plugin::vgpu::lib
 
+  $database_host = lookup('profile::anycast::management::ipv4', {
+    'value_type'    => String,
+  })
+  $database_name = lookup('profile::munin::vgpu::database::name', {
+    'value_type'    => String,
+    'default_value' => 'munin-vgpu',
+  })
+  $database_user = lookup('profile::munin::vgpu::database::user', {
+    'value_type'    => String,
+    'default_value' => 'munin-vgpu',
+  })
+  $database_pass = lookup('profile::munin::vgpu::database::pass', {
+    'value_type'    => String,
+    'default_value' => '',
+  })
+
   $gpus = lookup('nova::compute::vgpu::vgpu_types_device_addresses_mapping')
 
   $plugins = [
@@ -29,12 +45,19 @@ class profile::monitoring::munin::plugin::vgpu {
     }
   })
 
+  $db_config = [
+    "env.DBHOST ${database_host}",
+    "env.DBNAME ${database_name}",
+    "env.DBUSER ${database_user}",
+    "env.DBPASS ${database_pass}",
+  ]
+
   $plugins.each | $plugin | {
     munin::plugin { $plugin:
       ensure  => link,
       target  => $plugin,
       require => File["/usr/share/munin/plugins/${plugin}"],
-      config  => [ 'user nova' ] + $config_data,
+      config  => [ 'user nova' ] + $config_data + $db_config,
     }
   }
 }

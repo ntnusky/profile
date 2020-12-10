@@ -1,8 +1,91 @@
 #!/usr/bin/python3
 import os
+import pymysql
 import re
+import socket
 import subprocess
 import sys
+
+def connectToDB():
+  try:
+    connector = pymysql.connect(
+      host = os.environ['DBHOST'], 
+      db = os.environ['DBNAME'],   
+      user = os.environ['DBUSER'],   
+      passwd = os.environ['DBPASS'],   
+      port = 3306, 
+      charset = 'utf8'
+    )
+    return connector
+  except:
+    return None
+
+def createDatabase(connector):
+  fields = {
+    'id': 'INT AUTO_INCREMENT PRIMARY KEY',
+    'host': 'VARCHAR(255) NOT NULL',
+    'gpu': 'VARCHAR(255) NOT NULL',
+    'vgpu': 'INT NOT NULL',
+    'instance_id': 'VARCHAR(255) NULL',
+    'attached': 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP',
+    'detached': 'TIMESTAMP NULL DEFAULT NULL',
+  }
+
+  fieldstrings = []
+  for f in fields:
+    fieldstrings.append("%s %s" % (f, fields[f]))
+
+  with connector.cursor() as cur:
+    try:
+      cur.execute("SELECT * FROM instancemapping")
+      return 
+    except pymysql.err.ProgrammingError:
+      existing = False
+  
+  with connector.cursor() as cur:
+    cur.execute("CREATE TABLE instancemapping (" +
+      ", ".join(fieldstrings) + ")")
+    connector.commit()
+
+def registerHistory(gpu, vgpu, instance):
+  # Connect to database, and ensure table is present
+  connector = connectToDB()
+  if not connector:
+    return
+  createDatabase(connector)
+
+  hostname = socket.gethostname()
+
+  # Get latest instance-mapping for the vgpu in question
+  with connector.cursor() as cur:
+    cur.execute(
+        'SELECT * FROM instancemapping WHERE ' +
+        'host=%s AND gpu=%s AND vgpu=%s AND detached IS NULL',
+        (hostname, gpu, vgpu))
+    result = cur.fetchone()
+
+    if(result):
+      existing = True
+      e_id, e_host, e_gpu, e_vgpu, e_instance, e_attached, e_detached = result
+    else:
+      existing = False
+
+  # If the retrieve record is for another instance, mark it as detached.
+  if(existing and e_instance != instance):
+    with connector.cursor() as cur:
+      cur.execute("UPDATE instancemapping SET detached = CURRENT_TIMESTAMP()" +
+        " WHERE id = %s", e_id)
+      connector.commit()
+    existing = None
+
+  # If no record exists, or if the record was for another instance, create a new
+  # record.
+  if not existing and instance:
+    with connector.cursor() as cur:
+      cur.execute("INSERT INTO instancemapping (host, gpu, vgpu, instance_id)" +
+        " VALUES (%s, %s, %s, %s)",
+        (hostname, gpu, vgpu, instance))
+      connector.commit()
 
 def parseNvidiaSMI():
   process = subprocess.Popen(['nvidia-smi', 'vgpu', '-q'],
