@@ -22,6 +22,7 @@ class profile::services::mysql::cluster {
   })
 
   include ::profile::services::mysql::backup
+  include ::profile::services::mysql::databases
   include ::profile::services::mysql::firewall::mysql
   include ::profile::services::mysql::firewall::galera
   include ::profile::services::mysql::haproxy::backend

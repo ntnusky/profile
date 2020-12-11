@@ -1,0 +1,30 @@
+#!/bin/bash
+set -e
+
+classes=$(ceph report 2> /dev/null  | jq '.["osd_sum_by_class"]' | jq 'keys[]' -r)
+
+if [[ $1 == "config" ]]; then
+  echo "graph_title CEPH Storage utilization by class"
+  echo "graph_category ceph"
+  echo "graph_vlabel Bytes"
+  echo "graph_args -l 0"
+  echo "graph_scale yes"
+  echo "graph_info The utilization of OSD's of a certain class"
+  
+  for class in $classes; do
+    echo "${class}.label $class"
+    echo "${class}.info Utilization of OSD's in the $class class."
+  done
+  exit 0
+fi
+
+tmpfile=$(mktemp /tmp/munin-ceph-XXXXXXXX)
+ceph report 2> /dev/null  | jq '.["osd_sum_by_class"]' > $tmpfile 
+
+for class in $classes; do
+  total=$(cat $tmpfile | jq ".[\"$class\"][\"kb\"]")
+  used=$(cat $tmpfile | jq ".[\"$class\"][\"kb_used\"]")
+  echo "${class}.value" $(echo "scale=2;($used * 100) / $total" | bc) 
+done
+
+rm $tmpfile 

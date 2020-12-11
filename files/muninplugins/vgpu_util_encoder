@@ -1,0 +1,56 @@
+#!/usr/bin/python3
+import sys
+from munin_vgpu import getGPUData, registerHistory
+
+data = getGPUData()
+gpus = list(data.keys())
+gpus.sort()
+
+if('config' in sys.argv):
+  print("graph_title VGPU Encoder utilization")
+  print("graph_category vgpu")
+  print("graph_vlabel Percent")
+  print("graph_args -l 0")
+  print("graph_scale yes")
+  print("graph_info GPU Encoder-utilization per VGPU")
+
+  gpuid = 0
+  for gpu in gpus:
+    try:
+      vgpus = list(data[gpu]['VGPUs'].keys())
+      vgpus.sort()
+    except KeyError:
+      vgpus = []
+
+    for i in range(0, data[gpu]['vgpu_instances']):
+      try:
+        instance = "attached to %s" % data[gpu]['VGPUs'][vgpus[i]]['VM UUID']
+      except:
+        instance = 'unused'
+
+      vgpu = "%d-%d" % (gpuid, i)
+      print("vgpu%s.label VGPU %s" % (vgpu, vgpu))
+      print("vgpu%s.info Encoder-utilization for VGPU %s. Currently %s" % (
+            vgpu, vgpu, instance))
+
+    gpuid += 1
+  sys.exit(0)
+
+gpuid = 0
+for gpu in gpus:
+  try:
+    vgpus = list(data[gpu]['VGPUs'].keys())
+    vgpus.sort()
+  except KeyError:
+    vgpus = []
+
+  for i in range(0, data[gpu]['vgpu_instances']):
+    vgpu = "%d-%d" % (gpuid, i)
+    try:
+      value = data[gpu]['VGPUs'][vgpus[i]]['Utilization']['Encoder'].rstrip('% ')
+      print("vgpu%s.value %s" % (vgpu, value))
+      registerHistory(gpu, i, data[gpu]['VGPUs'][vgpus[i]]['VM UUID'])
+    except (KeyError, IndexError):
+      print("vgpu%s.value U" % vgpu)
+      registerHistory(gpu, i, None)
+  gpuid += 1
