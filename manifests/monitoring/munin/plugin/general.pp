@@ -39,9 +39,6 @@ class profile::monitoring::munin::plugin::general {
   }
 
   case $::osfamily {
-    'RedHat': {
-      $osspecific = ['yum']
-    }
     'Debian': {
       $osspecific = ['ntp_offset']
 
