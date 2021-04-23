@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for line in $(rabbitmqctl status | grep file_descriptors -A 4); do
+for line in $(rabbitmqctl status --formatter erlang | grep file_descriptors -A 4); do
   if [[ $line =~ total_limit,([0-9]+) ]]; then
     total_limit=${BASH_REMATCH[1]}
   fi
