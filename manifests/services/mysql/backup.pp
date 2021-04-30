@@ -1,7 +1,7 @@
 # Backups the database content of mysql
 class profile::services::mysql::backup {
 
-  $externa_backup = lookup('profile::mysql::backup::external', {
+  $external_backup = lookup('profile::mysql::backup::external', {
     'default_value' => false,
     'value_type'    => Boolean
   })
