@@ -1,5 +1,11 @@
 # Backups the database content of mysql
 class profile::services::mysql::backup {
+
+  $external_backup = lookup('profile::mysql::backup::external', {
+    'default_value' => false,
+    'value_type'    => Boolean
+  })
+
   file { '/usr/local/sbin/mysqlbackup.sh':
     ensure => present,
     owner  => 'root',
@@ -28,5 +34,9 @@ class profile::services::mysql::backup {
     user    => 'root',
     hour    => '1',
     minute  => '57',
+  }
+
+  if ($external_backup) {
+    include ::profile::services::mysql::backup::external
   }
 }

@@ -2,6 +2,10 @@
 class profile::services::postgresql::backup {
   $management_if = hiera('profile::interfaces::management')
   $pgip = $facts['networking']['interfaces'][$management_if]['ip']
+  $external_backup = lookup('profile::postgresql::backup::external', {
+    'default_value' => false,
+    'value_type'    => Boolean
+  })
 
   file { '/usr/local/sbin/postgresbackup.sh':
     ensure => present,
@@ -31,5 +35,9 @@ class profile::services::postgresql::backup {
     user    => 'root',
     hour    => '1',
     minute  => '14',
+  }
+
+  if ($external_backup) {
+    include ::profile::services::postgresql::backup::external
   }
 }
