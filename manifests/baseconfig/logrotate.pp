@@ -6,8 +6,6 @@ class profile::baseconfig::logrotate {
 
   class { '::logrotate':
     create_base_rules  => false,
-    manage_cron_daily  => false,
-    manage_cron_hourly => false,
     config             => {
       compress => true,
     }
