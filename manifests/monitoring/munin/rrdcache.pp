@@ -1,5 +1,7 @@
 # Install the RRD Cache Daemon and perl bindings
 class profile::monitoring::munin::rrdcache {
-  include rrd::cache
+  class { 'rrd::cache':
+    gid => 'www-data',
+  }
   include rrd::bindings::perl
 }
