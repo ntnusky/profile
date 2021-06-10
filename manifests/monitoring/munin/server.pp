@@ -9,7 +9,7 @@ class profile::monitoring::munin::server {
     'value_type'    => Integer,
   })
 
-  require ::profile::monitoring::munun::rrdcache
+  require ::profile::monitoring::munin::rrdcache
   contain ::profile::monitoring::munin::haproxy::balancermember
   include ::profile::monitoring::munin::plugin::snmp
 
