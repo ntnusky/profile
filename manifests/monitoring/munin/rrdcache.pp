@@ -3,7 +3,7 @@ class profile::monitoring::munin::rrdcache {
   class { 'rrd::cache':
     uid         => 'munin',
     gid         => 'www-data',
-    socket_mode => '744',
+    socket_mode => '766',
   }
   include rrd::bindings::perl
 }
