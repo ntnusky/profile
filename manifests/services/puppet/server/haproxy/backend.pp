@@ -9,7 +9,7 @@ class profile::services::puppet::server::haproxy::backend {
 
   $register_loadbalancer = lookup('profile::haproxy::register', {
     'value_type'    => Boolean,
-    'default_value' => True,
+    'default_value' => true,
   })
 
   if($register_loadbalancer) {
