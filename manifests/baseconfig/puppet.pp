@@ -1,7 +1,5 @@
 # This class installs and configures puppet.
 class profile::baseconfig::puppet {
-  include ::puppet_agent::service
-
   $environment = lookup('profile::puppet::environment', String)
   $runinterval = lookup('profile::puppet::runinterval', {
     'default_value' => '30m',
@@ -47,6 +45,12 @@ class profile::baseconfig::puppet {
     setting => 'ca_server',
     value   => $caserver,
     notify  => Service['puppet'],
+    require => Package[$agentpackage],
+  }
+
+  service { 'puppet':
+    ensure  => 'running',
+    enable  => true,
     require => Package[$agentpackage],
   }
 }
