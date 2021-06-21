@@ -7,16 +7,23 @@ class profile::services::puppet::db::haproxy::backend {
     'default_value' => $autoip,
   })
 
-  profile::services::haproxy::tools::register { "PuppetDB-${::fqdn}":
-    servername  => $::hostname,
-    backendname => 'bk_puppetdb',
-  }
+  $register_loadbalancer = lookup('profile::haproxy::register', {
+    'value_type'    => Boolean,
+    'default_value' => True,
+  })
 
-  @@haproxy::balancermember { "Puppetdb-${::fqdn}":
-    listening_service => 'bk_puppetdb',
-    server_names      => $::hostname,
-    ipaddresses       => $ip,
-    ports             => '8081',
-    options           => 'check',
+  if($register_loadbalancer) {
+    profile::services::haproxy::tools::register { "PuppetDB-${::fqdn}":
+      servername  => $::hostname,
+      backendname => 'bk_puppetdb',
+    }
+
+    @@haproxy::balancermember { "Puppetdb-${::fqdn}":
+      listening_service => 'bk_puppetdb',
+      server_names      => $::hostname,
+      ipaddresses       => $ip,
+      ports             => '8081',
+      options           => 'check',
+    }
   }
 }

@@ -7,18 +7,25 @@ class profile::services::dashboard::haproxy::backend {
     'default_value' => $mip,
   })
 
-  profile::services::haproxy::tools::register { "Shiftleader-${::fqdn}":
-    servername  => $::hostname,
-    backendname => 'bk_shiftleader',
-  }
+  $register_loadbalancer = lookup('profile::haproxy::register', {
+    'value_type'    => Boolean,
+    'default_value' => True,
+  })
 
-  @@haproxy::balancermember { "Shiftleader-${::fqdn}":
-    listening_service => 'bk_shiftleader',
-    ports             => '80',
-    ipaddresses       => $management_ip,
-    server_names      => $::hostname,
-    options           => [
-      'check inter 5s',
-    ],
+  if($register_loadbalancer) {
+    profile::services::haproxy::tools::register { "Shiftleader-${::fqdn}":
+      servername  => $::hostname,
+      backendname => 'bk_shiftleader',
+    }
+  
+    @@haproxy::balancermember { "Shiftleader-${::fqdn}":
+      listening_service => 'bk_shiftleader',
+      ports             => '80',
+      ipaddresses       => $management_ip,
+      server_names      => $::hostname,
+      options           => [
+        'check inter 5s',
+      ],
+    }
   }
 }

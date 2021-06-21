@@ -7,18 +7,25 @@ class profile::monitoring::munin::haproxy::balancermember {
     'default_value' => $mip,
   })
 
-  profile::services::haproxy::tools::register { "Munin-${::fqdn}":
-    servername  => $::hostname,
-    backendname => 'bk_munin',
-  }
+  $register_loadbalancer = lookup('profile::haproxy::register', {
+    'value_type'    => Boolean,
+    'default_value' => True,
+  })
 
-  @@haproxy::balancermember { "munin-${::fqdn}":
-    listening_service => 'bk_munin',
-    ports             => '80',
-    ipaddresses       => $management_ip,
-    server_names      => $::hostname,
-    options           => [
-      'check inter 5s',
-    ],
+  if($register_loadbalancer) {
+    profile::services::haproxy::tools::register { "Munin-${::fqdn}":
+      servername  => $::hostname,
+      backendname => 'bk_munin',
+    }
+
+    @@haproxy::balancermember { "munin-${::fqdn}":
+      listening_service => 'bk_munin',
+      ports             => '80',
+      ipaddresses       => $management_ip,
+      server_names      => $::hostname,
+      options           => [
+        'check inter 5s',
+      ],
+    }
   }
 }

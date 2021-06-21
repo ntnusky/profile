@@ -7,16 +7,23 @@ class profile::services::mysql::haproxy::backend {
     'default_value' => $autoip,
   })
 
-  profile::services::haproxy::tools::register { "Mysql-${::fqdn}":
-    servername  => $::hostname,
-    backendname => 'bk_mysqlcluster',
-  }
+  $register_loadbalancer = lookup('profile::haproxy::register', {
+    'value_type'    => Boolean,
+    'default_value' => True,
+  })
 
-  @@haproxy::balancermember { "mysql-${::fqdn}":
-    listening_service => 'bk_mysqlcluster',
-    server_names      => $::hostname,
-    ipaddresses       => $ip,
-    ports             => '3306',
-    options           => 'backup check',
+  if($register_loadbalancer) {
+    profile::services::haproxy::tools::register { "Mysql-${::fqdn}":
+      servername  => $::hostname,
+      backendname => 'bk_mysqlcluster',
+    }
+
+    @@haproxy::balancermember { "mysql-${::fqdn}":
+      listening_service => 'bk_mysqlcluster',
+      server_names      => $::hostname,
+      ipaddresses       => $ip,
+      ports             => '3306',
+      options           => 'backup check',
+    }
   }
 }
