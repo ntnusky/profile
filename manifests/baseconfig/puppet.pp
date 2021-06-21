@@ -34,7 +34,6 @@ class profile::baseconfig::puppet {
     section => 'agent',
     setting => 'server',
     value   => $puppetserver,
-    notify  => Service['puppet'],
   }
   ini_setting { 'Puppet caserver':
     ensure  => present,
@@ -42,11 +41,5 @@ class profile::baseconfig::puppet {
     section => 'agent',
     setting => 'ca_server',
     value   => $caserver,
-    notify  => Service['puppet'],
-  }
-
-  service { 'puppet':
-    ensure  => 'running',
-    enable  => true,
   }
 }
