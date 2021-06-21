@@ -27,7 +27,6 @@ class profile::baseconfig::puppet {
   # Apparantly the puppet_agent class refuses to configure arbritary parameters,
   # so we need to fix the rest ourselves...
   $agentconfigfile = '/etc/puppetlabs/puppet/puppet.conf'
-  $agentpackage = 'puppet-agent'
 
   ini_setting { 'Puppet server':
     ensure  => present,
@@ -36,7 +35,6 @@ class profile::baseconfig::puppet {
     setting => 'server',
     value   => $puppetserver,
     notify  => Service['puppet'],
-    require => Package[$agentpackage],
   }
   ini_setting { 'Puppet caserver':
     ensure  => present,
@@ -45,12 +43,10 @@ class profile::baseconfig::puppet {
     setting => 'ca_server',
     value   => $caserver,
     notify  => Service['puppet'],
-    require => Package[$agentpackage],
   }
 
   service { 'puppet':
     ensure  => 'running',
     enable  => true,
-    require => Package[$agentpackage],
   }
 }
