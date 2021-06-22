@@ -19,6 +19,11 @@ class profile::services::postgresql::server {
   $replicator_password = lookup('profile::postgres::replicatorpassword', String)
   $master_server = lookup('profile::postgres::masterserver', String)
 
+  $keepalived = lookup('profile::rabbitmq::keepalived::enable', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
   include ::profile::services::postgresql::pghba
   include ::profile::services::postgresql::pgpass
 
@@ -37,7 +42,7 @@ class profile::services::postgresql::server {
 
   # If the IP defined to be the postgres-IP is the same as the hosts own IP,
   # just install postgres as normal.
-  if($ip == $postgresql_ipv4) {
+  if($ip == $postgresql_ipv4 or ! $keepalived) {
     $vips = []
 
   # If the IP defined to be the postgres-IP differs from the hosts own IP,
