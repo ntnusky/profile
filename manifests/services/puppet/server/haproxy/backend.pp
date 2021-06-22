@@ -6,6 +6,6 @@ class profile::services::puppet::server::haproxy::backend {
     backend   => 'bk_puppetserver',
     interface => $if,
     options   => 'check',
-    port      => '8140',
+    port      => 8140,
   }
 }

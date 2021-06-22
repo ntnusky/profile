@@ -1,11 +1,11 @@
 # Configures a generic haproxy backend
 define profile::services::haproxy::backend (
-  String                         $backend,
-  Stdlib::Port                   $port,
-  String                         $hostname = $::hostname,
-  String                         $interface = undef,
-  Stdlib::IP::Address::Nosubnet  $ip = undef,
-  Variant[Array[String], String] $options = [],
+  String                                  $backend,
+  Stdlib::Port                            $port,
+  String                                  $hostname = $::hostname,
+  Optional[String]                        $interface = undef,
+  Optional[Stdlib::IP::Address::Nosubnet] $ip = undef,
+  Variant[Array[String], String]          $options = [],
 ) {
   # Fail the run if neither IP or interface of the backend is defined.
   if($ip == undef and $interface == undef) {

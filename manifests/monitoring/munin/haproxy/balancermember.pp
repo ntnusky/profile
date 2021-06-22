@@ -6,6 +6,6 @@ class profile::monitoring::munin::haproxy::balancermember {
     backend   => 'bk_munin',
     interface => $management_if,
     options   => 'check inter 5s',
-    port      => '80',
+    port      => 80,
   }
 }

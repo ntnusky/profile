@@ -6,6 +6,6 @@ class profile::services::dashboard::haproxy::backend {
     backend   => 'bk_shiftleader',
     interface => $if,
     options   => [ 'check inter 5s', ],
-    port      => '80',
+    port      => 80,
   }
 }

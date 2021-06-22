@@ -6,6 +6,6 @@ class profile::services::mysql::haproxy::backend {
     backend   => 'bk_mysqlcluster',
     interface => $if,
     options   => 'backup check',
-    port      => '3306',
+    port      => 3306,
   }
 }
