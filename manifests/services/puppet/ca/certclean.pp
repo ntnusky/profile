@@ -10,7 +10,7 @@ class profile::services::puppet::ca::certclean {
     'value_type'    => String,
   })
 
-  if($collection == 'puppet7) {
+  if($collection == 'puppet7') {
     $script = 'puppetcert_clean_v7.sh'
   } else {
     $script = 'puppetcert_clean.sh'
