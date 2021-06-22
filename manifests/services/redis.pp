@@ -1,7 +1,5 @@
 # Install and configure redis-cluster for sensu
-
 class profile::services::redis {
-
   contain ::profile::services::redis::firewall
 
   $nodetype = lookup('profile::redis::nodetype', Enum['slave', 'master'])
@@ -17,11 +15,6 @@ class profile::services::redis {
     'default_value' => true,
   })
   $masterauth = lookup('profile::redis::masterauth', String)
-
-  $register_loadbalancer = lookup('profile::haproxy::register', {
-    'value_type'    => Boolean,
-    'default_value' => True,
-  })
 
   if ( $nodetype == 'slave' ) {
     $slaveof = "${redismaster} 6379"
@@ -49,21 +42,11 @@ class profile::services::redis {
     sentinel_bind    => "${ip} 127.0.0.1",
   }
 
-  if($register_loadbalancer) {
-    profile::services::haproxy::tools::register { "Redis-${::fqdn}":
-      servername  => $::hostname,
-      backendname => 'bk_redis',
-    }
-
-    @@haproxy::balancermember { $::fqdn:
-      listening_service => 'bk_redis',
-      ports             => '6379',
-      ipaddresses       => $ip,
-      server_names      => $::hostname,
-      options           => [
-        'backup check inter 1s',
-      ],
-    }
+  ::profile::services::haproxy::backend { 'Redis':
+    backend => 'bk_redis',
+    ip      => $ip,
+    options => 'backup check inter 1s',
+    port    => '6379',
   }
 
   if ($installsensu) {

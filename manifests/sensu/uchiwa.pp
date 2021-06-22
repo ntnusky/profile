@@ -26,11 +26,6 @@ class profile::sensu::uchiwa {
   $private_key_path = '/etc/sensu/keys/uchiwa.rsa'
   $public_key_path  = '/etc/sensu/keys/uchiwa.rsa.pub'
 
-  $register_loadbalancer = lookup('profile::haproxy::register', {
-    'value_type'    => Boolean,
-    'default_value' => True,
-  })
-
   if ( $management_netv6 ) {
     $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     $ip = concat([], $management_ipv4, $management_ipv6)
@@ -112,20 +107,10 @@ class profile::sensu::uchiwa {
     notify  => Service[$uchiwa::service_name],
   }
 
-  if($register_loadbalancer) {
-    profile::services::haproxy::tools::register { "Uchiwa-${::fqdn}":
-      servername  => $::hostname,
-      backendname => 'bk_uchiwa',
-    }
-
-    @@haproxy::balancermember { $::fqdn:
-      listening_service => 'bk_uchiwa',
-      ports             => '80',
-      ipaddresses       => $management_ipv4,
-      server_names      => $::hostname,
-      options           => [
-        'check inter 5s',
-      ],
-    }
+  ::profile::services::haproxy::backend { 'Uchiwa':
+    backend => 'bk_uchiwa',
+    ip      => $management_ipv4,
+    options => 'check inter 5s',
+    port    => '80',
   }
 }
