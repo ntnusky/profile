@@ -79,7 +79,11 @@ class profile::services::postgresql::server {
     'checkpoint_segments': ensure => 'absent';
     'max_connections':     value  => '250';
     'max_wal_senders':     value  => '3';
-    'wal_keep_segments':   value  => '8';
     'wal_level':           value  => 'hot_standby';
+  }
+  if(versioncmp($postgres_version, '13') >= 0) {
+    postgresql::server::config_entry { 'wal_keep_size': value  => '128'; }
+  } else {
+    postgresql::server::config_entry { 'wal_keep_segments': value  => '8'; }
   }
 }
