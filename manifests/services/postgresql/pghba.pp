@@ -6,6 +6,11 @@ class profile::services::postgresql::pghba {
     'default_value' => $facts['networking']['interfaces'][$mif]['ip'],
   })
 
+  $postgres_version = lookup('profile::postgres::version', {
+    'default_value' => '9.6',
+    'value_type'    => String,
+  })
+
   @@postgresql::server::pg_hba_rule { "allow ${ip} for replication":
     description => "Open up PostgreSQL for access from ${ip}",
     type        => 'host',
@@ -13,7 +18,8 @@ class profile::services::postgresql::pghba {
     user        => 'replicator',
     address     => "${ip}/32",
     auth_method => 'md5',
+    tag         => "pghba-${postgres_version}",
   }
 
-  Postgresql::Server::Pg_hba_rule <<| |>>
+  Postgresql::Server::Pg_hba_rule <<| tag == "pghba-${postgres_version}" |>>
 }
