@@ -19,7 +19,7 @@ class profile::services::postgresql::server {
   $replicator_password = lookup('profile::postgres::replicatorpassword', String)
   $master_server = lookup('profile::postgres::masterserver', String)
 
-  $keepalived = lookup('profile::rabbitmq::keepalived::enable', {
+  $keepalived = lookup('profile::postgres::keepalived::enable', {
     'default_value' => true,
     'value_type'    => Boolean,
   })
