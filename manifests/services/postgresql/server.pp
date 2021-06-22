@@ -24,6 +24,11 @@ class profile::services::postgresql::server {
     'value_type'    => Boolean,
   })
 
+  $postgres_version = lookup('profile::postgres::version', {
+    'default_value' => '9.6',
+    'value_type'    => String,
+  })
+
   include ::profile::services::postgresql::pghba
   include ::profile::services::postgresql::pgpass
 
@@ -54,7 +59,7 @@ class profile::services::postgresql::server {
 
   class { '::postgresql::globals':
     manage_package_repo => true,
-    version             => '9.6',
+    version             => $postgres_version,
   }
 
   $ips = concat($vips, '127.0.0.1', '::1', $ip)
