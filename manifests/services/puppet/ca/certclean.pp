@@ -10,6 +10,8 @@ class profile::services::puppet::ca::certclean {
     'value_type'    => String,
   })
 
+  # TODO: This split can be removed after all our platforms are upgraded to
+  # puppet 7
   if($collection == 'puppet7') {
     $script = 'puppetcert_clean_v7.sh'
   } else {
