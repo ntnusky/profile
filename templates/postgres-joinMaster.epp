@@ -27,5 +27,5 @@ echo Add trigger config
 echo "trigger_file = '/var/lib/postgresql/<%= $version %>/main/triggerfile'" >> \
     /var/lib/postgresql/<%= $version %>/main/recovery.conf
 
-echo Startging PostgreSQL
+echo Starting PostgreSQL
 systemctl start postgresql
