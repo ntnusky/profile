@@ -19,8 +19,19 @@ class profile::services::postgresql::server {
   $replicator_password = lookup('profile::postgres::replicatorpassword', String)
   $master_server = lookup('profile::postgres::masterserver', String)
 
+  $keepalived = lookup('profile::postgres::keepalived::enable', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
+  $postgres_version = lookup('profile::postgres::version', {
+    'default_value' => '9.6',
+    'value_type'    => String,
+  })
+
   include ::profile::services::postgresql::pghba
   include ::profile::services::postgresql::pgpass
+  include ::profile::services::postgresql::scripts
 
   if($::fqdn == $master_server) {
     $confpassword = $password
@@ -37,7 +48,7 @@ class profile::services::postgresql::server {
 
   # If the IP defined to be the postgres-IP is the same as the hosts own IP,
   # just install postgres as normal.
-  if($ip == $postgresql_ipv4) {
+  if($ip == $postgresql_ipv4 or ! $keepalived) {
     $vips = []
 
   # If the IP defined to be the postgres-IP differs from the hosts own IP,
@@ -49,7 +60,7 @@ class profile::services::postgresql::server {
 
   class { '::postgresql::globals':
     manage_package_repo => true,
-    version             => '9.6',
+    version             => $postgres_version,
   }
 
   $ips = concat($vips, '127.0.0.1', '::1', $ip)
@@ -69,7 +80,12 @@ class profile::services::postgresql::server {
     'checkpoint_segments': ensure => 'absent';
     'max_connections':     value  => '250';
     'max_wal_senders':     value  => '3';
-    'wal_keep_segments':   value  => '8';
     'wal_level':           value  => 'hot_standby';
+  }
+
+  if(versioncmp($postgres_version, '13') >= 0) {
+    postgresql::server::config_entry { 'wal_keep_size': value  => '128'; }
+  } else {
+    postgresql::server::config_entry { 'wal_keep_segments': value  => '8'; }
   }
 }
