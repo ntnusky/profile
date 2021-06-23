@@ -24,8 +24,13 @@ sudo -u postgres pg_basebackup -h $host \
     -U replicator -v -P -w -R
 
 echo Add trigger config
+<% if(versioncmp($version, '13') >= 0) { -%>
+echo "promote_trigger_file = '/var/lib/postgresql/13/main/triggerfile'" >> \
+    /var/lib/postgresql/<%= $version %>/main/postgresql.auto.conf
+<% } else { -%>
 echo "trigger_file = '/var/lib/postgresql/<%= $version %>/main/triggerfile'" >> \
     /var/lib/postgresql/<%= $version %>/main/recovery.conf
+<% } -%>
 
 echo Starting PostgreSQL
 systemctl start postgresql
