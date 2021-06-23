@@ -31,6 +31,7 @@ class profile::services::postgresql::server {
 
   include ::profile::services::postgresql::pghba
   include ::profile::services::postgresql::pgpass
+  include ::profile::services::postgresql::scripts
 
   if($::fqdn == $master_server) {
     $confpassword = $password
@@ -81,6 +82,7 @@ class profile::services::postgresql::server {
     'max_wal_senders':     value  => '3';
     'wal_level':           value  => 'hot_standby';
   }
+
   if(versioncmp($postgres_version, '13') >= 0) {
     postgresql::server::config_entry { 'wal_keep_size': value  => '128'; }
   } else {
