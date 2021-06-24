@@ -8,13 +8,12 @@ class profile::baseconfig::networking {
   })
   if($if_to_configure) {
     $os = $facts['operatingsystem']
-    $distro = $facts['os']['release']['major']
-    if($distro == '18.04') {
+    if($os == 'Ubuntu') {
       class { '::profile::baseconfig::network::netplan':
         nics => $if_to_configure,
       }
     }
-    elsif($distro == '16.04') or ($os == 'CentOS') {
+    elsif ($os == 'CentOS') {
       class { '::profile::baseconfig::network::ifupdown':
         nics => $if_to_configure,
       }
