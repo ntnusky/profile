@@ -34,7 +34,7 @@ class profile::sensu::checks::base {
   }
 
   sensu::check { 'puppetrun':
-    command     => "sudo check-puppet-last-run.rb -r -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
+    command     => "sudo check-puppet-last-run.rb -r -s /opt/puppetlabs/puppet/public/last_run_summary.yaml -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
