@@ -7,7 +7,7 @@ class profile::baseconfig::ntp {
     'default_value' => 'Europe/Oslo'
   })
 
-  $rel = $facts['os']['relase']['major']
+  $rel = $facts['os']['release']['major']
   if ($rel == 18.04) {
     class { '::ntp':
         servers  => $ntpservers,
