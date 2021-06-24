@@ -3,7 +3,11 @@ import time
 import sys
 import yaml
 
-statusfile = open('/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml', 'r')
+try:
+  statusfile = open('/opt/puppetlabs/puppet/public/last_run_summary.yaml', 'r')
+except FileNotFoundError:
+  statusfile = open('/opt/puppetlabs/puppet/cache/state/last_run_summary.yaml', 'r')
+
 y = yaml.safe_load(statusfile)
 
 if('config' in sys.argv):
