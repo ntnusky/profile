@@ -1,9 +1,15 @@
 # Sensu checks intended for all nodes
 class profile::sensu::checks::base {
-
   $puppet_runinterval = Integer(lookup('profile::puppet::runinterval')[0,-2])*60
   $puppetwarn = $puppet_runinterval*3
   $puppetcrit = $puppet_runinterval*10
+
+  $puppetversion = lookup('profile::puppet::collection', String)
+  if($puppetversion == 'puppet7') {
+    $p = '-s /opt/puppetlabs/puppet/public/last_run_summary.yaml'
+  } else {
+    $p = ''
+  }
 
   sensu::check { 'diskspace':
     command     => 'check-disk-usage.rb -w :::disk.warning|80::: -c :::disk.critical|90::: -t ext2,ext3,ext4,xfs -i :::disk.ignore|none:::',
@@ -34,7 +40,7 @@ class profile::sensu::checks::base {
   }
 
   sensu::check { 'puppetrun':
-    command     => "sudo check-puppet-last-run.rb -r -s /opt/puppetlabs/puppet/public/last_run_summary.yaml -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
+    command     => "sudo check-puppet-last-run.rb -r ${p} -w :::puppet.warn|${puppetwarn}::: -c :::puppet.crit|${puppetcrit}:::",
     interval    => 300,
     standalone  => false,
     subscribers => [ 'all' ],
