@@ -6,7 +6,7 @@ class profile::services::haproxy::certs::serviceapi {
     'value_type'    => Variant[Boolean, String],
   })
   $certfile = lookup('profile::haproxy::services::apicert::certfile', {
-    'default_value' => '/etc/ssl/private/haproxy.servicesapi.pem'
+    'default_value' => '/etc/ssl/private/haproxy.servicesapi.pem',
     'value_type'    => Stdlib::Unixpath,
   })
 
