@@ -8,7 +8,7 @@ class profile::baseconfig::ntp {
   })
 
   $rel = $facts['os']['release']['major']
-  if ($rel == 18.04) {
+  if ($rel == '18.04') {
     class { '::ntp':
         servers  => $ntpservers,
         restrict => [
