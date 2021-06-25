@@ -13,7 +13,7 @@ class profile::ceph::base {
                             Array[Stdlib::IP::Address::V4::CIDR])
   $cluster_networks = lookup('profile::ceph::cluster_networks', {
     'default_value' => undef,
-    'value_type'    => Variant[Undef, Array[Stdlib::IP::Address::V4::CIDR]],
+    'value_type'    => Optional[Array[Stdlib::IP::Address::V4::CIDR]],
   })
 
   # Various settings
