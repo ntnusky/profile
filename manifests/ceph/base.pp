@@ -20,15 +20,15 @@ class profile::ceph::base {
   $fsid = lookup('profile::ceph::fsid')
   $replicas =  lookup('profile::ceph::replicas', {
     'default_value' => undef,
-    'value_type'    => Variant[Undef, Integer],
+    'value_type'    => Optional[Integer],
   })
   $journal_size =  lookup('profile::ceph::journal::size', {
     'default_value' => undef,
-    'value_type'    => Variant[Undef, Integer],
+    'value_type'    => Optional[Integer],
   })
   $bluestore_cache_size = lookup('profile::ceph::bluestore::cache::size', {
     'default_value' => undef,
-    'value_type'    => Variant[Undef, Integer],
+    'value_type'    => Optional[Integer],
   })
 
   # Install the ceph repos first
