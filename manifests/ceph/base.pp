@@ -5,8 +5,8 @@ class profile::ceph::base {
     'default_value' => {},
     'value_type'    => Variant[Hash[String,Stdlib::IP::Address], Hash],
   })
-  $ceph_mon_names = keys($ceph_mons)
-  $ceph_mon_addresses = values($ceph_mons)
+  $ceph_mon_names = join(keys($ceph_mons), ',')
+  $ceph_mon_addresses = join(values($ceph_mons), ',')
 
   # Configure the CIDR's used for the ceph networks.
   $public_networks = lookup('profile::ceph::public_networks',
