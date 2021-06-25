@@ -1,8 +1,11 @@
 # Creates rabbitmq user and vhost for sensu
 class profile::services::rabbitmq::sensu {
 
-  $sensurabbitpass = hiera('profile::sensu::rabbit_password')
-  $rabbithosts = hiera('profile::rabbitmq::servers', false)
+  $sensurabbitpass = lookup('profile::sensu::rabbit_password', String)
+  $rabbithosts = lookup('profile::rabbitmq::servers', {
+    'default_value' => false,
+    'value_type'    => Variant[Array[String], Boolean]
+  })
 
   rabbitmq_user { 'sensu':
     admin    => false,
