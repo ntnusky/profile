@@ -1,6 +1,6 @@
 # Installs the client.admin ceph key
 class profile::ceph::key::admin {
-  $admin_key = hiera('profile::ceph::admin_key')
+  $admin_key = lookup('profile::ceph::admin_key')
 
   ceph::key { 'client.admin':
     secret  => $admin_key,

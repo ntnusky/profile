@@ -1,16 +1,23 @@
 # Install and configure ceph-mon
 class profile::ceph::monitor {
-  $mon_key = hiera('profile::ceph::monitor_key')
-  $mgr_key = hiera('profile::ceph::mgr_key')
-  $admin_key = hiera('profile::ceph::admin_key')
-  $bootstrap_osd_key = hiera('profile::ceph::osd_bootstrap_key')
+  $mon_key = lookup('profile::ceph::monitor_key', String)
+  $mgr_key = lookup('profile::ceph::mgr_key', String)
+  $admin_key = lookup('profile::ceph::admin_key', String)
+  $bootstrap_osd_key = lookup('profile::ceph::osd_bootstrap_key', String)
 
-  $installmunin = hiera('profile::munin::install', true)
+  $installmunin = lookup('profile::munin::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+  $installsensu = lookup('profile::sensu::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
   if($installmunin) {
     include ::profile::monitoring::munin::plugin::ceph
   }
 
-  $installsensu = hiera('profile::sensu::install', true)
   if ($installsensu) {
     include ::profile::sensu::plugin::ceph
     sensu::subscription { 'roundrobin:ceph': }

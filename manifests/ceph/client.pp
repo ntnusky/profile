@@ -1,7 +1,7 @@
 # This class installs the ceph client, and configures to be able to use the ceph
 # cluster.
 class profile::ceph::client {
-  $admin_key = hiera('profile::ceph::admin_key')
+  $admin_key = lookup('profile::ceph::admin_key', String)
 
   include ::profile::ceph::base
   include ::profile::ceph::key::admin
