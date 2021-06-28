@@ -3,7 +3,7 @@ class profile::services::mysql::users {
   $rootpassword = lookup('profile::mysqlcluster::root_password')
   $haproxypassword = lookup('profile::mysqlcluster::haproxy_password')
 
-  file { '/root/my.cnf':
+  file { '/root/.my.cnf':
     ensure  => 'file',
     owner   => root,
     group   => root,
