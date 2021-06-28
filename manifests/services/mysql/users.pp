@@ -5,7 +5,7 @@ class profile::services::mysql::users {
 
   mysql_user { 'root@%':
     ensure        => 'present',
-    password_hash => mysql_password($rootpassword)
+    password_hash => mysql::password($rootpassword)
   }
   ->mysql_grant { 'root@%/*.*':
     ensure     => 'present',
@@ -17,7 +17,7 @@ class profile::services::mysql::users {
 
   mysql_user { 'haproxy_check@%':
     ensure        => 'present',
-    password_hash => mysql_password($haproxypassword)
+    password_hash => mysql::password($haproxypassword)
   }
   ->mysql_grant { 'haproxy_check@%/mysql.user':
     ensure     => 'present',
