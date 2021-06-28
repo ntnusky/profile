@@ -11,6 +11,8 @@ class profile::services::mysql::users {
     content => epp('profile/mysql/root.my.cnf.epp', {
       'password' => $rootpassword
     }),
+    require => Service['mysqld'],
+    before  => Class['mysql::server::root_password'],
   }
 
   mysql_user { 'root@%':
