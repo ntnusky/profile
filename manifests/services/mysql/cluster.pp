@@ -32,6 +32,7 @@ class profile::services::mysql::cluster {
 
   class { '::galera' :
     cluster_name        => 'my_wsrep_cluster',
+    create_root_my_cnf  => false,
     galera_servers      => $servers,
     galera_master       => $master,
     status_password     => $statuspassword,
