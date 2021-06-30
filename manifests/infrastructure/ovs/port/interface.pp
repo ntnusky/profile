@@ -23,7 +23,7 @@ define profile::infrastructure::ovs::port::interface (
   }
 
   # Make sure that the physical port is configured to be up.
-  $os = $facts['operatingsytem']
+  $os = $facts['operatingsystem']
   if($os == 'Ubuntu') {
     if($driver == '') {
       $parameters = { 'ifname' => $interface }
