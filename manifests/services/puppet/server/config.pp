@@ -18,6 +18,17 @@ class profile::services::puppet::server::config {
 
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
+
+    file { '/etc/puppetlabs/puppetserver/conf.d/ca.conf':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/profile/puppet/ca.conf',
+      notify  => Service['puppetserver'],
+      require => Package['puppetserver'],
+    }
+
   } else {
     $template = 'ca.disabled.cfg'
   }
