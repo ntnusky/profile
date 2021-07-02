@@ -12,4 +12,4 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-echo "projects.value $(openstack project list -f value | wc -l)"
+echo "projects.value $(openstack project list -f value --domain NTNU | wc -l)"
