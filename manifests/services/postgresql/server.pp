@@ -84,7 +84,10 @@ class profile::services::postgresql::server {
   }
 
   if(versioncmp($postgres_version, '13') >= 0) {
-    postgresql::server::config_entry { 'wal_keep_size': value  => '128'; }
+    postgresql::server::config_entry {
+      'wal_keep_size':        value => '128';
+      'promote_trigger_file': value => '/var/lib/postgresql/13/main/triggerfile';
+    }
   } else {
     postgresql::server::config_entry { 'wal_keep_segments': value  => '8'; }
   }
