@@ -15,7 +15,7 @@ class profile::services::dashboard::mysql {
   }
 
   mysql_user { "${database_user}@${database_grant}":
-    password_hash => mysql_password($database_pass),
+    password_hash => mysql::password($database_pass),
     require       => Mysql_database[$database_name],
   }
 

@@ -1,15 +1,15 @@
 # This class switches to a simpler io-scheduler for disks listed in hiera. The
-# purpose is to make scheduling to SSD's more efficient. 
+# purpose is to make scheduling to SSD's more efficient.
 class profile::baseconfig::ioscheduler {
   $ssds = lookup('profile::disk::ssds', Array[String], 'unique', [])
-  $ssdqueue = lookup('profile::disk::ssd::queue', Integer, 'first', 4096) 
-  $ssdscheduler = lookup('profile::disk::ssd::scheduler', 
-      Enum['noop', 'deadline', 'cfq'], 'first', 'noop')
+  $ssdqueue = lookup('profile::disk::ssd::queue', Integer, 'first', 4096)
+  $ssdscheduler = lookup('profile::disk::ssd::scheduler',
+      Enum['noop', 'deadline', 'cfq', 'none', 'mq-deadline'], 'first', 'noop')
 
   $hdds = lookup('profile::disk::hdds', Array[String], 'unique', [])
-  $hddqueue = lookup('profile::disk::hdd::queue', Integer, 'first', 512) 
-  $hddscheduler = lookup('profile::disk::hdd::scheduler', 
-      Enum['noop', 'deadline', 'cfq'], 'first', 'cfq')
+  $hddqueue = lookup('profile::disk::hdd::queue', Integer, 'first', 512)
+  $hddscheduler = lookup('profile::disk::hdd::scheduler',
+      Enum['noop', 'deadline', 'cfq', 'none', 'mq-deadline'], 'first', 'cfq')
 
   $ssds.each | $ssd | {
     require ::profile::baseconfig::ioscheduler::scripts

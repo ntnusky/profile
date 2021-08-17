@@ -31,6 +31,8 @@ class profile::services::mysql::cluster {
   include ::profile::services::mysql::sudo
 
   class { '::galera' :
+    cluster_name        => 'my_wsrep_cluster',
+    create_root_my_cnf  => false,
     galera_servers      => $servers,
     galera_master       => $master,
     status_password     => $statuspassword,

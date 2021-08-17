@@ -7,17 +7,9 @@ class profile::baseconfig::ntp {
     'default_value' => 'Europe/Oslo'
   })
 
-  case $::operatingsystem {
-    'CentOS': {
-      class { '::chrony':
-        servers => $ntpservers
-      }
-      if($installsensu) {
-        sensu::subscription { 'chrony': }
-      }
-    }
-    'Ubuntu': {
-      class { '::ntp':
+  $rel = $facts['os']['release']['major']
+  if ($rel == '18.04') {
+    class { '::ntp':
         servers  => $ntpservers,
         restrict => [
           '127.0.0.1',
@@ -26,12 +18,15 @@ class profile::baseconfig::ntp {
           '-6 default kod nomodify notrap nopeer noquery',
         ],
       }
-      if($installsensu) {
-        sensu::subscription { 'ntpd': }
-      }
+    if($installsensu) {
+      sensu::subscription { 'ntpd': }
     }
-    default: {
-      fail("Unsopperted operating system: ${::operatingsystem}")
+  } else {
+    class { '::chrony':
+      servers => $ntpservers
+    }
+    if($installsensu) {
+      sensu::subscription { 'chrony': }
     }
   }
 

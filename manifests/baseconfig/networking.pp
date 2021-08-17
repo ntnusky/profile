@@ -9,12 +9,15 @@ class profile::baseconfig::networking {
   if($if_to_configure) {
     $os = $facts['operatingsystem']
     $distro = $facts['os']['release']['major']
-    if($distro == '18.04') {
+    if($os == 'Ubuntu' and $distro != '16.04') {
       class { '::profile::baseconfig::network::netplan':
         nics => $if_to_configure,
       }
     }
-    elsif($distro == '16.04') or ($os == 'CentOS') {
+    # TODO: The 16.04 logic is present to ensure that existing
+    # 16.04 don't fail their puppet-run before they're reinstalled
+    # Delete when you've got rid of them
+    elsif ($os == 'CentOS' or $distro == '16.04') {
       class { '::profile::baseconfig::network::ifupdown':
         nics => $if_to_configure,
       }

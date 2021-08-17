@@ -1,0 +1,31 @@
+<% | String $password | %>
+
+[mysql]
+user=root
+host=localhost
+password="<%= $password %>"
+socket=/var/run/mysqld/mysqld.sock
+
+[client]
+user=root
+host=localhost
+password="<%= $password %>"
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqldump]
+user=root
+host=localhost
+password="<%= $password %>"
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqladmin]
+user=root
+host=localhost
+password="<%= $password %>"
+socket=/var/run/mysqld/mysqld.sock
+
+[mysqlcheck]
+user=root
+host=localhost
+password="<%= $password %>"
+socket=/var/run/mysqld/mysqld.sock

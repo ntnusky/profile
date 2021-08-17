@@ -3,8 +3,9 @@
 class profile::ceph::firewall::daemons {
   require ::profile::baseconfig::firewall
 
-  $public_networks = hiera_array('profile::ceph::public_networks')
-  $storage_interface = hiera('profile::interfaces::storage')
+  $public_networks = lookup('profile::ceph::public_networks',
+                            Array[Stdlib::IP::Address::V4::CIDR])
+  $storage_interface = lookup('profile::interfaces::storage', String)
 
   $public_networks.each | $net | {
     firewall { "200 accept incoming traffic for ceph daemons from ${net}":

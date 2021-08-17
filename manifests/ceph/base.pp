@@ -1,24 +1,35 @@
 # Provides the base-configuration of ceph
 class profile::ceph::base {
-  # Determine the names/addresses of the ceph-mons, which might be a combination
-  # of the old style controllers, or the new dedicated VM's.
-  $controllernames = hiera_array('controller::names', [])
-  $controlleraddresses = hiera_array('controller::storage::addresses', [])
-  $ceph_mons = hiera_hash('profile::ceph::monitors', {})
-  $ceph_mon_names = keys($ceph_mons)
-  $ceph_mon_address = values($ceph_mons)
-  $initial_names = join(concat($controllernames, $ceph_mon_names), ',')
-  $initial_addresses = join(concat($controlleraddresses, $ceph_mon_address), ',')
+  # Determine the names/addresses of the ceph-mons
+  $ceph_mons = lookup('profile::ceph::monitors', {
+    'default_value' => {},
+    'value_type'    => Variant[Hash[String,Stdlib::IP::Address], Hash],
+  })
+  $ceph_mon_names = join(keys($ceph_mons), ',')
+  $ceph_mon_addresses = join(values($ceph_mons), ',')
 
   # Configure the CIDR's used for the ceph networks.
-  $public_networks = hiera_array('profile::ceph::public_networks')
-  $cluster_networks = hiera_array('profile::ceph::cluster_networks', undef)
+  $public_networks = lookup('profile::ceph::public_networks',
+                            Array[Stdlib::IP::Address::V4::CIDR])
+  $cluster_networks = lookup('profile::ceph::cluster_networks', {
+    'default_value' => undef,
+    'value_type'    => Optional[Array[Stdlib::IP::Address::V4::CIDR]],
+  })
 
   # Various settings
-  $fsid = hiera('profile::ceph::fsid')
-  $replicas =  hiera('profile::ceph::replicas', undef)
-  $journal_size =  hiera('profile::ceph::journal::size', undef)
-  $bluestore_cache_size = hiera('profile::ceph::bluestore::cache::size', undef)
+  $fsid = lookup('profile::ceph::fsid')
+  $replicas =  lookup('profile::ceph::replicas', {
+    'default_value' => undef,
+    'value_type'    => Optional[Integer],
+  })
+  $journal_size =  lookup('profile::ceph::journal::size', {
+    'default_value' => undef,
+    'value_type'    => Optional[Integer],
+  })
+  $bluestore_cache_size = lookup('profile::ceph::bluestore::cache::size', {
+    'default_value' => undef,
+    'value_type'    => Optional[Integer],
+  })
 
   # Install the ceph repos first
   require ::profile::ceph::repo
@@ -31,8 +42,8 @@ class profile::ceph::base {
 
   class { 'ceph':
     fsid                  => $fsid,
-    mon_initial_members   => $initial_names,
-    mon_host              => $initial_addresses,
+    mon_initial_members   => $ceph_mon_names,
+    mon_host              => $ceph_mon_addresses,
     osd_pool_default_size => $replicas,
     public_network        => join($public_networks, ', '),
     cluster_network       => $cluster_networks_real,
