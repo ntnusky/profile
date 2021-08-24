@@ -65,10 +65,7 @@ class profile::services::mysql::cluster {
     require => Class['::galera'],
   }
 
-  class { '::systemd':
-    purge_dropin_dirs => false,
-  }
-  -> systemd::dropin_file { 'limits.conf':
+  systemd::dropin_file { 'limits.conf':
     unit    => 'mariadb.service',
     source  => 'puppet:///modules/profile/mysql/limits.conf',
     require => Class['::galera'],
