@@ -64,4 +64,11 @@ class profile::services::mysql::cluster {
     ensure  => 'absent',
     require => Class['::galera'],
   }
+
+  systemd::dropin_file { 'limits.conf':
+    unit    => 'mariadb.service',
+    source  => 'puppet:///modules/profile/mysql/limits.conf',
+    require => Class['::galera'],
+    notify  => Service['mysqld'],
+  }
 }
