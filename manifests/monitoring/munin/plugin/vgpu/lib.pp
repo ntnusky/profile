@@ -1,6 +1,11 @@
 # Install a simple python-lib for the vgpu munin plugins
 class profile::monitoring::munin::plugin::vgpu::lib {
-  file { '/usr/lib/python3.6/site-packages/munin_vgpu.py':
+  $pkgpath = $facts['operatingsystem'] ? {
+    'CentOS' => '/usr/lib/python3.6/site-packages',
+    'Ubuntu' => '/usr/lib/python3/dist-packages'
+  }
+
+  file { "${pkgpath}/munin_vgpu.py":
     ensure => present,
     owner  => 'root',
     group  => 'root',

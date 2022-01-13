@@ -29,6 +29,11 @@ class profile::services::postgresql::server {
     'value_type'    => String,
   })
 
+  $max_connections = lookup('profile::postgres::max_connections', {
+    'default_value' => 250,
+    'value_type'    => Integer,
+  })
+
   include ::profile::services::postgresql::pghba
   include ::profile::services::postgresql::pgpass
   include ::profile::services::postgresql::scripts
@@ -78,7 +83,7 @@ class profile::services::postgresql::server {
 
   postgresql::server::config_entry {
     'checkpoint_segments': ensure => 'absent';
-    'max_connections':     value  => '250';
+    'max_connections':     value  => $max_connections;
     'max_wal_senders':     value  => '3';
     'wal_level':           value  => 'hot_standby';
   }
