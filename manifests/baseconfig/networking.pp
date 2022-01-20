@@ -1,6 +1,8 @@
 # This class configures the network interfaces of a node based on data from
 # hiera.
 class profile::baseconfig::networking {
+  include ::profile::baseconfig::network::socketbuffer
+
   # Configure interfaces as instructed in hiera.
   $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
     'default_value' => false,
@@ -38,6 +40,7 @@ class profile::baseconfig::networking {
     # If the bridge should have an external connection
     if($configuration['external']) {
       if($configuration['external']['mtu']) {
+        # TODO: This should really just be $configuration['mtu']?
         $mtu = $configuration['external']['mtu']
       } else {
         $mtu = 1500
