@@ -6,8 +6,10 @@ class profile::baseconfig::updates::yumcron {
 
   class { '::yum_cron':
     apply_updates => true,
-    update_cmd    => 'security',
     email_host    => $email_host,
     mailto        => $mailto,
+    extra_configs => {
+      'commands/upgrade_type' => { 'value' => 'security' }
+    },
   }
 }

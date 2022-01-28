@@ -21,7 +21,18 @@ class profile::services::mysql::cluster {
     'default_value' => $mip,
   })
 
+  include ::profile::services::mysql::backup
+  include ::profile::services::mysql::databases
+  include ::profile::services::mysql::firewall::mysql
+  include ::profile::services::mysql::firewall::galera
+  include ::profile::services::mysql::haproxy::backend
+  include ::profile::services::mysql::monitoring
+  include ::profile::services::mysql::users
+  include ::profile::services::mysql::sudo
+
   class { '::galera' :
+    cluster_name        => 'my_wsrep_cluster',
+    create_root_my_cnf  => false,
     galera_servers      => $servers,
     galera_master       => $master,
     status_password     => $statuspassword,
@@ -40,11 +51,25 @@ class profile::services::mysql::cluster {
         'max_connections'        => '1000',
         'net_read_timeout'       => $net_read_timeout,
         'net_write_timeout'      => $net_write_timeout,
+        'ssl-disable'            => true,
         'wsrep_provider_options' => '"gcache.size=2G"',
       }
     },
     require             => [
-      Class['::profile::services::mysql::firewall::server'],
+      Class['::profile::services::mysql::firewall::mysql'],
+      Class['::profile::services::mysql::firewall::galera'],
     ],
+  }
+
+  mysql_user { "root@${master}":
+    ensure  => 'absent',
+    require => Class['::galera'],
+  }
+
+  systemd::dropin_file { 'limits.conf':
+    unit    => 'mariadb.service',
+    source  => 'puppet:///modules/profile/mysql/limits.conf',
+    require => Class['::galera'],
+    notify  => Service['mysqld'],
   }
 }

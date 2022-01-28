@@ -18,6 +18,17 @@ class profile::services::puppet::server::config {
 
   if($puppetca == $::fqdn) {
     $template = 'ca.enabled.cfg'
+
+    file { '/etc/puppetlabs/puppetserver/conf.d/ca.conf':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      source  => 'puppet:///modules/profile/puppet/ca.conf',
+      notify  => Service['puppetserver'],
+      require => Package['puppetserver'],
+    }
+
   } else {
     $template = 'ca.disabled.cfg'
   }
@@ -73,7 +84,7 @@ class profile::services::puppet::server::config {
     path    => '/etc/puppetlabs/puppet/puppet.conf',
     section => 'master',
     setting => 'reporturl',
-    value   => "http://${dash_url}/puppet/report/",
+    value   => "http://${dash_url}/web/puppet/report/",
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }

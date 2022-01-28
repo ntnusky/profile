@@ -24,8 +24,8 @@ define profile::infrastructure::ovs::port::interface (
   }
 
   # Make sure that the physical port is configured to be up.
-  $distro = $facts['os']['release']['major']
-  if($distro == '18.04') {
+  $os = $facts['operatingsystem']
+  if($os == 'Ubuntu') {
     if($driver == '') {
       $parameters = { 'ifname' => $interface }
     } else {
@@ -44,11 +44,17 @@ define profile::infrastructure::ovs::port::interface (
       content => epp('profile/netplan/manual.epp', $parameters + $mac),
       notify  => Exec['netplan_apply'],
     }
-  } elsif($distro == '16.04') {
+  } elsif($os == 'CentOS') {
+    $macadd = $::facts['networking']['interfaces'][$ifname]['mac']
     ::network::interface { "manual-up-${interface}":
-      interface => $interface,
-      method    => 'manual',
-      mtu       => $mtu,
+      interface     => $interface,
+      hwaddr        => $macadd,
+      type          => 'OVSPort',
+      devicetype    => 'ovs',
+      ovs_bridge    => $bridge,
+      onboot        => 'yes',
+      mtu           => $mtu,
+      nm_controlled => 'no',
     }
   }
 

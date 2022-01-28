@@ -1,12 +1,7 @@
 # This class installs the ceph client, and configures to be able to use the ceph
 # cluster.
 class profile::ceph::client {
-  $admin_key = hiera('profile::ceph::admin_key')
-  $pyvers = $::osfamily ? {
-    'RedHat' => '',
-    'Debian' => '3',
-    default  => '3',
-  }
+  $admin_key = lookup('profile::ceph::admin_key', String)
 
   include ::profile::ceph::base
   include ::profile::ceph::key::admin
@@ -18,7 +13,7 @@ class profile::ceph::client {
       value => true;
   }
 
-  ensure_packages ( ['rbd-nbd', "python${pyvers}-rbd", "python${pyvers}-rados"], {
+  ensure_packages ( ['rbd-nbd', 'python3-rbd', 'python3-rados'], {
     'ensure' => 'present',
   })
 }

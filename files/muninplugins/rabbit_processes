@@ -1,6 +1,6 @@
 #!/bin/bash
 
-line=$(rabbitmqctl status | grep processes)
+line=$(rabbitmqctl status --formatter erlang | grep processes)
 
 if [[ $line =~ limit,([0-9]+).*used,([0-9]+) ]]; then
   limit=${BASH_REMATCH[1]}

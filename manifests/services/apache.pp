@@ -41,7 +41,7 @@ class profile::services::apache {
     apache::listen { "[${management_ipv6}]:80": }
   }
 
-  apache::vhost { "${::fqdn} http":
+  apache::vhost { "${::fqdn}-http":
     servername    => $::fqdn,
     port          => '80',
     ip            => $ip,

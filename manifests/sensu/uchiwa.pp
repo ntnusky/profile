@@ -52,7 +52,7 @@ class profile::sensu::uchiwa {
   include ::apache::mod::proxy
   include ::apache::mod::proxy_html
 
-  apache::vhost { "${uchiwa_url} http":
+  apache::vhost { "${uchiwa_url}-http":
     servername          => $uchiwa_url,
     serveraliases       => [$uchiwa_url],
     port                => 80,
@@ -107,19 +107,10 @@ class profile::sensu::uchiwa {
     notify  => Service[$uchiwa::service_name],
   }
 
-  profile::services::haproxy::tools::register { "Uchiwa-${::fqdn}":
-    servername  => $::hostname,
-    backendname => 'bk_uchiwa',
+  ::profile::services::haproxy::backend { 'Uchiwa':
+    backend => 'bk_uchiwa',
+    ip      => $management_ipv4,
+    options => 'check inter 5s',
+    port    => 80,
   }
-
-  @@haproxy::balancermember { $::fqdn:
-    listening_service => 'bk_uchiwa',
-    ports             => '80',
-    ipaddresses       => $management_ipv4,
-    server_names      => $::hostname,
-    options           => [
-      'check inter 5s',
-    ],
-  }
-
 }

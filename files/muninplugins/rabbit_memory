@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for line in $(rabbitmqctl status | grep memory, -A 17); do
+for line in $(rabbitmqctl status --formatter erlang | grep memory, -A 19); do
   if [[ $line =~ total,([0-9]+) ]]; then
     total=${BASH_REMATCH[1]}
   fi
@@ -16,11 +16,14 @@ for line in $(rabbitmqctl status | grep memory, -A 17); do
   if [[ $line =~ connection_other,([0-9]+) ]]; then
     connection_other=${BASH_REMATCH[1]}
   fi
-  if [[ $line =~ queue_procs,([0-9]+) ]]; then
+  if [[ $line =~ \{queue_procs,([0-9]+) ]]; then
     queue_procs=${BASH_REMATCH[1]}
   fi
   if [[ $line =~ queue_slave_procs,([0-9]+) ]]; then
     queue_slave_procs=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ quorum_queue_procs,([0-9]+) ]]; then
+    quorum_queue_procs=${BASH_REMATCH[1]}
   fi
   if [[ $line =~ plugins,([0-9]+) ]]; then
     plugins=${BASH_REMATCH[1]}
@@ -36,6 +39,9 @@ for line in $(rabbitmqctl status | grep memory, -A 17); do
   fi
   if [[ $line =~ msg_index,([0-9]+) ]]; then
     msg_index=${BASH_REMATCH[1]}
+  fi
+  if [[ $line =~ quorum_ets,([0-9]+) ]]; then
+    quorum_ets=${BASH_REMATCH[1]}
   fi
   if [[ $line =~ other_ets,([0-9]+) ]]; then
     other_ets=${BASH_REMATCH[1]}
@@ -80,6 +86,9 @@ if [[ $1 == "config" ]]; then
   echo "qslave.label Queue slave processes"
   echo "qslave.draw STACK"
   echo "qslave.info Memory used by queue slave processes"
+  echo "qqprocs.label Quorum queue processes"
+  echo "qqprocs.draw STACK"
+  echo "qqprocs.info Memory used by quorum queue processes"
   echo "plugins.label Plugins"
   echo "plugins.draw STACK"
   echo "plugins.info Memory used by plugins"
@@ -95,6 +104,9 @@ if [[ $1 == "config" ]]; then
   echo "msg.label Message index"
   echo "msg.draw STACK"
   echo "msg.info Memory used by message index"
+  echo "quorumets.label Quorum ets"
+  echo "quorumets.draw STACK"
+  echo "quorumets.info Memory used by quorum ets"
   echo "otherets.label Other ets"
   echo "otherets.draw STACK"
   echo "otherets.info Memory used by other ets"
@@ -119,11 +131,13 @@ echo "cchannels.value $connection_channels"
 echo "cother.value $connection_other"
 echo "qprocs.value $queue_procs"
 echo "qslave.value $queue_slave_procs"
+echo "qqprocs.value $quorum_queue_procs"
 echo "plugins.value $plugins"
 echo "other.value $other_proc"
 echo "mnesia.value $mnesia"
 echo "mgmt.value $mgmt_db"
 echo "msg.value $msg_index"
+echo "quorumets.value $quorum_ets"
 echo "otherets.value $other_ets"
 echo "binary.value $binary"
 echo "code.value $code"

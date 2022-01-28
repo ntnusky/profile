@@ -7,5 +7,7 @@ Defaults:%administrator secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/u
 %administrator ALL=(root) /sbin/halt, /sbin/shutdown, /sbin/reboot
 
 # Allow the admnistrator to perform a puppet-run
+%administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent -t
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent -t *
+%administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent --test
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent --test * 

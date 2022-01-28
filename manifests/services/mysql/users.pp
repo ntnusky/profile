@@ -1,19 +1,25 @@
 # Configuring galera and maraidb cluster
 class profile::services::mysql::users {
-  $master  = hiera('profile::mysqlcluster::master')
-  $rootpassword = hiera('profile::mysqlcluster::root_password')
-  $statuspassword = hiera('profile::mysqlcluster::status_password')
-  $haproxypassword = hiera('profile::mysqlcluster::haproxy_password')
+  $rootpassword = lookup('profile::mysqlcluster::root_password')
+  $haproxypassword = lookup('profile::mysqlcluster::haproxy_password')
 
-  mysql_user { "root@${master}":
-    ensure  => 'absent',
-    require => Class['::galera'],
-  }->
+  file { '/root/.my.cnf':
+    ensure  => 'file',
+    owner   => root,
+    group   => root,
+    mode    => '0600',
+    content => epp('profile/mysql/root.my.cnf.epp', {
+      'password' => $rootpassword
+    }),
+    require => Service['mysqld'],
+    before  => Class['mysql::server::root_password'],
+  }
+
   mysql_user { 'root@%':
     ensure        => 'present',
-    password_hash => mysql_password($rootpassword)
-  }->
-  mysql_grant { 'root@%/*.*':
+    password_hash => mysql::password($rootpassword)
+  }
+  ->mysql_grant { 'root@%/*.*':
     ensure     => 'present',
     options    => ['GRANT'],
     privileges => ['ALL'],
@@ -23,9 +29,9 @@ class profile::services::mysql::users {
 
   mysql_user { 'haproxy_check@%':
     ensure        => 'present',
-    password_hash => mysql_password($haproxypassword)
-  }->
-  mysql_grant { 'haproxy_check@%/mysql.user':
+    password_hash => mysql::password($haproxypassword)
+  }
+  ->mysql_grant { 'haproxy_check@%/mysql.user':
     ensure     => 'present',
     options    => ['GRANT'],
     privileges => ['SELECT'],

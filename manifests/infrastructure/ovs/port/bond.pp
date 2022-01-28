@@ -25,10 +25,10 @@ define profile::infrastructure::ovs::port::bond (
   }
 
   # Iterate through all the member ports:
-  $distro = $facts['os']['release']['major']
+  $os = $facts['operatingsystem']
   $ifnames.each | $ifname | {
     # Make sure the physical port is up
-    if($distro == '18.04') {
+    if($os == 'Ubuntu') {
       # If a particular driver is supplied; add it.
       if($ifdata[$ifname]) {
         $match = {
@@ -57,27 +57,20 @@ define profile::infrastructure::ovs::port::bond (
         content => epp('profile/netplan/manual.epp', $parameters + $match),
         notify  => Exec['netplan_apply'],
       }
-    } elsif($distro == '16.04') {
-      # Add ifupdown-config for the interface
-      ::network::interface { "manual-up-${ifname}":
-        interface => $ifname,
-        method    => 'manual',
-        mtu       => $mtu,
-      }
-    } elsif($distro == '7' or $distro == '8') {
+    } elsif($os == 'CentOS') {
       # CentOS
       $mac = $::facts['networking']['interfaces'][$ifname]['mac']
       ::network::interface { $ifname:
-        interface  => $ifname,
-        hwaddr     => $mac,
-        type       => 'OVSPort',
-        devicetype => 'ovs',
-        ovs_bridge => $bridge,
-        onboot     => 'yes',
-        mtu        => $mtu,
+        interface     => $ifname,
+        hwaddr        => $mac,
+        type          => 'OVSPort',
+        devicetype    => 'ovs',
+        ovs_bridge    => $bridge,
+        onboot        => 'yes',
+        mtu           => $mtu,
+        nm_controlled => 'no',
       }
     }
-
 
     # Add monitoring for the physical port
     munin::plugin { "if_${ifname}":

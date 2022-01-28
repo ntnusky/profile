@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-pools=$(ceph tell "mon.$(hostname)"  report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
+pools=$(ceph report 2> /dev/null  | jq '.["osdmap"]["pools"][]' -c)
 
 if [[ $1 == "config" ]]; then
   echo "graph_title CEPH PG's"

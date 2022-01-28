@@ -22,7 +22,7 @@ class profile::services::memcache {
   if ( $use_keepalived ) {
     contain ::profile::services::memcache::keepalived
     $memcache_ip = lookup('profile::memcache::ip', Stdlib::IP::Address::V4)
-    $listen = $memcache_ip
+    $listen = [$memcache_ip]
   } else {
     $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
     $memcache_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
@@ -31,16 +31,16 @@ class profile::services::memcache {
     })
     $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
     if ( $memcache_ipv6 =~ /^fe80/ ) {
-      $listen = $memcache_ipv4
+      $listen = [$memcache_ipv4]
     } else {
-      $listen = "${memcache_ipv4},${memcache_ipv6}"
+      $listen = [$memcache_ipv4,$memcache_ipv6]
     }
   }
 
   contain ::profile::services::memcache::firewall
 
   class { 'memcached':
-    listen_ip  => "127.0.0.1,${listen}",
+    listen_ip  => ['127.0.0.1'] + $listen,
     max_memory => '75%',
     tcp_port   => $memcached_port,
     udp_port   => $memcached_port,

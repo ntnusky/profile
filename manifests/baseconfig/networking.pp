@@ -1,6 +1,8 @@
 # This class configures the network interfaces of a node based on data from
 # hiera.
 class profile::baseconfig::networking {
+  include ::profile::baseconfig::network::socketbuffer
+
   # Configure interfaces as instructed in hiera.
   $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
     'default_value' => false,
@@ -9,12 +11,15 @@ class profile::baseconfig::networking {
   if($if_to_configure) {
     $os = $facts['operatingsystem']
     $distro = $facts['os']['release']['major']
-    if($distro == '18.04') {
+    if($os == 'Ubuntu' and $distro != '16.04') {
       class { '::profile::baseconfig::network::netplan':
         nics => $if_to_configure,
       }
     }
-    elsif($distro == '16.04') or ($os == 'CentOS') {
+    # TODO: The 16.04 logic is present to ensure that existing
+    # 16.04 don't fail their puppet-run before they're reinstalled
+    # Delete when you've got rid of them
+    elsif ($os == 'CentOS' or $distro == '16.04') {
       class { '::profile::baseconfig::network::ifupdown':
         nics => $if_to_configure,
       }
@@ -35,6 +40,7 @@ class profile::baseconfig::networking {
     # If the bridge should have an external connection
     if($configuration['external']) {
       if($configuration['external']['mtu']) {
+        # TODO: This should really just be $configuration['mtu']?
         $mtu = $configuration['external']['mtu']
       } else {
         $mtu = 1500

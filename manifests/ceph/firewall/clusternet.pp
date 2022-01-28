@@ -2,8 +2,14 @@
 class profile::ceph::firewall::clusternet {
   require ::profile::baseconfig::firewall
 
-  $cluster_networks = hiera_array('profile::ceph::cluster_networks', false)
-  $storage_interface = hiera('profile::interfaces::storagereplica', false)
+  $cluster_networks = lookup('profile::ceph::cluster_networks', {
+    'default_value' => false,
+    'value_type'    => Variant[Array[Stdlib::IP::Address::V4::CIDR], Boolean],
+  })
+  $storage_interface = lookup('profile::interfaces::storagereplica', {
+    'default_value' => false,
+    'value_type'    => Variant[String, Boolean],
+  })
 
   if($cluster_networks and $storage_interface) {
     $cluster_networks.each | $net | {
