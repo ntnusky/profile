@@ -15,7 +15,10 @@ class profile::services::libvirt::logging {
       ],
       doc_type  => 'log',
       multiline => {
-        'pattern' => '^[[0-9]',
+        'type'    => 'pattern',
+        'pattern' => '^[0-9]',
+        'negate'  => 'true',
+        'match'   => 'after',
       },
       tags      => [ 'libvirt' ],
     }
