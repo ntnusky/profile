@@ -12,8 +12,8 @@ class profile::services::libvirt::architectures {
       ensure => 'file',
       owner  => 'root',
       group  => 'root',
-      mode   => '0644'
-      source => "puppet:///modules/profile/libvirt/cpu/${cpuarch}"
+      mode   => '0644',
+      source => "puppet:///modules/profile/libvirt/cpu/${cpuarch}",
     }
 
     xml_fragment { "Libvirt index ${cpuarch}":
@@ -24,7 +24,7 @@ class profile::services::libvirt::architectures {
         attributes => {
           'filename' => $cpuarch,
         }
-      }
+      },
     }
   }
 }
