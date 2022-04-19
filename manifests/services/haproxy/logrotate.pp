@@ -6,7 +6,7 @@ class profile::services::haproxy::logrotate {
     delaycompress => true,
     ifempty       => false,
     missingok     => true,
-    postrotate    => '/usr/lib/rsyslog/rsyslog-rotate'
+    postrotate    => '/usr/lib/rsyslog/rsyslog-rotate',
     rotate        => 504,
     rotate_every  => 'hour',
   }
