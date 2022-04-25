@@ -181,11 +181,10 @@ def getPGPU(data, address):
     if(address in gpu.lower()):
       return gpu
 
-  # Iterate through addresses, and see if we find a similar address, where only
-  # the last part differs.
-  address = '.'.join(address.split('.')[:-1])
+  # Check for parent device in sysfs, and try to find that in the adresses
+  parent_device = os.readlink(f"/sys/class/mdev_bus/{address}/physfn").split('/')[-1]
   for gpu in data:
-    if(address in gpu.lower()):
+    if(parent_device in gpu.lower()):
       return gpu
 
 # Get data from nvidia-smi, and enrich it with parameters from sysfs.
