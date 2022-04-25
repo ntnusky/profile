@@ -15,6 +15,7 @@ define profile::utilities::logging::module (
       ensure  => 'file',
       content => to_yaml($content),
       notify  => Service['filebeat'],
+      require => Anchor['filebeat::install::end'],
     }
   }
 }
