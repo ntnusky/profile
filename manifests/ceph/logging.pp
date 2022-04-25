@@ -15,7 +15,9 @@ class profile::ceph::logging {
       ],
       doc_type  => 'log',
       multiline => {
-        'pattern' => '^[^\[0-9]',
+        'pattern' => '^[^0-9]',
+        'negate'  => 'true',
+        'match'   => 'after',
       },
       tags      => [ 'ceph' ],
     }
