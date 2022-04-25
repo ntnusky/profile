@@ -10,16 +10,6 @@ class profile::baseconfig::logging {
     # Install and configure filebeat.
     class { 'filebeat':
       enable_conf_modules => true,
-      modules => [
-        'apache',
-        'haproxy',
-        'iptables',
-        'mysql',
-        'postgresql',
-        'rabbitmq',
-        'redis',
-        'system',
-      ],
       outputs => {
         'logstash' => {
           'hosts'       => $loggservers,
