@@ -1,6 +1,6 @@
 # Configures filebeat to use a certain module
 define profile::utilities::logging::module (
-  Hash $content,
+  $content,
 ) {
   $loggservers = lookup('profile::logstash::servers', {
     'value_type'    => Variant[Boolean, Array[String]],
