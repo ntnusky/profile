@@ -14,6 +14,7 @@ define profile::utilities::logging::module (
     file { "/etc/filebeat/modules.d/${name}.yml":
       ensure  => 'file',
       content => to_yaml($content),
+      notify  => Service['filebeat'],
     }
   }
 }
