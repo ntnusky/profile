@@ -57,6 +57,8 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
     },
   }
 
+  profile::utilities::logging::module { 'haproxy' : }
+
   if($installmunin) {
     include ::profile::monitoring::munin::plugin::haproxy
   }
