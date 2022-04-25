@@ -1,5 +1,7 @@
 # Configures filebeat to use a certain module
-define profile::utilities::logging::module {
+define profile::utilities::logging::module (
+  Hash $content,
+) {
   $loggservers = lookup('profile::logstash::servers', {
     'value_type'    => Variant[Boolean, Array[String]],
     'default_value' => false,
@@ -10,8 +12,8 @@ define profile::utilities::logging::module {
   # Only set up remote-logging if there are defined any log-servers in hiera.
   if $loggservers {
     file { "/etc/filebeat/modules.d/${name}.yml":
-      ensure => 'link',
-      target => "/etc/filebeat/modules.d/${name}.yml.disabled",
+      ensure  => 'file',
+      content => to_yaml($content),
     }
   }
 }
