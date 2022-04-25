@@ -3,6 +3,7 @@ define profile::utilities::logging::file (
   Array[String]        $paths,
   String               $doc_type   = 'log',
   Hash[String, String] $multiline = {},
+  Array[String]        $tags = [],
 ){
   $loggservers = lookup('profile::logstash::servers', {
     'value_type'    => Variant[Boolean, Array[String]],
@@ -17,6 +18,7 @@ define profile::utilities::logging::file (
       paths     => $paths,
       doc_type  => $doc_type,
       multiline => $multiline,
+      tags      => $tags,
     }
   }
 }
