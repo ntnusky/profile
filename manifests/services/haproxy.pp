@@ -21,6 +21,7 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
   $ssloptions = 'no-sslv3 no-tlsv10 no-tlsv11 no-tls-tickets'
 
   contain ::profile::services::haproxy::firewall
+  include ::profile::services::haproxy::logging
 
   class { '::haproxy':
     merge_options    => true,
@@ -56,8 +57,6 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
       ],
     },
   }
-
-  profile::utilities::logging::module { 'haproxy' : }
 
   if($installmunin) {
     include ::profile::monitoring::munin::plugin::haproxy
