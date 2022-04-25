@@ -7,7 +7,7 @@ class profile::baseconfig::logging::system {
       'syslog' => {
         'enabled' => true,
       },
-      'auth' => {
+      'auth'   => {
         'enabled' => true,
       },
     }]
@@ -36,7 +36,7 @@ class profile::baseconfig::logging::system {
       ]
 
       profile::utilities::logging::file { 'apt-history':
-        paths    => [
+        paths     => [
           '/var/log/apt/history.log',
         ],
         multiline => {
@@ -48,7 +48,7 @@ class profile::baseconfig::logging::system {
       }
 
       profile::utilities::logging::file { 'apt-term':
-        paths    => [
+        paths     => [
           '/var/log/apt/term.log',
         ],
         multiline => {
