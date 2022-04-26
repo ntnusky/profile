@@ -79,7 +79,15 @@ class profile::services::rabbitmq {
     provider             => 'rabbitmqctl',
   }
 
-  profile::utilities::logging::module { 'rabbitmq' :}
+  profile::utilities::logging::module { 'rabbitmq' :
+    content => [{
+      'module' => 'rabbitmq',
+      'log'   => {
+        'enabled'   => true,
+        'var.paths' => [ "rabbit@${hostname}.log" ],
+      },
+    }]
+  }
 
   # Install munin plugins for monitoring.
   if($install_munin) {
