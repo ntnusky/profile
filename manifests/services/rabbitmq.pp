@@ -84,7 +84,7 @@ class profile::services::rabbitmq {
       'module' => 'rabbitmq',
       'log'   => {
         'enabled'   => true,
-        'var.paths' => [ "rabbit@${hostname}.log" ],
+        'var.paths' => [ "/var/log/rabbitmq/rabbit@${hostname}.log" ],
       },
     }]
   }
