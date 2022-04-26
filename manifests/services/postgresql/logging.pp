@@ -17,7 +17,5 @@ class profile::services::postgresql::logging {
     'log_connections':            value => 'on';
     'log_disconnections':         value => 'on';
     'log_lock_waits':             value => 'on';
-    'logging_collector':          value => 'on';
-    'log_destination':            value => 'csvlog';
   }
 }
