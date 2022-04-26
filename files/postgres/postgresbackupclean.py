@@ -38,9 +38,9 @@ for f in files:
     lastDaily = match.group(3)
     daily.append(f)
 
-keep = every[-30:]
-daily = daily[-30:]
-monthly = monthly[-20:]
+keep = every[-12:]
+daily = daily[-14:]
+monthly = monthly[-12:]
 yearly = yearly[-5:]
 
 toDelete = [x for x in every if x not in keep and x not in daily \

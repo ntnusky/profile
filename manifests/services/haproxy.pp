@@ -22,6 +22,7 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
 
   contain ::profile::services::haproxy::firewall
   include ::profile::services::haproxy::logging
+  include ::profile::services::haproxy::logrotate
 
   class { '::haproxy':
     merge_options    => true,
