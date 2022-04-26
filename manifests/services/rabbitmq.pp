@@ -79,6 +79,8 @@ class profile::services::rabbitmq {
     provider             => 'rabbitmqctl',
   }
 
+  profile::utilities::logging::module { 'rabbitmq' :}
+
   # Install munin plugins for monitoring.
   if($install_munin) {
     include ::profile::monitoring::munin::plugin::rabbitmq
