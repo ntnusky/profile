@@ -6,13 +6,17 @@ class profile::services::apache::logging {
       'access' => {
         'enabled' => true,
         'var.paths' => [
-          '/var/log/apache2/*access.log*'
+          '/var/log/apache2/*access.log*',
+          '/var/log/httpd/*access.log*',
+          '/var/log/httpd/*access_log*',
         ],
       },
       'error' => {
         'enabled' => true,
         'var.paths' => [
-          '/var/log/apache2/*error.log*'
+          '/var/log/apache2/*error.log*',
+          '/var/log/httpd/*error.log*',
+          '/var/log/httpd/*error_log*',
         ],
       },
     }]
