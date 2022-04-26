@@ -1,9 +1,5 @@
 # Installs and configures a rabbitmq server for our openstack environment.
 class profile::services::rabbitmq {
-
-  include ::profile::services::rabbitmq::firewall
-  require ::profile::services::erlang
-
   # Rabbit credentials
   $rabbituser = lookup('profile::rabbitmq::rabbituser')
   $rabbitpass = lookup('profile::rabbitmq::rabbitpass')
@@ -26,6 +22,10 @@ class profile::services::rabbitmq {
     'default_value' => true,
     'value_type'    => Boolean,
   })
+
+  require ::profile::services::erlang
+  include ::profile::services::rabbitmq::firewall
+  include ::profile::services::rabbitmq::sudo
 
   if ( $cluster_nodes ) {
     $cluster_config = {
