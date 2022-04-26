@@ -77,6 +77,7 @@ class profile::services::postgresql::server {
     port                       => $database_port,
     postgres_password          => $confpassword,
     manage_pg_ident_conf       => false,
+    log_line_prefix            => '%m [%p] %q%u@%d ',
   }
 
   class { '::postgresql::server::contrib': }

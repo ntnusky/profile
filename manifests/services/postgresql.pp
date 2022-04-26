@@ -2,6 +2,7 @@
 class profile::services::postgresql {
   contain profile::services::postgresql::backup
   contain profile::services::postgresql::firewall
+  include profile::services::postgresql::logging
   contain profile::services::postgresql::server
 
   $install_munin = lookup('profile::munin::install', {
