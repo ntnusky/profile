@@ -41,6 +41,7 @@ class profile::services::memcache {
 
   class { 'memcached':
     pidfile    => '/var/run/memcached/memcached.pid',
+    user       => 'memcache',
     listen_ip  => ['127.0.0.1'] + $listen,
     max_memory => '75%',
     tcp_port   => $memcached_port,
