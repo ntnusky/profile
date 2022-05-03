@@ -1,0 +1,5 @@
+# Allow the admnistrator to use all ceph-commands when authenticated. 
+%administrator ALL=(root) /usr/sbin/ceph-volume
+
+# Allow administrator to use various ceph commands without password
+%administrator ALL=(root) NOPASSWD: /usr/sbin/ceph-volume inventory
