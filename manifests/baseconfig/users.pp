@@ -27,7 +27,7 @@ class profile::baseconfig::users {
       home           => $homedir,
       managehome     => true,
       password       => $data['hash'],
-      purge_ssh_keys => pick($data['purge_keys'], true),,
+      purge_ssh_keys => pick($data['purge_keys'], true),
       require        => Group['users'],
       shell          => '/bin/bash',
       uid            => $data['uid'],
