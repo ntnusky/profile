@@ -5,8 +5,11 @@ class profile::services::mysql::haproxy::frontend {
   ::profile::services::haproxy::frontend { 'mysqlcluster':
     profile => 'management',
     port    => 3306,
+    ftoptions => {
+      'timeout client' => '90m',
+    },
     bkoptions => {
-      'timeout client' => '3600s',
+      'timeout server' => '90m',
     },
   }
 }
