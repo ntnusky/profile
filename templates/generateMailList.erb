@@ -5,12 +5,18 @@ LOCALFILE="/var/www/$VHOST/mail/mail.txt"
 TODAY=$(date +%F)
 OS_PASSWORD=<%= scope.call_function('lookup', ['ntnuopenstack::keystone::admin_password']) %>
 OS_AUTH_URL=<%= scope.call_function('lookup', ['ntnuopenstack::endpoint::public']) %>:5000/v3
+LDAP_HOST=<%= scope.call_function('lookup', ['profile::info::maillist::ldap_host']) %>
+GROUP_BASE="<%= scope.call_function('lookup', ['profile::info::maillist::group_base'] %>"
+USER_BASE="<%= scope.call_function('lookup', ['profile::info::maillist::user_base'] %>"
 OSCMD="openstack --os-username admin --os-password $OS_PASSWORD --os-project-name admin --os-auth-url $OS_AUTH_URL --os-identity-api-version 3"
 
 declare -a mails=()
 
 # Fetch a list of uniqe users with a project role
 users=$($OSCMD role assignment list -f value -c User | sort | uniq | egrep '\w{64}')
+
+# Fetch a list of uniqe groups with a project role
+groups=$($OSCMD role assignment list -f value -c Group --names | sed -r '/^\s*$/d' | sort | uniq | cut -d'@' -f1)
 
 # Exit if we didn't get any users
 if [[ -z $users ]]; then
@@ -57,6 +63,23 @@ if [[ $($OSCMD project show MISC 2>/dev/null) ]]; then
 		fi
 	done
 fi
+
+# Iterate through groups, find members and their mail address
+for group in $groups; do
+  members=$(ldapsearch -LLL -Z -x -h $LDAP_HOST -b "$GROUP_BASE" "cn=${group}" memberUid | grep memberUid | awk '{print $2}')
+  for member in $members; do
+    mail=$(ldapsearch -LLL -Z -x -h $LDAP_HOST -b "$USER_BASE" "uid=${member}" mail | grep mail | awk '{print $2}')
+    if [[ -n $mail ]]; then
+      echo "Found user $member with mail $mail in $group"
+    else
+      # User with no mail in LDAP. Assuming student with RESERVE_PUBLISH
+      mail="${member}@stud.ntnu.no"
+      echo "[WARNING] Found user $member in $group, but no mail address. Assuming student: $mail"
+    fi
+		mails=("${mails[@]}" "$mail")
+		echo "-----------------------------------------"
+  done
+done
 
 if [ -f $LOCALFILE ]; then
 	mv $LOCALFILE{,-$TODAY}
