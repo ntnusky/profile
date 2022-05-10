@@ -23,4 +23,8 @@ class profile::services::info::maillist {
     owner  => 'root',
     mode   => '0755',
   }
+
+  tidy { "/var/www/${mailfqdn}/mail":
+    age => '14d',
+  }
 }
