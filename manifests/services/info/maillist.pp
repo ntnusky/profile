@@ -25,6 +25,7 @@ class profile::services::info::maillist {
   }
 
   tidy { "/var/www/${mailfqdn}/mail":
-    age => '14d',
+    age     => '14d',
+    recurse => true,
   }
 }
