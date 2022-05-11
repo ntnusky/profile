@@ -66,9 +66,9 @@ fi
 
 # Iterate through groups, find members and their mail address
 for group in $groups; do
-  members=$(ldapsearch -LLL -Z -x -h $LDAP_HOST -b "$GROUP_BASE" "cn=${group}" memberUid | grep memberUid | awk '{print $2}')
+  members=$(ldapsearch -LLL -x -H "ldaps://${LDAP_HOST}" -b "$GROUP_BASE" "cn=${group}" memberUid | grep memberUid | awk '{print $2}')
   for member in $members; do
-    mail=$(ldapsearch -LLL -Z -x -h $LDAP_HOST -b "$USER_BASE" "uid=${member}" mail | grep mail | awk '{print $2}')
+    mail=$(ldapsearch -LLL -x -H "ldaps://${LDAP_HOST}" -b "$USER_BASE" "uid=${member}" mail | grep mail | awk '{print $2}')
     if [[ -n $mail ]]; then
       echo "Found user $member with mail $mail in $group"
     else
