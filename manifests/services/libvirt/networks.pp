@@ -10,6 +10,7 @@
 #
 class profile::services::libvirt::networks {
   require ::vswitch::ovs
+  include ::profile::infrastructure::ovs::logging
 
   # The proposed way of configuring networks
   $kvm_networks = lookup('profile::kvm::networks', {

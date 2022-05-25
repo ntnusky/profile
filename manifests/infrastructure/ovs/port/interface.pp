@@ -6,6 +6,7 @@ define profile::infrastructure::ovs::port::interface (
   Integer $mtu = 1500,
 ) {
   require ::vswitch::ovs
+  include ::profile::infrastructure::ovs::logging
 
   # Connects the physical interface to the bridge
   vs_port { $interface :

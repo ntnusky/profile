@@ -3,6 +3,7 @@ class profile::services::puppet::db {
   include ::profile::services::puppet::altnames
   include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
+  include ::profile::services::puppet::db::logging
 
   $dbhost = lookup('profile::postgres::ipv4', Stdlib::IP::Address::V4)
   $dbname = lookup('profile::puppetdb::database::name', String)

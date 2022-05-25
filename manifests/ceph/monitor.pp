@@ -49,6 +49,11 @@ class profile::ceph::monitor {
     before  => Anchor['profile::ceph::monitor::end']
   }
 
+  sudo::conf { 'cephmon':
+    priority => 15,
+    source   => 'puppet:///modules/profile/sudo/cephmon_sudoers',
+  }
+
   file { '/usr/local/sbin/insightsKillSwitch.sh':
     ensure => present,
     owner  => 'root',

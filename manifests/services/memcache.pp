@@ -40,11 +40,15 @@ class profile::services::memcache {
   contain ::profile::services::memcache::firewall
 
   class { 'memcached':
+    pidfile    => '/var/run/memcached/memcached.pid',
+    user       => 'memcache',
     listen_ip  => ['127.0.0.1'] + $listen,
     max_memory => '75%',
     tcp_port   => $memcached_port,
     udp_port   => $memcached_port,
   }
+
+  profile::utilities::logging::journald { 'memcached.service' : }
 
   if ($installsensu) {
     include ::profile::sensu::plugin::memcached

@@ -22,6 +22,11 @@ class profile::ceph::osd {
     args => $osds,
   }
 
+  sudo::conf { 'cephosd':
+    priority => 15,
+    source   => 'puppet:///modules/profile/sudo/cephosd_sudoers',
+  }
+
   ceph_config {
     'global/osd_memory_target': value => $memory_target;
   }

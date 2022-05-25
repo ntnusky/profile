@@ -1,10 +1,10 @@
 # This class configures users based on information in hiera
 class profile::baseconfig::users {
-  # Configure users as instructed in hiera.
-  $users = hiera('profile::users', false)
-  if($users) {
-    profile::baseconfig::createuser { $users: }
-  }
+  # Get user-configuration from hiera
+  $users = lookup('profile::user', {
+    'default_value' => {},
+    'value_type'    => Hash,
+  })
 
   # Create the users group
   group { 'users':
@@ -14,6 +14,43 @@ class profile::baseconfig::users {
   group { 'administrator':
     ensure => present,
     gid    => 701,
+  }
+
+  $users.each | $username, $data | {
+    $ensure = pick($data['ensure'], 'present')
+    $homedir = "/home/${username}"
+
+    user { $username:
+      ensure         => $ensure,
+      gid            => 'users',
+      groups         => pick($data['groups'], []),
+      home           => $homedir,
+      managehome     => true,
+      password       => $data['hash'],
+      purge_ssh_keys => pick($data['purge_keys'], true),
+      require        => Group['users'],
+      shell          => '/bin/bash',
+      uid            => $data['uid'],
+    }
+
+    if ( $ensure == 'present' ) {
+      file { "${homedir}/.ssh":
+        ensure  => 'directory',
+        owner   => $username,
+        group   => 'users',
+        mode    => '0700',
+        require => User[$username],
+      }
+
+      $data['keys'].each | $name, $keydata | {
+        ssh_authorized_key { $name:
+          user    => $username,
+          type    => $keydata['type'],
+          key     => $keydata['key'],
+          require => File["${homedir}/.ssh"],
+        }
+      }
+    }
   }
 
   # Modify root's attributes
@@ -40,10 +77,20 @@ class profile::baseconfig::users {
     content => template('profile/mailrc.erb'),
   }
 
-  $keys = hiera('profile::user::root::keys', false)
-  if($keys) {
-    ::profile::baseconfig::createkey { $keys:
-      username => 'root',
+  # We should really not do this... TODO: Stop logging in as root on all
+  # platforms...
+  $rootkeys = lookup('profile::user::root::keys', {
+    'default_value' => [],
+    'value_type'    => Array[String],
+  })
+  $rootkeys.each | $keyname | {
+    $key = lookup("profile::user::root::key::${keyname}", String)
+
+    ssh_authorized_key { $keyname:
+      user    => 'root',
+      type    => 'ssh-rsa',
+      key     => $key,
+      require => File['/root/.ssh'],
     }
   }
 }

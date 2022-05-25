@@ -3,6 +3,7 @@ define profile::infrastructure::ovs::bridge (
   Variant[Integer, Undef] $mtu = undef,
 ) {
   require ::vswitch::ovs
+  include ::profile::infrastructure::ovs::logging
 
   vs_bridge { $name:
     ensure => 'present',

@@ -1,0 +1,13 @@
+# Allow the admnistrator to use all ceph-commands when authenticated. 
+%administrator ALL=(root) /usr/bin/ceph
+
+# Allow administrator to use various ceph commands without password
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph -s
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph df
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph health
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph health detail
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph osd df
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph osd tree
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph osd versions
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph version
+%administrator ALL=(root) NOPASSWD: /usr/bin/ceph versions

@@ -1,0 +1,10 @@
+# Also let administrators administer the rabbitmq-cluster when password is
+# supplied.
+%administrator ALL=(root) /bin/systemctl stop rabbitmq-server
+%administrator ALL=(root) /bin/systemctl start rabbitmq-server
+%administrator ALL=(root) /bin/systemctl restart rabbitmq-server
+%administrator ALL=(root) /usr/sbin/rabbitmqctl
+
+# Allow administrators to see the rabbitmqcluster status
+%administrator ALL=(root) NOPASSWD: /usr/sbin/rabbitmqctl cluster_status
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status rabbitmq-server

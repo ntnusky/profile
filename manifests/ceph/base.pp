@@ -31,6 +31,8 @@ class profile::ceph::base {
     'value_type'    => Optional[Integer],
   })
 
+  # Configure logging
+  include ::profile::ceph::logging
   # Install the ceph repos first
   require ::profile::ceph::repo
 
