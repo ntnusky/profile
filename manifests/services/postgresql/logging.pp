@@ -10,6 +10,7 @@ class profile::services::postgresql::logging {
   profile::utilities::logging::module { 'postgresql' : }
 
   postgresql::server::config_entry {
+    'log_duration':               value => 'off';
     'log_statement':              value => 'none';
     'log_min_duration_statement': value => $duration;
     'log_checkpoints':            value => 'on';
