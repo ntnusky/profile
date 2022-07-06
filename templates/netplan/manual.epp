@@ -8,12 +8,14 @@ network:
   renderer: networkd
   ethernets:
 <% if $drivername == '' or $mac == '' { -%>
-    <%= $ifname %>: {}
+    <%= $ifname %>:
+      accept-ra: no
 <% } else { -%>
     <%= $ifname %>:
       match:
         driver: "<%= $drivername %>"
         macaddress: "<%= $mac %>"
       mtu: <%= $mtu %>
+      accept-ra: no
 <% } -%>
 
