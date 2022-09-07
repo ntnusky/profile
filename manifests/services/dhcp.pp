@@ -44,6 +44,8 @@ class profile::services::dhcp {
 
   include ::profile::services::dhcp::firewall
 
+  $extra_config = [ 'option bootfile-name "syslinux.efi";' ]
+
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
     interfaces       => $dhcp_interfaces,
@@ -54,6 +56,7 @@ class profile::services::dhcp {
     omapi_port       => $omapi_port,
     pxeserver        => $pxe_server,
     pxefilename      => $pxe_file,
+    extra_config     => $extra_config;
   }
 
   profile::services::dhcp::pool { $networks:}
