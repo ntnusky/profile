@@ -42,9 +42,12 @@ class profile::services::dhcp {
     'merge'      => 'unique',
   })
 
+  $uefi_logic = {
+    pxeclient => 'match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";'
+  }
+
   include ::profile::services::dhcp::firewall
 
-  $extra_config = [ 'option bootfile-name "syslinux.efi";' ]
 
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
@@ -56,7 +59,7 @@ class profile::services::dhcp {
     omapi_port       => $omapi_port,
     pxeserver        => $pxe_server,
     pxefilename      => $pxe_file,
-    extra_config     => $extra_config;
+    dhcp_classes     => $uefi_logic,
   }
 
   profile::services::dhcp::pool { $networks:}
