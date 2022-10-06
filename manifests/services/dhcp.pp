@@ -50,12 +50,14 @@ class profile::services::dhcp {
     uefi => {
       parameters => [
         'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00009"',
+        "next-server ${pxe_server}",
         "filename \"${uefi_file}\""
       ],
     },
     bios => {
       parameters => [
         'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00000"',
+        "next-server ${pxe_server}",
         "filename \"${pxe_file}\""
       ]
     }
@@ -72,7 +74,6 @@ class profile::services::dhcp {
     omapi_key        => $omapi_key,
     omapi_name       => $omapi_name,
     omapi_port       => $omapi_port,
-    pxeserver        => $pxe_server,
     dhcp_classes     => $pxe_logic,
   }
 
