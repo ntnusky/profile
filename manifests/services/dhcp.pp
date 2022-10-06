@@ -44,7 +44,7 @@ class profile::services::dhcp {
 
   $uefi_logic = {
     pxeclient => {
-      match => 'if substring (option vendor-class-identifier, 0, 9) = "PXEClient";',
+      parameters => ['match if substring (option vendor-class-identifier, 0, 9) = "PXEClient";'],
     }
   }
 
