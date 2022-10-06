@@ -47,13 +47,13 @@ class profile::services::dhcp {
   })
 
   $pxe_logic = {
-    UEFI => {
+    uefi => {
       parameters => [
         'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00009"',
         "filename ${uefi_file}"
       ],
     },
-    BIOS => {
+    bios => {
       parameters => [
         'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00000"',
         "filename ${pxe_file}"
