@@ -47,7 +47,21 @@ class profile::services::dhcp {
   })
 
   $pxe_logic = {
-    uefi => {
+    uefi1 => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00007"',
+        "next-server ${pxe_server}",
+        "filename \"${uefi_file}\""
+      ],
+    },
+    uefi2 => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00008"',
+        "next-server ${pxe_server}",
+        "filename \"${uefi_file}\""
+      ],
+    },
+    uefi3 => {
       parameters => [
         'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00009"',
         "next-server ${pxe_server}",
