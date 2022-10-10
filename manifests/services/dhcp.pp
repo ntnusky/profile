@@ -36,15 +36,49 @@ class profile::services::dhcp {
     'value_type'    => String,
     'default_value' => 'pxelinux.0',
   })
+  $uefi_file = lookup('profile::dhcp::uefi::file', {
+    'value_type'    => String,
+    'default_value' => 'syslinux.efi',
+  })
 
   $nameservers = lookup('profile::dns::resolvers', {
     'value_type' => Array[Stdlib::IP::Address::V4],
     'merge'      => 'unique',
   })
 
+  $pxe_logic = {
+    uefi1 => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00007"',
+        "next-server ${pxe_server}",
+        "filename \"${uefi_file}\""
+      ],
+    },
+    uefi2 => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00008"',
+        "next-server ${pxe_server}",
+        "filename \"${uefi_file}\""
+      ],
+    },
+    uefi3 => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00009"',
+        "next-server ${pxe_server}",
+        "filename \"${uefi_file}\""
+      ],
+    },
+    bios => {
+      parameters => [
+        'match if substring(option vendor-class-identifier, 0, 20) = "PXEClient:Arch:00000"',
+        "next-server ${pxe_server}",
+        "filename \"${pxe_file}\""
+      ]
+    }
+  }
+
   include ::profile::services::dhcp::firewall
 
-  $extra_config = [ 'option bootfile-name "syslinux.efi";' ]
 
   class { '::dhcp':
     dnssearchdomains => [$searchdomain],
@@ -54,9 +88,7 @@ class profile::services::dhcp {
     omapi_key        => $omapi_key,
     omapi_name       => $omapi_name,
     omapi_port       => $omapi_port,
-    pxeserver        => $pxe_server,
-    pxefilename      => $pxe_file,
-    extra_config     => $extra_config;
+    dhcp_classes     => $pxe_logic,
   }
 
   profile::services::dhcp::pool { $networks:}
