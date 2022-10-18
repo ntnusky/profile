@@ -7,7 +7,7 @@ class profile::services::puppet::db::logging {
       '/var/log/puppetlabs/puppetdb/puppetdb-status.log',
     ],
     multiline => {
-      'pattern' => '\\$',
+      'pattern' => '\\\\$',
       'negate'  => 'false',
       'match'   => 'before',
     },
