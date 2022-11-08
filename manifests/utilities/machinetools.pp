@@ -13,6 +13,7 @@ class profile::utilities::machinetools {
   # If it is an Dell machine, install dell's utilities
   if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
+    include ::profile::utilities::bmc
 
     case $::osfamily {
       'Debian': {
