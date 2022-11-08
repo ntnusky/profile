@@ -12,6 +12,10 @@ class profile::utilities::bmc {
 
   bmc_user { 'root':
     password => $root_password,
+    callin   => true,
+    ipmi     => true,
+    link     => true,
+    idrac    => 0x1ff,
   }
 
   bmc_ssl { 'IDRAC ssl':
