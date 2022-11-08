@@ -10,10 +10,6 @@ class profile::utilities::bmc {
   $certificate_path = '/etc/ssl/private/idrac.pem'
   $private_key_path = '/etc/ssl/private/idrac.key'
 
-  class { '::bmc':
-    manage_oem_repo => false,
-  }
-
   bmc_user { 'root':
     password => $root_password,
   }
