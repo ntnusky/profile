@@ -21,6 +21,8 @@ class profile::utilities::bmc {
   bmc_ssl { 'IDRAC ssl':
     certificate_file => $certificate_path,
     certificate_key  => $private_key_path,
+    bmc_username     => 'root',
+    bmc_password     => $root_password,
     require          => [
       File[$certificate_path],
       File[$private_key_path],
