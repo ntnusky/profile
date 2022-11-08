@@ -52,6 +52,7 @@ class profile::utilities::bmc {
     ],
     *                => $connection,
   }
+  -> bmc_service { 'reset_idrac': }
 
   bmc_time {'ntnu-ntp':
     ntp_servers => $ntp_servers,
