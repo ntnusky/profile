@@ -7,7 +7,8 @@ class profile::utilities::bmc {
   $certificate = lookup('profile::bmc::cert', String)
   $private_key = lookup('profile::bmc::privatekey', String)
   $ntp_servers = lookup('profile::ntp::servers', Array[Stdlib::Fqdn])
-  $dns_domain_name = lookup('profile::networks::bmc::domain', Stdlib::Fqdn)
+  # TODO: Dette har vi ikke brukt for når bmc_network ikke virker
+  #$dns_domain_name = lookup('profile::networks::bmc::domain', Stdlib::Fqdn)
 
   $ca_cert_path = '/etc/ssl/private/idrac_ca.pem'
   $certificate_path = '/etc/ssl/private/idrac.pem'
@@ -27,15 +28,16 @@ class profile::utilities::bmc {
     idrac    => 0x1ff,
   }
 
-  bmc_network { 'network_settings':
-    ip_source                 => 'dhcp',
-    ipv4_dns_from_dhcp        => true,
-    dns_domain_from_dhcp      => false,
-    dns_domain_name_from_dhcp => false,
-    dns_domain_name           => $dns_domain_name,
-    dns_bmc_name              => $::hostname,
-    *                         => $connection,
-  }
+  # TODO: Dette virker ikke med gjeldene versjon av modulen..
+  #  bmc_network { 'network_settings':
+  #    ip_source                 => 'dhcp',
+  #    ipv4_dns_from_dhcp        => true,
+  #    dns_domain_from_dhcp      => false,
+  #    dns_domain_name_from_dhcp => false,
+  #    dns_domain_name           => $dns_domain_name,
+  #    dns_bmc_name              => $::hostname,
+  #    *                         => $connection,
+  #  }
 
   bmc_ssl { 'CA_chain':
     certificate_file => $ca_cert_path,
