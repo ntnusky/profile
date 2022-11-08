@@ -57,6 +57,7 @@ class profile::utilities::bmc {
   -> bmc_service { 'reset_idrac': }
 
   bmc_time {'ntnu-ntp':
+    ntp_enable  => true,
     ntp_servers => $ntp_servers,
     timezone    => 'Europe/Oslo',
   }
