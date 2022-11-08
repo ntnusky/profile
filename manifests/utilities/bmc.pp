@@ -2,7 +2,7 @@
 class profile::utilities::bmc {
 
   $root_password = lookup('profile::bmc::root::password', String)
-  #$bmc_ip = lookup('profile::bmc::ip', Stdlib::IP::Address::V4)
+  $bmc_ip = lookup('profile::bmc::ip', Stdlib::IP::Address::V4)
   $certificate = lookup('profile::bmc::cert', String)
   $private_key = lookup('profile::bmc::privatekey', String)
   $ntp_servers = lookup('profile::ntp::servers', Array[Stdlib::Fqdn])
@@ -23,6 +23,7 @@ class profile::utilities::bmc {
     certificate_key  => $private_key_path,
     bmc_username     => 'root',
     bmc_password     => $root_password,
+    bmc_server_host  => $bmc_ip,
     require          => [
       File[$certificate_path],
       File[$private_key_path],
