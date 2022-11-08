@@ -6,6 +6,7 @@ class profile::utilities::bmc {
   $certificate = lookup('profile::bmc::cert', String)
   $private_key = lookup('profile::bmc::privatekey', String)
   $ntp_servers = lookup('profile::ntp::servers', Array[Stdlib::Fqdn])
+  $dns_domain_name = lookup('profile::networks::bmc::domain', Stdlib::Fqdn)
 
   $certificate_path = '/etc/ssl/private/idrac.pem'
   $private_key_path = '/etc/ssl/private/idrac.key'
@@ -16,6 +17,14 @@ class profile::utilities::bmc {
     ipmi     => true,
     link     => true,
     idrac    => 0x1ff,
+  }
+
+  bmc_network { 'network_settings':
+    ip_source            => 'dhcp',
+    ipv4_dns_from_dhcp   => true,
+    dns_domain_from_dhcp => false,
+    dns_domain_name      => $dns_domain_name,
+    dns_bmc_name         => $::hostname,
   }
 
   bmc_ssl { 'IDRAC ssl':
