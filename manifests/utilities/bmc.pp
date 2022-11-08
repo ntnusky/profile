@@ -80,6 +80,6 @@ class profile::utilities::bmc {
     owner   => 'root',
     group   => 'root',
     mode    => '0600',
-    content => $private_key_path,
+    content => $private_key,
   }
 }
