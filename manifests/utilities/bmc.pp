@@ -31,6 +31,7 @@ class profile::utilities::bmc {
 
   bmc_time {'ntnu-ntp':
     ntp_servers => $ntp_servers,
+    timezone    => 'Europe/Oslo',
   }
 
   file { $certificate_path:
