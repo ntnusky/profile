@@ -11,6 +11,12 @@ class profile::utilities::bmc {
   $certificate_path = '/etc/ssl/private/idrac.pem'
   $private_key_path = '/etc/ssl/private/idrac.key'
 
+  $connection = {
+    'bmc_username'    => 'root',
+    'bmc_password'    => $root_password,
+    'bmc_server_host' => $bmc_ip,
+  }
+
   bmc_user { 'root':
     password => $root_password,
     callin   => true,
@@ -25,18 +31,17 @@ class profile::utilities::bmc {
     dns_domain_from_dhcp => false,
     dns_domain_name      => $dns_domain_name,
     dns_bmc_name         => $::hostname,
+    *                    => $connection,
   }
 
   bmc_ssl { 'IDRAC ssl':
     certificate_file => $certificate_path,
     certificate_key  => $private_key_path,
-    bmc_username     => 'root',
-    bmc_password     => $root_password,
-    bmc_server_host  => $bmc_ip,
     require          => [
       File[$certificate_path],
       File[$private_key_path],
     ],
+    *                => $connection,
   }
 
   bmc_time {'ntnu-ntp':
