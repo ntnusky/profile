@@ -28,11 +28,13 @@ class profile::utilities::bmc {
     /R[6789]10/ => false,
     default     => $manage_ntp,
   }
-  # Does only work for Rx2x series (iDRAC 7)
+  # Does only work for Rx2x and Rx3x series series (iDRAC 7/8)
   $manage_network_real = $::facts['dmi']['product']['name'] ? {
-    /R[6789]20/ => $manage_network,
+    /R[6789][23]0/ => $manage_network,
     default     => false,
   }
+
+  # Cert configuration works on everything, does not need a special case
 
   if $manage_users_real {
     include ::profile::utilities::bmc::users
