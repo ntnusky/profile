@@ -1,6 +1,5 @@
 # Configure TLS Certs for iDRAC
 class profile::utilities::bmc::certs {
-
   $root_password = lookup('profile::bmc::root::password', String)
   $bmc_ip = lookup('profile::bmc::ip', Stdlib::IP::Address::V4)
   $ca_cert = lookup('profile::bmc::ca_cert', String)

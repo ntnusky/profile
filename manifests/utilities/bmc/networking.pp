@@ -1,6 +1,5 @@
 # Configure network settings for iDRAC
 class profile::utilities::bmc::networking {
-
   $root_password = lookup('profile::bmc::root::password', String)
   $bmc_ip = lookup('profile::bmc::ip', Stdlib::IP::Address::V4)
   $dns_domain_name = lookup('profile::networks::bmc::domain', Stdlib::Fqdn)

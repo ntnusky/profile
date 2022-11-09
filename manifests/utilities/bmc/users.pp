@@ -1,6 +1,5 @@
 # Configure root user for iDRAC
 class profile::utilities::bmc::users {
-
   $root_password = lookup('profile::bmc::root::password', String)
   $bmc_ip = lookup('profile::bmc::ip', Stdlib::IP::Address::V4)
 

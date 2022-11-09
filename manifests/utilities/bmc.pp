@@ -1,6 +1,5 @@
 # Manage iDRAC settings
 class profile::utilities::bmc {
-
   $manage_users = lookup('profile::bmc::manage::users', {
     'value_type'    => Boolean,
     'default_value' => true,
