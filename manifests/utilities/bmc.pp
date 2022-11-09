@@ -20,18 +20,18 @@ class profile::utilities::bmc {
 
   # Does not work for Rx1x series (iDRAC 6)
   $manage_users_real = $::facts['dmi']['product']['name'] ? {
-    '/R[6789]10/' => false,
-    default       => $manage_users,
+    /R[6789]10/ => false,
+    default     => $manage_users,
   }
   # Does not work for Rx1x series (iDRAC 6)
   $manage_ntp_real = $::facts['dmi']['product']['name'] ? {
-    '/R[6789]10/' => false,
-    default       => $manage_ntp,
+    /R[6789]10/ => false,
+    default     => $manage_ntp,
   }
   # Does only work for Rx2x series (iDRAC 7)
   $manage_network_real = $::facts['dmi']['product']['name'] ? {
-    '/R[6789]20/' => $manage_network,
-    default       => false,
+    /R[6789]20/ => $manage_network,
+    default     => false,
   }
 
   if $manage_users_real {
