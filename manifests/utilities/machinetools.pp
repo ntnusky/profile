@@ -4,6 +4,10 @@ class profile::utilities::machinetools {
     'value_type'    => Boolean,
     'default_value' => true,
   })
+  $manage_idrac = lookup('profile::bmc::manage', {
+    'value_type'    => Boolean,
+    'default_value' => true,
+  })
 
   # If it is an HP machine, install hpacucli.
   if($::bios_vendor == 'HP' and $machinetools) {
@@ -13,6 +17,9 @@ class profile::utilities::machinetools {
   # If it is an Dell machine, install dell's utilities
   if($::bios_vendor == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
+    if $manage_idrac {
+      include ::profile::utilities::bmc
+    }
 
     case $::osfamily {
       'Debian': {
