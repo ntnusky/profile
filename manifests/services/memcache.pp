@@ -38,6 +38,7 @@ class profile::services::memcache {
   }
 
   contain ::profile::services::memcache::firewall
+  include ::profile::services::memcache::sudo
 
   class { 'memcached':
     pidfile    => '/var/run/memcached/memcached.pid',

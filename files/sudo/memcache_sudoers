@@ -1,0 +1,5 @@
+# Allow administrator to start/stop/restart the memcached service 
+%administrator ALL=(root) /usr/bin/systemctl stop memcached 
+%administrator ALL=(root) NOPASSWD: /usr/bin/systemctl start memcached 
+%administrator ALL=(root) NOPASSWD: /usr/bin/systemctl restart memcached 
+%administrator ALL=(root) NOPASSWD: /usr/bin/systemctl status memcached 
