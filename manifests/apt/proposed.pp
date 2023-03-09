@@ -3,7 +3,7 @@
 class profile::apt::proposed {
   $distro = lookup('profile::apt::proposed::distro', {
     'default_value' => $::facts['os']['distro']['codename'], 
-    'value_type'    => Integer,
+    'value_type'    => String,
   })
   $pin = lookup('profile::apt::proposed::pin', {
     'default_value' => 400, 
