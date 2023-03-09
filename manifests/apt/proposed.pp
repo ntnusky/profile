@@ -14,6 +14,9 @@ class profile::apt::proposed {
     location => 'http://archive.ubuntu.com/ubuntu/',
     release  => "${distro}-proposed",
     repos    => 'main universe',
-    pin      => 400,
+    pin      => {
+      priority => 400,
+      release  => "${distro}-proposed",
+    },
   }
 }
