@@ -12,7 +12,7 @@ class profile::apt::proposed {
 
   apt::source { 'ubuntu-proposed':
     location => 'http://archive.ubuntu.com/ubuntu/',
-    release  => "${distro}-proposed"
+    release  => "${distro}-proposed",
     repos    => 'main universe',
     pin      => 400,
   }
