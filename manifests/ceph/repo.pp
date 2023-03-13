@@ -1,20 +1,19 @@
 # Abstraction for the ceph::repo class
 class profile::ceph::repo {
   if($::facts['os']['distro']['codename'] == 'jammy') {
-    $default = false
+    $default = 'absent'
   } else {
-    $default = true
+    $default = 'present'
   }
 
-  $setup_repo = lookup('profile::ceph::repo::enabled', {
+  $ensure = lookup('profile::ceph::repo::ensure', {
     'default_value' = $default,
-    'value_type'    = Boolean,
+    'value_type'    = String,
   })
 
-  if ( $setup_repo ) {
-    class { '::ceph::repo':
-      enable_epel => false,
-      enable_sig  => true,
-    }
+  class { '::ceph::repo':
+    ensure      => $ensure,
+    enable_epel => false,
+    enable_sig  => true,
   }
 }
