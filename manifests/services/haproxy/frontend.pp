@@ -35,10 +35,10 @@ define profile::services::haproxy::frontend (
   if($mode == 'http') {
     if($certfile) {
       $sslpar = ['ssl', 'crt', $certfile]
-      $proto = { 'reqadd' => 'X-Forwarded-Proto:\ https' }
+      $proto = { 'http-request add-header' => 'X-Forwarded-Proto:\ https' }
     } else {
       $sslpar = []
-      $proto = { 'reqadd' => 'X-Forwarded-Proto:\ http' }
+      $proto = { 'http-request add-header' => 'X-Forwarded-Proto:\ http' }
     }
   } else {
     if($certfile) {
