@@ -58,7 +58,7 @@ class profile::services::haproxy::web {
       'forwardfor',
       'http-server-close',
     ],
-    'http-request add-header' => 'X-Forwarded-Proto:\ https if { ssl_fc }',
+    'http-request add-header' => 'X-Forwarded-Proto https if { ssl_fc }',
   }
 
   $base_bind = $addresses.reduce({}) | $memo, $address | {
