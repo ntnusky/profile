@@ -7,8 +7,8 @@ class profile::ceph::repo {
   }
 
   $ensure = lookup('profile::ceph::repo::ensure', {
-    'default_value' = $default,
-    'value_type'    = String,
+    'default_value' => $default,
+    'value_type'    => String,
   })
 
   class { '::ceph::repo':
