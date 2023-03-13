@@ -6,6 +6,7 @@ class profile::services::erlang {
   apt::source { 'erlang':
     comment  => '',
     location => 'https://packages.erlang-solutions.com/ubuntu',
+    release  => 'focal',
     repos    => 'contrib',
     key      => {
       id     => '434975BD900CCBE4F7EE1B1ED208507CA14F4FCA',
