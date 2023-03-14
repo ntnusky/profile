@@ -44,6 +44,7 @@ class profile::ceph::base {
     ::apt::pin { 'ceph-jammy-proposed':
       ensure   => 'present',
       packages => 'ceph*',
+      priority => 500,
       release  => 'jammy-proposed',
     }
   }
