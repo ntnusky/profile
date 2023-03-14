@@ -23,7 +23,7 @@ define profile::monitoring::munin::server::vhost {
   apache::vhost { "${name}-http":
     servername        => $name,
     serveraliases     => [$name],
-    port              => '80',
+    port              => 80,
     ip                => $ip,
     docroot           => '/var/cache/munin/www',
     docroot_owner     => 'www-data',
