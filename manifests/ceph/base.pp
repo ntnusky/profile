@@ -42,14 +42,14 @@ class profile::ceph::base {
     require ::profile::apt::proposed
 
     $pkgs = [
-      'ceph', 
-      'ceph-base', 
-      'ceph-common', 
-      'ceph-mds', 
-      'ceph-mgr', 
-      'ceph-mgr-modules-core', 
+      'ceph',
+      'ceph-base',
+      'ceph-common',
+      'ceph-mds',
+      'ceph-mgr',
+      'ceph-mgr-modules-core',
       'ceph-mon',
-      'ceph-osd', 
+      'ceph-osd',
       'ceph-volume',
       'libcephfs2',
       'librados2',
@@ -65,9 +65,10 @@ class profile::ceph::base {
 
     ::apt::pin { 'ceph-jammy-proposed':
       ensure   => 'present',
-      packages => $pkgs, 
+      packages => $pkgs,
       priority => 500,
       release  => 'jammy-proposed',
+      before   => Class['::ceph'],
     }
   }
 
@@ -77,7 +78,7 @@ class profile::ceph::base {
     $cluster_networks_real = undef
   }
 
-  class { 'ceph':
+  class { '::ceph':
     fsid                  => $fsid,
     mon_initial_members   => $ceph_mon_names,
     mon_host              => $ceph_mon_addresses,
