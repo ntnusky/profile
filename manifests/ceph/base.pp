@@ -40,6 +40,12 @@ class profile::ceph::base {
   # proposed repos for jammy; so then we need the proposed repos:
   if($::facts['os']['distro']['codename'] == 'jammy') {
     require ::profile::apt::proposed
+
+    ::apt::pin { 'ceph-jammy-proposed':
+      ensure   => 'present',
+      packages => 'ceph*',
+      release  => 'jammy-proposed',
+    }
   }
 
   if($cluster_networks) {
@@ -49,7 +55,6 @@ class profile::ceph::base {
   }
 
   class { 'ceph':
-    ensure                => '>=17.2.5',
     fsid                  => $fsid,
     mon_initial_members   => $ceph_mon_names,
     mon_host              => $ceph_mon_addresses,
