@@ -36,7 +36,7 @@ class profile::services::dashboard::apache {
 
   apache::vhost { "${dashboardname}-http":
     servername          => $dashboardname,
-    port                => '80',
+    port                => 80,
     ip                  => concat([], $management_ipv4, $management_ipv6),
     add_listen          => false,
     docroot             => "/var/www/${dashboardname}",
@@ -58,7 +58,7 @@ class profile::services::dashboard::apache {
   if($dashboardv4name) {
     apache::vhost { "${dashboardv4name}-http":
       servername          => $dashboardv4name,
-      port                => '80',
+      port                => 80,
       ip                  => concat([], $management_ipv4, $management_ipv6),
       add_listen          => false,
       docroot             => "/var/www/${dashboardname}",

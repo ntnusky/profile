@@ -17,7 +17,7 @@ class profile::services::info {
 
   apache::vhost { "${vhost}-http":
     servername        => $vhost,
-    port              => '80',
+    port              => 80,
     ip                => concat([], $management_ipv4, $management_ipv6),
     add_listen        => false,
     docroot           => "/var/www/${vhost}",
