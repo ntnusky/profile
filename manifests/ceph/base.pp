@@ -36,6 +36,18 @@ class profile::ceph::base {
   # Install the ceph repos first
   require ::profile::ceph::repo
 
+  # As of 14.03.2023 the version 17.2.5 of ceph is only available in the
+  # proposed repos for jammy; so then we need the proposed repos:
+  if($::facts['os']['distro']['codename'] == 'jammy') {
+    require ::profile::apt::proposed
+
+    ::apt::pin { 'ceph-jammy-proposed':
+      ensure   => 'present',
+      packages => 'ceph*',
+      release  => 'jammy-proposed',
+    }
+  }
+
   if($cluster_networks) {
     $cluster_networks_real = join($cluster_networks, ', ')
   } else {
