@@ -36,15 +36,39 @@ class profile::ceph::base {
   # Install the ceph repos first
   require ::profile::ceph::repo
 
-  # As of 14.03.2023 the version 17.2.5 of ceph is not correctly packaged in the
-  # ubuntu-repos; so we grab cephs own repos for focal (as they do not have a
-  # jammy-one).
+  # As of 14.03.2023 the version 17.2.5 of ceph is only available in the
+  # proposed repos for jammy; so then we need the proposed repos:
   if($::facts['os']['distro']['codename'] == 'jammy') {
-    ::apt::source { 'ceph-focal':
+    require ::profile::apt::proposed
+
+    $pkgs = [
+      'ceph',
+      'ceph-base',
+      'ceph-common',
+      'ceph-mds',
+      'ceph-mgr',
+      'ceph-mgr-modules-core',
+      'ceph-mon',
+      'ceph-osd',
+      'ceph-volume',
+      'libcephfs2',
+      'librados2',
+      'libradosstriper1',
+      'librbd1',
+      'libsqlite3-mod-ceph',
+      'python3-ceph-argparse',
+      'python3-ceph-common',
+      'python3-cephfs',
+      'python3-rados',
+      'python3-rbd',
+    ]
+
+    ::apt::pin { 'ceph-jammy-proposed':
       ensure   => 'present',
-      location => 'https://download.ceph.com/debian-quincy/',
-      release  => 'focal',
-      tag      => 'ceph',
+      packages => $pkgs,
+      priority => 500,
+      release  => 'jammy-proposed',
+      before   => Class['::ceph'],
     }
   }
 
