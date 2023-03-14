@@ -53,6 +53,7 @@ class profile::ceph::base {
       'ceph-volume',
       'libcephfs2',
       'librados2',
+      'libradosstriper1',
       'librbd1',
       'libsqlite3-mod-ceph',
       'python3-ceph-argparse',
