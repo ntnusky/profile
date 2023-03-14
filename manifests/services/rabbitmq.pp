@@ -66,6 +66,7 @@ class profile::services::rabbitmq {
 
   class { '::rabbitmq':
     erlang_cookie            => $secret,
+    manage_python            => false,
     repos_ensure             => true,
     wipe_db_on_cookie_change => true,
     ipv6                     => $ipv6,
@@ -86,9 +87,9 @@ class profile::services::rabbitmq {
   profile::utilities::logging::module { 'rabbitmq' :
     content => [{
       'module' => 'rabbitmq',
-      'log'   => {
+      'log'    => {
         'enabled'   => true,
-        'var.paths' => [ "/var/log/rabbitmq/rabbit@${hostname}.log" ],
+        'var.paths' => [ "/var/log/rabbitmq/rabbit@${::hostname}.log" ],
       },
     }]
   }
