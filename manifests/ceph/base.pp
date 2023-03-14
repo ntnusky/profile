@@ -41,30 +41,9 @@ class profile::ceph::base {
   if($::facts['os']['distro']['codename'] == 'jammy') {
     require ::profile::apt::proposed
 
-    $pkgs = [
-      'ceph', 
-      'ceph-base', 
-      'ceph-common', 
-      'ceph-mds', 
-      'ceph-mgr', 
-      'ceph-mgr-modules-core', 
-      'ceph-mon',
-      'ceph-osd', 
-      'ceph-volume',
-      'libcephfs2',
-      'librados2',
-      'librbd1',
-      'libsqlite3-mod-ceph',
-      'python3-ceph-argparse',
-      'python3-ceph-common',
-      'python3-cephfs',
-      'python3-rados',
-      'python3-rbd',
-    ]
-
     ::apt::pin { 'ceph-jammy-proposed':
       ensure   => 'present',
-      packages => $pkgs, 
+      packages => 'ceph*',
       priority => 500,
       release  => 'jammy-proposed',
     }
