@@ -1,7 +1,7 @@
 # Sensu checks intended for all physical servers
 class profile::sensu::checks::physical {
   sensu::check { 'general-hw-error':
-    command     => 'check-hardware-fail.rb',
+    command     => 'sudo check-hardware-fail.rb',
     interval    => 300,
     standalone  => false,
     subscribers => [ 'physical-servers' ],
