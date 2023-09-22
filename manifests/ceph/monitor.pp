@@ -45,7 +45,6 @@ class profile::ceph::monitor {
   }
   ceph::key { 'client.bootstrap-osd':
     secret  => $bootstrap_osd_key,
-    cap_mgr => 'allow r',
     cap_mon => 'allow profile bootstrap-osd',
     before  => Anchor['profile::ceph::monitor::end']
   }
