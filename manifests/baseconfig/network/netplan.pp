@@ -13,9 +13,24 @@ class profile::baseconfig::network::netplan {
   })
 
   $ethernets.each | $if, $data | {
-    # Get the IPv4-address in CIDR-format
-    $ip4 = $data['ipv4']['address']
-    $ip4cidr = netmask_to_masklen($data['ipv4']['netmask'])
+    # Retrieve the IPv4 address if it is provided
+    if('ipv4' in $data and 'address' in $['ipv4']) {
+      # If netmask is provided, the address is probably not in CIDR format...
+      if('netmask' in $data['ipv4']) {
+        $ip4 = $data['ipv4']['address']
+        $ip4cidr = netmask_to_masklen($data['ipv4']['netmask'])
+        $v4 = "${ip4}/${ip4cidr}",
+
+      # If the netmask is not provided, we expect the address to be in CIDR
+      # format.
+      } else {
+        $v4 = $data['ipv4']['address']
+      }
+    
+    # Otherwise, skip IPv4-config.
+    } else {
+      $v4 = undef,
+    }
 
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
@@ -34,7 +49,7 @@ class profile::baseconfig::network::netplan {
     }
 
     ::profile::baseconfig::netplan::interface{ $if:
-      ipv4      => "${ip4}/${ip4cidr}",
+      ipv4      => $v4,
       ipv6      => $v6,
       method    => $method_real,
       mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
