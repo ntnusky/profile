@@ -142,6 +142,7 @@ define profile::baseconfig::netplan::interface (
   # If it is a bond; create a bond and activate the member interfaces
   if($members) {
     ::netplan::bonds { $name:
+      accept_ra  => true,
       dhcp6      => false,
       interfaces => $members,
       macaddress => $::facts['networking']['interfaces'][$members[0]]['mac'],
