@@ -150,7 +150,7 @@ define profile::baseconfig::netplan::interface (
     }
 
     $members.each | $member | {
-      ::netplan::ethernets { $name:
+      ::netplan::ethernets { $member:
         accept_ra => false,
         dhcp4     => false,
         dhcp6     => false,
