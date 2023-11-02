@@ -24,9 +24,10 @@ class profile::baseconfig::duo::configure {
     *       => $common,
   }
   ini_setting { 'DUO-Secret':
-    setting => 'skey',
-    value   => $duo_secret,
-    *       => $common,
+    setting   => 'skey',
+    value     => $duo_secret,
+    show_diff => false,
+    *         => $common,
   }
 
   ini_setting { 'DUO-Groups':
