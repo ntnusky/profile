@@ -16,6 +16,12 @@ class profile::baseconfig {
 
   include ::profile::utilities::ntnuskytools
 
+  # If duo should be installed, install and configure it. 
+  $installduo = hiera('profile::duo::enabled', false)
+  if($installduo) {
+    include ::profile::baseconfig::duo
+  }
+
   # If munin should be installed, install and configure the munin-node
   $installmunin = hiera('profile::munin::install', true)
   if($installmunin) {
