@@ -4,10 +4,15 @@ class profile::baseconfig::netplan::base {
     'default_value' => undef,
     'value_type'    => Optional[Hash],
   })
+  $bonds = lookup('profile::baseconfig::network::bonds', {
+    'default_value' => undef,
+    'value_type'    => Optional[Hash],
+  })
 
   class { '::netplan':
     # We provide empty dicts so that the netplan-module includes the various
     # headers even though we define the sub-classes elsewhere.
+    bonds     => ($bonds) ? { undef => undef, default => {} },
     ethernets => ($ethernets) ? { undef => undef, default => {} },
   }
 }

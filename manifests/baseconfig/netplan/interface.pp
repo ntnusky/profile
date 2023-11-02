@@ -1,13 +1,16 @@
 # Configures an interface to be used by netplan
 define profile::baseconfig::netplan::interface (
-  Optional[Stdlib::IP::Address::V4::CIDR] $ipv4      = undef,
-  Optional[Stdlib::IP::Address::V6::CIDR] $ipv6      = undef,
-  Optional[Hash]                          $match     = undef,
-  Enum['manual', 'dhcp', 'static']        $method    = 'manual',
-  Integer                                 $mtu       = 1500,
-  Optional[Integer]                       $tableid   = undef,
-  Optional[Stdlib::IP::Address::V4]       $v4gateway = undef,
-  Optional[Stdlib::IP::Address::V6]       $v6gateway = undef,
+  Optional[Stdlib::IP::Address::V4::CIDR] $ipv4       = undef,
+  Optional[Stdlib::IP::Address::V6::CIDR] $ipv6       = undef,
+  Optional[Hash]                          $match      = undef,
+  Optional[Array[String]]                 $members    = undef,
+  Enum['manual', 'dhcp', 'static']        $method     = 'manual',
+  Integer                                 $mtu        = 1500,
+  Optional[Hash]                          $parameters = undef,
+  Optional[Integer]                       $priority   = undef,
+  Optional[Integer]                       $tableid    = undef,
+  Optional[Stdlib::IP::Address::V4]       $v4gateway  = undef,
+  Optional[Stdlib::IP::Address::V6]       $v6gateway  = undef,
 ) {
   $dns_servers = lookup('profile::dns::nameservers', {
     'default_value' => undef,
@@ -19,11 +22,9 @@ define profile::baseconfig::netplan::interface (
   include ::profile::baseconfig::netplan::base
 
   if($method == 'manual') {
-    ::netplan::ethernets { $name:
+    $addressdata = {
       accept_ra => false,
       dhcp4     => false,
-      dhcp6     => false,
-      emit_lldp => true,
       mtu       => $mtu,
     }
   } elsif($method == 'dhcp') {
@@ -35,13 +36,11 @@ define profile::baseconfig::netplan::interface (
       $priority_real = 5
     }
 
-    ::netplan::ethernets { $name:
+    $addressdata = {
       dhcp4           => true,
       dhcp4_overrides => {
         'route_metric' => $priority_real,
       },
-      dhcp6           => false,
-      emit_lldp       => true,
     }
   } else {
     # We currently treat IPv4 as mandatory, so fail if no appropriate address is
@@ -126,11 +125,9 @@ define profile::baseconfig::netplan::interface (
       $policies_real = $v4policy + $v6policy
     }
 
-    ::netplan::ethernets { $name:
+    $addressdata = {
       match          => $match,
-      emit_lldp      => true,
       dhcp4          => false,
-      dhcp6          => false,
       addresses      => [ $ipv4, $ipv6 ] - undef,
       nameservers    => {
         'addresses' => split($dns_servers, ' '),
@@ -141,4 +138,34 @@ define profile::baseconfig::netplan::interface (
       routing_policy => $policies_real,
     }
   }
+
+  # If it is a bond; create a bond and activate the member interfaces
+  if($members) {
+    ::netplan::bonds { $name:
+      dhcp6      => false,
+      emit_lldp  => true,
+      interfaces => $members,
+      parameters => $parameters,
+      *          => $addressdata,
+    }
+
+    $members.each | $member | {
+      ::netplan::ethernets { $name:
+        accept_ra => false,
+        dhcp4     => false,
+        dhcp6     => false,
+        emit_lldp => true,
+        mtu       => $mtu,
+      }
+    }
+
+  # If it is a regular interface, simply create the interface.
+  } else {
+    ::netplan::ethernets { $name:
+      dhcp6     => false,
+      emit_lldp => true,
+      *         => $addressdata,
+    }
+  }
+
 }
