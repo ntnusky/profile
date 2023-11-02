@@ -2,7 +2,7 @@
 define profile::baseconfig::netplan::interface (
   Optional[Stdlib::IP::Address::V4::CIDR] $ipv4      = undef,
   Optional[Stdlib::IP::Address::V6::CIDR] $ipv6      = undef,
-  Hash                                    $match     = {},
+  Hash                                    $match     = undef,
   Enum['manual', 'dhcp', 'static']        $method    = 'manual',
   Integer                                 $mtu       = 1500,
   Optional[Integer]                       $tableid   = undef,
@@ -103,6 +103,18 @@ define profile::baseconfig::netplan::interface (
       $v6policy = []
     }
 
+    if(length($v4routes + $v6routes)) {
+      $routes_real = $v4routes + $v6routes
+    } else {
+      $routes_real = undef
+    }
+
+    if(length($v4policy + $v6policy)) {
+      $policies_real = $v4policy + $v6policy
+    } else {
+      $policies_real = undef
+    }
+
     ::netplan::ethernets { $name:
       match          => $match,
       emit_lldp      => true,
@@ -114,8 +126,8 @@ define profile::baseconfig::netplan::interface (
         'search'    => [ $dns_search ],
       },
       mtu            => $mtu,
-      routes         => $v4routes + $v6routes,
-      routing_policy => $v4policy + $v6policy,
+      routes         => $routes_real,
+      routing_policy => $policies_real,
     }
   }
 }
