@@ -9,10 +9,16 @@ class profile::baseconfig::netplan::base {
     'value_type'    => Optional[Hash],
   })
 
+  if($bonds != undef or $ethernets != undef) {
+    $eth = {} 
+  } else {
+    $eth = undef 
+  }
+
   class { '::netplan':
     # We provide empty dicts so that the netplan-module includes the various
     # headers even though we define the sub-classes elsewhere.
     bonds     => ($bonds) ? { undef => undef, default => {} },
-    ethernets => ($ethernets) ? { undef => undef, default => {} },
+    ethernets => $eth, 
   }
 }
