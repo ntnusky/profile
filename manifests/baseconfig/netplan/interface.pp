@@ -38,11 +38,11 @@ define profile::baseconfig::netplan::interface (
     if($ipv4 == undef) {
       fail("You must define IPv4 address for ${name} when method is 'static'")
     }
-    if($v4gateway == undef) {
-      fail("You must define IPv4 gateway for ${name} when method is 'static'")
-    }
 
-    if($tableid) {
+    if(! $v4gateway) {
+      $v4routes = []
+      $v4policy = []
+    } elsif($tableid) {
       $v4routes = [{
         'to'    => '0.0.0.0/0',
         'via'   => $v4gateway,
