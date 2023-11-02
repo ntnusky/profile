@@ -143,7 +143,6 @@ define profile::baseconfig::netplan::interface (
   if($members) {
     ::netplan::bonds { $name:
       dhcp6      => false,
-      emit_lldp  => true,
       interfaces => $members,
       parameters => $parameters,
       *          => $addressdata,
