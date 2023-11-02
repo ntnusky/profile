@@ -27,10 +27,21 @@ define profile::baseconfig::netplan::interface (
       mtu       => $mtu,
     }
   } elsif($method == 'dhcp') {
+    if($priority) {
+      $priority_real = $priority
+    } elsif($tableid) {
+      $priority_real = $tableid * 10;
+    } else {
+      $priority_real = 5
+    }
+
     ::netplan::ethernets { $name:
-      dhcp4     => true,
-      dhcp6     => false,
-      emit_lldp => true,
+      dhcp4           => true,
+      dhcp4_overrides => {
+        'route_metric' => $priority_real,
+      },
+      dhcp6           => false,
+      emit_lldp       => true,
     }
   } else {
     # We currently treat IPv4 as mandatory, so fail if no appropriate address is
