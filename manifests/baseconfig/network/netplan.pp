@@ -43,8 +43,8 @@ class profile::baseconfig::network::netplan {
     if('method' in $data) {
       $method_real = $data['method']
     } else {
-      warning('Specifying method withing ipv4/ipv6 is deprecated. ' +
-        'Place under interface instead')
+      warning(
+        'Method within ipv4/ipv6 is deprecated. Place under interface instead')
       $method_real = $data['ipv4']['method']
     }
 
