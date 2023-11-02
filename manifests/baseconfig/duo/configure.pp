@@ -32,7 +32,7 @@ class profile::baseconfig::duo::configure {
 
   ini_setting { 'DUO-Groups':
     setting => 'groups',
-    value   => '*.!root',
+    value   => '*,!root',
     *       => $common,
   }
   ini_setting { 'DUO-Pushinfo':
