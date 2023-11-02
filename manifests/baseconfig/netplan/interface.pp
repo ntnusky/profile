@@ -3,7 +3,7 @@ define profile::baseconfig::netplan::interface (
   Optional[Stdlib::IP::Address::V4::CIDR] $ipv4      = undef,
   Optional[Stdlib::IP::Address::V6::CIDR] $ipv6      = undef,
   Hash                                    $match     = {},
-  Variant['manual', 'dhcp', 'static']     $method    = 'manual',
+  Enum['manual', 'dhcp', 'static']        $method    = 'manual',
   Integer                                 $mtu       = 1500,
   Optional[Integer]                       $tableid   = undef,
   Optional[Stdlib::IP::Address::V4]       $v4gateway = undef,
