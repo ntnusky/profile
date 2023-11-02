@@ -144,6 +144,7 @@ define profile::baseconfig::netplan::interface (
     ::netplan::bonds { $name:
       dhcp6      => false,
       interfaces => $members,
+      macaddress => $::facts['networking']['interfaces'][$members[0]]['mac'],
       parameters => $parameters,
       *          => $addressdata,
     }
