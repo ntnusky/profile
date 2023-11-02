@@ -16,7 +16,7 @@ define profile::baseconfig::netplan::interface (
     'default_value' => undef,
   })
 
-  include ::netplan
+  include ::profile::baseconfig::netplan::base
 
   if($method == 'manual') {
     ::netplan::ethernets { $name:
