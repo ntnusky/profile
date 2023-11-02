@@ -30,7 +30,7 @@ define profile::baseconfig::netplan::interface (
     if($priority) {
       $priority_real = $priority
     } elsif($tableid) {
-      $priority_real = $tableid * 10;
+      $priority_real = $tableid * 10
     } else {
       $priority_real = 5
     }
