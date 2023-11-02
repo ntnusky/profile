@@ -103,16 +103,16 @@ define profile::baseconfig::netplan::interface (
       $v6policy = []
     }
 
-    if(length($v4routes + $v6routes)) {
-      $routes_real = $v4routes + $v6routes
-    } else {
+    if(length($v4routes + $v6routes) == 0) {
       $routes_real = undef
+    } else {
+      $routes_real = $v4routes + $v6routes
     }
 
-    if(length($v4policy + $v6policy)) {
-      $policies_real = $v4policy + $v6policy
-    } else {
+    if(length($v4policy + $v6policy) == 0) {
       $policies_real = undef
+    } else {
+      $policies_real = $v4policy + $v6policy
     }
 
     ::netplan::ethernets { $name:
