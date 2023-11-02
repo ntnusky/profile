@@ -1,10 +1,15 @@
 # Configure networking with ifupdown
-class profile::baseconfig::network::ifupdown (Hash $nics) {
+class profile::baseconfig::network::ifupdown {
   $dns_servers = lookup('profile::dns::nameservers', {
     'default_value' => undef,
   })
   $dns_search = lookup('profile::dns::searchdomain', {
     'default_value' => undef,
+  })
+
+  $nics = lookup('profile::baseconfig::network::interfaces', {
+    'default_value' => {},
+    'value_type'    => Hash,
   })
 
   # "Strikk og binders" DNS-conf for RHEL like systems
