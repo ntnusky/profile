@@ -50,4 +50,12 @@ class profile::baseconfig::duo::configure {
     value   => 'secure',
     *       => $common,
   }
+
+  file { '/etc/pam.d/common-auth':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0644',
+    source => 'puppet:///modules/profile/pam/duo-common-auth',
+  }
 }
