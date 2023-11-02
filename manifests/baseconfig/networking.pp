@@ -3,27 +3,12 @@
 class profile::baseconfig::networking {
   include ::profile::baseconfig::network::socketbuffer
 
-  # Configure interfaces as instructed in hiera.
-  $if_to_configure = lookup('profile::baseconfig::network::interfaces', {
-    'default_value' => false,
-    'value_type'    => Variant[Hash,Boolean],
-  })
-  if($if_to_configure) {
-    $os = $facts['operatingsystem']
-    $distro = $facts['os']['release']['major']
-    if($os == 'Ubuntu' and $distro != '16.04') {
-      class { '::profile::baseconfig::network::netplan':
-        nics => $if_to_configure,
-      }
-    }
-    # TODO: The 16.04 logic is present to ensure that existing
-    # 16.04 don't fail their puppet-run before they're reinstalled
-    # Delete when you've got rid of them
-    elsif ($os == 'CentOS' or $distro == '16.04') {
-      class { '::profile::baseconfig::network::ifupdown':
-        nics => $if_to_configure,
-      }
-    }
+  # Determine if we need ifupdown or netplan for networking
+  $os = $facts['operatingsystem']
+  if($os == 'Ubuntu') {
+    include ::profile::baseconfig::network::netplan
+  } elsif ($os == 'CentOS') {
+    include ::profile::baseconfig::network::ifupdown
   }
 
   # Configure ovs-bridges as instructed in hiera
