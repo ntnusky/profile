@@ -61,7 +61,7 @@ class profile::baseconfig::duo::configure {
   }
   
   # Make SSH use the unix+DUO PAM config
-  file_line { 
+  file_line { 'PAM-Config DUO for SSH': 
     ensure             => present,
     path               => '/etc/pam.d/sshd',
     line               => '@include common-auth-duo',
