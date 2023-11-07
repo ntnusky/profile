@@ -17,7 +17,7 @@
 # here are the per-package modules (the "Primary" block)
 #auth	[success=1 default=ignore]	pam_unix.so nullok
 
-auth required	pam_unix.so nullok
+auth requisite	pam_unix.so nullok
 auth [success=1 default=ignore]  /lib64/security/pam_duo.so
 
 # here's the fallback if no module succeeds
