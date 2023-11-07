@@ -51,11 +51,21 @@ class profile::baseconfig::duo::configure {
     *       => $common,
   }
 
-  file { '/etc/pam.d/common-auth':
+  # Add a PAM-file for unix-passwod + DUO
+  file { '/etc/pam.d/common-auth-duo':
     ensure => present,
     owner  => 'root',
     group  => 'root',
     mode   => '0644',
     source => 'puppet:///modules/profile/pam/duo-common-auth',
+  }
+  
+  # Make SSH use the unix+DUO PAM config
+  file_line { 
+    ensure             => present,
+    path               => '/etc/pam.d/sshd',
+    line               => '@include common-auth-duo',
+    match              => '@include common-auth',
+    append_on_no_match => false,
   }
 }
