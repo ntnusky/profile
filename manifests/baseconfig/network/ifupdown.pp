@@ -1,7 +1,8 @@
 # Configure networking with ifupdown
 class profile::baseconfig::network::ifupdown {
-  $dns_servers = lookup('profile::dns::nameservers', {
-    'default_value' => undef,
+  $dns_servers = lookup('profile::dns::resolvers', {
+    'default_value' => [],
+    'value_type'    => Array,
   })
   $dns_search = lookup('profile::dns::searchdomain', {
     'default_value' => undef,
@@ -11,14 +12,6 @@ class profile::baseconfig::network::ifupdown {
     'default_value' => {},
     'value_type'    => Hash,
   })
-
-  # "Strikk og binders" DNS-conf for RHEL like systems
-  if ($dns_servers) {
-    $dns_server_array = split($dns_servers, ' ')
-  }
-  else {
-    $dns_server_array = []
-  }
 
   $dns_config = {
     dns1            => $dns_server_array[0],

@@ -12,8 +12,9 @@ define profile::baseconfig::netplan::interface (
   Optional[Stdlib::IP::Address::V4]       $v4gateway  = undef,
   Optional[Stdlib::IP::Address::V6]       $v6gateway  = undef,
 ) {
-  $dns_servers = lookup('profile::dns::nameservers', {
-    'default_value' => undef,
+  $dns_servers = lookup('profile::dns::resolvers', {
+    'default_value' => [],
+    'value_type'    => Array,
   })
   $dns_search = lookup('profile::dns::searchdomain', {
     'default_value' => undef,
@@ -130,7 +131,7 @@ define profile::baseconfig::netplan::interface (
       dhcp4          => false,
       addresses      => [ $ipv4, $ipv6 ] - undef,
       nameservers    => {
-        'addresses' => split($dns_servers, ' '),
+        'addresses' => $dns_servers,
         'search'    => [ $dns_search ],
       },
       mtu            => $mtu,

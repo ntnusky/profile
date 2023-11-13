@@ -1,8 +1,5 @@
 # Configure networking with netplan
 class profile::baseconfig::network::netplan {
-  $dns_servers = lookup('profile::dns::nameservers', {
-    'default_value' => undef,
-  })
   $dns_search = lookup('profile::dns::searchdomain', {
     'default_value' => undef,
   })
