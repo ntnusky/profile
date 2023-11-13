@@ -16,8 +16,13 @@ define profile::baseconfig::netplan::interface (
     'default_value' => [],
     'value_type'    => Array,
   })
-  $dns_search = lookup('profile::dns::searchdomain', {
+  # TODO: Remove old default
+  $dns_s = lookup('profile::dns::searchdomain', {
     'default_value' => undef,
+  })
+  $dns_search = lookup('profile::dns::searchdomains', {
+    'default_value' => [ $dns_s ],
+    'value_type'    => Array,
   })
 
   include ::profile::baseconfig::netplan::base
@@ -132,7 +137,7 @@ define profile::baseconfig::netplan::interface (
       addresses      => [ $ipv4, $ipv6 ] - undef,
       nameservers    => {
         'addresses' => $dns_servers,
-        'search'    => [ $dns_search ],
+        'search'    => $dns_search,
       },
       mtu            => $mtu,
       routes         => $routes_real,
