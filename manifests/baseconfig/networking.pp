@@ -25,8 +25,7 @@ class profile::baseconfig::networking {
     # If the bridge should have an external connection
     if($configuration['external']) {
       if($configuration['external']['mtu']) {
-        # TODO: This should really just be $configuration['mtu']?
-        $mtu = $configuration['external']['mtu']
+        $mtu = $configuration['mtu']
       } else {
         $mtu = 1500
       }
