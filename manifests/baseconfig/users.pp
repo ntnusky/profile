@@ -3,7 +3,7 @@ class profile::baseconfig::users {
   # Get user-configuration from hiera
   $users = lookup('profile::user', {
     'default_value' => {},
-    'merge'         => 'hash',
+    'merge'         => 'deep',
     'value_type'    => Hash,
   })
 
