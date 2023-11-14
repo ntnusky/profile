@@ -7,6 +7,7 @@ define profile::baseconfig::netplan::interface (
   Enum['manual', 'dhcp', 'static']        $method     = 'manual',
   Integer                                 $mtu        = 1500,
   Optional[Hash]                          $parameters = undef,
+  Boolean                                 $primary    = false,
   Optional[Integer]                       $priority   = undef,
   Optional[Integer]                       $tableid    = undef,
   Optional[Stdlib::IP::Address::V4]       $v4gateway  = undef,
@@ -59,6 +60,17 @@ define profile::baseconfig::netplan::interface (
       $v4routes = []
       $v4policy = []
     } elsif($tableid) {
+      # If this is a primary interface, ensure that there is a route in the default 
+      # routing-table as well.
+      if($primary) {
+        $base_route = [{
+          'to'  => '0.0.0.0/0',
+          'via' => $v4gateway,
+        }]
+      } else {
+        $base_route = []
+      }
+
       $v4routes = [{
         'to'    => '0.0.0.0/0',
         'via'   => $v4gateway,
@@ -67,7 +79,7 @@ define profile::baseconfig::netplan::interface (
         'to'    => ip_network($ipv4),
         'scope' => 'link',
         'table' => $tableid,
-      }]
+      }] + $base_route
       $v4policy = [{
         'to'    => '0.0.0.0/0',
         'from'  => ip_network($ipv4),

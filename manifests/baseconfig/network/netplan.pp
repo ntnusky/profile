@@ -64,6 +64,12 @@ class profile::baseconfig::network::netplan {
       $v4gw = undef
     }
 
+    if('ipv4' in $data and 'primary' in $data['ipv4']) {
+      $primary = $data['ipv4']['primary']
+    } else {
+      $primary = false
+    }
+
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
       $v6 = $data['ipv6']['address']
@@ -85,6 +91,7 @@ class profile::baseconfig::network::netplan {
       ipv6      => $v6,
       method    => $method_real,
       mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
+      primary   => $primary,
       tableid   => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
       v4gateway => $v4gw,
     }
