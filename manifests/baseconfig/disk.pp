@@ -2,15 +2,15 @@
 class profile::baseconfig::disk {
   $rootsize = lookup('profile::disk::root::size', {
     'default_value' => undef,
-    'value_type'    => Optional[Integer],
+    'value_type'    => Optional[String],
   })
   $varsize = lookup('profile::disk::var::size', {
     'default_value' => undef,
-    'value_type'    => Optional[Integer],
+    'value_type'    => Optional[String],
   })
   $swapsize = lookup('profile::disk::swap::size', {
     'default_value' => undef,
-    'value_type'    => Optional[Integer],
+    'value_type'    => Optional[String],
   })
 
   if($rootsize) {
