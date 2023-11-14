@@ -64,7 +64,7 @@ define profile::baseconfig::netplan::interface (
         'via'   => $v4gateway,
         'table' => $tableid,
       },{
-        'to'    => $ipv4,
+        'to'    => ip_network($ipv4),
         'scope' => 'link',
         'table' => $tableid,
       }]
@@ -84,7 +84,7 @@ define profile::baseconfig::netplan::interface (
     if($ipv6) {
       if($tableid) {
         $v6r = [{
-          'to'    => $ipv6,
+          'to'    => ip_network($ipv6),
           'scope' => 'link',
           'table' => $tableid,
         }]
