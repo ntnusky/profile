@@ -70,7 +70,7 @@ define profile::baseconfig::netplan::interface (
       }]
       $v4policy = [{
         'to'    => '0.0.0.0/0',
-        'from'  => $ipv4,
+        'from'  => ip_network($ipv4),
         'table' => $tableid,
       }]
     } else {
