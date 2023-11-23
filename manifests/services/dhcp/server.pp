@@ -38,13 +38,21 @@ class profile::services::dhcp::server {
     'default_value' => 7911,
   })
 
+  # Determine the management-IP for the server; either through the now obsolete
+  # hiera-keys, or through the sl2-data:
+  #  TODO: Remove the old-fashioned lookups. 
+  $man_if = lookup('profile::interfaces::management', Optional[String])
+  if($man_if) {
+    $mip = $facts['networking']['interfaces'][$man_if]['ip']
+    $management_ip = lookup("profile::baseconfig::network::interfaces.${man_if}.ipv4.address", {
+      'value_type'    => Stdlib::IP::Address::V4,
+      'default_value' => $mip,
+    })
+  } else {
+    $management_ip = $::sl2['server']['primary_interface']['ipv4']
+  }
+
   # Get the relevant parameters to configure DHCP classes for PXE/UEFI booting.
-  $man_if = lookup('profile::interfaces::management', String)
-  $mip = $facts['networking']['interfaces'][$man_if]['ip']
-  $management_ip = lookup("profile::baseconfig::network::interfaces.${man_if}.ipv4.address", {
-    'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip,
-  })
   $pxe_server = lookup('profile::dhcp::pxe::server', {
     'value_type'    => Stdlib::IP::Address::V4,
     'default_value' => $management_ip,
