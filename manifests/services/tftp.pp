@@ -16,6 +16,7 @@ class profile::services::tftp {
 
   # If we use shiftleader1 we need to allow for external OMAPI requests from the
   # shiftleader servers.
+  # TODO: Remove SL1 when we dont use it anymore 
   if($sl_version == 1) {
     include ::profile::services::dashboard::clients::tftp
   } else {
@@ -38,27 +39,34 @@ class profile::services::tftp {
     ensure => 'present',
   }
 
+  file { $rootdir:
+    ensure => directory, 
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
   file { "${rootdir}pxelinux.0":
     ensure  => 'file',
     source  => '/usr/lib/PXELINUX/pxelinux.0',
-    require => Package['pxelinux'],
+    require => [ Package['pxelinux'], File[$rootdir] ],
   }
 
   file { "${rootdir}ldlinux.c32":
     ensure  => 'file',
     source  => '/usr/lib/syslinux/modules/bios/ldlinux.c32',
-    require => Package['syslinux'],
+    require => [ Package['syslinux'], File[$rootdir] ],
   }
 
   file { "${rootdir}ldlinux.e64":
     ensure  => 'file',
     source  => '/usr/lib/syslinux/modules/efi64/ldlinux.e64',
-    require => Package['syslinux-efi'],
+    require => [ Package['syslinux-efi'], File[$rootdir] ],
   }
 
   file { "${rootdir}syslinux.efi":
     ensure  => 'file',
     source  => '/usr/lib/SYSLINUX.EFI/efi64/syslinux.efi',
-    require => Package['syslinux-efi'],
+    require => [ Package['syslinux-efi'], File[$rootdir] ],
   }
 }
