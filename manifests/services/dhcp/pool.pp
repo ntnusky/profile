@@ -19,14 +19,14 @@ define profile::services::dhcp::pool (
 
   # Determine if a gateway should be configured
   # TODO: Remove the hiera-lookup and simply base it on the supplied parameters.
-  $gateway = lookup("profile::networks::${name}::ipv4::gateway", {
+  $gateway_real = lookup("profile::networks::${name}::ipv4::gateway", {
     'default_value' => $gateway,
     'value_type'    => Optional[Stdlib::IP::Address::V4::Nosubnet],
   })
 
   # Determine if a range is to be configured:
   # TODO: Remove the hiera-lookup and simply base it on the supplied parameters.
-  $range = lookup("profile::networks::${name}::ipv4::dynamicrange", {
+  $range_real = lookup("profile::networks::${name}::ipv4::dynamicrange", {
     'default_value' => $range,
     'value_type'    => Optional[Variant[Array[String], String]],
   })
@@ -51,8 +51,8 @@ define profile::services::dhcp::pool (
   ::dhcp::pool { $name:
     network     => $network_id,
     mask        => $mask,
-    range       => $range,
-    gateway     => $gateway,
+    range       => $range_real,
+    gateway     => $gateway_real,
     domain_name => $domain_real,
   }
 }
