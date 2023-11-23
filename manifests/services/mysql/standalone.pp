@@ -3,13 +3,22 @@ class profile::services::mysql::standalone {
   # Get the MySQL root-password
   $rootpassword = lookup('profile::mysqlcluster::root_password', String)
 
-  # Determine which IP to listen to
-  $management_if = lookup('profile::interfaces::management', String)
-  $mip = $facts['networking']['interfaces'][$management_if]['ip']
-  $management_ip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
-    'value_type'    => Stdlib::IP::Address::V4,
-    'default_value' => $mip,
+  # Determine the management-IP for the server; either through the now obsolete
+  # hiera-keys, or through the sl2-data:
+  #  TODO: Remove the old-fashioned lookups. 
+  $man_if = lookup('profile::interfaces::management', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
   })
+  if($man_if) {
+    $mip = $facts['networking']['interfaces'][$man_if]['ip']
+    $management_ip = lookup("profile::baseconfig::network::interfaces.${man_if}.ipv4.address", {
+      'value_type'    => Stdlib::IP::Address::V4,
+      'default_value' => $mip,
+    })
+  } else {
+    $management_ip = $::sl2['server']['primary_interface']['ipv4']
+  }
 
   # Allow setting timeouts in hiera
   $net_read_timeout = lookup('profile::mysqlcluster::timeout::net::read', {
