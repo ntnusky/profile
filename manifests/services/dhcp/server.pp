@@ -41,7 +41,10 @@ class profile::services::dhcp::server {
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
   #  TODO: Remove the old-fashioned lookups. 
-  $man_if = lookup('profile::interfaces::management', Optional[String])
+  $man_if = lookup('profile::interfaces::management', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
   if($man_if) {
     $mip = $facts['networking']['interfaces'][$man_if]['ip']
     $management_ip = lookup("profile::baseconfig::network::interfaces.${man_if}.ipv4.address", {
