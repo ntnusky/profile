@@ -52,13 +52,13 @@ class profile::services::haproxy::web {
   }
 
   $baseoptions = {
-    'acl'         => $acl,
-    'use_backend' => $backend,
-    'option'      => [
+    'acl'                     => $acl,
+    'use_backend'             => $backend,
+    'option'                  => [
       'forwardfor',
       'http-server-close',
     ],
-    'reqadd'      => 'X-Forwarded-Proto:\ https if { ssl_fc }',
+    'http-request add-header' => 'X-Forwarded-Proto https if { ssl_fc }',
   }
 
   $base_bind = $addresses.reduce({}) | $memo, $address | {

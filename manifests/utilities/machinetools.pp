@@ -23,7 +23,7 @@ class profile::utilities::machinetools {
 
     case $::osfamily {
       'Debian': {
-        include ::hwraid
+        require ::hwraid
         $megaclipackages = [ 'megacli', 'mpt-status' ]
         package { $megaclipackages :
           ensure  => 'present',

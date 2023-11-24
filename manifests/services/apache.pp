@@ -43,7 +43,7 @@ class profile::services::apache {
 
   apache::vhost { "${::fqdn}-http":
     servername    => $::fqdn,
-    port          => '80',
+    port          => 80,
     ip            => $ip,
     add_listen    => false,
     docroot       => $default_docroot,
