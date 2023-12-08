@@ -164,6 +164,7 @@ define profile::baseconfig::netplan::interface (
       dhcp6      => false,
       interfaces => $members,
       macaddress => $::facts['networking']['interfaces'][$members[0]]['mac'],
+      mtu        => $mtu,
       parameters => $parameters,
       *          => $addressdata,
     }
