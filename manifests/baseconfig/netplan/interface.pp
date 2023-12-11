@@ -52,10 +52,23 @@ define profile::baseconfig::netplan::interface (
         'route_metric' => $priority_real,
       },
     }
+
   } else {
+    if($method == 'shiftleader') {
+      if(! $name in $::sl2['server']['interfaces']) {
+        fail("No interface named ${name} registered on host in shiftleader!")
+      }
+
+      $ipv4_real = $::sl2['server']['interfaces'][$name]['ipv4']
+      $ipv6_real = $::sl2['server']['interfaces'][$name]['ipv6']
+    } else {
+      $ipv4_real = $ipv4
+      $ipv6_real = $ipv6
+    }
+
     # We currently treat IPv4 as mandatory, so fail if no appropriate address is
     # given.
-    if($ipv4 == undef) {
+    if($ipv4_real == undef) {
       fail("You must define IPv4 address for ${name} when method is 'static'")
     }
 
@@ -79,13 +92,13 @@ define profile::baseconfig::netplan::interface (
         'via'   => $v4gateway,
         'table' => $tableid,
       },{
-        'to'    => ip_network($ipv4),
+        'to'    => ip_network($ipv4_real),
         'scope' => 'link',
         'table' => $tableid,
       }] + $base_route
       $v4policy = [{
         'to'    => '0.0.0.0/0',
-        'from'  => ip_network($ipv4),
+        'from'  => ip_network($ipv4_real),
         'table' => $tableid,
       }]
     } else {
@@ -99,7 +112,7 @@ define profile::baseconfig::netplan::interface (
     if($ipv6) {
       if($tableid) {
         $v6r = [{
-          'to'    => ip_network($ipv6),
+          'to'    => ip_network($ipv6_real),
           'scope' => 'link',
           'table' => $tableid,
         }]
@@ -115,7 +128,7 @@ define profile::baseconfig::netplan::interface (
         }
         $v6policy = [{
           'to'    => '::/0',
-          'from'  => $ipv6,
+          'from'  => $ipv6_real,
           'table' => $tableid,
         }]
       } else {
@@ -152,7 +165,7 @@ define profile::baseconfig::netplan::interface (
       accept_ra      => $v6ra,
       match          => $match,
       dhcp4          => false,
-      addresses      => [ $ipv4, $ipv6 ] - undef,
+      addresses      => [ $ipv4_real, $ipv6_real ] - undef,
       nameservers    => {
         'addresses' => $dns_servers,
         'search'    => $dns_search,
