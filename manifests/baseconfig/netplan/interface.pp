@@ -34,7 +34,6 @@ define profile::baseconfig::netplan::interface (
     $addressdata = {
       accept_ra => false,
       dhcp4     => false,
-      mtu       => $mtu,
     }
   } elsif($method == 'dhcp') {
     if($priority) {
@@ -170,7 +169,6 @@ define profile::baseconfig::netplan::interface (
         'addresses' => $dns_servers,
         'search'    => $dns_search,
       },
-      mtu            => $mtu,
       routes         => $routes_real,
       routing_policy => $policies_real,
     }
@@ -215,6 +213,7 @@ define profile::baseconfig::netplan::interface (
     ::netplan::ethernets { $name:
       dhcp6     => false,
       emit_lldp => true,
+      mtu       => $mtu,
       *         => $addressdata,
     }
   }
