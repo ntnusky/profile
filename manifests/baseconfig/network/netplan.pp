@@ -126,7 +126,14 @@ class profile::baseconfig::network::netplan {
       method    => $data['method'],
       mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
       parent    => $data['parent'],
-      tableid   => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
+      priority  => ('priority' in $data) ? {
+        true    => $data['priority'],
+        default => 100,
+      },
+      tableid   => ('tableid' in $data) ? {
+        true    => $data['tableid'],
+        default => undef,
+      },
       v4gateway => $v4gw,
       vlanid    => $data['vlanid'],
     }
