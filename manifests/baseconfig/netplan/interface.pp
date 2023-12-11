@@ -7,11 +7,13 @@ define profile::baseconfig::netplan::interface (
   Enum['manual', 'dhcp', 'static']        $method     = 'manual',
   Integer                                 $mtu        = 1500,
   Optional[Hash]                          $parameters = undef,
+  Optional[String]                        $parent     = undef,
   Boolean                                 $primary    = false,
   Optional[Integer]                       $priority   = undef,
   Optional[Integer]                       $tableid    = undef,
   Optional[Stdlib::IP::Address::V4]       $v4gateway  = undef,
   Optional[Stdlib::IP::Address::V6]       $v6gateway  = undef,
+  Optional[Integer]                       $vlanid     = undef,
 ) {
   $dns_servers = lookup('profile::dns::resolvers', {
     'default_value' => [],
@@ -44,6 +46,7 @@ define profile::baseconfig::netplan::interface (
     }
 
     $addressdata = {
+      accept_ra       => true,
       dhcp4           => true,
       dhcp4_overrides => {
         'route_metric' => $priority_real,
@@ -126,9 +129,11 @@ define profile::baseconfig::netplan::interface (
         }
         $v6policy = []
       }
+      $v6ra = false
     } else {
       $v6routes = []
       $v6policy = []
+      $v6ra = true
     }
 
     if(length($v4routes + $v6routes) == 0) {
@@ -144,6 +149,7 @@ define profile::baseconfig::netplan::interface (
     }
 
     $addressdata = {
+      accept_ra      => $v6ra,
       match          => $match,
       dhcp4          => false,
       addresses      => [ $ipv4, $ipv6 ] - undef,
@@ -178,6 +184,19 @@ define profile::baseconfig::netplan::interface (
         mtu       => $mtu,
       }
     }
+
+  # If it is a VLAN-interface, create it
+  } elsif ($parent and $vlanid) {
+    ::netplan::vlans { $name:
+      dhcp6  => false,
+      id     => $vlanid
+      mtu    => $mtu,
+      parent => $parent,
+      *      => $addressdata,
+    }
+
+  } elsif ($parent or $vlanid) {
+    fail('Cannot create VLAN interface withouht both a parent and an ID')
 
   # If it is a regular interface, simply create the interface.
   } else {

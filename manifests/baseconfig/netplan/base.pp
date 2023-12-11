@@ -1,10 +1,14 @@
 # Initializes the netplan-class 
 class profile::baseconfig::netplan::base {
+  $bonds = lookup('profile::baseconfig::network::bonds', {
+    'default_value' => undef,
+    'value_type'    => Optional[Hash],
+  })
   $ethernets = lookup('profile::baseconfig::network::interfaces', {
     'default_value' => undef,
     'value_type'    => Optional[Hash],
   })
-  $bonds = lookup('profile::baseconfig::network::bonds', {
+  $vlans = lookup('profile::baseconfig::network::vlans', {
     'default_value' => undef,
     'value_type'    => Optional[Hash],
   })
@@ -20,5 +24,6 @@ class profile::baseconfig::netplan::base {
     # headers even though we define the sub-classes elsewhere.
     bonds     => ($bonds) ? { undef => undef, default => {} },
     ethernets => $eth, 
+    vlans     => ($vlans) ? { undef => undef, default => {} },
   }
 }

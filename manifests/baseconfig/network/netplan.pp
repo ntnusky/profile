@@ -14,6 +14,11 @@ class profile::baseconfig::network::netplan {
     'value_type'    => Hash,
   })
 
+  $vlans = lookup('profile::baseconfig::network::vlans', {
+    'default_value' => {},
+    'value_type'    => Hash,
+  })
+
   $bonds.each | $bond, $data | {
     # Retrieve the IPv4 address if it is provided
     if('ipv4' in $data and 'address' in $data['ipv4']) {
@@ -42,6 +47,7 @@ class profile::baseconfig::network::netplan {
       v4gateway  => $v4gw,
     }
   }
+
   $ethernets.each | $if, $data | {
     # Retrieve the IPv4 address if it is provided
     if('ipv4' in $data and 'address' in $data['ipv4']) {
@@ -94,6 +100,35 @@ class profile::baseconfig::network::netplan {
       primary   => $primary,
       tableid   => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
       v4gateway => $v4gw,
+    }
+  }
+
+  $vlans.each | $vlanname, $data | {
+    # Retrieve the IPv4 address if it is provided
+    if('ipv4' in $data and 'address' in $data['ipv4']) {
+      $v4 = $data['ipv4']['address']
+      $v4gw = $data['ipv4']['gateway']
+    } else {
+      $v4 = undef
+      $v4gw = undef
+    }
+
+    # Get the IPv6-address if provided
+    if('ipv6' in $data) {
+      $v6 = $data['ipv6']['address']
+    } else {
+      $v6 = undef
+    }
+
+    ::profile::baseconfig::netplan::interface{ $vlanname:
+      ipv4      => $v4,
+      ipv6      => $v6,
+      method    => $data['method'],
+      mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
+      parent    => $data['parent'],
+      tableid   => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
+      v4gateway => $v4gw,
+      vlanid    => $data['vlanid'],
     }
   }
 }
