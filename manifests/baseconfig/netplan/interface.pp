@@ -202,7 +202,7 @@ define profile::baseconfig::netplan::interface (
       id    => $vlanid,
       link  => $parent,
       mtu   => $mtu,
-      *     => $addressdata,
+      *     => $addressdata - ['match'],
     }
 
   } elsif ($parent or $vlanid) {
