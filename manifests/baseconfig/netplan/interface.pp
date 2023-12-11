@@ -189,7 +189,7 @@ define profile::baseconfig::netplan::interface (
   } elsif ($parent and $vlanid) {
     ::netplan::vlans { $name:
       dhcp6  => false,
-      id     => $vlanid
+      id     => $vlanid,
       mtu    => $mtu,
       parent => $parent,
       *      => $addressdata,
