@@ -108,7 +108,7 @@ define profile::baseconfig::netplan::interface (
       $v4policy = []
     }
 
-    if($ipv6) {
+    if($ipv6_real) {
       if($tableid) {
         $v6r = [{
           'to'    => ip_network($ipv6_real),
