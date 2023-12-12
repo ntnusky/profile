@@ -105,7 +105,7 @@ class profile::baseconfig::network::netplan {
 
   $vlans.each | $vlanname, $data | {
     # Retrieve the IPv4 address if it is provided
-    if('ipv4' in $data and 'address' in $data['ipv4']) {
+    if('ipv4' in $data) {
       $v4 = $data['ipv4']['address']
       $v4gw = $data['ipv4']['gateway']
     } else {
