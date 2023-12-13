@@ -109,7 +109,7 @@ define profile::baseconfig::netplan::interface (
       $v4policy = []
     }
 
-    if($ipv6_real and $ipv6_real == 'disable') {
+    if($ipv6_real and $ipv6_real == 'disabled') {
       $v6routes = []
       $v6policy = []
       $v6ra = false
