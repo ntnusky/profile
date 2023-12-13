@@ -1,7 +1,7 @@
 # Configures an interface to be used by netplan
 define profile::baseconfig::netplan::interface (
   Optional[Stdlib::IP::Address::V4::CIDR]         $ipv4       = undef,
-  Optional[Variant[Stdlib::IP::Address::V6::CIDR, 'disabled']]
+  Optional[Variant[Stdlib::IP::Address::V6::CIDR, Enum['disabled']]]
                                                   $ipv6       = undef,
   Optional[Hash]                                  $match      = undef,
   Optional[Array[String]]                         $members    = undef,
