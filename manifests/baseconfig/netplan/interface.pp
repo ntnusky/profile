@@ -1,7 +1,7 @@
 # Configures an interface to be used by netplan
 define profile::baseconfig::netplan::interface (
   Optional[Stdlib::IP::Address::V4::CIDR]         $ipv4       = undef,
-  Optional[Variant[Stdlib::IP::Address::V6::CIDR, Enum['disabled']]]
+  Optional[Variant[Stdlib::IP::Address::V6::CIDR, Enum[false]]]
                                                   $ipv6       = undef,
   Optional[Hash]                                  $match      = undef,
   Optional[Array[String]]                         $members    = undef,
@@ -109,7 +109,7 @@ define profile::baseconfig::netplan::interface (
       $v4policy = []
     }
 
-    if($ipv6_real and $ipv6_real == 'disabled') {
+    if($ipv6_real == false) {
       $v6routes = []
       $v6policy = []
       $v6ra = false
@@ -169,7 +169,7 @@ define profile::baseconfig::netplan::interface (
       accept_ra      => $v6ra,
       match          => $match,
       dhcp4          => false,
-      addresses      => [ $ipv4_real, $ipv6_real ] - undef,
+      addresses      => [ $ipv4_real, $ipv6_real ] - [ undef, false ],
       nameservers    => {
         'addresses' => $dns_servers,
         'search'    => $dns_search,
