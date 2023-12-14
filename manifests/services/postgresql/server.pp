@@ -98,5 +98,9 @@ class profile::services::postgresql::server {
       'promote_trigger_file': 
         value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
     }
+  } else {
+    postgresql::server::config_entry {
+      'promote_trigger_file': ensure => absent; 
+    }
   }
 }
