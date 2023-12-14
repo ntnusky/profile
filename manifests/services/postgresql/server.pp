@@ -91,7 +91,12 @@ class profile::services::postgresql::server {
 
   postgresql::server::config_entry {
     'wal_keep_size':        value => '128';
-    'promote_trigger_file': 
-      value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
+  }
+
+  if(versioncmp($postgres_version, '15') <= 0) {
+    postgresql::server::config_entry {
+      'promote_trigger_file': 
+        value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
+    }
   }
 }
