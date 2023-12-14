@@ -20,7 +20,7 @@ class profile::services::haproxy::firewall {
     protocol => 'tcp',
   }
 
-  ::profile::baseconfig::firewall::service::custon { 'haproxy-status-extra':
+  ::profile::baseconfig::firewall::service::custom, { 'haproxy-status-extra':
     port     => 9000,
     protocol => 'tcp',
     v4source => $v4source,
