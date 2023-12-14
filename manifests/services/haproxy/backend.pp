@@ -1,7 +1,7 @@
 # Configures a generic haproxy backend
 define profile::services::haproxy::backend (
   String                                  $backend,
-  Stdlib::Port                            $port,
+  String                                  $port,
   String                                  $hostname = $::hostname,
   Optional[String]                        $interface = undef,
   Optional[Stdlib::IP::Address::Nosubnet] $ip = undef,

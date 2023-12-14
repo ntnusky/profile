@@ -46,7 +46,7 @@ class profile::services::redis {
     backend => 'bk_redis',
     ip      => $ip,
     options => 'backup check inter 1s',
-    port    => 6379,
+    port    => '6379',
   }
 
   if ($installsensu) {

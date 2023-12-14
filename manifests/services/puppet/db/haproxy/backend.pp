@@ -11,6 +11,6 @@ class profile::services::puppet::db::haproxy::backend {
     backend   => 'bk_puppetdb',
     interface => $if,
     options   => 'check',
-    port      => 8081,
+    port      => '8081',
   }
 }
