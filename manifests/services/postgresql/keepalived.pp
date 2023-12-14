@@ -16,7 +16,13 @@ class profile::services::postgresql::keepalived {
     'value_type'    => Integer,
     'default_value' => 100,
   })
-  $management_if = lookup('profile::interfaces::management')
+
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it
+  # from SL.
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $::sl2['server']['primary_interface']['name'],
+    'value_type'    => String,
+  })
   $autoip = $facts['networking']['interfaces'][$management_if]['ip']
   $localip = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,

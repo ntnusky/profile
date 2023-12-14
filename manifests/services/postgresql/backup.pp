@@ -1,6 +1,11 @@
 # Backups the database content of postgres
 class profile::services::postgresql::backup {
-  $management_if = hiera('profile::interfaces::management')
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it
+  # from SL.
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $::sl2['server']['primary_interface']['name'],
+    'value_type'    => String,
+  })
   $pgip = $facts['networking']['interfaces'][$management_if]['ip']
   $external_backup = lookup('profile::postgresql::backup::external', {
     'default_value' => false,
