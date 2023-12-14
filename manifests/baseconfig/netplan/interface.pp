@@ -1,20 +1,22 @@
 # Configures an interface to be used by netplan
 define profile::baseconfig::netplan::interface (
-  Optional[Stdlib::IP::Address::V4::CIDR]         $ipv4       = undef,
+  Optional[Stdlib::IP::Address::V4]               $alt_source_v4 = undef,
+  Optional[Stdlib::IP::Address::V6]               $alt_source_v6 = undef,
+  Optional[Stdlib::IP::Address::V4::CIDR]         $ipv4          = undef,
   Optional[Variant[Stdlib::IP::Address::V6::CIDR, Boolean[false]]]
-                                                  $ipv6       = undef,
-  Optional[Hash]                                  $match      = undef,
-  Optional[Array[String]]                         $members    = undef,
-  Enum['manual', 'dhcp', 'static', 'shiftleader'] $method     = 'manual',
-  Integer                                         $mtu        = 1500,
-  Optional[Hash]                                  $parameters = undef,
-  Optional[String]                                $parent     = undef,
-  Boolean                                         $primary    = false,
-  Optional[Integer]                               $priority   = undef,
-  Optional[Integer]                               $tableid    = undef,
-  Optional[Stdlib::IP::Address::V4]               $v4gateway  = undef,
-  Optional[Stdlib::IP::Address::V6]               $v6gateway  = undef,
-  Optional[Integer]                               $vlanid     = undef,
+                                                  $ipv6          = undef,
+  Optional[Hash]                                  $match         = undef,
+  Optional[Array[String]]                         $members       = undef,
+  Enum['manual', 'dhcp', 'static', 'shiftleader'] $method        = 'manual',
+  Integer                                         $mtu           = 1500,
+  Optional[Hash]                                  $parameters    = undef,
+  Optional[String]                                $parent        = undef,
+  Boolean                                         $primary       = false,
+  Optional[Integer]                               $priority      = undef,
+  Optional[Integer]                               $tableid       = undef,
+  Optional[Stdlib::IP::Address::V4]               $v4gateway     = undef,
+  Optional[Stdlib::IP::Address::V6]               $v6gateway     = undef,
+  Optional[Integer]                               $vlanid        = undef,
 ) {
   $dns_servers = lookup('profile::dns::resolvers', {
     'default_value' => [],
@@ -87,6 +89,16 @@ define profile::baseconfig::netplan::interface (
         $base_route = []
       }
 
+      if($alt_source_v4) {
+        $altv4 = [{
+          'to'    => '0.0.0.0/0',
+          'from'  => $alt_source_v4,
+          'table' => $tableid,
+        }]
+      } else {
+        $altv4 = []
+      }
+
       $v4routes = [{
         'to'    => '0.0.0.0/0',
         'via'   => $v4gateway,
@@ -100,7 +112,7 @@ define profile::baseconfig::netplan::interface (
         'to'    => '0.0.0.0/0',
         'from'  => ip_network($ipv4_real),
         'table' => $tableid,
-      }]
+      }] + $altv4
     } else {
       $v4routes = [{
         'to'  => '0.0.0.0/0',
@@ -130,11 +142,22 @@ define profile::baseconfig::netplan::interface (
         } else {
           $v6routes = $v6r
         }
+
+        if($alt_source_v6) {
+          $altv6 = [{
+            'to'    => '::/0',
+            'from'  => $alt_source_v6,
+            'table' => $tableid,
+          }]
+        } else {
+          $altv6 = []
+        }
+
         $v6policy = [{
           'to'    => '::/0',
           'from'  => $ipv6_real,
           'table' => $tableid,
-        }]
+        }] + $altv6
       } else {
         if($v6gateway) {
           $v6routes = [{

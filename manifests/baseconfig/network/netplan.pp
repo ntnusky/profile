@@ -50,7 +50,7 @@ class profile::baseconfig::network::netplan {
 
   $ethernets.each | $if, $data | {
     # Retrieve the IPv4 address if it is provided
-    if('ipv4' in $data and 'address' in $data['ipv4']) {
+    if('ipv4' in $data) {
       # If netmask is provided, the address is probably not in CIDR format...
       if('netmask' in $data['ipv4']) {
         $ip4 = $data['ipv4']['address']
@@ -63,11 +63,13 @@ class profile::baseconfig::network::netplan {
         $v4 = $data['ipv4']['address']
       }
       $v4gw = $data['ipv4']['gateway']
+      $v4alt = $data['ipv4']['alt_source']
 
     # Otherwise, skip IPv4-config.
     } else {
       $v4 = undef
       $v4gw = undef
+      $v4alt = undef
     }
 
     if('ipv4' in $data and 'primary' in $data['ipv4']) {
@@ -79,8 +81,10 @@ class profile::baseconfig::network::netplan {
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
       $v6 = $data['ipv6']['address']
+      $v6alt = $data['ipv6']['alt_source']
     } else {
       $v6 = undef
+      $v6alt = undef
     }
 
     # Determine the if-cofig-method
@@ -93,13 +97,15 @@ class profile::baseconfig::network::netplan {
     }
 
     ::profile::baseconfig::netplan::interface{ $if:
-      ipv4      => $v4,
-      ipv6      => $v6,
-      method    => $method_real,
-      mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
-      primary   => $primary,
-      tableid   => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
-      v4gateway => $v4gw,
+      alt_source_v4 => $v4alt,
+      alt_source_v6 => $v6alt,
+      ipv4          => $v4,
+      ipv6          => $v6,
+      method        => $method_real,
+      mtu           => $data['mtu'],
+      primary       => $primary,
+      tableid       => $data['tableid'],
+      v4gateway     => $v4gw,
     }
   }
 
