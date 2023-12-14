@@ -1,6 +1,11 @@
 # This class installs and configures the postgresql server
 class profile::services::postgresql::server {
-  $mif = lookup('profile::interfaces::management', String)
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it
+  # from SL.
+  $mif = lookup('profile::interfaces::management', {
+    'default_value' => $::sl2['server']['primary_interface']['name'],
+    'value_type'    => String,
+  })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
     'default_value' => $facts['networking']['interfaces'][$mif]['ip'],
