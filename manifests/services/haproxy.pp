@@ -1,9 +1,6 @@
 # Baseconfig for all haproxy servers
 
 class profile::services::haproxy {
-
-  $nic = lookup('profile::interfaces::management')
-  $ip = $::facts['networking']['interfaces'][$nic]['ip']
   $installsensu = lookup('profile::sensu::install', {
     'default_value' => true,
     'value_type'    => Boolean,
@@ -12,6 +9,7 @@ class profile::services::haproxy {
     'default_value' => true,
     'value_type'    => Boolean,
   })
+
   $sslciphers = "\
 ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:\
 ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:\
