@@ -1,17 +1,24 @@
 # Configure haproxy backend for munin
 class profile::monitoring::munin::haproxy::backend {
-  include ::profile::services::haproxy::web
+  $installmunin = lookup('profile::munin::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
 
-  profile::services::haproxy::tools::collect { 'bk_munin': }
+  if($installmunin) {
+    include ::profile::services::haproxy::web
 
-  haproxy::backend { 'bk_munin':
-    mode    => 'http',
-    options => {
-      'balance' => 'source',
-      'option'  => [
-        'httplog',
-        'log-health-checks',
-      ],
-    },
+    profile::services::haproxy::tools::collect { 'bk_munin': }
+
+    haproxy::backend { 'bk_munin':
+      mode    => 'http',
+      options => {
+        'balance' => 'source',
+        'option'  => [
+          'httplog',
+          'log-health-checks',
+        ],
+      },
+    }
   }
 }
