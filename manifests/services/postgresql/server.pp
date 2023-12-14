@@ -68,11 +68,6 @@ class profile::services::postgresql::server {
     $vips = concat([$postgresql_ipv4], $postgresql_ipv6)
   }
 
-  class { '::postgresql::globals':
-    manage_package_repo => true,
-    version             => $postgres_version,
-  }
-
   $ips = concat($vips, '127.0.0.1', '::1', $ip)
 
   class { '::postgresql::server':
