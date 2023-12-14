@@ -89,12 +89,9 @@ class profile::services::postgresql::server {
     'wal_level':           value  => 'hot_standby';
   }
 
-  if(versioncmp($postgres_version, '13') >= 0) {
-    postgresql::server::config_entry {
-      'wal_keep_size':        value => '128';
-      'promote_trigger_file': value => '/var/lib/postgresql/13/main/triggerfile';
-    }
-  } else {
-    postgresql::server::config_entry { 'wal_keep_segments': value  => '8'; }
+  postgresql::server::config_entry {
+    'wal_keep_size':        value => '128';
+    'promote_trigger_file': 
+      value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
   }
 }
