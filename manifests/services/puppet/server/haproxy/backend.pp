@@ -1,7 +1,7 @@
 # Configures the haproxy backend for this puppetmaster 
 class profile::services::puppet::server::haproxy::backend {
   $if = lookup('profile::interfaces::management', {
-    'default_value' => $::sl2['server']['primary_interface']['ipv4'],
+    'default_value' => $::sl2['server']['primary_interface']['name'],
     'value_type'    => String,
   })
 
