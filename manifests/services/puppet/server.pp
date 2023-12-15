@@ -1,6 +1,16 @@
 # Installs and configures a puppetmaster 
 class profile::services::puppet::server {
-  include ::profile::services::dashboard::clients::puppet
+  $sl_version = lookup('profile::shiftleader::major::version', {
+    'default_value' => 1,
+    'value_type'    => Integer,
+  })
+
+  if($sl_version == 1) {
+    include ::profile::services::dashboard::clients::puppet
+  } else {
+    include ::shiftleader::worker::puppet
+  }
+
   include ::profile::services::puppet::backup::server
   include ::profile::services::puppet::server::config
   include ::profile::services::puppet::server::firewall
