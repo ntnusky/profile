@@ -2,7 +2,7 @@
 class profile::baseconfig::ssh {
   $public = lookup('profile::ssh::public', {
     'default_value' => false,
-    'value_type'    => Boolean, 
+    'value_type'    => Boolean,
   })
 
   # If we consider the server to be publicly available, we limit the available
@@ -25,13 +25,13 @@ class profile::baseconfig::ssh {
     }
   }
 
-  if($::sl2 and $::sl2['server']['primary_interface']) {
+  if('server' in $::sl2 and $::sl2['server']['primary_interface']) {
     $listen = { 'ListenAddress' => [
       $::sl2['server']['primary_interface']['ipv4'],
-      $::Sl2['server']['primary_interface']['ipv6'],
+      $::sl2['server']['primary_interface']['ipv6'],
     ] - undef }
 
-    if(length($listn['ListenAddress']) > 0) {
+    if(length($listen['ListenAddress']) > 0) {
       $listen_real = $listen
     } else {
       $listen_real = {}
