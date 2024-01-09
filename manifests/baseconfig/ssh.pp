@@ -26,10 +26,10 @@ class profile::baseconfig::ssh {
   }
 
   if($::sl2 and $::sl2['server']['primary_interface']) {
-    $listen = 'ListenAddress' => [
+    $listen = { 'ListenAddress' => [
       $::sl2['server']['primary_interface']['ipv4'],
       $::Sl2['server']['primary_interface']['ipv6'],
-    ] - undef
+    ] - undef }
 
     if(length($listn['ListenAddress']) > 0) {
       $listen_real = $listen
