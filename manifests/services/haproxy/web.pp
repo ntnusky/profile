@@ -84,7 +84,7 @@ class profile::services::haproxy::web {
       unless  => "/bin/bash -c '/usr/bin/diff <(${joincmd}) ${altcert}'",
     }
     $puppet_bind = $addresses.reduce({}) | $memo, $address | {
-      $memo + {"${address}:443" => ['ssl', 'crt', $altcert]}
+      $memo + {"${address}:443 " => ['ssl', 'crt', $altcert]}
     }
   } else {
     $puppet_bind = {}
