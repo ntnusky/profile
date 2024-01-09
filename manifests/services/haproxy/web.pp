@@ -44,6 +44,11 @@ class profile::services::haproxy::web {
     'default_value' => false,
   })
 
+  $addpuppetcert = lookup('profile::haproxy::tls::puppetcert', {
+    'value_type'    => Boolean,
+    'default_value' => false,
+  })
+
   $acl = $domains.map |String $domain, String $name| {
     "host_${name} hdr_dom(host) -m beg ${domain}"
   }
@@ -63,6 +68,21 @@ class profile::services::haproxy::web {
 
   $base_bind = $addresses.reduce({}) | $memo, $address | {
     $memo + {"${address}:80" => []}
+  }
+
+  if($addpuppetcert) {
+    $cmdparts = [
+      "cat /etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
+      "/etc/puppetlabs/puppet/ssl/certs/${::fqdn}.pem",
+      '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
+    ]
+    $joincmd = join($cmdparts, ' ')
+    $altcert = '/etc/ssl/private/puppetbundle.pem'
+
+    exec { 'create puppet certbundle':
+      command => "${joincmd} > ${altcert}",
+      unless  => "diff <(${joincmd}) ${altcert}",
+    }
   }
 
   if($certificate) {
