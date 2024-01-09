@@ -72,7 +72,7 @@ class profile::services::haproxy::web {
 
   if($addpuppetcert) {
     $cmdparts = [
-      "cat /etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
+      "/usr/bin/cat /etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
       "/etc/puppetlabs/puppet/ssl/certs/${::fqdn}.pem",
       '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
     ]
@@ -81,7 +81,7 @@ class profile::services::haproxy::web {
 
     exec { 'create puppet certbundle':
       command => "${joincmd} > ${altcert}",
-      unless  => "diff <(${joincmd}) ${altcert}",
+      unless  => "/usr/bin/diff <(${joincmd}) ${altcert}",
     }
   }
 
