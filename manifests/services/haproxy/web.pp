@@ -81,7 +81,7 @@ class profile::services::haproxy::web {
 
     exec { 'create puppet certbundle':
       command => "${joincmd} > ${altcert}",
-      unless  => "/usr/bin/diff <(${joincmd}) ${altcert}",
+      unless  => "/bin/bash -c '/usr/bin/diff <(${joincmd}) ${altcert}'",
     }
   }
 
