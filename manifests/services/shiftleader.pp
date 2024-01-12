@@ -14,14 +14,14 @@ class profile::services::shiftleader {
     'value_type' => String,
   })
   $group_member = lookup('profile::ldap::group::attribute::member', {
-    'default_value' => 'memberOf'
+    'default_value' => 'memberOf',
     'value_type'    => String,
   })
   $group_base = lookup('profile::ldap::group::base', {
     'value_type' => String,
   })
   $user_id = lookup('profile::ldap::user::attribute::id', {
-    'default_value' => 'sAMAccountName'
+    'default_value' => 'sAMAccountName',
     'value_type'    => String,
   })
   $user_base = lookup('profile::ldap::user::base', {
