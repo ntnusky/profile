@@ -83,11 +83,9 @@ class profile::services::haproxy::web {
       command => "${joincmd} > ${altcert}",
       unless  => "/bin/bash -c '/usr/bin/diff <(${joincmd}) ${altcert}'",
     }
-    $puppet_bind = $addresses.reduce({}) | $memo, $address | {
-      $memo + {"${address}:443 " => ['ssl', 'crt', $altcert]}
-    }
+    $puppet_bind = ['crt', $altcert]
   } else {
-    $puppet_bind = {}
+    $puppet_bind = []
   }
 
   if($certificate) {
@@ -100,7 +98,7 @@ class profile::services::haproxy::web {
     }
 
     $ssl_bind = $addresses.reduce({}) | $memo, $address | {
-      $memo + {"${address}:443" => ['ssl', 'crt', $certfile]}
+      $memo + {"${address}:443" => ['ssl', 'crt', $certfile] + $puppet_bind}
     }
   } else {
     $redirect = {}
@@ -108,7 +106,7 @@ class profile::services::haproxy::web {
   }
 
   $options = deep_merge($baseoptions, $redirect)
-  $bind = deep_merge($base_bind, $ssl_bind, $puppet_bind)
+  $bind = deep_merge($base_bind, $ssl_bind)
 
   ::haproxy::frontend { 'ft_web':
     bind    => $bind,
