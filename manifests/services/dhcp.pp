@@ -18,5 +18,6 @@ class profile::services::dhcp {
   # worker-daemon
   } else {
     include ::shiftleader::worker::dhcp
+    include ::shiftleader::worker::dns
   }
 }
