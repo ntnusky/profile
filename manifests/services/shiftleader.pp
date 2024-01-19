@@ -2,7 +2,6 @@
 class profile::services::shiftleader {
   include ::profile::services::apache
   include ::profile::services::shiftleader::haproxy::backend
-  include ::shiftleader::web
 
   $server = lookup('profile::ldap::server', {
     'value_type' => String,
@@ -29,8 +28,13 @@ class profile::services::shiftleader {
   })
 
   class { '::shiftleader::api':
-    puppetapi_cert => false,
-    puppetapi_key  => false,
+    access_log_format => 'forwarded',
+    puppetapi_cert    => false,
+    puppetapi_key     => false,
+  }
+
+  class { '::shiftleader::web':
+    access_log_format => 'forwarded',
   }
 
   shiftleader::api::domain { 'NTNU':
