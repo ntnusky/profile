@@ -19,24 +19,6 @@ class profile::services::puppet::server::config::ca {
     $template = 'ca.disabled.cfg'
   }
 
-  file { '/etc/puppetlabs/puppet/ssl/ca/ca_crl.pem':
-    ensure  => 'link',
-    owner   => 'puppet',
-    group   => 'puppet',
-    target  => '/etc/puppetlabs/puppet/ssl/crl.pem',
-    replace => false,
-    notify  => Service['puppetserver'],
-    require => File['/etc/puppetlabs/puppet/ssl/ca'],
-  }
-
-  file { '/etc/puppetlabs/puppet/ssl/ca':
-    ensure  => 'directory',
-    mode    => '0755',
-    owner   => 'puppet',
-    group   => 'puppet',
-    require => Package['puppetserver'],
-  }
-
   file { '/etc/puppetlabs/puppetserver/services.d/ca.cfg':
     ensure  => present,
     owner   => 'root',
