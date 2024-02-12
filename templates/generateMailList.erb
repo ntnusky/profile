@@ -49,9 +49,9 @@ done
 if [[ $($OSCMD project show MISC 2>/dev/null) ]]; then
 	vms=$($OSCMD server list -f value -c ID --project MISC)
 	for vm in $vms; do
-		properties=$($OSCMD server show -f value -c properties $vm)
+		properties=$($OSCMD server show -f json -c properties $vm)
 		if [[ $properties =~ @ ]]; then
-			mail=$(echo $properties | grep -oE "contact='\S+'," | cut -d "'" -f2)
+			mail=$(echo $properties | jq -r .properties.contact)
 		else
 			echo "[WARNING] VM with ID $vm has no email details"
 		fi
