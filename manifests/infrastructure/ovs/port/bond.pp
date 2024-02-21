@@ -51,7 +51,6 @@ define profile::infrastructure::ovs::port::bond (
       # Add netplan-config for the interface
       file { "/etc/netplan/02-bondmember-${ifname}.yaml":
         ensure  => file,
-        mode    => '0644',
         owner   => root,
         group   => root,
         mode    => '0600',
