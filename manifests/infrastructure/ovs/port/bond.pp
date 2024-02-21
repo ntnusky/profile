@@ -54,6 +54,7 @@ define profile::infrastructure::ovs::port::bond (
         mode    => '0644',
         owner   => root,
         group   => root,
+        mode    => '0600',
         content => epp('profile/netplan/manual.epp', $parameters + $match),
         notify  => Exec['netplan_apply'],
       }
