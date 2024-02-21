@@ -1,6 +1,6 @@
 <%- | Array $prefixes,
       String $name,
-      String $med,
+      Integer $med,
 | -%>
 filter <%= $name %> {
 <% $prefixes.each |$prefix| { -%>
