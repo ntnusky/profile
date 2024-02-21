@@ -58,6 +58,7 @@ class profile::bird::ipv4 {
 
     ::profile::bird::config::filter { 'v4anycast':
       configfile => '/etc/bird/bird.conf',
+      med        => $bgpmetric,
       prefixes   => [ "${anycastv4}/32" ],
     }
 
