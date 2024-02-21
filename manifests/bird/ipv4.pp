@@ -2,8 +2,12 @@
 # hiera under the key 'profile::bird::anycast::ipv6::address' 
 class profile::bird::ipv4 {
   $anycastv4 = lookup('profile::bird::anycast::ipv4::address', {
-    'value_type'    => Variant[String, Boolean],
     'default_value' => false,
+    'value_type'    => Variant[String, Boolean],
+  })
+  $bgpmetric = lookup('profile::bird::anycast::med', {
+    'default_value' => 500,
+    'value_type'    => Integer,
   })
 
   if($anycastv4) {

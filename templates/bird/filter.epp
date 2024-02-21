@@ -1,8 +1,12 @@
 <%- | Array $prefixes,
       String $name,
+      String $med,
 | -%>
 filter <%= $name %> {
 <% $prefixes.each |$prefix| { -%>
-  if net = <%= $prefix %> then accept;
+  if net = <%= $prefix %> then {
+    bgp_med = <%= $med %>;
+    accept;
+  }
 <% } -%>
 }
