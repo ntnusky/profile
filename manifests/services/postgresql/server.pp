@@ -2,8 +2,14 @@
 class profile::services::postgresql::server {
   # TODO: Stop looking for the management-IP in hiera, and simply just take it
   # from SL.
+  if($sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
   $mif = lookup('profile::interfaces::management', {
-    'default_value' => $::sl2['server']['primary_interface']['name'],
+    'default_value' => $default, 
     'value_type'    => String,
   })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {

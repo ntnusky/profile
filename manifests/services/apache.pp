@@ -1,8 +1,14 @@
 # This class installs and configures a simple apache webserver, and configures a
 # vhost for the fqdn of the host
 class profile::services::apache {
+  if($sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
   $management_if = lookup('profile::interfaces::management', {
-    'default_value' => $::sl2['server']['primary_interface']['name'],
+    'default_value' => $default, 
     'value_type'    => String,
   })
   $default_docroot = lookup('profile::apache::vhost::default::docroot', {
