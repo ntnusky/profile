@@ -62,5 +62,6 @@ class profile::services::apache {
   include ::apache::mod::rewrite
   include ::apache::mod::prefork
   include ::apache::mod::ssl
+  include ::apache::mod::wsgi
   include ::profile::services::apache::firewall
 }
