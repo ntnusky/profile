@@ -1,7 +1,7 @@
 # Configures a generic haproxy frontend
 define profile::services::haproxy::frontend (
   String                   $profile,
-  Integer                  $port,
+  Variant[Integer, String] $port,
   String                   $mode      = 'tcp',
   Variant[Boolean, String] $certfile  = false,
   Hash                     $ftoptions = {},
