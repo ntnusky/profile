@@ -2,9 +2,9 @@
 class profile::services::mysql::haproxy::backend {
   # TODO: Remove the hiera-lookup and just juse the sl2-data
   if($sl2) {
-    $default = $::sl2['server']['primary_interface']['name'],
+    $default = $::sl2['server']['primary_interface']['name']
   } else {
-    $default = undef,
+    $default = undef
   }
 
   $if = lookup('profile::interfaces::management', {
