@@ -8,6 +8,7 @@ class profile::services::puppet::server {
   if($sl_version == 1) {
     include ::profile::services::dashboard::clients::puppet
   } else {
+    include ::profile::services::dashboard::clients::purge
     include ::shiftleader::worker::puppet
   }
 

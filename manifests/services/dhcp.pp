@@ -17,6 +17,7 @@ class profile::services::dhcp {
   # If we run a newer variant of shiftleader we need to install the 
   # worker-daemon
   } else {
+    include ::profile::services::dashboard::clients::purge
     include ::shiftleader::worker::dhcp
     include ::shiftleader::worker::dns
   }

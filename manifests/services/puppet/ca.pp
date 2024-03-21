@@ -9,6 +9,7 @@ class profile::services::puppet::ca {
     include ::profile::services::dashboard::clients::puppet
     include ::profile::services::puppet::ca::certclean
   } else {
+    include ::profile::services::dashboard::clients::purge
     include ::shiftleader::worker::puppet
     include ::shiftleader::worker::puppet::ca
   }
