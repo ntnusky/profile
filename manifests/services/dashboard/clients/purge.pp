@@ -9,4 +9,7 @@ class profile::services::dashboard::clients::purge {
   cron { 'Dashboard-client tftpimages':
     ensure => absent,
   }
+  cron { 'Puppet cleaning certificates':
+    ensure => absent,
+  }
 }
