@@ -31,11 +31,6 @@ class profile::services::apache {
     'value_type'    => Integer,
   })
 
-  # The SL1 roles load wsgi themselves.
-  if($sl_version != 1) {
-    include ::apache::mod::wsgi
-  }
-
   include ::profile::services::apache::logging
 
   if ( $management_netv6 ) {
@@ -44,6 +39,17 @@ class profile::services::apache {
   } else {
     $ip = [$management_ipv4]
   }
+
+  # The SL1 roles load wsgi themselves.
+  if($sl_version != 1) {
+    include ::apache::mod::wsgi
+    $vhost_extra = {
+      'ip' => $ip,
+    }
+  } else {
+    $vhost_extra = {}
+  }
+
 
   class { '::apache':
     mpm_module    => 'prefork',
@@ -67,6 +73,7 @@ class profile::services::apache {
     docroot       => $default_docroot,
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
+    *             => $vhost_extra,
   }
 
   include ::apache::mod::rewrite
