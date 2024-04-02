@@ -1,5 +1,10 @@
 # Configures the puppetmaster to send reports to the SL dashboard
 class profile::services::puppet::server::config::report {
+  $sl_version = lookup('profile::shiftleader::major::version', {
+    'default_value' => 1,
+    'value_type'    => Integer,
+  })
+
   if($sl_version == 1) {
     $dash_url = lookup('profile::dashboard::name::v4only', Stdlib::Fqdn)
     $report_url = "http://${dash_url}/web/puppet/report/"
