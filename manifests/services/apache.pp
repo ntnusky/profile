@@ -43,11 +43,11 @@ class profile::services::apache {
   # The SL1 roles load wsgi themselves.
   if($sl_version != 1) {
     include ::apache::mod::wsgi
+    $vhost_extra = {}
+  } else {
     $vhost_extra = {
       'ip' => $ip,
     }
-  } else {
-    $vhost_extra = {}
   }
 
 
