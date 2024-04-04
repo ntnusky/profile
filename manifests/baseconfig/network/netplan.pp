@@ -1,9 +1,5 @@
 # Configure networking with netplan
 class profile::baseconfig::network::netplan {
-  $dns_search = lookup('profile::dns::searchdomain', {
-    'default_value' => undef,
-  })
-
   $bonds = lookup('profile::baseconfig::network::bonds', {
     'default_value' => {},
     'value_type'    => Hash,
