@@ -14,9 +14,9 @@ class profile::baseconfig::network::ifupdown {
   })
 
   $dns_config = {
-    dns1            => $dns_server_array[0],
-    dns2            => $dns_server_array[1],
-    dns3            => $dns_server_array[2],
+    dns1            => $dns_servers[0],
+    dns2            => $dns_servers[1],
+    dns3            => $dns_servers[2],
     domain          => $dns_search,
     dns_nameservers => $dns_servers,
     dns_search      => $dns_search,
