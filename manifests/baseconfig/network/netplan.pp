@@ -28,8 +28,10 @@ class profile::baseconfig::network::netplan {
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
       $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
     } else {
       $v6 = undef
+      $v6gw = undef
     }
 
     ::profile::baseconfig::netplan::interface{ $bond:
@@ -41,6 +43,7 @@ class profile::baseconfig::network::netplan {
       parameters => $data['parameters'],
       tableid    => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
       v4gateway  => $v4gw,
+      v6gateway  => $v6gw,
     }
   }
 
@@ -77,9 +80,11 @@ class profile::baseconfig::network::netplan {
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
       $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
       $v6alt = $data['ipv6']['alt_source']
     } else {
       $v6 = undef
+      $v6gw = undef
       $v6alt = undef
     }
 
@@ -102,6 +107,7 @@ class profile::baseconfig::network::netplan {
       primary       => $primary,
       tableid       => $data['tableid'],
       v4gateway     => $v4gw,
+      v6gateway     => $v6gw,
     }
   }
 
@@ -118,8 +124,10 @@ class profile::baseconfig::network::netplan {
     # Get the IPv6-address if provided
     if('ipv6' in $data) {
       $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
     } else {
       $v6 = undef
+      $v6gw = undef
     }
 
     ::profile::baseconfig::netplan::interface{ $vlanname:
@@ -137,6 +145,7 @@ class profile::baseconfig::network::netplan {
         default => undef,
       },
       v4gateway => $v4gw,
+      v6gateway => $v6gw,
       vlanid    => $data['vlanid'],
     }
   }
