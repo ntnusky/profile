@@ -136,11 +136,19 @@ define profile::baseconfig::netplan::interface (
         }]
 
         if($v6gateway) {
+          if($primary) {
+            $base6_route = [{
+              'to'    => '::/0',
+              'via'   => $v6gateway,
+            }]
+          } else {
+            $base6_route = []
+          }
           $v6routes = [{
             'to'    => '::/0',
             'via'   => $v6gateway,
             'table' => $tableid,
-          }] + $v6r
+          }] + $v6r + $base6_route
         } else {
           $v6routes = $v6r
         }
