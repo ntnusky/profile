@@ -39,6 +39,7 @@ class profile::services::puppet::db {
     database_username  => $dbuser,
     database_password  => $dbpass,
     database_name      => $dbname,
+    read_database_host => undef,
     ssl_listen_address => $ip,
   }
 }
