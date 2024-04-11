@@ -18,20 +18,38 @@ class profile::baseconfig {
   include ::profile::utilities::ntnuskytools
 
   # If duo should be installed, install and configure it. 
-  $installduo = hiera('profile::duo::enabled', false)
+  $installduo = lookup('profile::duo::enabled', {
+    'default_value' => false,
+    'value_type'    => Boolean,
+  })
   if($installduo) {
     include ::profile::baseconfig::duo
   }
 
   # If munin should be installed, install and configure the munin-node
-  $installmunin = hiera('profile::munin::install', true)
+  $installmunin = lookup('profile::munin::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
   if($installmunin) {
     include ::profile::monitoring::munin::node
   }
 
   # If sensu should be installed, install and configure the sensu-client agent
-  $installsensu = hiera('profile::sensu::install', true)
+  $installsensu = lookup('profile::sensu::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
   if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
+    include ::profile::sensu::client
+  }
+
+  # Optionally install the SL2 client 
+  $installsl2client = lookup('profile::shiftleader2::client::install', {
+    'default_value' => false,
+    'value_type'    => Boolean,
+  })
+  if ($installsl2client) {
     include ::profile::sensu::client
   }
 
