@@ -1,12 +1,22 @@
 # This define configures an apache vhost for a munin dashboard.
 define profile::monitoring::munin::server::vhost {
+  if($sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
+
   require profile::services::apache
 
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
     'default_value' => false,
   })
-  $management_if = lookup('profile::interfaces::management', String)
   $mip = $facts['networking']['interfaces'][$management_if]['ip']
   $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
@@ -20,11 +30,23 @@ define profile::monitoring::munin::server::vhost {
     $ip = [$management_ipv4]
   }
 
+  $sl_version = lookup('profile::shiftleader::major::version', {
+    'default_value' => 1,
+    'value_type'    => Integer,
+  })
+
+  if($sl_version != 1) {
+    $vhost_extra = {}
+  } else {
+    $vhost_extra = {
+      'ip' => $ip,
+    }
+  }
+
   apache::vhost { "${name}-http":
     servername        => $name,
     serveraliases     => [$name],
     port              => 80,
-    ip                => $ip,
     docroot           => '/var/cache/munin/www',
     docroot_owner     => 'www-data',
     docroot_group     => 'www-data',
@@ -107,5 +129,6 @@ define profile::monitoring::munin::server::vhost {
         ],
       },
     ],
+    *               => $vhost_extra,
   }
 }
