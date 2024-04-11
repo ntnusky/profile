@@ -31,6 +31,7 @@ class profile::services::apache {
     'value_type'    => Integer,
   })
 
+  require ::profile::services::apache::server
   include ::profile::services::apache::logging
 
   if ( $management_netv6 ) {
@@ -48,13 +49,6 @@ class profile::services::apache {
     $vhost_extra = {
       'ip' => $ip,
     }
-  }
-
-
-  class { '::apache':
-    mpm_module    => 'prefork',
-    confd_dir     => '/etc/apache2/conf-enabled',
-    default_vhost => false,
   }
 
   package { 'libcgi-pm-perl':

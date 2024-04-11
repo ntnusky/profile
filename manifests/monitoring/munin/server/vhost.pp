@@ -11,7 +11,6 @@ define profile::monitoring::munin::server::vhost {
     'value_type'    => String,
   })
 
-  require profile::services::apache
 
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'value_type'    => Variant[Stdlib::IP::Address::V6::CIDR, Boolean],
@@ -43,9 +42,12 @@ define profile::monitoring::munin::server::vhost {
     }
   }
 
+  require ::profile::services::apache
+
   apache::vhost { "${name}-http":
     servername        => $name,
     serveraliases     => [$name],
+    add_listen        => false,
     port              => 80,
     docroot           => '/var/cache/munin/www',
     docroot_owner     => 'www-data',
@@ -129,6 +131,6 @@ define profile::monitoring::munin::server::vhost {
         ],
       },
     ],
-    *               => $vhost_extra,
+    *                 => $vhost_extra,
   }
 }
