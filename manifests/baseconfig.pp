@@ -50,7 +50,7 @@ class profile::baseconfig {
     'value_type'    => Boolean,
   })
   if ($installsl2client) {
-    include ::profile::sensu::client
+    include ::shiftleader::client
   }
 
   # If the machine is a physical machine, install ipmitool and hw-mgmt-tools
