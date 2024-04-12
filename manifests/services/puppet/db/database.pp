@@ -12,5 +12,6 @@ class profile::services::puppet::db::database {
     user     => $dbuser,
     password => $dbpass,
     grant    => 'all',
+    owner    => $dbuser,
   }
 }

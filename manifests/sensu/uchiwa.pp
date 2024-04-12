@@ -111,6 +111,6 @@ class profile::sensu::uchiwa {
     backend => 'bk_uchiwa',
     ip      => $management_ipv4,
     options => 'check inter 5s',
-    port    => 80,
+    port    => '80',
   }
 }

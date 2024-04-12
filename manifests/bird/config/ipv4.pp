@@ -3,13 +3,21 @@ class profile::bird::config::ipv4 {
   require ::profile::bird::install
   include ::profile::bird::service::ipv4
 
-  # Determine the management IP. Either select the first found on the management
-  # interface, or use the IP set in hiera, if there are an IP in hiera.
-  $management_if = lookup('profile::interfaces::management', String)
-  $management_auto4 = $facts['networking']['interfaces'][$management_if]['ip']
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it 
+  # from SL.
+  if($::sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
   $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
     'value_type'    => String,
-    'default_value' => $management_auto4,
+    'default_value' => $facts['networking']['interfaces'][$management_if]['ip'], 
   })
 
   # If a router-id is set in hiera; use it. Otherwise, use the IP from the

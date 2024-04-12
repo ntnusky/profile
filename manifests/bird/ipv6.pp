@@ -5,6 +5,10 @@ class profile::bird::ipv6 {
     'value_type'    => Variant[String, Boolean],
     'default_value' => false,
   })
+  $bgpmetric = lookup('profile::bird::anycast::med', {
+    'default_value' => 500,
+    'value_type'    => Integer,
+  })
 
   if($anycastv6) {
     include ::profile::bird::config::ipv6
@@ -54,6 +58,7 @@ class profile::bird::ipv6 {
 
     ::profile::bird::config::filter { 'v6anycast':
       configfile => '/etc/bird/bird6.conf',
+      med        => $bgpmetric,
       prefixes   => [ "${anycastv6}/128" ],
     }
 

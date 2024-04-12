@@ -1,138 +1,152 @@
 # Configure networking with netplan
-class profile::baseconfig::network::netplan (Hash $nics) {
-  $dns_servers = lookup('profile::dns::nameservers', {
-    'default_value' => undef,
-  })
-  $dns_search = lookup('profile::dns::searchdomain', {
-    'default_value' => undef,
+class profile::baseconfig::network::netplan {
+  $bonds = lookup('profile::baseconfig::network::bonds', {
+    'default_value' => {},
+    'value_type'    => Hash,
   })
 
-  $ethernets = $nics.reduce({}) | $memo, $n | {
-    $nic = $n[0]
-    $table_id = $nics[$nic]['tableid']
-    $mtu   = { 'mtu'   => $nics[$nic]['mtu'] }
-    if ( $nic =~ /^(lo|infra)/ or $nics[$nic]['nomatch'] or
-        !($nic in $::facts['networking']['interfaces'])) {
-      $match = {}
+  $ethernets = lookup('profile::baseconfig::network::interfaces', {
+    'default_value' => {},
+    'value_type'    => Hash,
+  })
+
+  $vlans = lookup('profile::baseconfig::network::vlans', {
+    'default_value' => {},
+    'value_type'    => Hash,
+  })
+
+  $bonds.each | $bond, $data | {
+    # Retrieve the IPv4 address if it is provided
+    if('ipv4' in $data and 'address' in $data['ipv4']) {
+      $v4 = $data['ipv4']['address']
+      $v4gw = $data['ipv4']['gateway']
     } else {
-      $mac = $::facts['networking']['interfaces'][$nic]['mac']
-      $match = { 'match' => {'macaddress' => $mac} }
+      $v4 = undef
+      $v4gw = undef
     }
 
-    # If the interface should have its own routing-table, and it already exists,
-    # configure the routing-table adding gateways etc.
-    if($table_id and $nic in $::facts['networking']['interfaces']) {
-      if($::facts['networking']['interfaces'][$nic]['ip']) {
-        $net4id = $::facts['networking']['interfaces'][$nic]['network']
-        $net4mask = netmask_to_masklen($::facts['networking']['interfaces'][$nic]['netmask'])
-        $v4gateway = $nics[$nic]['ipv4']['gateway']
-        $v4defroute = {
-          'to'    => '0.0.0.0/0',
-          'via'   => $v4gateway,
-          'table' => $table_id,
-        }
-        $v4route = {
-          'to'    => "${net4id}/${net4mask}",
-          'scope' => 'link',
-          'table' => $table_id,
-        }
-        $v4policy = {
-          'to'    => '0.0.0.0/0',
-          'from'  => "${net4id}/${net4mask}",
-          'table' => $table_id,
-        }
-      } else {
-        $v4route = undef
-        $v4defroute = undef
-        $v4policy = undef
-      }
-      if($::facts['networking']['interfaces'][$nic]['ip6']) {
-        $net6id = $::facts['networking']['interfaces'][$nic]['network6']
-        if($nics[$nic]['ipv6']) {
-          $v6gateway = $nics[$nic]['ipv6']['gateway']
-        } else {
-          $v6gateway = 'fe80::1'
-        }
-        $v6defroute = {
-          'to'    => '::/0',
-          'via'   => $v6gateway,
-          'table' => $table_id,
-        }
-        $v6route = {
-          'to'    => "${net6id}/64",
-          'scope' => 'link',
-          'table' => $table_id,
-        }
-        $v6policy = {
-          'to'    => '::/0',
-          'from'  => "${net6id}/64",
-          'table' => $table_id,
-        }
-      } else {
-        $v6route = undef
-        $v6defroute = undef
-        $v6policy = undef
-      }
-      if($v4route) or ($v6route) {
-        $routes   = {
-          'routes' => [ $v4route, $v4defroute, $v6defroute, $v6route ] - undef
-        }
-        $policies = { 'routing_policy' => [ $v4policy, $v6policy ] - undef }
-      } else {
-        $routes   = { 'routes'         => undef }
-        $policies = { 'routing_policy' => undef }
-      }
+    # Get the IPv6-address if provided
+    if('ipv6' in $data) {
+      $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
     } else {
-        $routes   = { 'routes'         => undef }
-        $policies = { 'routing_policy' => undef }
+      $v6 = undef
+      $v6gw = undef
     }
 
-    $common = $match + $mtu + $routes + $policies
-
-    $method = $nics[$nic]['ipv4']['method']
-    if($method == 'dhcp') {
-      $dhcp = { 'dhcp4' => true }
-      $memo + { $nic => $dhcp + $common }
-    }
-    elsif($method == 'manual') {
-      $memo + { $nic => $common }
-    }
-    else {
-      if($nics[$nic]['ipv4']['address']) {
-        $v4address = $nics[$nic]['ipv4']['address']
-        $v4mask = netmask_to_masklen($nics[$nic]['ipv4']['netmask'])
-        $v4cidr = [ "${v4address}/${v4mask}" ]
-      } else {
-        $v4cidr = []
-      }
-
-      if($nics[$nic]['ipv6']) {
-        $v6cidr = [ $nics[$nic]['ipv6']['address'] ]
-      } else {
-        $v6cidr = []
-      }
-
-      $addresses = $v4cidr + $v6cidr
-      $primary = $nics[$nic]['ipv4']['primary']
-
-      if($primary) {
-        $gateway = $nics[$nic]['ipv4']['gateway']
-      } else {
-        $gateway = undef
-      }
-
-      $memo + { $nic => {
-        'addresses'      => $addresses,
-        'gateway4'       => $gateway,
-        'nameservers'    => {
-          'addresses' => split($dns_servers, ' '),
-          'search'    => [ $dns_search ],
-        },
-      } + $common }
+    ::profile::baseconfig::netplan::interface{ $bond:
+      ipv4       => $v4,
+      ipv6       => $v6,
+      members    => $data['interfaces'],
+      method     => $data['method'],
+      mtu        => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
+      parameters => $data['parameters'],
+      tableid    => ('tableid' in $data) ? { true => $data['tableid'], default => undef},
+      v4gateway  => $v4gw,
+      v6gateway  => $v6gw,
     }
   }
 
-  class { '::netplan':
-    ethernets => $ethernets,
+  $ethernets.each | $if, $data | {
+    # Retrieve the IPv4 address if it is provided
+    if('ipv4' in $data) {
+      # If netmask is provided, the address is probably not in CIDR format...
+      if('netmask' in $data['ipv4']) {
+        $ip4 = $data['ipv4']['address']
+        $ip4cidr = netmask_to_masklen($data['ipv4']['netmask'])
+        $v4 = "${ip4}/${ip4cidr}"
+
+      # If the netmask is not provided, we expect the address to be in CIDR
+      # format.
+      } else {
+        $v4 = $data['ipv4']['address']
+      }
+      $v4gw = $data['ipv4']['gateway']
+      $v4alt = $data['ipv4']['alt_source']
+
+    # Otherwise, skip IPv4-config.
+    } else {
+      $v4 = undef
+      $v4gw = undef
+      $v4alt = undef
+    }
+
+    if('ipv4' in $data and 'primary' in $data['ipv4']) {
+      $primary = $data['ipv4']['primary']
+    } else {
+      $primary = false
+    }
+
+    # Get the IPv6-address if provided
+    if('ipv6' in $data) {
+      $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
+      $v6alt = $data['ipv6']['alt_source']
+    } else {
+      $v6 = undef
+      $v6gw = undef
+      $v6alt = undef
+    }
+
+    # Determine the if-cofig-method
+    if('method' in $data) {
+      $method_real = $data['method']
+    } else {
+      warning(
+        'Method within ipv4/ipv6 is deprecated. Place under interface instead')
+      $method_real = $data['ipv4']['method']
+    }
+
+    ::profile::baseconfig::netplan::interface{ $if:
+      alt_source_v4 => $v4alt,
+      alt_source_v6 => $v6alt,
+      ipv4          => $v4,
+      ipv6          => $v6,
+      method        => $method_real,
+      mtu           => $data['mtu'],
+      primary       => $primary,
+      tableid       => $data['tableid'],
+      v4gateway     => $v4gw,
+      v6gateway     => $v6gw,
+    }
+  }
+
+  $vlans.each | $vlanname, $data | {
+    # Retrieve the IPv4 address if it is provided
+    if('ipv4' in $data) {
+      $v4 = $data['ipv4']['address']
+      $v4gw = $data['ipv4']['gateway']
+    } else {
+      $v4 = undef
+      $v4gw = undef
+    }
+
+    # Get the IPv6-address if provided
+    if('ipv6' in $data) {
+      $v6 = $data['ipv6']['address']
+      $v6gw = $data['ipv6']['gateway']
+    } else {
+      $v6 = undef
+      $v6gw = undef
+    }
+
+    ::profile::baseconfig::netplan::interface{ $vlanname:
+      ipv4      => $v4,
+      ipv6      => $v6,
+      method    => $data['method'],
+      mtu       => ('mtu' in $data) ? { true => $data['mtu'], default => undef},
+      parent    => $data['parent'],
+      priority  => ('priority' in $data) ? {
+        true    => $data['priority'],
+        default => 100,
+      },
+      tableid   => ('tableid' in $data) ? {
+        true    => $data['tableid'],
+        default => undef,
+      },
+      v4gateway => $v4gw,
+      v6gateway => $v6gw,
+      vlanid    => $data['vlanid'],
+    }
   }
 }

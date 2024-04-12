@@ -1,6 +1,17 @@
 # This class installs and configures the postgresql server
 class profile::services::postgresql::server {
-  $mif = lookup('profile::interfaces::management', String)
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it
+  # from SL.
+  if($::sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
+  $mif = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,
     'default_value' => $facts['networking']['interfaces'][$mif]['ip'],
@@ -63,11 +74,6 @@ class profile::services::postgresql::server {
     $vips = concat([$postgresql_ipv4], $postgresql_ipv6)
   }
 
-  class { '::postgresql::globals':
-    manage_package_repo => true,
-    version             => $postgres_version,
-  }
-
   $ips = concat($vips, '127.0.0.1', '::1', $ip)
 
   class { '::postgresql::server':
@@ -89,12 +95,18 @@ class profile::services::postgresql::server {
     'wal_level':           value  => 'hot_standby';
   }
 
-  if(versioncmp($postgres_version, '13') >= 0) {
+  postgresql::server::config_entry {
+    'wal_keep_size':        value => '128';
+  }
+
+  if(versioncmp($postgres_version, '15') <= 0) {
     postgresql::server::config_entry {
-      'wal_keep_size':        value => '128';
-      'promote_trigger_file': value => '/var/lib/postgresql/13/main/triggerfile';
+      'promote_trigger_file': 
+        value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
     }
   } else {
-    postgresql::server::config_entry { 'wal_keep_segments': value  => '8'; }
+    postgresql::server::config_entry {
+      'promote_trigger_file': ensure => absent; 
+    }
   }
 }

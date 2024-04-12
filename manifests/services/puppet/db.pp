@@ -14,7 +14,17 @@ class profile::services::puppet::db {
     'default_value' => 5432,
   })
 
-  $if = lookup('profile::interfaces::management', String)
+  # TODO: Stop looking for the management-IP in hiera, and simply just take it
+  # from SL.
+  if($::sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+  $if = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
   $autoip = $::facts['networking']['interfaces'][$if]['ip']
   $ip = lookup("profile::baseconfig::network::interfaces.${if}.ipv4.address", {
     'value_type'    => Stdlib::IP::Address::V4,

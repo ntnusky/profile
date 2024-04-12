@@ -1,7 +1,16 @@
 # This class installs and configures a simple apache webserver, and configures a
 # vhost for the fqdn of the host
 class profile::services::apache {
-  $management_if = lookup('profile::interfaces::management', String)
+  if($::sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
   $default_docroot = lookup('profile::apache::vhost::default::docroot', {
     'value_type'    => Stdlib::Absolutepath,
     'default_value' => "/var/www/${::fqdn}",
@@ -17,6 +26,12 @@ class profile::services::apache {
     'default_value' => $mip,
   })
 
+  $sl_version = lookup('profile::shiftleader::major::version', {
+    'default_value' => 1,
+    'value_type'    => Integer,
+  })
+
+  require ::profile::services::apache::server
   include ::profile::services::apache::logging
 
   if ( $management_netv6 ) {
@@ -26,10 +41,14 @@ class profile::services::apache {
     $ip = [$management_ipv4]
   }
 
-  class { '::apache':
-    mpm_module    => 'prefork',
-    confd_dir     => '/etc/apache2/conf-enabled',
-    default_vhost => false,
+  # The SL1 roles load wsgi themselves.
+  if($sl_version != 1) {
+    include ::apache::mod::wsgi
+    $vhost_extra = {}
+  } else {
+    $vhost_extra = {
+      'ip' => $ip,
+    }
   }
 
   package { 'libcgi-pm-perl':
@@ -44,16 +63,15 @@ class profile::services::apache {
   apache::vhost { "${::fqdn}-http":
     servername    => $::fqdn,
     port          => 80,
-    ip            => $ip,
     add_listen    => false,
     docroot       => $default_docroot,
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
+    *             => $vhost_extra,
   }
 
   include ::apache::mod::rewrite
   include ::apache::mod::prefork
-  include ::apache::mod::php
   include ::apache::mod::ssl
   include ::profile::services::apache::firewall
 }

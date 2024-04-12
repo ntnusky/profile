@@ -1,7 +1,15 @@
 # This class installs and configures a simple memcached server
 class profile::services::memcache {
-  # Variables for keepalived
-  $management_if = lookup('profile::interfaces::management', String)
+  if($::sl2) {
+    $default = $::sl2['server']['primary_interface']['name']
+  } else {
+    $default = undef
+  }
+
+  $management_if = lookup('profile::interfaces::management', {
+    'default_value' => $default, 
+    'value_type'    => String,
+  })
   $memcached_port = lookup('profile::memcache::port', {
     'value_type'    => Stdlib::Port,
     'default_value' => 11211,

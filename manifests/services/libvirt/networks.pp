@@ -53,7 +53,6 @@ class profile::services::libvirt::networks {
       autostart             => true,
       forward_mode          => 'bridge',
       forward_interfaces    => [ "br-${shortname}", ],
-      trust_guest_rxfilters => true,
     }
     sysctl::value { "net.ipv6.conf.br-${shortname}.autoconf":
       value   => '0',
