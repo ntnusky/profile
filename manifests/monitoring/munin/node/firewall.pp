@@ -22,10 +22,10 @@ class profile::monitoring::munin::node::firewall {
 
   $v6networks.each | $net | {
     firewall { "050 accept incoming Munin from ${net}":
-      proto  => 'tcp',
-      dport  => [4949],
-      action => 'accept',
-      source => $net,
+      proto    => 'tcp',
+      dport    => [4949],
+      action   => 'accept',
+      source   => $net,
       provider => 'ip6tables',
     }
   }
