@@ -2,7 +2,7 @@
 class profile::services::dhcp::server {
   # Determine which search-domain(s) to use:
   $searchdomain = lookup('profile::dhcp::searchdomain', {
-    'default_value' => undefined,
+    'default_value' => undef,
     'value_type'    => Optional[Stdlib::Fqdn],
   })
   $searchdomains = lookup('profile::dns::searchdomains', {
