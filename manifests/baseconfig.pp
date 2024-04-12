@@ -45,7 +45,7 @@ class profile::baseconfig {
   }
 
   # Optionally install the SL2 client 
-  $installsl2client = lookup('profile::shiftleader2::client::install', {
+  $installsl2client = lookup('profile::shiftleader::client::install', {
     'default_value' => false,
     'value_type'    => Boolean,
   })
