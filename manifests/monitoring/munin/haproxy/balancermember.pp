@@ -1,6 +1,6 @@
 # Define balancer members for munin haproxy backend
 class profile::monitoring::munin::haproxy::balancermember {
-  if($sl2) {
+  if($::sl2) {
     $default = $::sl2['server']['primary_interface']['name']
   } else {
     $default = undef

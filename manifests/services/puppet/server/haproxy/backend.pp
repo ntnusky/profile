@@ -2,7 +2,7 @@
 class profile::services::puppet::server::haproxy::backend {
   # TODO: Stop looking for the management-IP in hiera, and simply just take it
   # from SL.
-  if($sl2) {
+  if($::sl2) {
     $default = $::sl2['server']['primary_interface']['name']
   } else {
     $default = undef

@@ -1,6 +1,6 @@
 # This define configures an apache vhost for a munin dashboard.
 define profile::monitoring::munin::server::vhost {
-  if($sl2) {
+  if($::sl2) {
     $default = $::sl2['server']['primary_interface']['name']
   } else {
     $default = undef

@@ -1,7 +1,6 @@
 # This class installs and configures a simple memcached server
 class profile::services::memcache {
-  # Variables for keepalived
-  if($sl2) {
+  if($::sl2) {
     $default = $::sl2['server']['primary_interface']['name']
   } else {
     $default = undef

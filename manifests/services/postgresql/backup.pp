@@ -1,7 +1,7 @@
 # Backups the database content of postgres
 class profile::services::postgresql::backup {
   # TODO: Remove the hiera-lookup and just juse the sl2-data
-  if($sl2) {
+  if($::sl2) {
     $default = $::sl2['server']['primary_interface']['name']
   } else {
     $default = undef
