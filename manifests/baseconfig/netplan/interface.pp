@@ -86,6 +86,9 @@ define profile::baseconfig::netplan::interface (
         $base_route = [{
           'to'  => '0.0.0.0/0',
           'via' => $v4gateway,
+        },{
+          'to'    => ip_network($ipv4_real),
+          'scope' => 'link',
         }]
       } else {
         $base_route = []
@@ -119,6 +122,9 @@ define profile::baseconfig::netplan::interface (
       $v4routes = [{
         'to'  => '0.0.0.0/0',
         'via' => $v4gateway,
+      },{
+        'to'    => ip_network($ipv4_real),
+        'scope' => 'link',
       }]
       $v4policy = []
     }
