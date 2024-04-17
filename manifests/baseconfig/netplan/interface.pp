@@ -61,7 +61,7 @@ define profile::baseconfig::netplan::interface (
         $ipv4_real = pick($ipv4,
           $::sl2['server']['interfaces'][$name]['ipv4_cidr'])
         $ipv6_real = pick_default($ipv6,
-          $::sl2['server']['interfaces'][$name]['ipv6_cidr'])
+          $::sl2['server']['interfaces'][$name]['ipv6_cidr'], false)
       } else {
         fail("No interface named '${name}' registered on host in shiftleader!")
       }
