@@ -20,8 +20,8 @@ class profile::monitoring::munin::plugin::vgpu::db {
   if($database_pass) {
     mysql_database { $database_name:
       ensure  => present,
-      charset => 'utf8',
-      collate => 'utf8_general_ci',
+      charset => 'utf8mb3',
+      collate => 'utf8mb3_general_ci',
       require => [ Class['::mysql::server'] ],
     }
 
