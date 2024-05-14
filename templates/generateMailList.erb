@@ -16,7 +16,7 @@ declare -a mails=()
 users=$($OSCMD role assignment list -f value -c User | sort | uniq | egrep '\w{64}')
 
 # Fetch a list of uniqe groups with a project role
-groups=$($OSCMD role assignment list -f value -c Group --names | sed -r '/^\s*$/d' | sort | uniq | cut -d'@' -f1)
+group_ids=$($OSCMD role assignment list -f value -c Group | sed -r '/^\s*$/d' | sort | uniq )
 
 # Exit if we didn't get any users
 if [[ -z $users ]]; then
@@ -65,7 +65,8 @@ if [[ $($OSCMD project show MISC 2>/dev/null) ]]; then
 fi
 
 # Iterate through groups, find members and their mail address
-for group in $groups; do
+for group_id in $group_ids; do
+  group=$($OSCMD group show -f value -c name $group_id)
   members=$(ldapsearch -LLL -x -H "ldaps://${LDAP_HOST}" -b "$GROUP_BASE" "cn=${group}" memberUid | grep memberUid | awk '{print $2}')
   for member in $members; do
     mail=$(ldapsearch -LLL -x -H "ldaps://${LDAP_HOST}" -b "$USER_BASE" "uid=${member}" mail | grep mail | awk '{print $2}')
