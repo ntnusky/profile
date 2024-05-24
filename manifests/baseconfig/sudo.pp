@@ -1,6 +1,23 @@
 # This class starts to configure sudo
 class profile::baseconfig::sudo {
-  class { '::sudo': }
+  # if purge::unmanaged is true we should purge all files in sudoers.d that is
+  # not managed by puppet. If it is false we will only purge files with the
+  # puppet-prefix (ie: files previously managed by puppet).
+  $purge = lookup('profile::baseconfig::sudo::purge::unmanaged', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
+  if($purge) {
+    $opts = {}
+  } else {
+    $opts = { 'purge_ignore' => '[!puppet_]*' }
+  }
+
+  class { '::sudo':
+    prefix => 'puppet_',
+    *      => $opts,
+  }
 
   sudo::conf { 'insults':
     priority => 10,
