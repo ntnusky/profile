@@ -31,7 +31,7 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-openstack server list --all --limit -1 -c Status -f value > /tmp/munin-openstack-states
+openstack server list --all --limit 100000 -c Status -f value > /tmp/munin-openstack-states
 
 echo "active.value $(cat /tmp/munin-openstack-states | grep -c ACTIVE)"
 echo "shutoff.value $(cat /tmp/munin-openstack-states | grep -c SHUTOFF)"
