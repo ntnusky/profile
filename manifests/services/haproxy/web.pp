@@ -116,10 +116,11 @@ class profile::services::haproxy::web {
 
   if ($certificate) {
     file { $certfile:
-      ensure  => 'present',
-      content => $certificate,
-      mode    => '0600',
-      notify  => Service['haproxy'],
+      ensure    => 'present',
+      content   => $certificate,
+      mode      => '0600',
+      notify    => Service['haproxy'],
+      show_diff => false,
     }
   }
 }
