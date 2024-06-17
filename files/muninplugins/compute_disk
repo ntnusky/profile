@@ -12,6 +12,7 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-eval $(openstack hypervisor show $(hostname -f) -f shell)
+PROVIDER_ID=$(openstack resource provider list -f value | grep -E "$(hostname -f) " | cut -d' ' -f1)
+eval $(openstack resource provider inventory show -f shell $PROVIDER_ID DISK_GB)
 
-echo "used.value $(($local_gb_used * 1000 * 1000 * 1000))"
+echo "used.value $(($used * 1000 * 1000 * 1000))"

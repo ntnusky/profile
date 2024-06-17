@@ -14,7 +14,8 @@ if [[ $1 == "config" ]]; then
   exit 0
 fi
 
-eval $(openstack hypervisor show $(hostname -f) -f shell)
+PROVIDER_ID=$(openstack resource provider list -f value | grep -E "$(hostname -f) " | cut -d' ' -f1)
+eval $(openstack resource provider inventory show -f shell $PROVIDER_ID VCPU)
 
-echo "total.value $vcpus"
-echo "used.value $vcpus_used"
+echo "total.value $total"
+echo "used.value $used"

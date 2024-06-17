@@ -8,6 +8,8 @@ class profile::monitoring::munin::plugin::openstack::compute {
     'compute_vms',
   ]
 
+  require ::placement::client
+
   ::profile::monitoring::munin::plugin::openstack::generic { $plugins:
     plugin_user => 'nova',
   }
