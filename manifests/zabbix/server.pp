@@ -6,7 +6,6 @@ class profile::zabbix::server {
   $key = lookup("profile::zabbix::web::key")
 
   include ::apache::mod::php
-  include ::apache::mod::prefork
   include ::apache::mod::ssl
 
   file { '/etc/ssl/private/zabbix.crt':
@@ -28,6 +27,7 @@ class profile::zabbix::server {
     mpm_module    => 'prefork',
     confd_dir     => '/etc/apache2/conf-enabled',
     default_vhost => false,
+    before        => Class['::apache::mod::php'],
   }
 
   class { 'zabbix::server':
