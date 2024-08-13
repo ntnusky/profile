@@ -26,7 +26,7 @@ class profile::zabbix::server {
   }
 
   class { 'zabbix::web':
-    zabbix_url        => $zabbix_url,
+    zabbix_url        => $::fqdn,
     apache_use_ssl    => true,
     apache_ssl_cert   => '/etc/ssl/private/zabbix.crt',
     apache_ssl_key    => '/etc/ssl/private/zabbix.key',
