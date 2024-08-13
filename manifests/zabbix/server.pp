@@ -6,7 +6,7 @@ class profile::zabbix::server {
   $key = lookup("profile::zabbix::web::key")
 
   include ::apache::mod::php
-  include ::profile::services::apache::server
+  require ::profile::services::apache::server
 
   file { '/etc/ssl/private/zabbix.crt':
     ensure    => 'present',
