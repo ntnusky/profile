@@ -32,5 +32,9 @@ class profile::zabbix::server {
     apache_ssl_key    => '/etc/ssl/private/zabbix.key',
     database_type     => 'mysql',
     database_password => $db_pass,
+    require           => [
+      File['/etc/ssl/private/zabbix.crt'],
+      File['/etc/ssl/private/zabbix.key'],
+    ],
   }
 }
