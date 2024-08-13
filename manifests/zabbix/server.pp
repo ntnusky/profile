@@ -5,8 +5,6 @@ class profile::zabbix::server {
   $cert = lookup("profile::zabbix::web::cert")
   $key = lookup("profile::zabbix::web::key")
 
-  include ::apache::mod::ssl
-
   file { '/etc/ssl/private/zabbix.crt':
     ensure    => 'present',
     content   => $cert,
@@ -20,16 +18,6 @@ class profile::zabbix::server {
     mode      => '0600',
     notify    => Service['httpd'],
     show_diff => false,
-  }
-
-  class { '::apache':
-    mpm_module    => 'prefork',
-    confd_dir     => '/etc/apache2/conf-enabled',
-    default_vhost => false,
-  }
-
-  class { '::apache::mod::php':
-    require => Class['::apache'],
   }
 
   class { 'zabbix::server':
