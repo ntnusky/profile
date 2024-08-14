@@ -29,6 +29,8 @@ class profile::zabbix::server {
   class { 'zabbix::server':
     database_type     => 'mysql',
     database_password => $db_pass,
+    hanodename        => $::fqdn,
+    nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
     require           => Anchor['shiftleader::database::create'],
   }
