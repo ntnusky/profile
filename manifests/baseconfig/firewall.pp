@@ -4,6 +4,12 @@ class profile::baseconfig::firewall {
     before  => Class['::profile::baseconfig::firewall::post'],
     require => Class['::profile::baseconfig::firewall::pre'],
   }
+
+  firewallchain { 'INPUT:filter:IPv4':
+    ensure => present,
+    policy => drop,
+    purge  => true,
+  }
   
   include ::profile::baseconfig::firewall::pre
   include ::profile::baseconfig::firewall::post
