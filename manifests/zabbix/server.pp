@@ -9,6 +9,8 @@ class profile::zabbix::server {
   $cert = lookup("profile::zabbix::web::cert")
   $key = lookup("profile::zabbix::web::key")
 
+  include ::profile::zabbix::deps
+
   file { '/etc/ssl/private/zabbix.crt':
     ensure    => 'present',
     content   => $cert,
@@ -28,6 +30,7 @@ class profile::zabbix::server {
     database_type     => 'mysql',
     database_password => $db_pass,
     manage_database   => $db_manage,
+    require           => Anchor['shiftleader::database::create'],
   }
 
   ::profile::baseconfig::firewall::service::management { 'zabbix-dashboard':
