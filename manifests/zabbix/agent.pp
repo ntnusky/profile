@@ -21,7 +21,7 @@ class profile::zabbix::agent {
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
-      server                => $servers, 
+      server                => join($servers, ','), 
       servicename           => 'zabbix-agent2',
       zabbix_package_agent  => 'zabbix-agent2',
       zabbix_version        => $zabbix_version,
