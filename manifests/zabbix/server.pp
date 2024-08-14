@@ -25,6 +25,11 @@ class profile::zabbix::server {
     database_password => $db_pass,
   }
 
+  ::profile::baseconfig::firewall::service::management { 'zabbix-dashboard':
+    port     => [ 80 , 443 ],
+    protocol => 'tcp',
+  }
+
   class { 'zabbix::web':
     zabbix_url        => $::fqdn,
     apache_use_ssl    => true,
