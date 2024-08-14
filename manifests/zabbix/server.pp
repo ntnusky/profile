@@ -5,6 +5,10 @@ class profile::zabbix::server {
     'default_value' => false,
     'value_type'    => Boolean,
   })
+  $zabbix_version = lookup('profile::zabbix::version', {
+    'default_value' => '7.0',
+    'value_type'    => String,
+  })
 
   $cert = lookup("profile::zabbix::web::cert")
   $key = lookup("profile::zabbix::web::key")
@@ -32,6 +36,7 @@ class profile::zabbix::server {
     hanodename        => $::fqdn,
     nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
+    zabbix_version    => $zabbix_version,
     require           => Anchor['shiftleader::database::create'],
   }
 
@@ -41,13 +46,14 @@ class profile::zabbix::server {
   }
 
   class { 'zabbix::web':
-    zabbix_url        => $::fqdn,
-    apache_use_ssl    => true,
     apache_ssl_cert   => '/etc/ssl/private/zabbix.crt',
     apache_ssl_key    => '/etc/ssl/private/zabbix.key',
-    database_type     => 'mysql',
+    apache_use_ssl    => true,
     database_password => $db_pass,
+    database_type     => 'mysql',
     default_vhost     => true,
+    zabbix_url        => $::fqdn,
+    zabbix_version    => $zabbix_version,
     require           => [
       File['/etc/ssl/private/zabbix.crt'],
       File['/etc/ssl/private/zabbix.key'],
