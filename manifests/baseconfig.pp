@@ -17,6 +17,8 @@ class profile::baseconfig {
 
   include ::profile::utilities::ntnuskytools
 
+  include ::profile::zabbix::agent
+
   # If duo should be installed, install and configure it. 
   $installduo = lookup('profile::duo::enabled', {
     'default_value' => false,
