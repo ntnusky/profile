@@ -30,6 +30,11 @@ class profile::zabbix::server {
     show_diff => false,
   }
 
+  ::profile::baseconfig::firewall::service::infra { 'zabbix-agents':
+    port     => 10051,
+    protocol => 'tcp',
+  }
+
   class { 'zabbix::server':
     database_type     => 'mysql',
     database_password => $db_pass,
