@@ -8,5 +8,5 @@ class profile::zabbix::database {
     database_type     => 'mysql',
     database_password => $db_pass,
     before            => Anchor['shiftleader::database::create'],
-  
+  }
 }
