@@ -7,7 +7,13 @@ class profile::baseconfig::firewall {
 
   firewallchain { 'INPUT:filter:IPv4':
     ensure => present,
-    policy => drop,
+    policy => accept,
+    purge  => true,
+  }
+  
+  firewallchain { 'INPUT:filter:IPv6':
+    ensure => present,
+    policy => accept,
     purge  => true,
   }
   
