@@ -34,7 +34,7 @@ class profile::zabbix::agent {
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
-      pidfile               => '/var/run/zabbix_agent/zabbix_agentd.pid'
+      pidfile               => '/var/run/zabbix_agent/zabbix_agentd.pid',
       server                => join($servers, ','),
       servicename           => $servicename,
       zabbix_package_agent  => $package_agent,
