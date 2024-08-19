@@ -1,16 +1,15 @@
 # User and grats for the Zabbix Monitoring
-class profile::services::mysql::users::zabbixmonitor {
-  $zbx_monitor_password = lookup('profile::mysqlcluster::zbx_monitor_password')
+class profile::services::mysql::users::zabbixagent {
 
-  mysql_user { 'zbx_monitor@%':
+  mysql_user { 'zabbix_agent@%':
     ensure        => 'present',
     plugin        => 'unix_socket',
   }
-  ->mysql_grant { 'zbx_monitor@%/*.*':
+  ->mysql_grant { 'zabbix_agent@%/*.*':
     ensure     => 'present',
     options    => ['GRANT'],
     privileges => ['BINLOG MONITOR', 'PROCESS', 'SHOW DATABASES', 'SHOW VIEW'],
     table      => '*.*',
-    user       => 'zbx_monitor@%',
+    user       => 'zabbix_agent@%',
   }
 }

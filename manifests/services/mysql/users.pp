@@ -9,7 +9,7 @@ class profile::services::mysql::users {
   })
 
   if($zabbix_servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
-    include ::profile::services::mysql::users::zabbixmonitor
+    include ::profile::services::mysql::users::zabbixagent
   }
 
   file { '/root/.my.cnf':
