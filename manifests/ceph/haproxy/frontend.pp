@@ -1,15 +1,10 @@
 # Configures the haproxy in frontend for the rest-api in the ceph cluster
 class profile::ceph::haproxy::frontend {
-  include ::profile::services::haproxy::certs
   include ::profile::ceph::firewall::rest
-
-  $certfile = lookup("profile::haproxy::${profile}::webcert::certfile", {
-    'default_value' => '/etc/ssl/private/haproxy.pem',
-    'value_type'    => String,
-  })
+  include ::profile::services::haproxy::certs::manageapi
 
   ::profile::services::haproxy::frontend { 'Ceph-REST':
-    certfile => $certfile,
+    certfile => '/etc/ssl/private/haproxy.managementapi.pem',
     profile  => 'management',
     port     => 8003,
   }
