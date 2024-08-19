@@ -1,6 +1,7 @@
 # Create a loadbalancer for web resources
 class profile::services::haproxy::web {
   include ::profile::services::apache::firewall
+  include ::profile::services::haproxy::certs
   require ::profile::services::haproxy
 
   # Is this a management or a services loadbalancer?
@@ -112,15 +113,5 @@ class profile::services::haproxy::web {
     bind    => $bind,
     mode    => 'http',
     options => $options,
-  }
-
-  if ($certificate) {
-    file { $certfile:
-      ensure    => 'present',
-      content   => $certificate,
-      mode      => '0600',
-      notify    => Service['haproxy'],
-      show_diff => false,
-    }
   }
 }
