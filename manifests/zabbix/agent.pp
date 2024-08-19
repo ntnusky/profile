@@ -34,6 +34,7 @@ class profile::zabbix::agent {
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
+      pidfile               => '/var/run/zabbix_agent/zabbix_agentd.pid'
       server                => join($servers, ','),
       servicename           => $servicename,
       zabbix_package_agent  => $package_agent,
@@ -41,7 +42,7 @@ class profile::zabbix::agent {
       require               => User['zabbix_agent'],
     }
 
-    systemd::dropin_file { 'zabbiz-agent2-overrides.conf':
+    systemd::dropin_file { 'zabbix-agent2-overrides.conf':
       unit    => "${servicename}.service",
       content => epp('profile/zabbix_agent/zabbix_agent.epp', {
         'zabbix_user'  => $user,
