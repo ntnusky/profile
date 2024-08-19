@@ -1,6 +1,3 @@
-<%- | String $zabbix_user,
-      String $zabbix_group
-| -%>
 [Service]
 User=<%= $zabbix_user %>
 Group=<%= $zabbix_group %>

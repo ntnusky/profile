@@ -24,7 +24,7 @@ class profile::zabbix::agent {
       protocol => 'tcp',
     }
 
-    user { 'zabbix_agent':
+    user { $user:
       ensure => 'present',
       system => true,
     }
@@ -42,8 +42,8 @@ class profile::zabbix::agent {
     }
 
     systemd::dropin_file { 'zabbiz-agent2-overrides.conf':
-      unit   => "${servicename}.service",
-      source => epp('profile/zabbix_agent/zabbix_agent.epp', {
+      unit    => "${servicename}.service",
+      content => epp('profile/zabbix_agent/zabbix_agent.epp', {
         'zabbix_user'  => $user,
         'zabbix_group' => $user,
       }),
