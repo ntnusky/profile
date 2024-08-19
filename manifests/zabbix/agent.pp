@@ -12,7 +12,6 @@ class profile::zabbix::agent {
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })
 
-  $agent_config_file = '/etc/zabbix/zabbix_agent2.conf'
   $servicename = 'zabbix-agent2'
   $user = 'zabbix_agent'
   $package_agent = $servicename
@@ -31,7 +30,7 @@ class profile::zabbix::agent {
     }
 
     class { 'zabbix::agent':
-      agent_configfile_path => $agent_config_file,
+      agent_configfile_path => '/etc/zabbix/zabbix_agent2.conf',
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
