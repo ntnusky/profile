@@ -48,7 +48,6 @@ class profile::zabbix::agent {
         'zabbix_group' => $user,
       }),
       notify  => Service[$servicename],
-      require => Class['zabbix::agent'],
     }
   }
 }
