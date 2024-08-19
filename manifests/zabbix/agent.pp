@@ -16,6 +16,7 @@ class profile::zabbix::agent {
   $servicename = 'zabbix-agent2'
   $user = 'zabbix_agent'
   $package_agent = $servicename
+  $pidfile_dir = '/var/run/zabbix_agent'
 
   # If the array contains at least one element:
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
@@ -39,7 +40,7 @@ class profile::zabbix::agent {
       servicename           => $servicename,
       zabbix_package_agent  => $package_agent,
       zabbix_version        => $zabbix_version,
-      require               => User['zabbix_agent'],
+      require               => [User[$user],File[$pidfile_dir]]
     }
 
     systemd::dropin_file { 'zabbix-agent2-overrides.conf':
@@ -49,6 +50,14 @@ class profile::zabbix::agent {
         'zabbix_group' => $user,
       }),
       notify  => Service[$servicename],
+    }
+
+    file { $pidfile_dir:
+      ensure  => 'directory',
+      mode    => '0755',
+      owner   => $user,
+      group   => $user,
+      require => User[$user],
     }
   }
 }
