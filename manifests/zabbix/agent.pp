@@ -43,7 +43,7 @@ class profile::zabbix::agent {
 
     systemd::dropin_file { 'zabbiz-agent2-overrides.conf':
       unit   => "${servicename}.service",
-      source => epp('profile/zabbix_agent.epp', {
+      source => epp('profile/zabbix/zabbix_agent.epp', {
         'zabbix_user'  => $user,
         'zabbix_group' => $user,
       }),
