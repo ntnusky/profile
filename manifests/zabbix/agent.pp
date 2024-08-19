@@ -16,15 +16,22 @@ class profile::zabbix::agent {
       protocol => 'tcp',
     }
 
+    user { 'zabbix_agent':
+      ensure => 'present',
+      system => true,
+    }
+
     class { 'zabbix::agent':
       agent_configfile_path => '/etc/zabbix/zabbix_agent2.conf',
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
-      server                => join($servers, ','), 
+      server                => join($servers, ','),
       servicename           => 'zabbix-agent2',
       zabbix_package_agent  => 'zabbix-agent2',
+      zabbix_user           => 'zabbix_agent',
       zabbix_version        => $zabbix_version,
+      require               => User['zabbix_agent'],
     }
   }
 }
