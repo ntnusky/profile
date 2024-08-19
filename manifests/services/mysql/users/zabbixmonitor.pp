@@ -10,7 +10,7 @@ class profile::services::mysql::users::zabbixmonitor {
   ->mysql_grant { 'zbx_monitor@%/*.*':
     ensure     => 'present',
     options    => ['GRANT'],
-    privileges => ['REPLICATION CLIENT', 'PROCESS', 'SHOW DATABASES', 'SHOW VIEW'],
+    privileges => ['BINLOG MONITOR', 'PROCESS', 'SHOW DATABASES', 'SHOW VIEW'],
     table      => '*.*',
     user       => 'zbx_monitor@%',
   }
