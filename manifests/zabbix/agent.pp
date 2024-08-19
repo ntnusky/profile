@@ -37,19 +37,18 @@ class profile::zabbix::agent {
       server                => join($servers, ','),
       servicename           => $servicename,
       zabbix_package_agent  => $package_agent,
-      zabbix_user           => $user,
       zabbix_version        => $zabbix_version,
       require               => User['zabbix_agent'],
     }
 
-    zabbix::startup { $servicename:
-      pidfile                   => $zabbix::params::agent_pidfile,
-      agent_configfile_path     => $agent_config_file,
-      zabbix_user               => $user,
-      additional_service_params => $zabbix::params::additional_service_params,
-      service_type              => $zabbix::params::service_type,
-      service_name              => $servicename,
-      require                   => Package[$package_agent],
+    systemd::dropin_file { 'zabbiz-agent2-overrides.conf':
+      unit   => "${servicename}.service",
+      source => epp('profile/zabbix_agent.epp', {
+        'zabbix_user'  => $user,
+        'zabbix_group' => $user,
+      }),
+      notify  => Service[$servicename],
+      require => Class['zabbix::agent'],
     }
   }
 }
