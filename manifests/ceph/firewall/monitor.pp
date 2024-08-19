@@ -1,16 +1,9 @@
 # Opens the firewall for the ceph monitor.
 class profile::ceph::firewall::monitor {
   require ::profile::baseconfig::firewall
+  include ::profile::ceph::firewall::rest
 
   $ceph_public = lookup('profile::ceph::public_networks', {
-    'value_type' => Array[String],
-    'default_value' => [],
-  })
-  $mgmtv4_nets = lookup('profile::networking::management::ipv4::prefixes', {
-    'value_type' => Array[String],
-    'default_value' => [],
-  })
-  $mgmtv6_nets = lookup('profile::networking::management::ipv6::prefixes', {
     'value_type' => Array[String],
     'default_value' => [],
   })
@@ -24,25 +17,6 @@ class profile::ceph::firewall::monitor {
       proto   => 'tcp',
       dport   => [ '3300', '6789' ],
       action  => 'accept',
-    }
-  }
-
-  # Allow traffic to the dashboard from the management networks.
-  $mgmtv4_nets.each | $net | {
-    firewall { "300 accept incoming traffic for ceph dashboard from ${net}":
-      source  => $net,
-      proto   => 'tcp',
-      dport   => [ '7000' ],
-      action  => 'accept',
-    }
-  }
-  $mgmtv6_nets.each | $net | {
-    firewall { "300 accept incoming traffic for ceph dashboard from ${net}":
-      source   => $net,
-      proto    => 'tcp',
-      dport    => [ '7000' ],
-      action   => 'accept',
-      provider => 'ip6tables',
     }
   }
 }
