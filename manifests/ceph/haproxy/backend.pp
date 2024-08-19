@@ -4,7 +4,7 @@ class profile::ceph::haproxy::backend {
   ::profile::services::haproxy::backend { 'Ceph-REST':
     backend   => 'bk_Ceph-REST',
     interface => $::sl2['server']['primary_interface']['name'],
-    options   => 'check',
+    options   => 'check ssl verify none',
     port      => '8003',
   }
 }

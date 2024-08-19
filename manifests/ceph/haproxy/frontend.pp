@@ -5,6 +5,7 @@ class profile::ceph::haproxy::frontend {
 
   ::profile::services::haproxy::frontend { 'Ceph-REST':
     certfile => '/etc/ssl/private/haproxy.managementapi.pem',
+    mode     => 'http',
     profile  => 'management',
     port     => 8003,
   }
