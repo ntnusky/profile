@@ -19,6 +19,7 @@ class profile::services::postgresql {
   }
 
   if($zabbix_servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::services::postgresql::users::zabbixagent
     package { 'zabbix-agent2-plugin-postgresql':
       ensure  => installed,
       require => Class['zabbix::agent'],
