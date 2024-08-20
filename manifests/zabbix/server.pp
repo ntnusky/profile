@@ -9,7 +9,7 @@ class profile::zabbix::server {
     'default_value' => '7.0',
     'value_type'    => String,
   })
-  $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', 
+  $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', { 
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
