@@ -9,6 +9,10 @@ class profile::zabbix::server {
     'default_value' => '7.0',
     'value_type'    => String,
   })
+  $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', 
+    'default_value' => $::fqdn,
+    'value_type'    => String,
+  })
 
   $cert = lookup("profile::zabbix::web::cert")
   $key = lookup("profile::zabbix::web::key")
@@ -51,15 +55,16 @@ class profile::zabbix::server {
   }
 
   class { 'zabbix::web':
-    apache_ssl_cert   => '/etc/ssl/private/zabbix.crt',
-    apache_ssl_key    => '/etc/ssl/private/zabbix.key',
-    apache_use_ssl    => true,
-    database_password => $db_pass,
-    database_type     => 'mysql',
-    default_vhost     => true,
-    zabbix_url        => $::fqdn,
-    zabbix_version    => $zabbix_version,
-    require           => [
+    apache_ssl_cert    => '/etc/ssl/private/zabbix.crt',
+    apache_ssl_key     => '/etc/ssl/private/zabbix.key',
+    apache_use_ssl     => true,
+    database_password  => $db_pass,
+    database_type      => 'mysql',
+    default_vhost      => true,
+    zabbix_url         => $::fqdn,
+    zabbix_version     => $zabbix_version,
+    zabbix_server_name => $zabbix_web_server_name,
+    require            => [
       File['/etc/ssl/private/zabbix.crt'],
       File['/etc/ssl/private/zabbix.key'],
     ],
