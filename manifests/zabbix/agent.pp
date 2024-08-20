@@ -66,7 +66,7 @@ class profile::zabbix::agent {
       mode    => '0644',
       owner   => $user,
       group   => $user,
-      content => 'Include=/etc/zabbix/zabbix_agent2.d/plugins.d'
+      content => 'Include=/etc/zabbix/zabbix_agent2.d/plugins.d',
       require => Class['zabbix::agent'],
     }
   }
