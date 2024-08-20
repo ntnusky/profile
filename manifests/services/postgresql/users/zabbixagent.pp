@@ -1,10 +1,7 @@
 # Create zbx_monitor role with needed privileges
 class profile::services::postgresql::users::zabbixagent {
   $password = lookup('profile::postgres::zbx_monitor_password', String)
-  $pw_hash = postgresql::postgresql_password({
-    username => 'zbx_monitor',
-    password => $password
-  })
+  $pw_hash = postgresql::postgresql_password('zbx_monitor', $password)
 
   postgresql::server::role { 'zbx_monitor':
     password_hash => $pw_hash,
