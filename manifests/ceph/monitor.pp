@@ -28,6 +28,7 @@ class profile::ceph::monitor {
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::haproxy::backend
   include ::profile::ceph::key::admin
+  include ::profile::ceph::zabbix::monitor
 
   ceph::mgr { $::hostname :
     key        => $mgr_key,
