@@ -9,21 +9,21 @@ class profile::zabbix::server {
     'default_value' => '7.0',
     'value_type'    => String,
   })
-  $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', { 
+  $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
 
-  $cert = lookup("profile::zabbix::web::cert")
-  $key = lookup("profile::zabbix::web::key")
+  $cert = lookup('profile::zabbix::web::cert')
+  $key = lookup('profile::zabbix::web::key')
 
   include ::profile::zabbix::deps
 
   file { '/etc/ssl/private/zabbix.crt':
-    ensure    => 'present',
-    content   => $cert,
-    mode      => '0600',
-    notify    => Service['httpd'],
+    ensure  => 'present',
+    content => $cert,
+    mode    => '0600',
+    notify  => Service['httpd'],
   }
 
   file { '/etc/ssl/private/zabbix.key':
@@ -45,6 +45,7 @@ class profile::zabbix::server {
     hanodename        => $::fqdn,
     nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
+    startipmipollers  => 3,
     zabbix_version    => $zabbix_version,
     require           => Anchor['shiftleader::database::create'],
   }

@@ -31,6 +31,8 @@ class profile::zabbix::agent {
 
     class { 'zabbix::agent':
       agent_configfile_path => '/etc/zabbix/zabbix_agent2.conf',
+      agent_config_owner    => $user,
+      agent_config_group    => $user,
       include_dir           => '/etc/zabbix/zabbix_agent2.d',
       include_dir_purge     => false,
       manage_startup_script => false,
@@ -57,6 +59,15 @@ class profile::zabbix::agent {
       owner   => $user,
       group   => $user,
       require => User[$user],
+    }
+
+    file { '/etc/zabbix/zabbix_agent2.d/plugins.conf':
+      ensure  => 'file',
+      mode    => '0644',
+      owner   => $user,
+      group   => $user,
+      content => 'Include=/etc/zabbix/zabbix_agent2.d/plugins.d',
+      require => Class['zabbix::agent'],
     }
   }
 }
