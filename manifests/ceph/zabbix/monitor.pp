@@ -23,7 +23,7 @@ class profile::ceph::zabbix::monitor {
       group   => 'zabbix_agent',
       mode    => '0644',
       content => "UserParameter=ceph.custom.perf[*],${script} $1 $2 $3",
-      require => Class['zabbix::agent'],
+      require => Package['zabbix-agent2'],
       notify  => Service['zabbix-agent2'],
     }
   }
