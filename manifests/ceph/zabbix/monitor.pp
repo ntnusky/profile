@@ -24,7 +24,7 @@ class profile::ceph::zabbix::monitor {
       mode    => '0644',
       content => "UserParameter=ceph.custom.perf[*],${script} $1 $2 $3",
       require => Class['zabbix::agent'],
-      notify  => Service['zabbix'],
+      notify  => Service['zabbix-agent2'],
     }
   }
 }
