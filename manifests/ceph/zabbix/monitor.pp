@@ -25,7 +25,7 @@ class profile::ceph::zabbix::monitor {
       content => join([
         "UserParameter=ceph.custom.perf[*],${script} \$1 \$2 \$3",
         "UserParameter=ceph.custom.df,ceph df -f json",
-      ], '\n'),
+      ], "\n"),
       require => Package['zabbix-agent2'],
       notify  => Service['zabbix-agent2'],
     }
