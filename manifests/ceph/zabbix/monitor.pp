@@ -22,7 +22,10 @@ class profile::ceph::zabbix::monitor {
       owner   => 'zabbix_agent',
       group   => 'zabbix_agent',
       mode    => '0644',
-      content => "UserParameter=ceph.custom.perf[*],${script} \$1 \$2 \$3",
+      content => join([
+        "UserParameter=ceph.custom.perf[*],${script} \$1 \$2 \$3",
+        "UserParameter=ceph.custom.df,ceph df -f json",
+      ], '\n'),
       require => Package['zabbix-agent2'],
       notify  => Service['zabbix-agent2'],
     }
