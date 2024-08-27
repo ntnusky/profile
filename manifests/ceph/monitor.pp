@@ -28,11 +28,15 @@ class profile::ceph::monitor {
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::haproxy::backend
   include ::profile::ceph::key::admin
+  include ::profile::ceph::key::mgr
   include ::profile::ceph::zabbix::monitor
+
+  File["/var/lib/ceph/mgr/ceph-${::hostname}"]
+  -> Class['::profile::ceph::key::mgr'] 
+  -> Service["ceph-mgr@${::hostname}"]
 
   ceph::mgr { $::hostname :
     key        => $mgr_key,
-    inject_key => true,
   }
   ceph::mon { $::hostname:
     key    => $mon_key,
