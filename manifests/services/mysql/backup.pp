@@ -41,17 +41,17 @@ class profile::services::mysql::backup {
 
   cron { 'Mysql database backup':
     command => $backup_command, 
-    day     => $day,
     hour    => $hour, 
     minute  => fqdn_rand(60, "${::hostname}-backup"), 
     user    => 'root',
+    weekday => $day,
   }
 
   cron { 'Mysql database backup cleaning':
     command => $clean_command, 
-    day     => $day,
     hour    => fqdn_rand(6) + 8, 
     minute  => fqdn_rand(60, "${::hostname}-cleaning"), 
     user    => 'root',
+    weekday => $day,
   }
 }
