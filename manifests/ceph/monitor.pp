@@ -36,7 +36,9 @@ class profile::ceph::monitor {
   -> Service["ceph-mgr@${::hostname}"]
 
   ceph::mgr { $::hostname :
-    key        => $mgr_key,
+    # This sounds dangerous; but it really isnt. We enable cephx by creating a
+    # key in ::profile::ceph::key::mgr
+    authentication_type => 'none', 
   }
   ceph::mon { $::hostname:
     key    => $mon_key,
