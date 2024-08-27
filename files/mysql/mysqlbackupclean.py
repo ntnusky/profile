@@ -1,8 +1,13 @@
 #!/usr/bin/python3
 import os
 import re
+import sys
 
-location = '/var/backups'
+if len(sys.argv) < 2:
+  print("Usage: %s <backup-location>" % sys.argv[0])
+  sys.exit(1)
+
+location = sys.argv[1] 
 filenamePattern = re.compile( \
     r'^MysqlDump\.([0-9]{2})([0-9]{2})([0-9]{2})[0-9]{6}\.sql\.gz$')
 
