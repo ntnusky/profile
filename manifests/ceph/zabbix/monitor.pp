@@ -7,15 +7,21 @@ class profile::ceph::zabbix::monitor {
 
   # Only install/configure zabbix if we actually are going to use zabbix
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
-    $script = '/usr/local/sbin/get-osd-perfdata.py'
+    $scripts = [
+      'get-osd-perfdata.py',
+      'discover-ceph-deviceclasses.sh',
+    ]
 
-    file { $script:
-      ensure => present,
-      owner  => 'root',
-      group  => 'root',
-      mode   => '0755',
-      source => 'puppet:///modules/profile/zabbix/get-osd-perfdata.py',
+    $scripts.each | $script | {
+      file { "/usr/local/sbin/${script}":
+        ensure => present,
+        owner  => 'root',
+        group  => 'root',
+        mode   => '0755',
+        source => "puppet:///modules/profile/zabbix/${script}",
+      }
     }
+
 
     file { '/etc/zabbix/zabbix_agent2.d/userparam-ceph.conf':
       ensure  => present,
@@ -23,8 +29,9 @@ class profile::ceph::zabbix::monitor {
       group   => 'zabbix_agent',
       mode    => '0644',
       content => join([
-        "UserParameter=ceph.custom.perf[*],${script} \$1 \$2 \$3",
+        "UserParameter=ceph.custom.perf[*],/usr/local/sbin/get-osd-perfdata.py \$1 \$2 \$3",
         "UserParameter=ceph.custom.df,ceph df -f json",
+        "UserParameter=ceph.discover.deviceclass,/usr/local/sbin/discover-ceph-deviceclasses.sh",
       ], "\n"),
       require => Package['zabbix-agent2'],
       notify  => Service['zabbix-agent2'],
