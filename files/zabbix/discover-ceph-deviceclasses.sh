@@ -11,7 +11,7 @@ for class in $(ceph df -f json | jq '.["stats_by_class"] | keys | .[]' -r); do
     echo ','
   fi
 
-  echo -n "  {\"{#CLASS}\":\"$class\"}"
+  echo -n "  {\"{#OSDCLASS}\":\"$class\"}"
 done
 
 echo
