@@ -28,5 +28,5 @@ fi
 logger "Finished moving backups to external storage"
 
 logger "Deleting local copy of backups"
-rm "${location}/MysqlDump*"
+rm ${location}/MysqlDump*
 logger "MYSQL-Backup-script is finished"
