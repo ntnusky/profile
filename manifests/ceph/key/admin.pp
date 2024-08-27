@@ -8,5 +8,6 @@ class profile::ceph::key::admin {
     cap_osd => 'allow *',
     cap_mds => 'allow',
     cap_mgr => 'allow *',
+    mode    => '0644',
   }
 }
