@@ -114,5 +114,10 @@ def getGPUData():
     data[pgpu]['type'] = types[t]
     data[pgpu]['vgpu_instances'] = getMaxVGPUs(t, types[t])
     data[pgpu]['vgpu_ram'] = getVGPURAM(t, types[t])
+  
+  for gpuid in data:
+    data[gpuid]['gpuID'] = gpuid
+    for vgpu in data[gpuid]["VGPUs"]:
+      data[gpuid]['VGPUs'][vgpu]['vgpuID'] = vgpu
 
   return data
