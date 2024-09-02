@@ -14,9 +14,14 @@ class profile::zabbix::agent::puppet {
     group   => 'zabbix_agent',
     mode    => '0644',
     content => join([
-      "UserParameter=puppet.metrics,/usr/local/sbin/puppetStatus.py \$1 \$2 \$3",
+      "UserParameter=puppet.metrics,sudo /usr/local/sbin/puppetStatus.py",
     ], "\n"),
     require => Package['zabbix-agent2'],
     notify  => Service['zabbix-agent2'],
+  }
+
+  sudo::conf { 'zabbix_agent':
+    priority => 15,
+    source   => 'puppet:///modules/profile/zabbix/sudoers',
   }
 }
