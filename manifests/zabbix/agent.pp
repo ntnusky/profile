@@ -19,6 +19,8 @@ class profile::zabbix::agent {
 
   # If the array contains at least one element:
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::zabbix::agent::puppet
+
     ::profile::baseconfig::firewall::service::infra { 'zabbix-agent':
       port     => [ 10050 ],
       protocol => 'tcp',
