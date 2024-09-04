@@ -28,7 +28,7 @@ class profile::zabbix::agent::tls {
       '{#IPADDR}'    => $domain,
       '{#SSLPORT}'   => $port,
       '{#SSLDOMAIN}' => $domain,
-      '{#TIMEOUT}'   => 30,
+      '{#TIMEOUT}'   => "30",
     }
   }
 
