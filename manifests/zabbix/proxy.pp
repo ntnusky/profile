@@ -18,6 +18,12 @@ class profile::zabbix::proxy {
     require => Package['zabbix-proxy-sqlite3'],
   }
 
+  ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
+    port     => 10051,
+    protocol => 'tcp',
+    v4source => $servers.map | $s | { "${s}/32" },
+  }
+
   class { '::zabbix::proxy':
     database_type      => 'sqlite',
     database_name      => '/var/cache/zabbix-proxy/zabbixproxy.db',
