@@ -21,7 +21,7 @@ class profile::zabbix::proxy {
   class { '::zabbix::proxy':
     database_type      => 'sqlite',
     database_name      => '/var/cache/zabbix-proxy/zabbixproxy.db',
-    zabbix_server_host => join($servers, ','),
+    zabbix_server_host => join($servers, ';'),
     zabbix_version     => $zabbix_version,
   }
 }
