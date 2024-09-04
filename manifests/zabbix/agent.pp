@@ -7,7 +7,7 @@ class profile::zabbix::agent {
     'default_value' => '7.0',
     'value_type'    => String,
   })
-  $servers = lookup('profile::zabbix::servers', {
+  $servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })

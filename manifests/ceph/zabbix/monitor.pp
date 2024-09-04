@@ -1,6 +1,6 @@
 # This class installs plugins needed for zabbix to monitor the ceph monitors.
 class profile::ceph::zabbix::monitor {
-  $servers = lookup('profile::zabbix::servers', {
+  $servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })

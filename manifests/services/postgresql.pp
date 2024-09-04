@@ -9,7 +9,7 @@ class profile::services::postgresql {
     'default_value' => true,
     'value_type'    => Boolean,
   })
-  $zabbix_servers = lookup('profile::zabbix::servers', {
+  $zabbix_servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })
