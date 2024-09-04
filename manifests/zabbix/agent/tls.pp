@@ -1,7 +1,7 @@
 # Zabbix config for TLS checks
 class profile::zabbix::agent::tls {
 
-  $domains = lookup('zabbix::tls::expiry::domains', Array[String])
+  $domains = lookup('zabbix::tls::expiry::domains', Hash[String, String])
 
   zabbix::userparameters { 'ssl_cert_check':
     content => join([
