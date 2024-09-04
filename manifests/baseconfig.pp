@@ -7,6 +7,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::logging
   include ::profile::baseconfig::logrotate
   include ::profile::baseconfig::mounts
+  include ::profile::baseconfig::motd
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
