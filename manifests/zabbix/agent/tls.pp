@@ -5,7 +5,7 @@ class profile::zabbix::agent::tls {
 
   zabbix::userparameters { 'ssl_cert_check':
     content => join([
-      'UserParameter=ssl_cert_check_valid[*], /usr/local/bin/ssl_cert_check.sh valid "$1" "$2" "$3" "$4" "$5',
+      'UserParameter=ssl_cert_check_valid[*], /usr/local/bin/ssl_cert_check.sh valid "$1" "$2" "$3" "$4" "$5"',
       'UserParameter=ssl_cert_check_expire[*], /usr/local/bin/ssl_cert_check.sh expire "$1" "$2" "$3" "$4" "$5"',
       'UserParameter=ssl_cert_check_json[*], /usr/local/bin/ssl_cert_check.sh json "$1" "$2" "$3" "$4" "$5"'
     ], "\n"),
