@@ -1,7 +1,10 @@
 # Zabbix config for TLS checks
 class profile::zabbix::agent::tls {
 
-  $domains = lookup('zabbix::tls::expiry::domains', Hash[String, String])
+  $domains = lookup('zabbix::tls::expiry::domains', {
+    'default_value' => {},
+    'value_type'    => Hash[String, String],
+  })
 
   zabbix::userparameters { 'ssl_cert_check':
     content => join([
@@ -28,7 +31,7 @@ class profile::zabbix::agent::tls {
       '{#IPADDR}'    => $domain,
       '{#SSLPORT}'   => $port,
       '{#SSLDOMAIN}' => $domain,
-      '{#TIMEOUT}'   => "30",
+      '{#TIMEOUT}'   => '30',
     }
   }
 
