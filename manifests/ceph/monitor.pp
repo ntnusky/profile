@@ -51,6 +51,10 @@ class profile::ceph::monitor {
     before  => Anchor['profile::ceph::monitor::end']
   }
 
+  package { 'ceph-mgr-dashboard':
+    ensure => present,
+  }
+
   sudo::conf { 'cephmon':
     priority => 15,
     source   => 'puppet:///modules/profile/sudo/cephmon_sudoers',
