@@ -24,6 +24,7 @@ class profile::ceph::monitor {
   }
 
   require ::profile::ceph::base
+  include ::profile::ceph::dashboard
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::haproxy::backend
@@ -49,10 +50,6 @@ class profile::ceph::monitor {
     secret  => $bootstrap_osd_key,
     cap_mon => 'allow profile bootstrap-osd',
     before  => Anchor['profile::ceph::monitor::end']
-  }
-
-  package { 'ceph-mgr-dashboard':
-    ensure => present,
   }
 
   sudo::conf { 'cephmon':
