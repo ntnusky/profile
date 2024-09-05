@@ -50,6 +50,11 @@ class profile::zabbix::server {
     require           => Anchor['shiftleader::database::create'],
   }
 
+  ::sudo::conf { 'zabbix-server_sudoers':
+    priority => 15,
+    source   => 'puppet:///modules/profile/sudo/zabbix-server_sudoers',
+  }
+
   ::profile::baseconfig::firewall::service::management { 'zabbix-dashboard':
     port     => [ 80 , 443 ],
     protocol => 'tcp',

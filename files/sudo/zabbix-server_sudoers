@@ -1,0 +1,5 @@
+# Allow the administrators to start/stop zabbix-servers
+%administrator ALL=(root) /bin/systemctl stop zabbix-server
+%administrator ALL=(root) /bin/systemctl start zabbix-server
+%administrator ALL=(root) /bin/systemctl restart zabbix-server
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status zabbix-server

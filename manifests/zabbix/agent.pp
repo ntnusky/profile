@@ -31,6 +31,11 @@ class profile::zabbix::agent {
       system => true,
     }
 
+    ::sudo::conf { 'zabbix-agent_sudoers':
+      priority => 15,
+      source   => 'puppet:///modules/profile/sudo/zabbix-agent_sudoers',
+    }
+
     class { 'zabbix::agent':
       agent_configfile_path => '/etc/zabbix/zabbix_agent2.conf',
       agent_config_owner    => $user,

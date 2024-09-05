@@ -31,4 +31,9 @@ class profile::zabbix::proxy {
     zabbix_server_host => join($servers, ','),
     zabbix_version     => $zabbix_version,
   }
+
+  ::sudo::conf { 'zabbix-proxy_sudoers':
+    priority => 15,
+    source   => 'puppet:///modules/profile/sudo/zabbix-proxy_sudoers',
+  }
 }
