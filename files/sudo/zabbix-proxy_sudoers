@@ -1,5 +1,5 @@
 # Let administrators reload the proxy config-cache
-%administrator ALL=(root) NOPASSWD: zabbix_proxy -c /etc/zabbix/zabbix_proxy.conf -R config_cache_reload 
+%administrator ALL=(root) NOPASSWD: /usr/sbin/zabbix_proxy -c /etc/zabbix/zabbix_proxy.conf -R config_cache_reload 
 
 # Allow the administrators to start/stop zabbix-proxys
 %administrator ALL=(root) /bin/systemctl stop zabbix-proxy
