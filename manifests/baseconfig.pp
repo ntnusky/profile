@@ -16,6 +16,8 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::updates
 
+  include ::profile::monitoring::munin::node
+
   include ::profile::utilities::ntnuskytools
 
   include ::profile::zabbix::agent
@@ -27,15 +29,6 @@ class profile::baseconfig {
   })
   if($installduo) {
     include ::profile::baseconfig::duo
-  }
-
-  # If munin should be installed, install and configure the munin-node
-  $installmunin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  if($installmunin) {
-    include ::profile::monitoring::munin::node
   }
 
   # If sensu should be installed, install and configure the sensu-client agent
