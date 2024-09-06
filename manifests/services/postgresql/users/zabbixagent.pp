@@ -13,6 +13,13 @@ class profile::services::postgresql::users::zabbixagent {
     group => 'pg_monitor',
   }
 
+  postgresql::server::database_grant { 'zbx_monitor-puppetdb':
+    ensure    => 'present',
+    db        => 'puppetdb',
+    role      => 'zbx_monitor',
+    privilege => 'CONNECT',
+  }
+
   postgresql::server::pg_hba_rule { 'Allow zbx_monitor':
     description => 'Allow connections locally for zbx_monitor',
     type        => 'host',
