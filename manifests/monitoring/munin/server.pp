@@ -10,7 +10,6 @@ class profile::monitoring::munin::server {
   })
 
   $install_munin = lookup('profile::munin::install', {
-    'default_value' => true,
     'value_type'    => Boolean,
   })
 
