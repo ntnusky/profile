@@ -33,6 +33,7 @@ class profile::ceph::zabbix::monitor {
       content => join([
         "UserParameter=ceph.custom.osd.bluefs[*],/usr/local/sbin/get-osd-bluefsdata.py \$1",
         "UserParameter=ceph.custom.report[*],ceph report 2> /dev/null | jq '.[\"\$1\"]'",
+        'UserParameter=ceph.custom.status,ceph status -f json',
         'UserParameter=ceph.custom.df,ceph df -f json',
         'UserParameter=ceph.custom.osd.df,ceph osd df -f json',
         'UserParameter=ceph.custom.osd.perf,ceph osd perf -f json',
