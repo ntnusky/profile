@@ -8,7 +8,7 @@ class profile::ceph::zabbix::monitor {
   # Only install/configure zabbix if we actually are going to use zabbix
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
     $scripts = [
-      'get-osd-perfdata.py',
+      'get-osd-bluefsdata.py',
       'discover-ceph-deviceclasses.py',
       'discover-ceph-pools.py',
       'discover-ceph-osds.py',
@@ -31,7 +31,7 @@ class profile::ceph::zabbix::monitor {
       group   => 'zabbix_agent',
       mode    => '0644',
       content => join([
-        "UserParameter=ceph.custom.perf[*],/usr/local/sbin/get-osd-perfdata.py \$1 \$2 \$3",
+        "UserParameter=ceph.custom.osd.bluefs[*],/usr/local/sbin/get-osd-bluefsdata.py \$1",
         "UserParameter=ceph.custom.report[*],ceph report 2> /dev/null | jq '.[\"\$1\"]'",
         'UserParameter=ceph.custom.df,ceph df -f json',
         'UserParameter=ceph.custom.osd.df,ceph osd df -f json',
