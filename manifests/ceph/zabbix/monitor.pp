@@ -34,6 +34,7 @@ class profile::ceph::zabbix::monitor {
         "UserParameter=ceph.custom.perf[*],/usr/local/sbin/get-osd-perfdata.py \$1 \$2 \$3",
         "UserParameter=ceph.custom.report[*],ceph report 2> /dev/null | jq '.[\"\$1\"]'",
         'UserParameter=ceph.custom.df,ceph df -f json',
+        'UserParameter=ceph.custom.osd.df,ceph osd df -f json',
         'UserParameter=ceph.custom.autoscale.status,ceph osd pool autoscale-status -f json',
         'UserParameter=ceph.discover.deviceclass,/usr/local/sbin/discover-ceph-deviceclasses.py',
         'UserParameter=ceph.discover.osds,/usr/local/sbin/discover-ceph-osds.py',
