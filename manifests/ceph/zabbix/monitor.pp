@@ -9,7 +9,9 @@ class profile::ceph::zabbix::monitor {
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
     $scripts = [
       'get-osd-perfdata.py',
-      'discover-ceph-deviceclasses.sh',
+      'discover-ceph-deviceclasses.py',
+      'discover-ceph-pools.py',
+      'discover-ceph-osds.py',
     ]
 
     $scripts.each | $script | {
@@ -31,8 +33,10 @@ class profile::ceph::zabbix::monitor {
       content => join([
         "UserParameter=ceph.custom.perf[*],/usr/local/sbin/get-osd-perfdata.py \$1 \$2 \$3",
         "UserParameter=ceph.custom.report[*],ceph report 2> /dev/null | jq '.[\"\$1\"]'",
-        "UserParameter=ceph.custom.df,ceph df -f json",
-        "UserParameter=ceph.discover.deviceclass,/usr/local/sbin/discover-ceph-deviceclasses.sh",
+        'UserParameter=ceph.custom.df,ceph df -f json',
+        'UserParameter=ceph.discover.deviceclass,/usr/local/sbin/discover-ceph-deviceclasses.sh',
+        'UserParameter=ceph.discover.osds,/usr/local/sbin/discover-ceph-osds.sh',
+        'UserParameter=ceph.discover.pools,/usr/local/sbin/discover-ceph-pools.sh',
       ], "\n"),
       require => Package['zabbix-agent2'],
       notify  => Service['zabbix-agent2'],
