@@ -6,5 +6,5 @@ report = subprocess.run(['/usr/bin/ceph', 'df', '-f', 'json'], capture_output=Tr
 data = json.loads(report.stdout)
 
 print(json.dumps([
-  {'{#CLASS}': c } for c in data['stats_by_class'].keys()
+  {'{#OSDCLASS}': c } for c in data['stats_by_class'].keys()
 ]))
