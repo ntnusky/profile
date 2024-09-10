@@ -39,9 +39,7 @@ class profile::baseconfig {
   if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
     include ::profile::sensu::client
   } else {
-    package { 'sensu':
-      ensure => purged,
-    }
+    include ::profille::sensu::client::uninstall
   }
 
   # Optionally install the SL2 client 
