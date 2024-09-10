@@ -12,7 +12,7 @@ class profile::ceph::zabbix::radosgw {
       owner  => 'root',
       group  => 'root',
       mode   => '0755',
-      source => 'puppet:///modules/profile/zabbix/${script}',
+      source => 'puppet:///modules/profile/zabbix/radosgw_usage.py',
     }
 
     file { '/etc/zabbix/zabbix_agent2.d/userparam-radosgw.conf':
