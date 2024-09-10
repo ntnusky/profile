@@ -6,6 +6,7 @@ class profile::sensu::client::uninstall {
 
   file { '/etc/sensu':
     ensure => absent,
+    force  => true,
   }
 
   user { 'sensu':
