@@ -1,5 +1,5 @@
-# This class installs plugins needed for zabbix to monitor the ceph monitors.
-class profile::ceph::zabbix::monitor {
+# This class installs plugins needed for zabbix to monitor the rados gateways
+class profile::ceph::zabbix::radosgw {
   $servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
