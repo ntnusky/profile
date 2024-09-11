@@ -1,7 +1,6 @@
 # Opens the firewall for the ceph monitor.
 class profile::ceph::firewall::monitor {
   require ::profile::baseconfig::firewall
-  include ::profile::ceph::firewall::rest
 
   $ceph_public = lookup('profile::ceph::public_networks', {
     'value_type' => Array[String],

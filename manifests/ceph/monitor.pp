@@ -27,7 +27,6 @@ class profile::ceph::monitor {
   include ::profile::ceph::dashboard
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
-  include ::profile::ceph::haproxy::backend
   include ::profile::ceph::key::admin
   include ::profile::ceph::zabbix::monitor
 
