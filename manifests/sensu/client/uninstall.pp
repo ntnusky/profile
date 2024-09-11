@@ -4,16 +4,16 @@ class profile::sensu::client::uninstall {
     ensure => purged,
   }
 
-  file { '/etc/sensu':
+  -> file { '/etc/sensu':
     ensure => absent,
     force  => true,
   }
 
-  user { 'sensu':
+  -> user { 'sensu':
     ensure => absent,
   }
 
-  group { 'sensu':
+  -> group { 'sensu':
     ensure => absent,
   }
 }
