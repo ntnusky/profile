@@ -64,6 +64,8 @@ class profile::services::mysql::cluster {
         'net_write_timeout'      => $net_write_timeout,
         'ssl-disable'            => true,
         'wsrep_provider_options' => '"gcache.size=2G"',
+        'tmp_table_size'         => '128M',
+        'max_heap_table_size'    => '128M',
       }
     },
     require             => [
