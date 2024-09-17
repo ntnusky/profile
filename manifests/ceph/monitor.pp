@@ -24,7 +24,6 @@ class profile::ceph::monitor {
   }
 
   require ::profile::ceph::base
-  include ::profile::ceph::dashboard
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::key::admin
