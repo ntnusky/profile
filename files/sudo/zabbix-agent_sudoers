@@ -1,0 +1,5 @@
+# Allow the administrators to start/stop zabbix-agent2s
+%administrator ALL=(root) /bin/systemctl stop zabbix-agent2
+%administrator ALL=(root) /bin/systemctl start zabbix-agent2
+%administrator ALL=(root) /bin/systemctl restart zabbix-agent2
+%administrator ALL=(root) NOPASSWD: /bin/systemctl status zabbix-agent2

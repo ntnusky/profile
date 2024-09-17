@@ -7,6 +7,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::logging
   include ::profile::baseconfig::logrotate
   include ::profile::baseconfig::mounts
+  include ::profile::baseconfig::motd
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
@@ -15,7 +16,11 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::updates
 
+  include ::profile::monitoring::munin::node
+
   include ::profile::utilities::ntnuskytools
+
+  include ::profile::zabbix::agent
 
   # If duo should be installed, install and configure it. 
   $installduo = lookup('profile::duo::enabled', {
@@ -26,15 +31,6 @@ class profile::baseconfig {
     include ::profile::baseconfig::duo
   }
 
-  # If munin should be installed, install and configure the munin-node
-  $installmunin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  if($installmunin) {
-    include ::profile::monitoring::munin::node
-  }
-
   # If sensu should be installed, install and configure the sensu-client agent
   $installsensu = lookup('profile::sensu::install', {
     'default_value' => true,
@@ -42,6 +38,8 @@ class profile::baseconfig {
   })
   if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
     include ::profile::sensu::client
+  } else {
+    include ::profile::sensu::client::uninstall
   }
 
   # Optionally install the SL2 client 

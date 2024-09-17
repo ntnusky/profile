@@ -8,6 +8,11 @@ define profile::infrastructure::ovs::port::interface (
   require ::vswitch::ovs
   include ::profile::infrastructure::ovs::logging
 
+  $installmunin = lookup('profile::munin::install', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
   # Connects the physical interface to the bridge
   vs_port { $interface :
     ensure  => 'present',
@@ -58,15 +63,17 @@ define profile::infrastructure::ovs::port::interface (
     }
   }
 
-  # Add monitoring for the physical port
-  munin::plugin { "if_${interface}":
-    ensure => link,
-    target => 'if_',
-    config => ['user root', 'env.speed 10000'],
-  }
-  munin::plugin { "if_err_${interface}":
-    ensure => link,
-    target => 'if_err_',
-    config => ['user nobody'],
+  if($installmunin) {
+    # Add monitoring for the physical port
+    munin::plugin { "if_${interface}":
+      ensure => link,
+      target => 'if_',
+      config => ['user root', 'env.speed 10000'],
+    }
+    munin::plugin { "if_err_${interface}":
+      ensure => link,
+      target => 'if_err_',
+      config => ['user nobody'],
+    }
   }
 }

@@ -9,7 +9,20 @@ class profile::services::postgresql {
     'default_value' => true,
     'value_type'    => Boolean,
   })
+  $zabbix_servers = lookup('profile::zabbix::agent::servers', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
+  })
+
   if($install_munin) {
     include ::profile::monitoring::munin::plugin::postgresql
+  }
+
+  if($zabbix_servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::services::postgresql::users::zabbixagent
+    package { 'zabbix-agent2-plugin-postgresql':
+      ensure  => installed,
+      require => Class['zabbix::agent'],
+    }
   }
 }

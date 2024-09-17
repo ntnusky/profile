@@ -6,17 +6,17 @@ define profile::baseconfig::firewall::service::management (
 ) {
   require ::profile::baseconfig::firewall
 
-  $infrav4 = lookup('profile::networking::management::ipv4::prefixes', {
+  $mgmtnetworksv4 = lookup('profile::networking::management::ipv4::prefixes', {
     'value_type' => Array[Stdlib::IP::Address::V4::CIDR],
     'merge'      => 'unique',
   })
-  $infrav6 = lookup('profile::networking::management::ipv6::prefixes', {
+  $mgmtnetworksv6 = lookup('profile::networking::management::ipv6::prefixes', {
     'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
     'merge'         => 'unique',
     'default_value' => [],
   })
 
-  $infrav4.each | $net | {
+  $mgmtnetworksv4.each | $net | {
     firewall { "5 Accept service ${name} from ${net}":
       proto  => $protocol,
       dport  => $port,
@@ -25,7 +25,7 @@ define profile::baseconfig::firewall::service::management (
     }
   }
 
-  $infrav6.each | $net | {
+  $mgmtnetworksv6.each | $net | {
     firewall { "5 Accept service ${name} from ${net}":
       proto    => $protocol,
       dport    => $port,

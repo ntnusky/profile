@@ -27,6 +27,7 @@ class profile::ceph::monitor {
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::key::admin
+  include ::profile::ceph::zabbix::monitor
 
   ceph::mgr { $::hostname :
     key        => $mgr_key,
@@ -54,18 +55,13 @@ class profile::ceph::monitor {
     source   => 'puppet:///modules/profile/sudo/cephmon_sudoers',
   }
 
+  # We dont need this anymore. TODO: Remove at a later release when this has
+  # been deployed on all platforms.
   file { '/usr/local/sbin/insightsKillSwitch.sh':
-    ensure => present,
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-    source => 'puppet:///modules/profile/ceph/insightsKillSwitch.sh',
+    ensure => absent,
   }
-
   cron { 'Ceph insights killswitch':
-    command => '/usr/local/sbin/insightsKillSwitch.sh',
-    user    => 'root',
-    minute  => '*',
+    ensure => absent,
   }
 
   anchor{'profile::ceph::monitor::end':}

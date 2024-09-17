@@ -1,0 +1,1 @@
+zabbix_agent ALL = (root) NOPASSWD: /usr/bin/radosgw-admin usage show

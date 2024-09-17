@@ -3,6 +3,15 @@ class profile::services::mysql::users {
   $rootpassword = lookup('profile::mysqlcluster::root_password')
   $haproxypassword = lookup('profile::mysqlcluster::haproxy_password')
 
+  $zabbix_servers = lookup('profile::zabbix::agent::servers', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
+  })
+
+  if($zabbix_servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::services::mysql::users::zabbixagent
+  }
+
   file { '/root/.my.cnf':
     ensure  => 'file',
     owner   => root,
