@@ -1,7 +1,6 @@
 # Zabbix config for TLS checks
 class profile::zabbix::agent::tls {
-
-  $domains = lookup('zabbix::tls::expiry::domains', {
+  $domains = lookup('profile::zabbix::tls::expiry::domains', {
     'default_value' => {},
     'value_type'    => Hash[String, String],
   })
