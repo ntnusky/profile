@@ -32,6 +32,8 @@ class profile::services::mysql::backup {
   }
 
   if ($external_backup) {
+    include ::profile::zabbix::agent::mysql
+
     $backup_command = '/usr/local/sbin/mysqlbackup-remote.sh'
     $clean_command = '/usr/local/sbin/mysqlbackupclean-remote.sh'
   } else {
