@@ -36,7 +36,7 @@ class profile::ceph::zabbix::monitor {
         'UserParameter=ceph.custom.status,ceph status -f json',
         'UserParameter=ceph.custom.df,ceph df -f json',
         'UserParameter=ceph.custom.osd.df,ceph osd df -f json',
-        'UserParameter=ceph.custom.osd.df.filtered[*],ceph osd df -f json | jq \'.nodes | map({id, \"\$1\"})\''
+        'UserParameter=ceph.custom.osd.df.filtered[*],ceph osd df -f json | jq \'.nodes | map({id, \"\$1\"})\'',
         'UserParameter=ceph.custom.osd.perf,ceph osd perf -f json',
         'UserParameter=ceph.custom.osd.metadata[*],ceph report 2> /dev/null | jq \'.osd_metadata[] | select(.id == \$1)\'',
         'UserParameter=ceph.custom.autoscale.status,ceph osd pool autoscale-status -f json',
