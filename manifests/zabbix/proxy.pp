@@ -8,6 +8,13 @@ class profile::zabbix::proxy {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })
+  $psk = lookup('profile::zabbix::proxy::psk::key', {
+    'value_type' => String,
+  })
+  $pskid = lookup('profile::zabbix::proxy::psk::identity', {
+    'default_value' => 'Proxy PSK',
+    'value_type'    => String,
+  })
 
   file { '/var/cache/zabbix-proxy':
     ensure  => directory,
@@ -16,6 +23,14 @@ class profile::zabbix::proxy {
     group   => 'zabbix',
     before  => Class['zabbix::database::sqlite'],
     require => Package['zabbix-proxy-sqlite3'],
+  }
+
+  file { '/etc/zabbix/proxy.psk':
+    ensure  => present,
+    mode    => '0600',
+    owner   => 'zabbix',
+    group   => 'zabbix',
+    content => $psk,
   }
 
   ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
@@ -27,8 +42,11 @@ class profile::zabbix::proxy {
   class { '::zabbix::proxy':
     database_type      => 'sqlite',
     database_name      => '/var/cache/zabbix-proxy/zabbixproxy.db',
-    mode               => '1',
     startipmipollers   => 3,
+    tlsaccept          => 'psk',
+    tlsconnect         => 'psk',
+    tlspskfile         => '/etc/zabbix/proxy.psk',
+    tlspskidentity     => $pskid,
     zabbix_server_host => join($servers, ','),
     zabbix_version     => $zabbix_version,
   }
