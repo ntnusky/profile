@@ -47,7 +47,7 @@ class profile::zabbix::proxy {
     tlsconnect         => 'psk',
     tlspskfile         => '/etc/zabbix/proxy.psk',
     tlspskidentity     => $pskid,
-    zabbix_server_host => join($servers, ','),
+    zabbix_server_host => join($servers, ';'),
     zabbix_version     => $zabbix_version,
   }
 
