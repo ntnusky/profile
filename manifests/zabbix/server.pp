@@ -13,7 +13,7 @@ class profile::zabbix::server {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
-  $zabbix_proxy_nets = lookip('profile::zabbix::proxy::networks', {
+  $zabbix_proxy_nets = lookup('profile::zabbix::proxy::networks', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
   })
