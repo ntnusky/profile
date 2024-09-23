@@ -15,7 +15,7 @@ class profile::zabbix::server {
   })
   $zabbix_proxy_nets = lookip('profile::zabbix::proxy::networks', {
     'default_value' => [],
-    'value_type'    => Array[Stdlib::IP::Address::CIDR],
+    'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
   })
 
   $cert = lookup('profile::zabbix::web::cert')
