@@ -40,15 +40,16 @@ class profile::zabbix::proxy {
   }
 
   class { '::zabbix::proxy':
-    database_type      => 'sqlite',
-    database_name      => '/var/cache/zabbix-proxy/zabbixproxy.db',
-    startipmipollers   => 3,
-    tlsaccept          => 'psk',
-    tlsconnect         => 'psk',
-    tlspskfile         => '/etc/zabbix/proxy.psk',
-    tlspskidentity     => $pskid,
-    zabbix_server_host => join($servers, ';'),
-    zabbix_version     => $zabbix_version,
+    database_type        => 'sqlite',
+    database_name        => '/var/cache/zabbix-proxy/zabbixproxy.db',
+    proxyconfigfrequency => 10,
+    startipmipollers     => 3,
+    tlsaccept            => 'psk',
+    tlsconnect           => 'psk',
+    tlspskfile           => '/etc/zabbix/proxy.psk',
+    tlspskidentity       => $pskid,
+    zabbix_server_host   => join($servers, ';'),
+    zabbix_version       => $zabbix_version,
   }
 
   ::sudo::conf { 'zabbix-proxy_sudoers':
