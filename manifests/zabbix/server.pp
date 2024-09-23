@@ -13,6 +13,10 @@ class profile::zabbix::server {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
+  $zabbix_proxy_nets = lookip('profile::zabbix::proxy::networks', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::CIDR],
+  })
 
   $cert = lookup('profile::zabbix::web::cert')
   $key = lookup('profile::zabbix::web::key')
@@ -37,6 +41,12 @@ class profile::zabbix::server {
   ::profile::baseconfig::firewall::service::infra { 'zabbix-agents':
     port     => 10051,
     protocol => 'tcp',
+  }
+
+  ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
+    port     => 10051,
+    protocol => 'tcp',
+    v4source => $zabbix_proxy_nets,
   }
 
   class { 'zabbix::server':
