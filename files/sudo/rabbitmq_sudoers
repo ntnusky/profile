@@ -8,3 +8,5 @@
 # Allow administrators to see the rabbitmqcluster status
 %administrator ALL=(root) NOPASSWD: /usr/sbin/rabbitmqctl cluster_status
 %administrator ALL=(root) NOPASSWD: /bin/systemctl status rabbitmq-server
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu rabbitmq-server 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u rabbitmq-server 
