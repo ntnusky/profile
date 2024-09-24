@@ -42,7 +42,7 @@ class profile::services::puppet::server::config {
 
   file_line { 'Puppetserver JVM memory':
     path    => '/etc/default/puppetserver',
-    line    => "JAVA_ARGS=-Xms${jvm_memory} -Xmx${jvm_memory} -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger",
+    line    => "JAVA_ARGS=\"-Xms${jvm_memory} -Xmx${jvm_memory} -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger\"",
     match   => 'JAVA_ARGS=.*',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
