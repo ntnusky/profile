@@ -31,6 +31,7 @@ class profile::zabbix::proxy {
     owner   => 'zabbix',
     group   => 'zabbix',
     content => $psk,
+    require => Package['zabbix-proxy-sqlite3'],
   }
 
   ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
