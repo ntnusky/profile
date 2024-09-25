@@ -5,6 +5,11 @@ class profile::services::puppet::server::config {
     'default_value' => true,
   })
 
+  $jvm_memory = lookup('profile::puppet::server::jvm::memory', {
+    'value_type' => String,
+    'default_value' => '2g',
+  })
+
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
   #  TODO: Remove the old-fashioned lookups. 
@@ -31,6 +36,14 @@ class profile::services::puppet::server::config {
     path    => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
     line    => "    ssl-host: ${management_ip}",
     match   => '    ssl-host: .*',
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
+  }
+
+  file_line { 'Puppetserver JVM memory':
+    path    => '/etc/default/puppetserver',
+    line    => "JAVA_ARGS=\"-Xms${jvm_memory} -Xmx${jvm_memory} -Djruby.logger.class=com.puppetlabs.jruby_utils.jruby.Slf4jLogger\"",
+    match   => 'JAVA_ARGS=.*',
     notify  => Service['puppetserver'],
     require => Package['puppetserver'],
   }
