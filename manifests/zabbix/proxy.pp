@@ -39,7 +39,7 @@ class profile::zabbix::proxy {
     owner   => 'zabbix',
     group   => 'zabbix',
     mode    => '0755',
-    require => Class['zabbix::server'],
+    require => Class['zabbix::proxy'],
   }
 
   ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
