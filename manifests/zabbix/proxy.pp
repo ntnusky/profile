@@ -33,6 +33,14 @@ class profile::zabbix::proxy {
     content => $psk,
   }
 
+  file { '/etc/zabbix/sshkeys':
+    ensure  => directory,
+    owner   => 'zabbix',
+    group   => 'zabbix',
+    mode    => '0755',
+    require => Class['zabbix::server'],
+  }
+
   ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
     port     => 10051,
     protocol => 'tcp',
@@ -43,6 +51,7 @@ class profile::zabbix::proxy {
     database_type        => 'sqlite',
     database_name        => '/var/cache/zabbix-proxy/zabbixproxy.db',
     proxyconfigfrequency => 10,
+    sshkeylocation       => '/etc/zabbix/sshkeys',
     startipmipollers     => 3,
     tlsaccept            => 'psk',
     tlsconnect           => 'psk',
