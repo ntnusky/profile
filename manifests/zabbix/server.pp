@@ -13,6 +13,26 @@ class profile::zabbix::server {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
+  $zabbix_clients_v4 = lookup('profile::zabbix::frontend::users::ipv4', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
+  })
+  $zabbix_clients_v6 = lookup('profile::zabbix::frontend::users::ipv6', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+  })
+  $zabbix_proxy_nets = lookup('profile::zabbix::proxy::networks', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
+  })
+  $zabbix_ssh_private_key = lookup('profile::zabbix::ssh::privatekey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
+  $zabbix_ssh_public_key = lookup('profile::zabbix::ssh::publickey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
 
   $cert = lookup('profile::zabbix::web::cert')
   $key = lookup('profile::zabbix::web::key')
@@ -39,15 +59,52 @@ class profile::zabbix::server {
     protocol => 'tcp',
   }
 
+  ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
+    port     => 10051,
+    protocol => 'tcp',
+    v4source => $zabbix_proxy_nets,
+  }
+
   class { 'zabbix::server':
     database_type     => 'mysql',
     database_password => $db_pass,
     hanodename        => $::fqdn,
     nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
+    sshkeylocation    => '/etc/zabbix/sshkeys',
     startipmipollers  => 3,
     zabbix_version    => $zabbix_version,
     require           => Anchor['shiftleader::database::create'],
+  }
+
+  file { '/etc/zabbix/sshkeys':
+    ensure  => directory,
+    owner   => 'zabbix',
+    group   => 'zabbix',
+    mode    => '0755',
+    require => Class['zabbix::server'],
+  }
+
+  if ($zabbix_ssh_private_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa':
+      ensure  => file,
+      content => $zabbix_ssh_private_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0600',
+      require => File['/etc/zabbix/sshkeys'],
+    }
+  }
+
+  if ($zabbix_ssh_public_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa.pub':
+      ensure  => file,
+      content => $zabbix_ssh_public_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0644',
+      require => File['/etc/zabbix/sshkeys'],
+    }
   }
 
   ::sudo::conf { 'zabbix-server_sudoers':
@@ -55,9 +112,11 @@ class profile::zabbix::server {
     source   => 'puppet:///modules/profile/sudo/zabbix-server_sudoers',
   }
 
-  ::profile::baseconfig::firewall::service::management { 'zabbix-dashboard':
+  ::profile::baseconfig::firewall::service::custom { 'zabbix-dashboard':
     port     => [ 80 , 443 ],
     protocol => 'tcp',
+    v4source => $zabbix_clients_v4,
+    v6source => $zabbix_clients_v6,
   }
 
   class { 'zabbix::web':

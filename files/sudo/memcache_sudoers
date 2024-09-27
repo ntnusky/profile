@@ -3,3 +3,5 @@
 %administrator ALL=(root) NOPASSWD: /usr/bin/systemctl start memcached 
 %administrator ALL=(root) NOPASSWD: /usr/bin/systemctl restart memcached 
 %administrator ALL=(root) NOPASSWD: /usr/bin/systemctl status memcached 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu memcached 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u memcached 

@@ -3,3 +3,5 @@
 %administrator ALL=(root) /bin/systemctl start zabbix-agent2
 %administrator ALL=(root) /bin/systemctl restart zabbix-agent2
 %administrator ALL=(root) NOPASSWD: /bin/systemctl status zabbix-agent2
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu zabbix-agent2 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u zabbix-agent2 

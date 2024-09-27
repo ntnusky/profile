@@ -7,7 +7,11 @@ data = json.loads(report.stdout)
 
 osds = {}
 for osd in data['crushmap']['devices']:
-  osds['osd.%d' % osd['id']] = { '{#OSDNAME}': osd['id'], '{#CLASS}': osd['class']}
+  osds['osd.%d' % osd['id']] = {
+    '{#OSDNAME}': osd['id'],
+  }
+  if 'class' in osd:
+    osds['osd.%d' % osd['id']]['{#CLASS}'] = osd['class']
 
 for osd in data['osd_metadata']:
   osds['osd.%d' % osd['id']]['{#HOST}'] = osd['hostname']

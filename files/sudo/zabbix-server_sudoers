@@ -3,3 +3,5 @@
 %administrator ALL=(root) /bin/systemctl start zabbix-server
 %administrator ALL=(root) /bin/systemctl restart zabbix-server
 %administrator ALL=(root) NOPASSWD: /bin/systemctl status zabbix-server
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu zabbix-server 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u zabbix-server 

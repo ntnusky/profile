@@ -15,3 +15,5 @@
 %administrator ALL=(root) /bin/systemctl start haproxy
 %administrator ALL=(root) /bin/systemctl restart haproxy
 %administrator ALL=(root) NOPASSWD: /bin/systemctl status haproxy
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu haproxy 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u haproxy 

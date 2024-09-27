@@ -11,6 +11,8 @@ Defaults:%administrator secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/u
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent -t *
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent --test
 %administrator ALL=(root) NOPASSWD: /opt/puppetlabs/bin/puppet agent --test * 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -fu puppet 
+%administrator ALL=(root) NOPASSWD: /usr/bin/journalctl -u puppet 
 
 # Allow the administrator to use various root-utilities without password.
 %administrator ALL=(root) NOPASSWD: /usr/sbin/dmidecode
