@@ -63,9 +63,18 @@ class profile::zabbix::server {
     hanodename        => $::fqdn,
     nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
+    sshkeylocation    => '/etc/zabbix/sshkeys',
     startipmipollers  => 3,
     zabbix_version    => $zabbix_version,
     require           => Anchor['shiftleader::database::create'],
+  }
+
+  file { '/etc/zabbix/sshkeys':
+    ensure  => directory,
+    owner   => 'zabbix',
+    group   => 'zabbix',
+    mode    => '0755',
+    require => Class['zabbix::server'],
   }
 
   ::sudo::conf { 'zabbix-server_sudoers':
