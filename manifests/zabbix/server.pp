@@ -92,7 +92,7 @@ class profile::zabbix::server {
       owner   => 'zabbix',
       group   => 'zabbix',
       mode    => '0600',
-      requore => File['/etc/zabbix/sshkeys'],
+      require => File['/etc/zabbix/sshkeys'],
     }
   }
 
@@ -103,7 +103,7 @@ class profile::zabbix::server {
       owner   => 'zabbix',
       group   => 'zabbix',
       mode    => '0600',
-      requore => File['/etc/zabbix/sshkeys'],
+      require => File['/etc/zabbix/sshkeys'],
     }
   }
 
