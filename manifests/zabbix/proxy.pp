@@ -67,7 +67,7 @@ class profile::zabbix::proxy {
       content => $zabbix_ssh_public_key,
       owner   => 'zabbix',
       group   => 'zabbix',
-      mode    => '0600',
+      mode    => '0644',
       require => File['/etc/zabbix/sshkeys'],
     }
   }
