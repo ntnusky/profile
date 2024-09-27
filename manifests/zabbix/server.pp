@@ -13,6 +13,14 @@ class profile::zabbix::server {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
+  $zabbix_clients_v4 = lookup('profile::zabbix::frontend::users::ipv4', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
+  })
+  $zabbix_clients_v6 = lookup('profile::zabbix::frontend::users::ipv6', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
+  })
   $zabbix_proxy_nets = lookup('profile::zabbix::proxy::networks', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
@@ -104,9 +112,11 @@ class profile::zabbix::server {
     source   => 'puppet:///modules/profile/sudo/zabbix-server_sudoers',
   }
 
-  ::profile::baseconfig::firewall::service::management { 'zabbix-dashboard':
+  ::profile::baseconfig::firewall::service::custom { 'zabbix-dashboard':
     port     => [ 80 , 443 ],
     protocol => 'tcp',
+    v4source => $zabbix_clients_v4,
+    v6source => $zabbix_clients_v6,
   }
 
   class { 'zabbix::web':
