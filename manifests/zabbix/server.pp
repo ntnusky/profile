@@ -17,6 +17,14 @@ class profile::zabbix::server {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
   })
+  $zabbix_ssh_private_key = lookup('profile::zabbix::ssh::privatekey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
+  $zabbix_ssh_public_key = lookup('profile::zabbix::ssh::publickey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
 
   $cert = lookup('profile::zabbix::web::cert')
   $key = lookup('profile::zabbix::web::key')
@@ -67,6 +75,28 @@ class profile::zabbix::server {
     group   => 'zabbix',
     mode    => '0755',
     require => Class['zabbix::server'],
+  }
+
+  if ($zabbix_ssh_private_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa':
+      ensure  => file,
+      content => $zabbix_ssh_private_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0600',
+      requore => File['/etc/zabbix/sshkeys'],
+    }
+  }
+
+  if ($zabbix_ssh_public_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa.pub':
+      ensure  => file,
+      content => $zabbix_ssh_public_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0600',
+      requore => File['/etc/zabbix/sshkeys'],
+    }
   }
 
   ::sudo::conf { 'zabbix-server_sudoers':

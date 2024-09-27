@@ -15,6 +15,14 @@ class profile::zabbix::proxy {
     'default_value' => 'Proxy PSK',
     'value_type'    => String,
   })
+  $zabbix_ssh_private_key = lookup('profile::zabbix::ssh::privatekey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
+  $zabbix_ssh_public_key = lookup('profile::zabbix::ssh::publickey', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
 
   file { '/var/cache/zabbix-proxy':
     ensure  => directory,
@@ -40,6 +48,28 @@ class profile::zabbix::proxy {
     group   => 'zabbix',
     mode    => '0755',
     require => Class['zabbix::proxy'],
+  }
+
+  if ($zabbix_ssh_private_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa':
+      ensure  => file,
+      content => $zabbix_ssh_private_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0600',
+      requore => File['/etc/zabbix/sshkeys'],
+    }
+  }
+
+  if ($zabbix_ssh_public_key) {
+    file { '/etc/zabbix/sshkeys/id_rsa.pub':
+      ensure  => file,
+      content => $zabbix_ssh_public_key,
+      owner   => 'zabbix',
+      group   => 'zabbix',
+      mode    => '0600',
+      requore => File['/etc/zabbix/sshkeys'],
+    }
   }
 
   ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
