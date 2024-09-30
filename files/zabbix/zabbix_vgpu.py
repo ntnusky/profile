@@ -117,7 +117,8 @@ def getGPUData():
   
   for gpuid in data:
     data[gpuid]['gpuID'] = gpuid
-    for vgpu in data[gpuid]["VGPUs"]:
-      data[gpuid]['VGPUs'][vgpu]['vgpuID'] = vgpu
+    if data[gpuid]["Active vGPUs"] != '0':
+      for vgpu in data[gpuid]["VGPUs"]:
+        data[gpuid]['VGPUs'][vgpu]['vgpuID'] = vgpu
 
   return data
