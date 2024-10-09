@@ -34,6 +34,6 @@ class profile::baseconfig::facts {
     file { '/etc/puppetlabs/facter/facts.d/openstack.yaml':
       ensure => absent,
     }
-    warning { "There is no region set in hiera." }
+    warning("There is no region set in hiera.")
   }
 }
