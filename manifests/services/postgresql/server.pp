@@ -1,15 +1,7 @@
 # This class installs and configures the postgresql server
 class profile::services::postgresql::server {
-  # TODO: Stop looking for the management-IP in hiera, and simply just take it
-  # from SL.
-  if($::sl2) {
-    $default = $::sl2['server']['primary_interface']['name']
-  } else {
-    $default = undef
-  }
-
   $mif = lookup('profile::interfaces::management', {
-    'default_value' => $default, 
+    'default_value' => $::sl2['server']['primary_interface']['name'], 
     'value_type'    => String,
   })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {
@@ -29,11 +21,6 @@ class profile::services::postgresql::server {
   $password = lookup('profile::postgres::password', String)
   $replicator_password = lookup('profile::postgres::replicatorpassword', String)
   $master_server = lookup('profile::postgres::masterserver', String)
-
-  $keepalived = lookup('profile::postgres::keepalived::enable', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
 
   $postgres_version = lookup('profile::postgres::version', {
     'default_value' => '9.6',
@@ -62,19 +49,7 @@ class profile::services::postgresql::server {
     }
   }
 
-  # If the IP defined to be the postgres-IP is the same as the hosts own IP,
-  # just install postgres as normal.
-  if($ip == $postgresql_ipv4 or ! $keepalived) {
-    $vips = []
-
-  # If the IP defined to be the postgres-IP differs from the hosts own IP,
-  # install keepalived to manage the postgres-IP. 
-  } else {
-    contain profile::services::postgresql::keepalived
-    $vips = concat([$postgresql_ipv4], $postgresql_ipv6)
-  }
-
-  $ips = concat($vips, '127.0.0.1', '::1', $ip)
+  $ips = concat([], '127.0.0.1', '::1', $ip)
 
   class { '::postgresql::server':
     ip_mask_deny_postgres_user => '0.0.0.0/32',

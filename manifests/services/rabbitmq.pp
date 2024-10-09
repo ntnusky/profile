@@ -7,9 +7,6 @@ class profile::services::rabbitmq {
   $cluster_nodes = lookup('profile::rabbitmq::servers', {
     'default_value' => false,
   })
-  $enable_keepalived = lookup('profile::rabbitmq::keepalived::enable', {
-    'default_value' => false,
-  })
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'default_value' => false,
   })
@@ -48,15 +45,7 @@ class profile::services::rabbitmq {
     $cluster_config = {}
   }
 
-  if ( $enable_keepalived ) {
-    require ::profile::services::keepalived::rabbitmq
-  } else {
-    include ::profile::services::keepalived::uninstall
-  }
-
-  if ( $enable_keepalived ) and ( $cluster_nodes ) {
-    warning("Both keeaplived and clustering are enabled. You probably don't want that")
-  }
+  include ::profile::services::keepalived::uninstall
 
   if ( $management_netv6 ) {
     $ipv6 = true

@@ -22,27 +22,17 @@ class profile::services::memcache {
     'value_type'    => Boolean,
     'default_value' => true,
   })
-  $use_keepalived = lookup('profile::memcache::keepalived', {
-    'value_type'    => Boolean,
-    'default_value' => false,
-  })
 
-  if ( $use_keepalived ) {
-    contain ::profile::services::memcache::keepalived
-    $memcache_ip = lookup('profile::memcache::ip', Stdlib::IP::Address::V4)
-    $listen = [$memcache_ip]
+  $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
+  $memcache_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
+    'value_type'    => Stdlib::IP::Address::V4,
+    'default_value' => $autoip,
+  })
+  $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
+  if ( $memcache_ipv6 =~ /^fe80/ ) {
+    $listen = [$memcache_ipv4]
   } else {
-    $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
-    $memcache_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
-      'value_type'    => Stdlib::IP::Address::V4,
-      'default_value' => $autoip,
-    })
-    $memcache_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
-    if ( $memcache_ipv6 =~ /^fe80/ ) {
-      $listen = [$memcache_ipv4]
-    } else {
-      $listen = [$memcache_ipv4,$memcache_ipv6]
-    }
+    $listen = [$memcache_ipv4,$memcache_ipv6]
   }
 
   contain ::profile::services::memcache::firewall

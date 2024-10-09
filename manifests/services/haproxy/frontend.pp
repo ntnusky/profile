@@ -18,15 +18,7 @@ define profile::services::haproxy::frontend (
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })
-  $keepalivedipv4 = lookup("profile::haproxy::${profile}::ipv4", {
-    'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
-    'default_value' => false,
-  })
-  $keepalivedipv6 = lookup("profile::haproxy::${profile}::ipv6", {
-    'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
-    'default_value' => false,
-  })
-  $a = concat([], $anycastv4, $anycastv6, $keepalivedipv4, $keepalivedipv6)
+  $a = concat([], $anycastv4, $anycastv6)
   $addresses = delete($a, false)
 
   # Determine suitable options for http-mode. Addin headers to indicate that the
