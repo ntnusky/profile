@@ -20,6 +20,10 @@ class profile::baseconfig::facts {
   -> file { '/etc/puppetlabs/facter/facts.d/openstack.yaml':
     ensure  => 'file',
     mode    => '0644',
-    content => to_yaml( { region => $region } ),
+    content => to_yaml( {
+      openstack => {
+        region => $region,
+      },
+    } ),
   }
 }
