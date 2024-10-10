@@ -17,7 +17,7 @@ class profile::services::haproxy::web {
   $addresses = delete($a, false)
 
   # Collect domains to serve
-  $domains = lookup("profile::haproxy::domains", {
+  $domains = lookup("profile::haproxy::web::domains", {
     'default_value' => {},
     'merge'         => 'hash',
     'value_type'    => Hash,
