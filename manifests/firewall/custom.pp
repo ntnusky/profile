@@ -20,9 +20,11 @@ define profile::firewall::custom (
 
   unique($prefixes_all).each | $prefix | {
     if($prefix =~ Stdlib::IP::Address::V4::CIDR) {
-      $protocol = 'IPv4'
+      #$protocol = 'IPv4'
+      $provider = 'iptables'
     } elsif($prefix =~ Stdlib::IP::Address::V6::CIDR) {
-      $protocol = 'IPv6'
+      #$protocol = 'IPv6'
+      $provider = 'ip6tables'
     } else {
       fail("${prefix} is not an v4 or v6 CIDR")
     }
@@ -32,7 +34,8 @@ define profile::firewall::custom (
       dport    => $port,
       iniface  => $interface,
       jump     => 'accept',
-      protocol => $protocol,
+      #protocol => $protocol,
+      provider => $provider,
       source   => $prefix,
     }
   }
