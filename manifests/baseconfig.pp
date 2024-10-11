@@ -44,4 +44,7 @@ class profile::baseconfig {
     include ::profile::utilities::ipmitool
     include ::profile::utilities::machinetools
   }
+
+  # TODO: Remove this at a later point in time
+  include ::profile::services::keepalived::uninstall
 }
