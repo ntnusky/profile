@@ -6,11 +6,6 @@ define profile::infrastructure::ovs::port::bond (
 ) {
   require ::profile::infrastructure::ovs::script::bond
 
-  $installmunin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-
   if($members =~ Array) {
     $ifnames = $members
     $ifdata = {}
@@ -74,20 +69,6 @@ define profile::infrastructure::ovs::port::bond (
         onboot        => 'yes',
         mtu           => $mtu,
         nm_controlled => 'no',
-      }
-    }
-
-    if($installmunin) {
-      # Add monitoring for the physical port
-      munin::plugin { "if_${ifname}":
-        ensure => link,
-        target => 'if_',
-        config => ['user root', 'env.speed 10000'],
-      }
-      munin::plugin { "if_err_${ifname}":
-        ensure => link,
-        target => 'if_err_',
-        config => ['user nobody'],
       }
     }
   }

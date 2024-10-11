@@ -11,15 +11,6 @@ class profile::services::rabbitmq {
     'default_value' => false,
   })
 
-  $install_munin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  $install_sensu = lookup('profile::sensu::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-
   $distro = $facts['os']['release']['major']
 
   if ($distro == '20.04') {
@@ -81,17 +72,5 @@ class profile::services::rabbitmq {
         'var.paths' => [ "/var/log/rabbitmq/rabbit@${::hostname}.log" ],
       },
     }]
-  }
-
-  # Install munin plugins for monitoring.
-  if($install_munin) {
-    include ::profile::monitoring::munin::plugin::rabbitmq
-  }
-
-  # Include rabbitmq configuration for sensu. And the plugin
-  if ($install_sensu) {
-    include ::profile::services::rabbitmq::sensu
-    include ::profile::sensu::plugin::rabbitmq
-    sensu::subscription { 'rabbitmq': }
   }
 }

@@ -1,26 +1,12 @@
 # This class installs and configures a simple memcached server
 class profile::services::memcache {
-  if($::sl2) {
-    $default = $::sl2['server']['primary_interface']['name']
-  } else {
-    $default = undef
-  }
-
   $management_if = lookup('profile::interfaces::management', {
-    'default_value' => $default, 
+    'default_value' => $::sl2['server']['primary_interface']['name'], 
     'value_type'    => String,
   })
   $memcached_port = lookup('profile::memcache::port', {
     'value_type'    => Stdlib::Port,
     'default_value' => 11211,
-  })
-  $installsensu = lookup('profile::sensu::install', {
-    'value_type'    => Boolean,
-    'default_value' => true,
-  })
-  $installmunin = lookup('profile::munin::install', {
-    'value_type'    => Boolean,
-    'default_value' => true,
   })
 
   $autoip = $::facts['networking']['interfaces'][$management_if]['ip']
@@ -48,12 +34,4 @@ class profile::services::memcache {
   }
 
   profile::utilities::logging::journald { 'memcached.service' : }
-
-  if ($installsensu) {
-    include ::profile::sensu::plugin::memcached
-    sensu::subscription { 'memcached': }
-  }
-  if($installmunin) {
-    include ::profile::monitoring::munin::plugin::memcached
-  }
 }
