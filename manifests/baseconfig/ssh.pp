@@ -13,7 +13,8 @@ class profile::baseconfig::ssh {
     }
 
     ::profile::firewall::management::external { 'SSH':
-      port => 22,
+      interface => $::sl2['server']['primary_interface']['name'],
+      port      => 22,
     }
 
   # For the non-public servers we allow host-based auth for openstack/postgres
@@ -29,7 +30,8 @@ class profile::baseconfig::ssh {
     }
 
     ::profile::firewall::management::internal { 'SSH':
-      port => 22,
+      interface => $::sl2['server']['primary_interface']['name'],
+      port      => 22,
     }
   }
 

@@ -2,11 +2,13 @@
 # regions.
 define profile::firewall::infra::all (
   Variant[Integer, Array[Integer], String] $port,
+  Optional[String]                         $interface = undef,
   Enum['tcp', 'udp']                       $transport_protocol = 'tcp',
 ) {
   ::profile::firewall::custom { $name: 
-    port               => $port,
     hiera_key          => 'profile::networks::infra::all',
+    interface          => $interface,
+    port               => $port,
     transport_protocol => $transport_protocol,
   }
 }
