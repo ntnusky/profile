@@ -26,12 +26,12 @@ class profile::firewall::common::post {
   } else {
     firewall { '999 drop all':
       proto  => 'all',
-      jump   => $action,
+      action => $action,
       before => undef,
     }
     firewall { '999 ipv6 drop all':
       proto    => 'all',
-      jump     => $action,
+      action   => $action,
       provider => 'ip6tables',
       before   => undef,
     }
