@@ -4,9 +4,6 @@ class profile::firewall::common::pre {
     require => undef,
   }
 
-  $ipv4_management_nets = hiera_array('profile::networking::management::ipv4::prefixes', false)
-  $ipv6_management_nets = hiera_array('profile::networking::management::ipv6::prefixes', false)
-
   # Default firewall rules
   firewall { '000 accept all icmp':
     proto  => 'icmp',
@@ -29,29 +26,11 @@ class profile::firewall::common::pre {
     action => 'accept',
   }
 
-  if($ipv4_management_nets) {
-    $ipv4_management_nets.each |$net| {
-      firewall { "004 accept incoming SSH from ${net}":
-        proto    => 'tcp',
-        dport    => 22,
-        source   => $net,
-        action   => 'accept',
-      }
-    }
-  } else {
-    firewall { '004 accept incoming SSH':
-      proto  => 'tcp',
-      dport  => 22,
-      action => 'accept',
-    }
-  }
-
   firewall { '005 accept DHCP':
     proto  => 'udp',
     dport  => 68,
     action => 'accept',
   }
-
 
   # Default firewall rules
   firewall { '000 ipv6 accept all icmp':
@@ -76,24 +55,5 @@ class profile::firewall::common::pre {
     state    => ['RELATED', 'ESTABLISHED'],
     action   => 'accept',
     provider => 'ip6tables',
-  }
-
-  if($ipv6_management_nets) {
-    $ipv6_management_nets.each |$net| {
-      firewall { "004 ipv6 accept incoming SSH from ${net}":
-        proto    => 'tcp',
-        dport    => 22,
-        source   => $net,
-        action   => 'accept',
-        provider => 'ip6tables',
-      }
-    }
-  } else {
-    firewall { '004 accept incoming SSH':
-      proto    => 'tcp',
-      dport    => 22,
-      action   => 'accept',
-      provider => 'ip6tables',
-    }
   }
 }
