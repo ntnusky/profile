@@ -18,7 +18,7 @@ class profile::firewall {
   }
   
   include ::firewall
-  require ::profile::firewall::common::pre
+  include ::profile::firewall::common::pre
   include ::profile::firewall::common::post
 }
 
