@@ -1,6 +1,5 @@
 # Installs the generic web-cert for haproxy usage
 class profile::services::haproxy::certs {
-  include ::profile::services::apache::firewall
   require ::profile::services::haproxy
 
   # Retrieve the certs:

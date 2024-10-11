@@ -1,6 +1,11 @@
-# This class installs and configures firewall post.
-class profile::baseconfig::firewall::post {
-  $action = hiera('profile::firewall::action::final', 'drop')
+# This class installs the last firewall-rule, basically controlling the
+# default-behaviour. This should default to drop; but might also be 'log' to aid
+# in debugging.
+class profile::firewall::common::post {
+  $action = lookup('profile::firewall::action::final', {
+    'default_value' => 'drop',
+    'value_type'    => Enum['drop', 'log', 'reject'],
+  })
 
   if($action == 'log') {
     firewall { '999 drop all':
@@ -21,12 +26,12 @@ class profile::baseconfig::firewall::post {
   } else {
     firewall { '999 drop all':
       proto  => 'all',
-      action => $action,
+      jump   => $action,
       before => undef,
     }
     firewall { '999 ipv6 drop all':
       proto    => 'all',
-      action   => $action,
+      jump     => $action,
       provider => 'ip6tables',
       before   => undef,
     }

@@ -1,8 +1,8 @@
 # Create a loadbalancer for web resources
 class profile::services::haproxy::web {
-  include ::profile::services::apache::firewall
-  include ::profile::services::haproxy::certs
   require ::profile::services::haproxy
+  include ::profile::services::haproxy::certs
+  include ::profile::services::haproxy::firewall::web
 
   # Collect the addresses to bind to; or get false if the address is not used.
   $anycastv4 = lookup("profile::anycast::ipv4", {

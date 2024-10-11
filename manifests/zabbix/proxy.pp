@@ -72,10 +72,9 @@ class profile::zabbix::proxy {
     }
   }
 
-  ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
+  ::profile::firewall::custom { 'zabbix-proxy':
     port     => 10051,
-    protocol => 'tcp',
-    v4source => $servers.map | $s | { "${s}/32" },
+    prefixes => $servers.map | $s | { "${s}/32" },
   }
 
   class { '::zabbix::proxy':

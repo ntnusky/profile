@@ -1,5 +1,5 @@
 # This class installs and configures firewall pre.
-class profile::baseconfig::firewall::pre {
+class profile::firewall::common::pre {
   Firewall {
     require => undef,
   }

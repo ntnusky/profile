@@ -12,6 +12,10 @@ class profile::baseconfig::ssh {
       'PubkeyAcceptedAlgorithms' => 'sk-ssh-ed25519@openssh.com',
     }
 
+    ::profile::firewall::management::external { 'SSH':
+      port => 22,
+    }
+
   # For the non-public servers we allow host-based auth for openstack/postgres
   # services.
   } else {
@@ -22,6 +26,10 @@ class profile::baseconfig::ssh {
       'Match User nova'     => {
         'HostbasedAuthentication' => 'yes',
       },
+    }
+
+    ::profile::firewall::management::internal { 'SSH':
+      port => 22,
     }
   }
 
@@ -39,7 +47,6 @@ class profile::baseconfig::ssh {
   } else {
     $listen_real = {}
   }
-
 
   class {'::ssh':
     server_options => $server_options + $listen_real,

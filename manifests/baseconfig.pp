@@ -2,7 +2,6 @@
 class profile::baseconfig {
   include ::profile::baseconfig::disk
   include ::profile::baseconfig::facts
-  include ::profile::baseconfig::firewall
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
   include ::profile::baseconfig::logging

@@ -1,6 +1,6 @@
 # Configures the haproxy in frontend for the mysql cluster
 class profile::services::mysql::haproxy::frontend {
-  include ::profile::services::mysql::firewall::balancer
+  include ::profile::services::mysql::firewall::mysql
 
   ::profile::services::haproxy::frontend { 'mysqlcluster':
     profile => 'management',

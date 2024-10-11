@@ -21,9 +21,8 @@ class profile::zabbix::agent {
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
     include ::profile::zabbix::agent::puppet
 
-    ::profile::baseconfig::firewall::service::infra { 'zabbix-agent':
-      port     => [ 10050 ],
-      protocol => 'tcp',
+    ::profile::firewall::infra::region { 'zabbix-agent':
+      port     => 10050,
     }
 
     user { $user:
