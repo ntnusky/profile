@@ -15,7 +15,6 @@ class profile::services::mysql::standalone {
 
   include ::profile::services::mysql::backup
   include ::profile::services::mysql::firewall::mysql
-  include ::profile::services::mysql::users
   include ::profile::services::mysql::sudo
 
   class { '::mysql::server':
