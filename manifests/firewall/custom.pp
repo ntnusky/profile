@@ -33,7 +33,7 @@ define profile::firewall::custom (
       proto    => $transport_protocol,
       dport    => $port,
       iniface  => $interface,
-      jump     => 'accept',
+      action   => 'accept',
       #protocol => $protocol,
       provider => $provider,
       source   => $prefix,
