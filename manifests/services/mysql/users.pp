@@ -1,7 +1,11 @@
 # Configuring galera and maraidb cluster
 class profile::services::mysql::users {
   $rootpassword = lookup('profile::mysqlcluster::root_password')
-  $haproxypassword = lookup('profile::mysqlcluster::haproxy_password')
+
+  $haproxypassword = lookup('profile::mysqlcluster::haproxy_password', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  })
 
   $zabbix_servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
@@ -36,15 +40,21 @@ class profile::services::mysql::users {
     user       => 'root@%',
   }
 
-  mysql_user { 'haproxy_check@%':
-    ensure        => 'present',
-    password_hash => mysql::password($haproxypassword)
-  }
-  ->mysql_grant { 'haproxy_check@%/mysql.user':
-    ensure     => 'present',
-    options    => ['GRANT'],
-    privileges => ['SELECT'],
-    table      => 'mysql.user',
-    user       => 'haproxy_check@%',
+  if($haproxypassword) {
+    mysql_user { 'haproxy_check@%':
+      ensure        => 'present',
+      password_hash => mysql::password($haproxypassword)
+    }
+    ->mysql_grant { 'haproxy_check@%/mysql.user':
+      ensure     => 'present',
+      options    => ['GRANT'],
+      privileges => ['SELECT'],
+      table      => 'mysql.user',
+      user       => 'haproxy_check@%',
+    }
+  } else {
+    mysql_user { 'haproxy_check@%':
+      ensure => 'absent',
+    }
   }
 }
