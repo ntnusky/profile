@@ -11,7 +11,7 @@ define profile::firewall::custom (
   if($hiera_key) {
     $prefixes_all = $prefixes + lookup($hiera_key, {
       'value_type' => Array[Stdlib::IP::Address],
-    }
+    })
   } else {
     $prefixes_all = $prefixes
   }
