@@ -18,18 +18,26 @@ define profile::firewall::custom (
 
   include ::profile::firewall
 
+  # Iterate through all prefixes (after removing any duplicates) to create
+  # firewall-rules:
   unique($prefixes_all).each | $prefix | {
+    # Check if it is legacy-IP:
     if($prefix =~ Stdlib::IP::Address::V4::CIDR) {
       #$protocol = 'IPv4'
       $provider = 'iptables'
+
+    # Or if it is moden IP:
     } elsif($prefix =~ Stdlib::IP::Address::V6::CIDR) {
       #$protocol = 'IPv6'
       $provider = 'ip6tables'
+
+    # Fail if it is something else...
     } else {
       fail("${prefix} is not an v4 or v6 CIDR")
     }
 
-    firewall { "500 accept incoming ${name} from ${prefix}":
+    # Create the firewall-rule for the given service.
+    firewall { "500 accept traffic to ${name} from ${prefix}":
       proto    => $transport_protocol,
       dport    => $port,
       iniface  => $interface,
