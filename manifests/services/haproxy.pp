@@ -1,15 +1,6 @@
 # Baseconfig for all haproxy servers
 
 class profile::services::haproxy {
-  $installsensu = lookup('profile::sensu::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  $installmunin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-
   $sslciphers = "\
 ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:\
 ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:\
@@ -55,13 +46,5 @@ ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA256"
         'uri /',
       ],
     },
-  }
-
-  if($installmunin) {
-    include ::profile::monitoring::munin::plugin::haproxy
-  }
-  if ($installsensu) {
-    include ::profile::sensu::plugin::haproxy
-    sensu::subscription { 'haproxy-servers': }
   }
 }

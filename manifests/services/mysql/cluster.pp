@@ -37,7 +37,6 @@ class profile::services::mysql::cluster {
   include ::profile::services::mysql::firewall::galera
   include ::profile::services::mysql::haproxy::backend
   include ::profile::services::mysql::logging
-  include ::profile::services::mysql::monitoring
   include ::profile::services::mysql::users
   include ::profile::services::mysql::sudo
 

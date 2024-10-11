@@ -6,22 +6,12 @@ class profile::services::tftp {
     'value_type'    => Stdlib::Unixpath,
   })
 
-  $sl_version = lookup('profile::shiftleader::major::version', {
-    'default_value' => 1,
-    'value_type'    => Integer,
-  })
+  # TODO: Remove this purge at a later release
+  include ::profile::services::dashboard::clients::purge
 
   include ::profile::services::tftp::acl
   include ::profile::services::tftp::firewall
-
-  # If we use shiftleader1 we need to allow for external OMAPI requests from the
-  # shiftleader servers.
-  # TODO: Remove SL1 when we dont use it anymore 
-  if($sl_version == 1) {
-    include ::profile::services::dashboard::clients::tftp
-  } else {
-    include ::shiftleader::worker::tftp
-  }
+  include ::shiftleader::worker::tftp
 
   # Install and configure the tftp server.
   class { '::tftp':
