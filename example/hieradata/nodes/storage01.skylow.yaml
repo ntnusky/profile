@@ -21,8 +21,3 @@ profile::ceph::osds:
 #      journal: '/dev/cciss/c0d1'
 #   '/dev/cciss/c0d3':
 #      journal: '/dev/cciss/c0d1'
-
-sensu::client_custom:
-  'load':
-    warning: "x,y,z"
-    critical: "x,y,z"
