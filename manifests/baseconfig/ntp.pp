@@ -1,6 +1,5 @@
 # This class installs and configures NTP.
 class profile::baseconfig::ntp {
-  $installsensu = lookup('profile::sensu::install')
   $ntpservers = lookup('profile::ntp::servers')
   $tz = lookup('profile::ntp::timezone', {
     'value_type'    => String,
@@ -18,15 +17,9 @@ class profile::baseconfig::ntp {
           '-6 default kod nomodify notrap nopeer noquery',
         ],
       }
-    if($installsensu) {
-      sensu::subscription { 'ntpd': }
-    }
   } else {
     class { '::chrony':
       servers => $ntpservers
-    }
-    if($installsensu) {
-      sensu::subscription { 'chrony': }
     }
   }
 
