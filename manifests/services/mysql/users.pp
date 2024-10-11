@@ -1,6 +1,13 @@
 # Configuring galera and maraidb cluster
 class profile::services::mysql::users {
-  $rootpassword = lookup('profile::mysqlcluster::root_password')
+  $standalonepw = lookup('profile::mysql::root_password', {
+    'default_value' => undef,
+    'value_type'    => Optional[String],
+  }) 
+  $rootpassword = lookup('profile::mysqlcluster::root_password', {
+    'default_value' => $standalonepw,
+    'value_type'    => String, 
+  })
 
   $haproxypassword = lookup('profile::mysqlcluster::haproxy_password', {
     'default_value' => undef,
