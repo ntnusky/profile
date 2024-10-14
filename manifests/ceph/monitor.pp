@@ -9,6 +9,7 @@ class profile::ceph::monitor {
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::monitor
   include ::profile::ceph::key::admin
+  include ::profile::ceph::keys
   include ::profile::ceph::zabbix::monitor
 
   ceph::mgr { $::hostname :
