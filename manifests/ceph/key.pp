@@ -1,6 +1,9 @@
 # Configures ceph-key based on the list in hiera
 define profile::ceph::key (
-  Boolean $inject = false,
+  String           $group  = 'root',
+  Boolean          $inject = false,
+  Stdlib::Filemode $mode   = '0600',
+  String           $user   = 'root',
 ) {
   $keydata = lookup('profile::ceph::keys', {
     'default_value' => {},
@@ -36,7 +39,10 @@ define profile::ceph::key (
     cap_mgr => $cap_mgr,
     cap_mon => $cap_mon,
     cap_osd => $cap_osd,
+    group   => $group,
     inject  => $inject,
+    mode    => $mode,
+    user    => $user,
     secret  => $keydata[$name]['secret'],
   }
 }
