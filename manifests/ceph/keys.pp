@@ -6,26 +6,26 @@ class profile::ceph::keys {
   })
 
   $keydata.each | $keyname, $data | {
-    if($data['cap_mds']) {
-      $cap_mds = $data['cap_mds'].join(',')
+    if($data['caps_mds']) {
+      $cap_mds = $data['caps_mds'].join(', ')
     } else {
       $cap_mds = undef
     }
 
-    if($data['cap_mgr']) {
-      $cap_mgr = $data['cap_mgr'].join(',')
+    if($data['caps_mgr']) {
+      $cap_mgr = $data['caps_mgr'].join(', ')
     } else {
       $cap_mgr = undef
     }
 
-    if($data['cap_mon']) {
-      $cap_mon = $data['cap_mon'].join(',')
+    if($data['caps_mon']) {
+      $cap_mon = $data['caps_mon'].join(', ')
     } else {
       $cap_mon = undef
     }
 
-    if($data['cap_osd']) {
-      $cap_osd = $data['cap_osd'].join(',')
+    if($data['caps_osd']) {
+      $cap_osd = $data['caps_osd'].join(', ')
     } else {
       $cap_osd = undef
     }
