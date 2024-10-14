@@ -31,7 +31,7 @@ define profile::ceph::key (
     $cap_osd = undef
   }
 
-  ceph::key { $keyname:
+  ceph::key { $name:
     cap_mds => $cap_mds,
     cap_mgr => $cap_mgr,
     cap_mon => $cap_mon,
