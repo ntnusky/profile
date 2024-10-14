@@ -13,7 +13,6 @@ class profile::baseconfig::ssh {
     }
 
     ::profile::firewall::management::external { 'SSH':
-      interface => $::sl2['server']['primary_interface']['name'],
       port      => 22,
     }
 
@@ -30,7 +29,6 @@ class profile::baseconfig::ssh {
     }
 
     ::profile::firewall::management::internal { 'SSH':
-      interface => $::sl2['server']['primary_interface']['name'],
       port      => 22,
     }
   }
