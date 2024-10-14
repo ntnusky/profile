@@ -7,26 +7,26 @@ define profile::ceph::key (
     'value_type'    => Hash[String, Hash],
   })
 
-  if($data[$name]['caps_mds']) {
-    $cap_mds = $data[$name]['caps_mds'].join(', ')
+  if($keydata[$name]['caps_mds']) {
+    $cap_mds = $keydata[$name]['caps_mds'].join(', ')
   } else {
     $cap_mds = undef
   }
 
-  if($data[$name]['caps_mgr']) {
-    $cap_mgr = $data[$name]['caps_mgr'].join(', ')
+  if($keydata[$name]['caps_mgr']) {
+    $cap_mgr = $keydata[$name]['caps_mgr'].join(', ')
   } else {
     $cap_mgr = undef
   }
 
-  if($data[$name]['caps_mon']) {
-    $cap_mon = $data[$name]['caps_mon'].join(', ')
+  if($keydata[$name]['caps_mon']) {
+    $cap_mon = $keydata[$name]['caps_mon'].join(', ')
   } else {
     $cap_mon = undef
   }
 
-  if($data[$name]['caps_osd']) {
-    $cap_osd = $data[$name]['caps_osd'].join(', ')
+  if($keydata[$name]['caps_osd']) {
+    $cap_osd = $keydata[$name]['caps_osd'].join(', ')
   } else {
     $cap_osd = undef
   }
@@ -37,6 +37,6 @@ define profile::ceph::key (
     cap_mon => $cap_mon,
     cap_osd => $cap_osd,
     inject  => $inject,
-    secret  => $data[$name]['secret'],
+    secret  => $keydata[$name]['secret'],
   }
 }
