@@ -1,7 +1,7 @@
 # Create a custom-fact containing the region-name, thus enabling us to use this 
 # variable in hiera
 class profile::baseconfig::facts {
-  $region = lookup('ntnuopenstack::region', {
+  $region = lookup('profile::region', {
     'default_value' => undef,
     'value_type'    => Optional[String],
   })
@@ -20,17 +20,23 @@ class profile::baseconfig::facts {
   }
 
   if($region) {
-    file { '/etc/puppetlabs/facter/facts.d/openstack.yaml':
+    file { '/etc/puppetlabs/facter/facts.d/ntnu.yaml':
       ensure  => 'file',
       mode    => '0644',
       content => to_yaml( {
-        openstack => {
+        ntnu => {
           region => $region,
         },
       } ),
       require => File['/etc/puppetlabs/facter/facts.d'],
     }
+    file { '/etc/puppetlabs/facter/facts.d/openstack.yaml':
+      ensure => absent,
+    }
   } else {
+    file { '/etc/puppetlabs/facter/facts.d/ntnu.yaml':
+      ensure => absent,
+    }
     file { '/etc/puppetlabs/facter/facts.d/openstack.yaml':
       ensure => absent,
     }
