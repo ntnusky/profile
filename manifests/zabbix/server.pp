@@ -55,6 +55,11 @@ class profile::zabbix::server {
     port      => 10051,
   }
 
+  ::profile::firewall::custom { 'zabbix-servers':
+    hiera_key => 'profile::zabbix::agent::servers',
+    port      => 10051,
+  }
+
   class { 'zabbix::server':
     database_type     => 'mysql',
     database_password => $db_pass,
