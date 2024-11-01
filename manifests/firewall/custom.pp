@@ -21,19 +21,33 @@ define profile::firewall::custom (
   # Iterate through all prefixes (after removing any duplicates) to create
   # firewall-rules:
   unique($prefixes_all).each | $prefix | {
-    # Check if it is legacy-IP:
+    # Check if it is legacy-network:
     if($prefix =~ Stdlib::IP::Address::V4::CIDR) {
       #$protocol = 'IPv4'
       $provider = 'iptables'
+      $prefix_real = $prefix
 
-    # Or if it is moden IP:
+    # Or if it is a single legacy IP:
+    } elsif($prefix =~ Stdlib::IP::Address::V4::Nosubnet) {
+      #$protocol = 'IPv4'
+      $provider = 'iptables'
+      $prefix_real = "${prefix}/32"
+
+    # Or if it is a moden network:
     } elsif($prefix =~ Stdlib::IP::Address::V6::CIDR) {
       #$protocol = 'IPv6'
       $provider = 'ip6tables'
+      $prefix_real = $prefix
+
+    # Or if it is a single modern IP:
+    } elsif($prefix =~ Stdlib::IP::Address::V6::Nosubnet) {
+      #$protocol = 'IPv6'
+      $provider = 'ip6tables'
+      $prefix_real = "${prefix}/128"
 
     # Fail if it is something else...
     } else {
-      fail("${prefix} is not an v4 or v6 CIDR")
+      fail("${prefix} is not an v4 or v6 address/CIDR")
     }
 
     # Create the firewall-rule for the given service.
@@ -44,7 +58,7 @@ define profile::firewall::custom (
       action   => 'accept',
       #protocol => $protocol,
       provider => $provider,
-      source   => $prefix,
+      source   => $prefix_real,
     }
   }
 }
