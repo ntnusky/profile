@@ -13,6 +13,15 @@ class profile::services::mysql::standalone {
     'default_value' => 60,
   })
 
+  $zabbix_servers = lookup('profile::zabbix::agent::servers', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
+  })
+
+  if($zabbix_servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::services::mysql::users::zabbixagent
+  }
+
   include ::profile::services::mysql::backup
   include ::profile::services::mysql::firewall::mysql
   include ::profile::services::mysql::haproxy::backend
