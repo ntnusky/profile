@@ -1,7 +1,12 @@
 # Installs the mysql-repo for mariaBD
 class profile::services::mysql::standalone::repo {
+  $mariadb_version = lookup('profile::mariadb::version', {
+    'default_value' => '10.6',
+    'value_type'    => String,
+  })
+
   apt::source { 'mariadb':
-    location => 'https://deb.mariadb.org/10.6/ubuntu',
+    location => "https://deb.mariadb.org/${mariadb_version}/ubuntu",
     release  => $::facts['os']['codename'],
     repos    => 'main',
     key      => {

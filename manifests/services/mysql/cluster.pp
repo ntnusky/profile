@@ -13,7 +13,10 @@ class profile::services::mysql::cluster {
     'value_type'    => Integer,
     'default_value' => 60,
   })
-  $mariadb_version = lookup('profile::mysqlcluster::mariadb::version', String)
+  $mariadb_version = lookup('profile::mariadb::version', {
+    'default_value' => '10.6',
+    'value_type'    => String,
+  })
 
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
