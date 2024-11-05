@@ -44,6 +44,11 @@ class profile::services::mysql::standalone {
     },
   }
 
+  class { 'mysql::client':
+    package_name    => 'mariadb-client',
+    bindings_enable => true,
+  }
+
   Apt::Source['mariadb'] ~>
   Class['apt::update'] ->
   Class['mysql::server']
