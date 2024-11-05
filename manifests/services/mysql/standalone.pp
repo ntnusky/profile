@@ -30,6 +30,7 @@ class profile::services::mysql::standalone {
 
   class { '::mysql::server':
     package_name            => 'mariadb-server',
+    service_name            => 'mariadb',
     root_password           => $rootpassword,
     remove_default_accounts => true,
     override_options        => {
