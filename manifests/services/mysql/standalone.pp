@@ -25,9 +25,11 @@ class profile::services::mysql::standalone {
   include ::profile::services::mysql::backup
   include ::profile::services::mysql::firewall::mysql
   include ::profile::services::mysql::haproxy::backend
+  require ::profile::services::mysql::standalone::repo
   include ::profile::services::mysql::sudo
 
   class { '::mysql::server':
+    package_name            => 'mariadb-server',
     root_password           => $rootpassword,
     remove_default_accounts => true,
     override_options        => {
@@ -40,4 +42,8 @@ class profile::services::mysql::standalone {
       }
     },
   }
+
+  Apt::Source['mariadb'] ~>
+  Class['apt::update'] ->
+  Class['mysql::server']
 }
