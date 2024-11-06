@@ -37,9 +37,13 @@ class profile::services::mysql::standalone {
       'mysqld'              => {
         'port'              => '3306',
         'bind-address'      => $::sl2['server']['primary_interface']['ipv4'], 
-        'max_connections'   => '1000',
+        'max_connections'   => '750',
         'net_read_timeout'  => $net_read_timeout,
         'net_write_timeout' => $net_write_timeout,
+        'ssl_ca'            => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
+        'ssl_cert'          => "/etc/puppetlabs/puppet/ssl/certs/${fqdn}.pem",
+        'ssl_key'           =>
+          "/etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
       }
     },
   }
