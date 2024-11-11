@@ -15,11 +15,11 @@ define profile::services::haproxy::frontend (
   })
 
   # Collect the addresses to bind to; or get false if the address is not used.
-  $anycastv4 = lookup("profile::anycast::${profile}::ipv4", {
+  $anycastv4 = lookup("profile::anycast::ipv4", {
     'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
     'default_value' => false,
   })
-  $anycastv6 = lookup("profile::anycast::${profile}::ipv6", {
+  $anycastv6 = lookup("profile::anycast::ipv6", {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })

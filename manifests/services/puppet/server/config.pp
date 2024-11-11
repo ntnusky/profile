@@ -29,8 +29,8 @@ class profile::services::puppet::server::config {
 
   include ::profile::services::puppet::altnames
   include ::profile::services::puppet::server::config::ca
-  include ::profile::services::puppet::server::config::shiftleader
   include ::profile::services::puppet::server::config::report
+  include ::shiftleader::integration::puppet
 
   file_line { 'Puppetserver listen IP':
     path    => '/etc/puppetlabs/puppetserver/conf.d/webserver.conf',
