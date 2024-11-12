@@ -12,8 +12,6 @@ hierarchy:
    path: "nodes/%{trusted.certname}.yaml"
  - name: "Per-Region data"
    glob: "region-%{facts.ntnu.region}/*.yaml"
- - name: "Per-Region data-skal-bort"
-   glob: "region-%{facts.openstack.region}/*.yaml"
  - name: "Global data"
    glob: "*.yaml"
 
