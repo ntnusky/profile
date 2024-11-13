@@ -22,9 +22,6 @@ class profile::ceph::monitor {
   }
 
   Ceph::Key {
-    inject         => true,
-    inject_as_id   => 'mon.',
-    inject_keyring => "/var/lib/ceph/mon/ceph-${::hostname}/keyring",
     before         => Anchor['profile::ceph::monitor::end']
   }
   ceph::key { 'client.bootstrap-osd':
