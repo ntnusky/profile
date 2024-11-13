@@ -3,5 +3,16 @@ define profile::services::haproxy::tools::collect (
 ){
   include ::profile::services::haproxy::tools
 
-  Concat::Fragment <<| tag == "haproxy-${name}" |>>
+  $collectall = lookup('profile::haproxy::collect::all', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
+  if($collectall) {
+    Concat::Fragment <<| tag == "haproxy-${name}" |>>
+  } else {
+    $region = lookup('ntnuopenstack::region', String)
+    Concat::Fragment <<| tag == "haproxy-${name}" and 
+      tag == "region-${region}" |>>
+  }
 }
