@@ -6,21 +6,8 @@ class profile::baseconfig::ntp {
     'default_value' => 'Europe/Oslo'
   })
 
-  $rel = $facts['os']['release']['major']
-  if ($rel == '18.04') {
-    class { '::ntp':
-        servers  => $ntpservers,
-        restrict => [
-          '127.0.0.1',
-          '-6 ::1',
-          'default kod nomodify notrap nopeer noquery',
-          '-6 default kod nomodify notrap nopeer noquery',
-        ],
-      }
-  } else {
-    class { '::chrony':
-      servers => $ntpservers
-    }
+  class { '::chrony':
+    servers => $ntpservers
   }
 
   class { '::timezone':
