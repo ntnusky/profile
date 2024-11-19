@@ -6,7 +6,7 @@ class profile::ceph::firewall::clusternet {
   })
 
   if($replica_interface) {
-    ::profile::firewall::custom { 'ceph-daemons':
+    ::profile::firewall::custom { 'ceph-daemons-replicanet':
       hiera_key => 'profile::ceph::cluster_networks',
       port      => '6800-7300',
       interface => $replica_interface,
