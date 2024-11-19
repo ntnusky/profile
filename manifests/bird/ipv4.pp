@@ -1,9 +1,9 @@
 # Installs and configures bird for IPv6 if there is defined an IPv6 address in
-# hiera under the key 'profile::bird::anycast::ipv6::address' 
+# hiera under the key 'profile::anycast::ipv4' 
 class profile::bird::ipv4 {
-  $anycastv4 = lookup('profile::bird::anycast::ipv4::address', {
-    'default_value' => false,
-    'value_type'    => Variant[String, Boolean],
+  $anycastv4 = lookup('profile::anycast::ipv4', {
+    'default_value' => undef,
+    'value_type'    => Optional[Stdlib::IP::Address::V4::Nosubnet],
   })
   $bgpmetric = lookup('profile::bird::anycast::med', {
     'default_value' => 500,
