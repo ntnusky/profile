@@ -1,7 +1,7 @@
 # This class ensures that all baseconfiguration are brought in.
 class profile::baseconfig {
   include ::profile::baseconfig::disk
-  include ::profile::baseconfig::firewall
+  include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
   include ::profile::baseconfig::logging
@@ -16,8 +16,6 @@ class profile::baseconfig {
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::updates
 
-  include ::profile::monitoring::munin::node
-
   include ::profile::utilities::ntnuskytools
 
   include ::profile::zabbix::agent
@@ -29,17 +27,6 @@ class profile::baseconfig {
   })
   if($installduo) {
     include ::profile::baseconfig::duo
-  }
-
-  # If sensu should be installed, install and configure the sensu-client agent
-  $installsensu = lookup('profile::sensu::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  if ($::hostname !~ /^(sensu|monitor)/ and $installsensu) {
-    include ::profile::sensu::client
-  } else {
-    include ::profile::sensu::client::uninstall
   }
 
   # Optionally install the SL2 client 

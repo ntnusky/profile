@@ -1,16 +1,7 @@
 # Installs and configures a puppetmaster 
 class profile::services::puppet::server {
-  $sl_version = lookup('profile::shiftleader::major::version', {
-    'default_value' => 1,
-    'value_type'    => Integer,
-  })
-
-  if($sl_version == 1) {
-    include ::profile::services::dashboard::clients::puppet
-  } else {
-    include ::profile::services::dashboard::clients::purge
-    include ::shiftleader::worker::puppet
-  }
+  # TODO: Remove this purge at a later release
+  include ::profile::services::dashboard::clients::purge
 
   include ::profile::services::puppet::backup::server
   include ::profile::services::puppet::server::config
@@ -20,6 +11,7 @@ class profile::services::puppet::server {
   include ::profile::services::puppet::server::install
   include ::profile::services::puppet::server::logging
   include ::profile::services::puppet::server::service
+  include ::shiftleader::worker::puppet
 
   Class['profile::services::puppet::server::install'] ->
   Class['profile::services::puppet::server::config']

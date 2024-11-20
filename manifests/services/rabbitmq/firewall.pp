@@ -1,15 +1,12 @@
 # Configure firewall for rabbitmq servers
 class profile::services::rabbitmq::firewall {
-  ::profile::baseconfig::firewall::service::infra { 'RabbitMQ':
-    protocol => 'tcp',
+  ::profile::firewall::infra::region { 'RabbitMQ':
     port     => 5672,
   }
-  ::profile::baseconfig::firewall::service::infra { 'RabbitMQ-Clustering':
-    protocol => 'tcp',
+  ::profile::firewall::infra::region { 'RabbitMQ-Clustering':
     port     => [4369, 25672],
   }
-  ::profile::baseconfig::firewall::service::infra { 'RabbitMQ-Clustering-CLI':
-    protocol => 'tcp',
+  ::profile::firewall::infra::region { 'RabbitMQ-Clustering-CLI':
     port     => '35672-35682',
   }
 }

@@ -21,10 +21,6 @@ class profile::zabbix::server {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::V6::CIDR],
   })
-  $zabbix_proxy_nets = lookup('profile::zabbix::proxy::networks', {
-    'default_value' => [],
-    'value_type'    => Array[Stdlib::IP::Address::V4::CIDR],
-  })
   $zabbix_ssh_private_key = lookup('profile::zabbix::ssh::privatekey', {
     'default_value' => undef,
     'value_type'    => Optional[String],
@@ -54,15 +50,14 @@ class profile::zabbix::server {
     show_diff => false,
   }
 
-  ::profile::baseconfig::firewall::service::infra { 'zabbix-agents':
-    port     => 10051,
-    protocol => 'tcp',
+  ::profile::firewall::custom { 'zabbix-proxy':
+    hiera_key => 'profile::zabbix::proxy::networks',
+    port      => 10051,
   }
 
-  ::profile::baseconfig::firewall::service::custom { 'zabbix-proxy':
-    port     => 10051,
-    protocol => 'tcp',
-    v4source => $zabbix_proxy_nets,
+  ::profile::firewall::custom { 'zabbix-servers':
+    hiera_key => 'profile::zabbix::agent::servers',
+    port      => 10051,
   }
 
   class { 'zabbix::server':
@@ -112,11 +107,8 @@ class profile::zabbix::server {
     source   => 'puppet:///modules/profile/sudo/zabbix-server_sudoers',
   }
 
-  ::profile::baseconfig::firewall::service::custom { 'zabbix-dashboard':
-    port     => [ 80 , 443 ],
-    protocol => 'tcp',
-    v4source => $zabbix_clients_v4,
-    v6source => $zabbix_clients_v6,
+  ::profile::firewall::management::external { 'zabbix-dashboard':
+    port => [ 80, 443 ],
   }
 
   class { 'zabbix::web':

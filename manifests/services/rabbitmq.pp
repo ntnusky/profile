@@ -7,20 +7,8 @@ class profile::services::rabbitmq {
   $cluster_nodes = lookup('profile::rabbitmq::servers', {
     'default_value' => false,
   })
-  $enable_keepalived = lookup('profile::rabbitmq::keepalived::enable', {
-    'default_value' => false,
-  })
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
     'default_value' => false,
-  })
-
-  $install_munin = lookup('profile::munin::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
-  })
-  $install_sensu = lookup('profile::sensu::install', {
-    'default_value' => true,
-    'value_type'    => Boolean,
   })
 
   $distro = $facts['os']['release']['major']
@@ -48,15 +36,7 @@ class profile::services::rabbitmq {
     $cluster_config = {}
   }
 
-  if ( $enable_keepalived ) {
-    require ::profile::services::keepalived::rabbitmq
-  } else {
-    include ::profile::services::keepalived::uninstall
-  }
-
-  if ( $enable_keepalived ) and ( $cluster_nodes ) {
-    warning("Both keeaplived and clustering are enabled. You probably don't want that")
-  }
+  include ::profile::services::keepalived::uninstall
 
   if ( $management_netv6 ) {
     $ipv6 = true
@@ -92,17 +72,5 @@ class profile::services::rabbitmq {
         'var.paths' => [ "/var/log/rabbitmq/rabbit@${::hostname}.log" ],
       },
     }]
-  }
-
-  # Install munin plugins for monitoring.
-  if($install_munin) {
-    include ::profile::monitoring::munin::plugin::rabbitmq
-  }
-
-  # Include rabbitmq configuration for sensu. And the plugin
-  if ($install_sensu) {
-    include ::profile::services::rabbitmq::sensu
-    include ::profile::sensu::plugin::rabbitmq
-    sensu::subscription { 'rabbitmq': }
   }
 }

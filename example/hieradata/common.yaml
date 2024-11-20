@@ -2,9 +2,6 @@
 profile::puppet::aptkey: '<puppet GPG key>'
 profile::munin::url: 'munin.domain.tld'
 
-profile::munin::install: true
-profile::sensu::install: true
-
 profile::ntp::server: '<IP-to-NTP-server>'
 
 profile::monitoring::logstash_server: 'monitor.skylow:5000'

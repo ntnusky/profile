@@ -10,26 +10,6 @@ class profile::services::info {
     $auth_user = lookup('profile::info::auth_user', String, 'first', 'sympa')
     $pw_hash = apache::pw_hash($auth_password)
 
-    $sl_version = lookup('profile::shiftleader::major::version', {
-      'default_value' => 1,
-      'value_type'    => Integer,
-    })
-
-    if($sl_version == 1) {
-      $management_if = lookup('profile::interfaces::management', String)
-      $mip = $facts['networking']['interfaces'][$management_if]['ip']
-      $management_ipv4 = lookup("profile::baseconfig::network::interfaces.${management_if}.ipv4.address", {
-        'value_type'    => Stdlib::IP::Address::V4,
-        'default_value' => $mip,
-      })
-      $management_ipv6 = $::facts['networking']['interfaces'][$management_if]['ip6']
-      $listen = {
-        'ip'  => concat([], $management_ipv4, $management_ipv6),
-      }
-    } else {
-      $listen = {}
-    }
-
     require ::profile::services::apache
     contain ::profile::services::info::maillist
 
@@ -49,7 +29,6 @@ class profile::services::info {
           auth_require   => 'valid-user',
         },
       ],
-      *                 => $listen,
     }
 
     file { "/var/www/${vhost}/.htpasswd":

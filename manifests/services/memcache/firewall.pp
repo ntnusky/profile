@@ -5,12 +5,12 @@ class profile::services::memcache::firewall {
     'value_type'    => Integer,
   })
 
-  ::profile::baseconfig::firewall::service::infra { 'TCP Memcache':
-    protocol => 'tcp',
-    port     => $memcached_port,
+  ::profile::firewall::infra::region { 'Memcached TCP':
+    port               => $memcached_port,
+    transport_protocol => 'tcp',
   }
-  ::profile::baseconfig::firewall::service::infra { 'UDP Memcache':
-    protocol => 'udp',
-    port     => $memcached_port,
+  ::profile::firewall::infra::region { 'Memcached UDP':
+    port               => $memcached_port,
+    transport_protocol => 'udp',
   }
 }

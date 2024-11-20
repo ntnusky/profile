@@ -33,16 +33,3 @@ profile::api::nova::vrrp::priority: 140
 profile::rabbitmq::vrrp::priority: 150
 profile::mysql::vrrp::priority: 130
 profile::memcache::vrrp::priority: 130
-
-sensu::subscriptions:
-  - 'mysql'
-  - 'ceph'
-  - 'roundrobin:ceph'
-  - 'rabbitmq'
-
-sensu::client_custom:
-  'load':
-    warning: "x,y,z"
-    critical: "x,y,z"
-  'mysql':
-    password: "%{hiera('profile::mysqlcluster::status_password')}"

@@ -14,10 +14,3 @@ profile::interfaces::management: 'eth2'
 profile::interfaces::storage: 'eth0'
 profile::interfaces::tenant: 'eth3'
 
-sensu::client_custom:
-  'load':
-    warning: "x,y,z"
-    critical: "x,y,z"
-  'rac':
-    ip: "172.17.4.51"
-    password: "<rac password>"

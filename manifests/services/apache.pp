@@ -8,7 +8,7 @@ class profile::services::apache {
   }
 
   $management_if = lookup('profile::interfaces::management', {
-    'default_value' => $default, 
+    'default_value' => $default,
     'value_type'    => String,
   })
   $default_docroot = lookup('profile::apache::vhost::default::docroot', {
@@ -26,11 +26,6 @@ class profile::services::apache {
     'default_value' => $mip,
   })
 
-  $sl_version = lookup('profile::shiftleader::major::version', {
-    'default_value' => 1,
-    'value_type'    => Integer,
-  })
-
   require ::profile::services::apache::server
   include ::profile::services::apache::logging
 
@@ -39,16 +34,6 @@ class profile::services::apache {
     $ip = concat([], $management_ipv4, $management_ipv6)
   } else {
     $ip = [$management_ipv4]
-  }
-
-  # The SL1 roles load wsgi themselves.
-  if($sl_version != 1) {
-    include ::apache::mod::wsgi
-    $vhost_extra = {}
-  } else {
-    $vhost_extra = {
-      'ip' => $ip,
-    }
   }
 
   package { 'libcgi-pm-perl':
@@ -67,11 +52,11 @@ class profile::services::apache {
     docroot       => $default_docroot,
     docroot_owner => 'www-data',
     docroot_group => 'www-data',
-    *             => $vhost_extra,
   }
 
   include ::apache::mod::rewrite
   include ::apache::mod::prefork
   include ::apache::mod::ssl
+  include ::apache::mod::wsgi
   include ::profile::services::apache::firewall
 }

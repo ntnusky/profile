@@ -1,3 +1,0 @@
----
-sensu::version: '1.9.0-1.el7'
-sensu::manage_repo: false

@@ -13,7 +13,10 @@ class profile::services::mysql::cluster {
     'value_type'    => Integer,
     'default_value' => 60,
   })
-  $mariadb_version = lookup('profile::mysqlcluster::mariadb::version', String)
+  $mariadb_version = lookup('profile::mariadb::version', {
+    'default_value' => '10.6',
+    'value_type'    => String,
+  })
 
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
@@ -37,7 +40,6 @@ class profile::services::mysql::cluster {
   include ::profile::services::mysql::firewall::galera
   include ::profile::services::mysql::haproxy::backend
   include ::profile::services::mysql::logging
-  include ::profile::services::mysql::monitoring
   include ::profile::services::mysql::users
   include ::profile::services::mysql::sudo
 

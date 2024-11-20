@@ -37,6 +37,17 @@ define profile::services::haproxy::backend (
   })
 
   if($register_loadbalancer) {
+    $region = lookup('ntnuopenstack::region', {
+      'default_value' => undef,
+      'value_type'    => Optional[String],
+    })
+
+    if($region) {
+      $tags = ["region-${region}"]
+    } else {
+      $tags = []
+    }
+
     # Make a registration for our helper-scripts.
     profile::services::haproxy::tools::register { "${name}-${::fqdn}":
       servername  => $hostname,
@@ -50,6 +61,7 @@ define profile::services::haproxy::backend (
       ipaddresses       => $real_ip,
       ports             => $port,
       options           => $options,
+      tag               => $tags,
     }
   }
 }

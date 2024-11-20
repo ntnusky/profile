@@ -9,24 +9,21 @@ define profile::services::haproxy::frontend (
 ) {
   require ::profile::services::haproxy
 
+  $collectall = lookup('profile::haproxy::collect::all', {
+    'default_value' => true,
+    'value_type'    => Boolean,
+  })
+
   # Collect the addresses to bind to; or get false if the address is not used.
-  $anycastv4 = lookup("profile::anycast::${profile}::ipv4", {
+  $anycastv4 = lookup("profile::anycast::ipv4", {
     'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
     'default_value' => false,
   })
-  $anycastv6 = lookup("profile::anycast::${profile}::ipv6", {
+  $anycastv6 = lookup("profile::anycast::ipv6", {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })
-  $keepalivedipv4 = lookup("profile::haproxy::${profile}::ipv4", {
-    'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
-    'default_value' => false,
-  })
-  $keepalivedipv6 = lookup("profile::haproxy::${profile}::ipv6", {
-    'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
-    'default_value' => false,
-  })
-  $a = concat([], $anycastv4, $anycastv6, $keepalivedipv4, $keepalivedipv6)
+  $a = concat([], $anycastv4, $anycastv6)
   $addresses = delete($a, false)
 
   # Determine suitable options for http-mode. Addin headers to indicate that the
@@ -76,7 +73,20 @@ define profile::services::haproxy::frontend (
     options => deep_merge($ftbaseoptions, $proto, $ftoptions),
   }
   haproxy::backend { "bk_${name}":
-    mode    => $mode,
-    options => deep_merge($bkbaseoptions, $bkoptions),
+    collect_exported => false,
+    mode             => $mode,
+    options          => deep_merge($bkbaseoptions, $bkoptions),
+  }
+
+  if($collectall) {
+    Haproxy::Balancermember <<| listening_service == "bk_${name}" |>>
+  } else {
+    $region = lookup('ntnuopenstack::region', {
+      'default_value' => undef,
+      'value_type'    => Optional[String],
+    })
+
+    Haproxy::Balancermember <<| listening_service == "bk_${name}" and
+        tag == "region-${region}" |>>
   }
 }

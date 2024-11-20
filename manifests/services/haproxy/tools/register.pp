@@ -10,11 +10,16 @@ define profile::services::haproxy::tools::register (
   })
 
   if($exportresource) {
+    $region = lookup('ntnuopenstack::region', String)
+
     @@concat::fragment{ "haproxy config ${servername};${backendname}":
       target  => $configfile,
       content => "${servername};${backendname}",
       order   => '10',
-      tag     => "haproxy-${backendname}",
+      tag     => [
+        "haproxy-${backendname}",
+        "region-${region}",
+      ],
     }
   } else {
     concat::fragment{ "haproxy config ${servername};${backendname}":

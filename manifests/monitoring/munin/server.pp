@@ -14,7 +14,6 @@ class profile::monitoring::munin::server {
   })
 
   require ::profile::monitoring::munin::rrdcache
-  contain ::profile::monitoring::munin::haproxy::balancermember
 
   # If we should run munin; ensure it is installed and configured.
   if($install_munin) {
