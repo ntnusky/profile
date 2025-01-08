@@ -1,5 +1,5 @@
 #!/bin/bash
-location="/var/backups"
+location="/dev/shm"
 share='/mnt/backup'
 filename="${location}/MysqlDump.$(date +%y%m%d%H%M%S).sql.gz"
 
