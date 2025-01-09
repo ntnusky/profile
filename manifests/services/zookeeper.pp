@@ -4,10 +4,10 @@ class profile::services::zookeeper {
   # - Open firewall
   # - Install zookeeper
   $zookeeper_servers = lookup('profile::zookeeper::servers', { 
-    'value_type' => Hash[Integer, Stdlib::IP::Address::Nosubnet],
+    'value_type' => Hash[String, Stdlib::IP::Address::Nosubnet],
   })
   $zookeeper_serverid = lookup('profile::zookeeper::server::id', { 
-    'value_type' => Integer,
+    'value_type' => String,
   })
 
   ::profile::firewall::infra::all { 'zookeeper-clients':
