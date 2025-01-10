@@ -10,6 +10,9 @@ class profile::services::zookeeper {
     'value_type' => String,
   })
 
+  # Zabbix monitoring of Zookeeper
+  include ::profile::zabbix::agent::zookeeper
+
   ::profile::firewall::infra::all { 'zookeeper-clients':
     port => 2181,
   }
@@ -18,7 +21,7 @@ class profile::services::zookeeper {
     prefixes => values($zookeeper_servers),
   }
 
-  class { 'zookeeper':
+  class { '::zookeeper':
     id      => $zookeeper_serverid,
     servers => $zookeeper_servers,
   }
