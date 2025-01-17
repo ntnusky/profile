@@ -35,9 +35,9 @@ class profile::services::libvirt::networks {
 
     # Instruct netplan to not accept ra's on the host-interface to these
     # bridges.
-    file { "/etc/netplan/03-vswitch-${interface}.yaml":
+    file { "/etc/netplan/03-vswitch-br-${shortname}.yaml":
       ensure  => file,
-      mode    => '0644',
+      mode    => '0600',
       owner   => root,
       group   => root,
       content => epp('profile/netplan/manual.epp', {
