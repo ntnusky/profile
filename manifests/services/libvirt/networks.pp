@@ -33,6 +33,19 @@ class profile::services::libvirt::networks {
       mtu => $mtu,
     }
 
+    # Instruct netplan to not accept ra's on the host-interface to these
+    # bridges.
+    file { "/etc/netplan/03-vswitch-${interface}.yaml":
+      ensure  => file,
+      mode    => '0644',
+      owner   => root,
+      group   => root,
+      content => epp('profile/netplan/manual.epp', {
+        'ifname' => "br-${shortname}",
+      }),
+      notify  => Exec['netplan_apply'],
+    }
+
     if('vlanid' in $data) {
       profile::infrastructure::ovs::patch::vlan {
           "patch br-${shortname} to ${bridge}":
