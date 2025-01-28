@@ -21,8 +21,10 @@ class profile::zabbix::agent {
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
     include ::profile::zabbix::agent::puppet
 
-    ::profile::firewall::infra::region { 'zabbix-agent':
-      port     => 10050,
+    ::profile::firewall::custom { 'zabbix-agent': 
+      hiera_key => 'profile::zabbix::agent::servers',
+      interface => $::sl2['server']['primary_interface']['name'],
+      port      => 10050,
     }
 
     user { $user:
