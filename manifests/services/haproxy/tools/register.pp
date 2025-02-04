@@ -10,7 +10,14 @@ define profile::services::haproxy::tools::register (
   })
 
   if($exportresource) {
-    $region = lookup('ntnuopenstack::region', String)
+    $region_fallback = lookup('profile::region', {
+      'default_value' => undef,
+      'value_type'    => Optional[String],
+    })
+    $region = lookup('profile::haproxy::region', {
+      'default_value' => $region_fallback,
+      'value_type'    => String,
+    })
 
     @@concat::fragment{ "haproxy config ${servername};${backendname}":
       target  => $configfile,
