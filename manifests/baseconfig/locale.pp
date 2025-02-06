@@ -1,7 +1,7 @@
 # Class for configuring OS locale
 class profile::baseconfig::locale {
   $default_locale = lookup('profile::locales::default', {
-      'default_value' => 'C', # The locales module default
+      'default_value' => 'en_US.UTF-8', # Override module default of "C"
       'value_type'    => String
   })
   $locales = lookup('profile::locales', {
