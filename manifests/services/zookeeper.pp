@@ -10,8 +10,14 @@ class profile::services::zookeeper {
     'value_type' => String,
   })
 
-  # Zabbix monitoring of Zookeeper
-  include ::profile::zabbix::agent::zookeeper
+  $zabbixservers = lookup('profile::zabbix::agent::servers', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
+  })
+  # If the array contains at least one element:
+  if($zabbixservers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
+    include ::profile::zabbix::agent::zookeeper
+  }
 
   ::profile::firewall::infra::all { 'zookeeper-clients':
     port => 2181,
