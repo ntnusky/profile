@@ -29,7 +29,7 @@ class profile::ceph::osd {
     'global/osd_memory_target': value => $memory_target;
   }
 
-  if($autolocation and $::hostname =~ /.*\-([bg]?)(\d{2})\-(\d{2})-(\d{2})/ ) {
+  if($autolocation and $::hostname =~ /.*\-([bg]?)(\d{2})\-(\d{2})\-(\d{2})/ ) {
     ceph_config { 'global/crush_location':
       value => "root=default room=${1} row=${2} rack=${3} host=${::hostname}",
     }
