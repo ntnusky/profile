@@ -31,7 +31,7 @@ class profile::ceph::osd {
 
   if($autolocation and $::hostname =~ /.*\-([bg]?)(\d{2})\-(\d{2})\-(\d{2})/ ) {
     ceph_config { 'global/crush_location':
-      value => "root=default room=${1} row=${2} rack=${3} host=${::hostname}",
+      value => "root=default row=${2} rack=${3} host=${::hostname}",
     }
   } else {
     ceph_config {
