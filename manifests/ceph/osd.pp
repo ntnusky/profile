@@ -6,6 +6,16 @@ class profile::ceph::osd {
     'value_type'    => Integer,
   })
 
+  $row = lookup('profile::ceph::row', {
+    'default_value' => undef,
+    'value_type'    => Optional[Integer],
+  })
+
+  $rack = lookup('profile::ceph::rack', {
+    'default_value' => undef,
+    'value_type'    => Optional[Integer],
+  })
+
   require ::profile::ceph::base
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::clusternet
@@ -22,5 +32,28 @@ class profile::ceph::osd {
 
   ceph_config {
     'global/osd_memory_target': value => $memory_target;
+  }
+
+  if($row) {
+    $rowloc = "row=${row} "
+  } else {
+    $rowloc = ''
+  }
+
+  if($rack) {
+    $racloc = "rack=${rack} "
+  } else {
+    $racloc = ''
+  }
+
+  if($rack or $row) {
+    $hostloc = "host=${::hostname}"
+    ceph_config { 'global/crush_location':
+      value => "root=default ${rowloc}${racloc}${hostloc}",
+    }
+  } else {
+    ceph_config {
+      'global/crush_location': ensure => absent;
+    }
   }
 }
