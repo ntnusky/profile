@@ -15,11 +15,11 @@ define profile::services::haproxy::frontend (
   })
 
   # Collect the addresses to bind to; or get false if the address is not used.
-  $anycastv4 = lookup("profile::anycast::ipv4", {
+  $anycastv4 = lookup('profile::anycast::ipv4', {
     'value_type'    => Variant[Stdlib::IP::Address::V4, Boolean],
     'default_value' => false,
   })
-  $anycastv6 = lookup("profile::anycast::ipv6", {
+  $anycastv6 = lookup('profile::anycast::ipv6', {
     'value_type'    => Variant[Stdlib::IP::Address::V6, Boolean],
     'default_value' => false,
   })
@@ -81,12 +81,28 @@ define profile::services::haproxy::frontend (
   if($collectall) {
     Haproxy::Balancermember <<| listening_service == "bk_${name}" |>>
   } else {
-    $region = lookup('ntnuopenstack::region', {
+    $region_fallback = lookup('profile::region', {
       'default_value' => undef,
       'value_type'    => Optional[String],
     })
+    $overrides = lookup('profile::haproxy::region::override', {
+      'default_value' => {},
+      'value_type'    => Hash[String, Array[String]],
+    })
 
-    Haproxy::Balancermember <<| listening_service == "bk_${name}" and
-        tag == "region-${region}" |>>
+    # If there is defined an override-list for a certain haproxy-backend, use
+    # that list as the list of regions to collect servers from.
+    if("bk_${name}" in $overrides) {
+      $regions = [] + $overrides["bk_${name}"]
+
+    # Otherwise use the haproxy-servers region
+    } else {
+      $regions = [ $region_fallback ]
+    }
+
+    $regions.each | $region | {
+      Haproxy::Balancermember <<| listening_service == "bk_${name}" and
+          tag == "region-${region}" |>>
+    }
   }
 }

@@ -6,6 +6,11 @@ class profile::ceph::osd {
     'value_type'    => Integer,
   })
 
+  $autolocation = lookup('profile::ceph::location::auto', {
+    'default_value' => false,
+    'value_type'    => Boolean,
+  })
+
   require ::profile::ceph::base
   include ::profile::ceph::firewall::daemons
   include ::profile::ceph::firewall::clusternet
@@ -22,5 +27,15 @@ class profile::ceph::osd {
 
   ceph_config {
     'global/osd_memory_target': value => $memory_target;
+  }
+
+  if($autolocation and $::hostname =~ /.*\-([bg]?)(\d{2})\-(\d{2})\-(\d{2})/ ) {
+    ceph_config { 'global/crush_location':
+      value => "root=default row=row${2} rack=rack${2}-${3} host=${::hostname}",
+    }
+  } else {
+    ceph_config {
+      'global/crush_location': ensure => absent;
+    }
   }
 }

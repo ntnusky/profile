@@ -24,9 +24,13 @@ class profile::services::shiftleader::haproxy::frontend {
   if($collectall) {
     Haproxy::Balancermember <<| listening_service == 'bk_shiftleader2' |>>
   } else {
-    $region = lookup('ntnuopenstack::region', {
+    $region_fallback = lookup('profile::region', {
       'default_value' => undef,
       'value_type'    => Optional[String],
+    })
+    $region = lookup('profile::haproxy::region', {
+      'default_value' => $region_fallback,
+      'value_type'    => String,
     })
 
     Haproxy::Balancermember <<| listening_service == 'bk_shiftleader2' and
