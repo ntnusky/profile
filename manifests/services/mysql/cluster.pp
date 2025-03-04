@@ -18,6 +18,11 @@ class profile::services::mysql::cluster {
     'value_type'    => String,
   })
 
+  $max_connections = lookup('profile::mysqlcluster::max_connections', {
+    'default_value' => 1000,
+    'value_type'    => Integer,
+  })
+
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
   #  TODO: Remove the old-fashioned lookups. 
@@ -61,7 +66,7 @@ class profile::services::mysql::cluster {
       'mysqld'                   => {
         'port'                   => '3306',
         'bind-address'           => $management_ip,
-        'max_connections'        => '1000',
+        'max_connections'        => $max_connections,
         'net_read_timeout'       => $net_read_timeout,
         'net_write_timeout'      => $net_write_timeout,
         'ssl-disable'            => true,
