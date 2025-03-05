@@ -23,7 +23,6 @@ class profile::zabbix::agent {
 
     ::profile::firewall::custom { 'zabbix-agent': 
       hiera_key => 'profile::zabbix::agent::servers',
-      interface => $::sl2['server']['primary_interface']['name'],
       port      => 10050,
     }
 
