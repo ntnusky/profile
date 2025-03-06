@@ -1,6 +1,6 @@
 #Configures the firewall for the galera servers
 class profile::services::mysql::firewall::galera {
-  $common = lookup('profile::mysqlcluster::interregional', {
+  $common = lookup('profile::mysql::interregional', {
     'default_value' => false,
     'value_type'    => Boolean,
   })
