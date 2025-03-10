@@ -6,7 +6,7 @@ import sys
 data = {}
 
 # Try to fetch monitoring-data from the zookeeper cluster. If it fails,
-# return that the server is available.
+# return that the server is unavailable.
 try:
   client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   client_socket.connect(('localhost', 2181))
