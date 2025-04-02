@@ -13,6 +13,10 @@ class profile::zabbix::server {
     'default_value' => $::fqdn,
     'value_type'    => String,
   })
+  $zabbix_clients = lookup('profile::zabbix::frontend::users::networks', {
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::IP::Address]
+  })
   $zabbix_ssh_private_key = lookup('profile::zabbix::ssh::privatekey', {
     'default_value' => undef,
     'value_type'    => Optional[String],
@@ -104,8 +108,8 @@ class profile::zabbix::server {
   }
 
   ::profile::firewall::custom { 'zabbix-dashboard-extra':
-    hiera_key => 'profile::zabbix::frontend::users::networks',
-    port      => [ 80, 443 ],
+    prefixes => $zabbix_clients,
+    port     => [ 80, 443 ],
   }
 
   class { 'zabbix::web':
