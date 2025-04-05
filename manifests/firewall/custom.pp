@@ -10,7 +10,8 @@ define profile::firewall::custom (
   # the prefixes-list given as a parameter.
   if($hiera_key) {
     $prefixes_all = $prefixes + lookup($hiera_key, {
-      'value_type' => Array[Stdlib::IP::Address],
+      'default_value' => [],
+      'value_type'    => Array[Stdlib::IP::Address],
     })
   } else {
     $prefixes_all = $prefixes
