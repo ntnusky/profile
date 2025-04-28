@@ -1,15 +1,14 @@
 # This class installs a zabbix-agent
 class profile::zabbix::agent {
-
   include ::zabbix::params
 
   $zabbix_version = lookup('profile::zabbix::version', {
-    'default_value' => '7.0',
-    'value_type'    => String,
+      'default_value' => '7.0',
+      'value_type'    => String,
   })
   $servers = lookup('profile::zabbix::agent::servers', {
-    'default_value' => [],
-    'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
+      'default_value' => [],
+      'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
   })
 
   $servicename = 'zabbix-agent2'
@@ -21,9 +20,8 @@ class profile::zabbix::agent {
   if($servers =~ Array[Stdlib::IP::Address::Nosubnet, 1]) {
     include ::profile::zabbix::agent::puppet
 
-    ::profile::firewall::custom { 'zabbix-agent': 
+    ::profile::firewall::custom { 'zabbix-agent':
       hiera_key => 'profile::zabbix::agent::servers',
-      interface => $::sl2['server']['primary_interface']['name'],
       port      => 10050,
     }
 
@@ -55,8 +53,8 @@ class profile::zabbix::agent {
     systemd::dropin_file { 'zabbix-agent2-overrides.conf':
       unit    => "${servicename}.service",
       content => epp('profile/zabbix_agent/zabbix_agent.epp', {
-        'zabbix_user'  => $user,
-        'zabbix_group' => $user,
+          'zabbix_user'  => $user,
+          'zabbix_group' => $user,
       }),
       notify  => Service[$servicename],
     }
