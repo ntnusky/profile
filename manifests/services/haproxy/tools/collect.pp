@@ -11,8 +11,15 @@ define profile::services::haproxy::tools::collect (
   if($collectall) {
     Concat::Fragment <<| tag == "haproxy-${name}" |>>
   } else {
-    $region = lookup('ntnuopenstack::region', String)
-    Concat::Fragment <<| tag == "haproxy-${name}" and 
+    $region_fallback = lookup('profile::region', {
+      'default_value' => undef,
+      'value_type'    => Optional[String],
+    })
+    $region = lookup('profile::haproxy::region', {
+      'default_value' => $region_fallback,
+      'value_type'    => String,
+    })
+    Concat::Fragment <<| tag == "haproxy-${name}" and
       tag == "region-${region}" |>>
   }
 }

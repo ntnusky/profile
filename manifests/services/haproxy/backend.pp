@@ -37,8 +37,12 @@ define profile::services::haproxy::backend (
   })
 
   if($register_loadbalancer) {
-    $region = lookup('ntnuopenstack::region', {
+    $region_fallback = lookup('profile::region', {
       'default_value' => undef,
+      'value_type'    => Optional[String],
+    })
+    $region = lookup('profile::haproxy::region', {
+      'default_value' => $region_fallback,
       'value_type'    => Optional[String],
     })
 

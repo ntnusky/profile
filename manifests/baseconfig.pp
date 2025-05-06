@@ -4,6 +4,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
+  include ::profile::baseconfig::locale
   include ::profile::baseconfig::logging
   include ::profile::baseconfig::logrotate
   include ::profile::baseconfig::mounts
