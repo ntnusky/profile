@@ -26,7 +26,7 @@ class profile::services::rabbitmq {
     }
 
     rabbitmq_policy { 'ha-all@/':
-      pattern    => '^(?!(amq\.)|(.*_fanout_)|(reply_)).*',
+      pattern    => '^(?!amq\.).*',
       definition => {
         'alternate-exchange'     => 'unroutable',
         'expires'                => '3600000',
