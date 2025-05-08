@@ -29,12 +29,12 @@ class profile::services::rabbitmq {
       pattern    => '^(?!(amq\.)|(.*_fanout_)|(reply_)).*',
       definition => {
         'alternate-exchange'     => 'unroutable',
-        'expires'                => 3600000,
+        'expires'                => '3600000',
         'ha-mode'                => 'all',
         'ha-promote-on-failure'  => 'always',      # Default
         'ha-promote-on-shutdown' => 'always',
         'ha-sync-mode'           => 'manual',      # Default
-        'message-ttl'            => 600000,
+        'message-ttl'            => '600000',
         'queue-master-locator'   => 'client-local' # Default
       },
       require    => Class['rabbitmq'],
