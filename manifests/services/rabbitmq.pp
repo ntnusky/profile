@@ -26,9 +26,16 @@ class profile::services::rabbitmq {
     }
 
     rabbitmq_policy { 'ha-all@/':
-      pattern    => '^(?!amq\.).*',
+      pattern    => '^(?!(amq\.)|(.*_fanout_)|(reply_)).*',
       definition => {
-        'ha-mode' => 'all',
+        'alternate-exchange'     => 'unroutable',
+        'expires'                => 3600000,
+        'ha-mode'                => 'all',
+        'ha-promote-on-failure'  => 'always',      # Default
+        'ha-promote-on-shutdown' => 'always',
+        'ha-sync-mode'           => 'manual',      # Default
+        'message-ttl'            => 600000,
+        'queue-master-locator'   => 'client-local' # Default
       },
       require    => Class['rabbitmq'],
     }
