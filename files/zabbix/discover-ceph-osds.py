@@ -7,6 +7,11 @@ data = json.loads(report.stdout)
 
 osds = {}
 for osd in data['crushmap']['devices']:
+  # Skip osd's in crushmap thats not actually there. This happens when we remove
+  # disks from ceph and the OSD-numbering is not continious.
+  if('device' in osd['name']):
+    continue
+
   osds['osd.%d' % osd['id']] = {
     '{#OSDNAME}': osd['id'],
   }
