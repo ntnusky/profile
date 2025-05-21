@@ -11,7 +11,7 @@ define profile::baseconfig::alias (
   file { $filename:
     ensure => present,
     owner => $username, 
-    mode  => 0644,
+    mode  => '0644',
   }
 
   $caserver = lookup('profile::puppet::caserver')
