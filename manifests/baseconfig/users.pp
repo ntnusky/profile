@@ -33,6 +33,10 @@ class profile::baseconfig::users {
       shell          => '/bin/bash',
       uid            => $data['uid'],
     }
+    
+    ::profile::baseconfig::alias { $username : 
+      require => User[$username],
+    }
 
     if ( $ensure == 'present' ) {
       file { "${homedir}/.ssh":
@@ -53,6 +57,8 @@ class profile::baseconfig::users {
       }
     }
   }
+
+  ::profile::baseconfig::alias { 'root' : }
 
   # Modify root's attributes
   file { '/root/.ssh':
