@@ -22,7 +22,7 @@ define profile::baseconfig::alias (
   }
   file_line { "Alias pat for ${username}":
     path    => $filename,
-    line    => "alias pat='sudo puppet agent --test",
+    line    => "alias pat='sudo puppet agent --test'",
     require => File[$filename],
   }
 }
