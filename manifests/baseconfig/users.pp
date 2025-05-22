@@ -34,11 +34,11 @@ class profile::baseconfig::users {
       uid            => $data['uid'],
     }
     
-    ::profile::baseconfig::alias { $username : 
-      require => User[$username],
-    }
-
     if ( $ensure == 'present' ) {
+      ::profile::baseconfig::alias { $username : 
+        require => User[$username],
+      }
+
       file { "${homedir}/.ssh":
         ensure  => 'directory',
         owner   => $username,
