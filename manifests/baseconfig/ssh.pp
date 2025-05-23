@@ -33,23 +33,8 @@ class profile::baseconfig::ssh {
     }
   }
 
-  if('server' in $::sl2 and $::sl2['server']['primary_interface']) {
-    $listen = { 'ListenAddress' => [
-      $::sl2['server']['primary_interface']['ipv4'],
-      $::sl2['server']['primary_interface']['ipv6'],
-    ] - undef }
-
-    if(length($listen['ListenAddress']) > 0) {
-      $listen_real = $listen
-    } else {
-      $listen_real = {}
-    }
-  } else {
-    $listen_real = {}
-  }
-
   class {'::ssh':
-    server_options => $server_options + $listen_real,
+    server_options => $server_options,
     client_options => {
       'Host *' => {
         'HostbasedAuthentication' => 'yes',
