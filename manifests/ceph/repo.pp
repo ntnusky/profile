@@ -1,6 +1,7 @@
 # Abstraction for the ceph::repo class
 class profile::ceph::repo {
-  if($::facts['os']['distro']['codename'] == 'jammy') {
+  $release = lookup('ceph::params::release')
+  if($::facts['os']['distro']['codename'] == 'jammy' and $release == 'quincy') {
     $default = 'absent'
   } else {
     $default = 'present'
