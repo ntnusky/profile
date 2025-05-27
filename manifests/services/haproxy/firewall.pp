@@ -6,7 +6,7 @@ class profile::services::haproxy::firewall {
   }
 
   # Let our zabbix-servers discover the service
-  ::profile::firewall::management::custom { 'haproxy-status-infra':
+  ::profile::firewall::custom { 'haproxy-status-infra':
     port      => 9000,
     hiera_key => 'profile::zabbix::agent::servers',
   }
