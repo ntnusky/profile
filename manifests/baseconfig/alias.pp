@@ -26,7 +26,7 @@ define profile::baseconfig::alias (
     target  => $filename,
   }
   concat_fragment { "Alias pat in ${filename}":
-    content => "alias pca='sudo puppet agent --test'\n",
+    content => "alias pat='sudo puppet agent --test'\n",
     target  => $filename,
   }
 }
