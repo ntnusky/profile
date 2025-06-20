@@ -6,7 +6,7 @@ define profile::baseconfig::alias (
     $filename = '/root/.bash_aliases'
 
     concat_fragment { "Alias oppgrader in ${filename}":
-      content => "alias pca='sudo puppet agent --test --server ${caserver}'",
+      content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
       target  => $filename,
     }
   } else {
@@ -22,11 +22,11 @@ define profile::baseconfig::alias (
 
   $caserver = lookup('profile::puppet::caserver')
   concat_fragment { "Alias pca in ${filename}":
-    content => "alias pca='sudo puppet agent --test --server ${caserver}'",
+    content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
     target  => $filename,
   }
   concat_fragment { "Alias pat in ${filename}":
-    content => "alias pca='sudo puppet agent --test --server ${caserver}'",
+    content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
     target  => $filename,
   }
 }
