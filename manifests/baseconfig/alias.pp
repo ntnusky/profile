@@ -16,7 +16,7 @@ define profile::baseconfig::alias (
   concat { $filename:
     ensure => present,
     owner  => $username,
-    group  => ($username == 'root') ? 'root' : 'users',
+    group  => ($username) ? { 'root' => 'root', default => 'users'},
     mode   => '0644',
   }
 
