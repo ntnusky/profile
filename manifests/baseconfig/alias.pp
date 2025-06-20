@@ -6,7 +6,7 @@ define profile::baseconfig::alias (
     $filename = '/root/.bash_aliases'
 
     concat_fragment { "Alias oppgrader in ${filename}":
-      content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
+      content => "apt update && DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt -y dist-upgrade && apt -y autoremove",
       target  => $filename,
     }
   } else {
@@ -26,7 +26,7 @@ define profile::baseconfig::alias (
     target  => $filename,
   }
   concat_fragment { "Alias pat in ${filename}":
-    content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
+    content => "alias pca='sudo puppet agent --test'\n",
     target  => $filename,
   }
 }
