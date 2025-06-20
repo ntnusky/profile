@@ -6,7 +6,7 @@ define profile::baseconfig::alias (
     $filename = '/root/.bash_aliases'
 
     concat_fragment { "Alias oppgrader in ${filename}":
-      content => "apt update && DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt -y dist-upgrade && apt -y autoremove",
+      content => "alias oppgrader='apt update && DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt -y dist-upgrade && apt -y autoremove'",
       target  => $filename,
     }
   } else {
