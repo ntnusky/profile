@@ -4,25 +4,34 @@ define profile::baseconfig::alias (
 ) {
   if($username == 'root') {
     $filename = '/root/.bash_aliases'
+
+    concat_fragment { "Alias oppgrader in ${filename}":
+      content => "alias oppgrader='apt update && DEBIAN_FRONTEND=noninteractive NEEDRESTART_MODE=a apt -y dist-upgrade && apt -y autoremove'\n",
+      target  => $filename,
+    }
   } else {
     $filename = "/home/${username}/.bash_aliases"
   }
 
-  file { $filename:
+  concat { $filename:
     ensure => present,
-    owner => $username, 
-    mode  => '0644',
+    owner  => $username,
+    group  => ($username) ? { 'root' => 'root', default => 'users'},
+    mode   => '0644',
+  }
+  concat_fragment { "Puppet-heading in ${filename}":
+    content => "# This file is managed by puppet.\n",
+    order   => 1,
+    target  => $filename,
   }
 
   $caserver = lookup('profile::puppet::caserver')
-  file_line { "Alias pca for ${username}":
-    path    => $filename,
-    line    => "alias pca='sudo puppet agent --test --server ${caserver}'",
-    require => File[$filename],
+  concat_fragment { "Alias pca in ${filename}":
+    content => "alias pca='sudo puppet agent --test --server ${caserver}'\n",
+    target  => $filename,
   }
-  file_line { "Alias pat for ${username}":
-    path    => $filename,
-    line    => "alias pat='sudo puppet agent --test'",
-    require => File[$filename],
+  concat_fragment { "Alias pat in ${filename}":
+    content => "alias pat='sudo puppet agent --test'\n",
+    target  => $filename,
   }
 }
