@@ -20,7 +20,7 @@ define profile::baseconfig::alias (
     mode   => '0644',
   }
   concat_fragment { "Puppet-heading in ${filename}":
-    content => '# This file is managed by puppet.',
+    content => '# This file is managed by puppet.\n',
     order   => 1,
     target  => $filename,
   }
