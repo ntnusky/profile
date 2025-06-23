@@ -19,6 +19,11 @@ define profile::baseconfig::alias (
     group  => ($username) ? { 'root' => 'root', default => 'users'},
     mode   => '0644',
   }
+  concat_fragment { "Puppet-heading in ${filename}":
+    content => '# This file is managed by puppet.',
+    order   => 1,
+    target  => $filename,
+  }
 
   $caserver = lookup('profile::puppet::caserver')
   concat_fragment { "Alias pca in ${filename}":
