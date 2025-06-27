@@ -94,11 +94,7 @@ class profile::services::mysql::cluster {
         'max_heap_table_size'     => $max_heap_table_size,
         'net_read_timeout'        => $net_read_timeout,
         'net_write_timeout'       => $net_write_timeout,
-        'ssl_ca'                  => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
-        'ssl_cert'                =>
-          "/etc/puppetlabs/puppet/ssl/certs/${::fqdn}.pem",
-        'ssl_key'                 =>
-          "/etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
+        'ssl-disable'             => true,
         'thread_handling'         => $thread_handling,
         'thread_pool_size'        => $thread_pool_size,
         'tmp_table_size'          => $tmp_table_size,
