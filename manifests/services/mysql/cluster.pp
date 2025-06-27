@@ -27,6 +27,23 @@ class profile::services::mysql::cluster {
     'default_value' => 1073741824, # We default to 1GB. 
     'value_type'    => Integer,
   })
+  $thread_handling = lookup('profile::mysql::thread_handling', {
+    'default_value' => 'pool-of-threads',
+    'value_type'    => String,
+  })
+  $thread_pool_size = lookup('profile::mysql::thread_pool_size', {
+    'default_value' => $facts['processors']['count'],
+    'value_type'    => Integer,
+  })
+  $key_buffer_size = lookup('profile::mysql::key_buffer_size', {
+    'default_value' => '64M',
+  })
+  $max_heap_table_size = lookup('profile::mysql::max_heap_table_size', {
+    'default_value' => '64M',
+  })
+  $tmp_table_size = lookup('profile::mysql::tmp_table_size', {
+    'default_value' => '64M',
+  })
 
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
@@ -72,10 +89,15 @@ class profile::services::mysql::cluster {
         'port'                    => '3306',
         'bind-address'            => $management_ip,
         'innodb_buffer_pool_size' => $innodb_buffer_pool_size,
+        'key_buffer_size'         => $key_buffer_size,
         'max_connections'         => $max_connections,
+        'max_heap_table_size'     => $max_heap_table_size,
         'net_read_timeout'        => $net_read_timeout,
         'net_write_timeout'       => $net_write_timeout,
         'ssl-disable'             => true,
+        'thread_handling'         => $thread_handling,
+        'thread_pool_size'        => $thread_pool_size,
+        'tmp_table_size'          => $tmp_table_size,
         'wsrep_provider_options'  => '"gcache.size=2G"',
       }
     },
