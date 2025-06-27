@@ -23,6 +23,11 @@ class profile::services::mysql::cluster {
     'value_type'    => Integer,
   })
 
+  $innodb_buffer_pool_size = lookup('profile::mysql::innodb_buffer_pool_size', {
+    'default_value' => 1073741824, # We default to 1GB. 
+    'value_type'    => Integer, 
+  })
+
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
   #  TODO: Remove the old-fashioned lookups. 
@@ -63,14 +68,15 @@ class profile::services::mysql::cluster {
     status_check        => false,
     validate_connection => false,
     override_options    => {
-      'mysqld'                   => {
-        'port'                   => '3306',
-        'bind-address'           => $management_ip,
-        'max_connections'        => $max_connections,
-        'net_read_timeout'       => $net_read_timeout,
-        'net_write_timeout'      => $net_write_timeout,
-        'ssl-disable'            => true,
-        'wsrep_provider_options' => '"gcache.size=2G"',
+      'mysqld'                    => {
+        'port'                    => '3306',
+        'bind-address'            => $management_ip,
+        'innodb_buffer_pool_size' => $innodb_buffer_pool_size, 
+        'max_connections'         => $max_connections,
+        'net_read_timeout'        => $net_read_timeout,
+        'net_write_timeout'       => $net_write_timeout,
+        'ssl-disable'             => true,
+        'wsrep_provider_options'  => '"gcache.size=2G"',
       }
     },
     require             => [

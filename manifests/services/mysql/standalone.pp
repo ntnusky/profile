@@ -12,6 +12,10 @@ class profile::services::mysql::standalone {
     'value_type'    => Integer,
     'default_value' => 60,
   })
+  $innodb_buffer_pool_size = lookup('profile::mysql::innodb_buffer_pool_size', {
+    'default_value' => 1073741824, # We default to 1GB. 
+    'value_type'    => Integer, 
+  })
 
   $zabbix_servers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
@@ -34,15 +38,18 @@ class profile::services::mysql::standalone {
     root_password           => $rootpassword,
     remove_default_accounts => true,
     override_options        => {
-      'mysqld'              => {
-        'port'              => '3306',
-        'bind-address'      => $::sl2['server']['primary_interface']['ipv4'], 
-        'max_connections'   => '750',
-        'net_read_timeout'  => $net_read_timeout,
-        'net_write_timeout' => $net_write_timeout,
-        'ssl_ca'            => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
-        'ssl_cert'          => "/etc/puppetlabs/puppet/ssl/certs/${fqdn}.pem",
-        'ssl_key'           =>
+      'mysqld'                    => {
+        'port'                    => '3306',
+        'bind-address'            => 
+          $::sl2['server']['primary_interface']['ipv4'], 
+        'innodb_buffer_pool_size' => $innodb_buffer_pool_size, 
+        'max_connections'         => '750',
+        'net_read_timeout'        => $net_read_timeout,
+        'net_write_timeout'       => $net_write_timeout,
+        'ssl_ca'                  => '/etc/puppetlabs/puppet/ssl/certs/ca.pem',
+        'ssl_cert'                => 
+          "/etc/puppetlabs/puppet/ssl/certs/${fqdn}.pem",
+        'ssl_key'                 =>
           "/etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
       }
     },
