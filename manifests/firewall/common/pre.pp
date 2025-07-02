@@ -36,24 +36,24 @@ class profile::firewall::common::pre {
   firewall { '000 ipv6 accept all icmp':
     proto    => 'ipv6-icmp',
     jump     => 'accept',
-    provider => 'ip6tables',
+    protocol => 'ip6tables',
   }->
   firewall { '001 ipv6 accept all to lo interface':
     proto    => 'all',
     iniface  => 'lo',
     jump     => 'accept',
-    provider => 'ip6tables',
+    protocol => 'ip6tables',
   }->
   firewall { '002 ipv6 allow link-local':
     proto    => 'all',
     source   => 'fe80::/10',
     jump     => 'accept',
-    provider => 'ip6tables',
+    protocol => 'ip6tables',
   }->
   firewall { '003 ipv6 accept related established rules':
     proto    => 'all',
     state    => ['RELATED', 'ESTABLISHED'],
     jump     => 'accept',
-    provider => 'ip6tables',
+    protocol => 'ip6tables',
   }
 }

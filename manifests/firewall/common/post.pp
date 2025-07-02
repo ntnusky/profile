@@ -20,7 +20,7 @@ class profile::firewall::common::post {
       jump       => 'LOG',
       log_level  => '5',
       log_prefix => 'FW-DROP',
-      provider   => 'ip6tables',
+      protocol   => 'ip6tables',
       before     => undef,
     }
   } else {
@@ -31,8 +31,8 @@ class profile::firewall::common::post {
     }
     firewall { '999 ipv6 drop all':
       proto    => 'all',
-      jump   => $action,
-      provider => 'ip6tables',
+      jump     => $action,
+      protocol => 'ip6tables',
       before   => undef,
     }
   }

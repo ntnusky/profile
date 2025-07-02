@@ -24,26 +24,22 @@ define profile::firewall::custom (
   unique($prefixes_all).each | $prefix | {
     # Check if it is legacy-network:
     if($prefix =~ Stdlib::IP::Address::V4::CIDR) {
-      #$protocol = 'IPv4'
-      $provider = 'iptables'
+      $protocol = 'IPv4'
       $prefix_real = $prefix
 
     # Or if it is a single legacy IP:
     } elsif($prefix =~ Stdlib::IP::Address::V4::Nosubnet) {
-      #$protocol = 'IPv4'
-      $provider = 'iptables'
+      $protocol = 'IPv4'
       $prefix_real = "${prefix}/32"
 
     # Or if it is a moden network:
     } elsif($prefix =~ Stdlib::IP::Address::V6::CIDR) {
-      #$protocol = 'IPv6'
-      $provider = 'ip6tables'
+      $protocol = 'IPv6'
       $prefix_real = $prefix
 
     # Or if it is a single modern IP:
     } elsif($prefix =~ Stdlib::IP::Address::V6::Nosubnet) {
-      #$protocol = 'IPv6'
-      $provider = 'ip6tables'
+      $protocol = 'IPv6'
       $prefix_real = "${prefix}/128"
 
     # Fail if it is something else...
@@ -57,8 +53,7 @@ define profile::firewall::custom (
       dport    => $port,
       iniface  => $interface,
       jump     => 'accept',
-      #protocol => $protocol,
-      provider => $provider,
+      protocol => $protocol,
       source   => $prefix_real,
     }
   }
