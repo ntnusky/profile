@@ -34,7 +34,7 @@ class profile::firewall::common::pre {
 
   # Default firewall rules
   firewall { '000 ipv6 accept all icmp':
-    proto    => 'ipv6-icmp',
+    proto    => 'icmp',
     jump     => 'accept',
     protocol => 'ip6tables',
   }->
