@@ -56,7 +56,7 @@ define profile::firewall::custom (
       proto    => $transport_protocol,
       dport    => $port,
       iniface  => $interface,
-      action   => 'accept',
+      jump     => 'accept',
       #protocol => $protocol,
       provider => $provider,
       source   => $prefix_real,
