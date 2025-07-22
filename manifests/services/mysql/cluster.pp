@@ -24,8 +24,8 @@ class profile::services::mysql::cluster {
   })
 
   $innodb_buffer_pool_size = lookup('profile::mysql::innodb_buffer_pool_size', {
-    'default_value' => 1073741824, # We default to 1GB. 
-    'value_type'    => Integer,
+    'default_value' => '1G',
+    'value_type'    => Variant[String, Integer],
   })
   $thread_handling = lookup('profile::mysql::thread_handling', {
     'default_value' => 'pool-of-threads',
