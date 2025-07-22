@@ -44,6 +44,9 @@ class profile::services::mysql::cluster {
   $tmp_table_size = lookup('profile::mysql::tmp_table_size', {
     'default_value' => '64M',
   })
+  $gcache_size = lookup('profile::mysql::wsrep::gcache', {
+    'default_value' => '2G',
+  })
 
   # Determine the management-IP for the server; either through the now obsolete
   # hiera-keys, or through the sl2-data:
@@ -98,7 +101,7 @@ class profile::services::mysql::cluster {
         'thread_handling'         => $thread_handling,
         'thread_pool_size'        => $thread_pool_size,
         'tmp_table_size'          => $tmp_table_size,
-        'wsrep_provider_options'  => '"gcache.size=2G"',
+        'wsrep_provider_options'  => "\"gcache.size=${gcache_size}\"",
       }
     },
     require             => [
