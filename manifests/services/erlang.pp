@@ -10,7 +10,7 @@ class profile::services::erlang {
   if ( versioncmp($rabbit_version, '3.10.13-1') == 1 ) {
 
     if ( $erlang_version == 'auto' ) {
-      $erlang_verision_real = $rabbit_version ? {
+      $erlang_version_real = $rabbit_version ? {
         /^(3.10.2?|3.11)/ => '1:25.3.2.21-1',
         /^(3.12|3.13)/    => '1:26.2.5.13-1',
         /^(4.0|4.1)/      => '1:27.3.4.2-1',
