@@ -1,15 +1,19 @@
 # Module to install erlang from Erlangs repositories
 class profile::services::erlang {
   $version = lookup('profile::services::erlang::version', {
-    'default_value' => '1:23.3.1-1',
+    'default_value' => '1:25.3.2.21-1',
   })
+
+  $distro = $facts['os']['distro']['codename']
+
   apt::source { 'erlang':
     comment  => '',
-    location => 'https://packages.erlang-solutions.com/ubuntu',
-    repos    => 'contrib',
+    location => "https://deb1.rabbitmq.com/rabbitmq-erlang/ubuntu/${distro}",
+    release  => $distro,
+    repos    => 'main',
     key      => {
-      id     => '434975BD900CCBE4F7EE1B1ED208507CA14F4FCA',
-      source => 'https://packages.erlang-solutions.com/ubuntu/erlang_solutions.asc',
+      id     => '0A9AF2115F4687BD29803A206B73A36E6026DFCA',
+      source => 'https://keys.openpgp.org/vks/v1/by-fingerprint/0A9AF2115F4687BD29803A206B73A36E6026DFCA',
     },
     notify   => Exec['apt_update'],
     before   => Apt::Pin['erlang'],

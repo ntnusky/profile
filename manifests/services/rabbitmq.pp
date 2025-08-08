@@ -13,9 +13,7 @@ class profile::services::rabbitmq {
 
   $distro = $facts['os']['release']['major']
 
-  if ($distro == '20.04') {
-    require ::profile::services::erlang
-  }
+  require ::profile::services::erlang
   include ::profile::services::rabbitmq::firewall
   include ::profile::services::rabbitmq::sudo
 
