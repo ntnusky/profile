@@ -43,7 +43,7 @@ class profile::services::erlang {
       priority => 1000,
     }
 
-    package { ['erlang', 'erlang-base']:
+    package { ['erlang', 'erlang-base', 'erlang-mode', 'erlang-jinterface']:
       ensure  => $erlang_version_real,
       require => [ Apt::Source['erlang'], Exec['apt_update'] ],
     }
