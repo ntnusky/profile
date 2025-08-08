@@ -43,10 +43,9 @@ class profile::services::erlang {
       priority => 1000,
     }
 
-    package { 'erlang':
-      ensure        => $erlang_version_real,
-      allow_virtual => true,
-      require       => [ Apt::Source['erlang'], Exec['apt_update'] ],
+    package { ['erlang', 'erlang-base']:
+      ensure  => $erlang_version_real,
+      require => [ Apt::Source['erlang'], Exec['apt_update'] ],
     }
   }
 }
