@@ -11,8 +11,6 @@ class profile::services::rabbitmq {
     'default_value' => false,
   })
 
-  $distro = $facts['os']['release']['major']
-
   require ::profile::services::erlang
   include ::profile::services::rabbitmq::firewall
   include ::profile::services::rabbitmq::sudo
