@@ -45,7 +45,7 @@ class profile::services::erlang {
 
     package { 'erlang':
       ensure  => $erlang_version_real,
-      require => Apt::Source['erlang'],
+      require => [ Apt::Source['erlang'], Exec['apt_update'] ],
     }
   }
 }
