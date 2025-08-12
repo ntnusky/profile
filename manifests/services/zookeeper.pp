@@ -3,13 +3,16 @@
 class profile::services::zookeeper {
   # - Open firewall
   # - Install zookeeper
-  $zookeeper_servers = lookup('profile::zookeeper::servers', { 
+  $zookeeper_servers = lookup('profile::zookeeper::servers', {
     'value_type' => Hash[String, Stdlib::IP::Address::Nosubnet],
   })
-  $zookeeper_serverid = lookup('profile::zookeeper::server::id', { 
+  $zookeeper_serverid = lookup('profile::zookeeper::server::id', {
     'value_type' => String,
   })
-
+  $zookeeper_whitelist_commands = lookup('profile::zookeeper::whitelist_commands', {
+    'value_type'    => Array[String],
+    'default_value' => ['srvr', 'ruok', 'stat', 'dirs', 'mntr', 'isro']
+  })
   $zabbixservers = lookup('profile::zabbix::agent::servers', {
     'default_value' => [],
     'value_type'    => Array[Stdlib::IP::Address::Nosubnet],
@@ -28,7 +31,8 @@ class profile::services::zookeeper {
   }
 
   class { '::zookeeper':
-    id      => $zookeeper_serverid,
-    servers => $zookeeper_servers,
+    id            => $zookeeper_serverid,
+    servers       => $zookeeper_servers,
+    whitelist_4lw => $zookeeper_whitelist_commands,
   }
 }
