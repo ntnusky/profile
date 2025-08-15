@@ -15,6 +15,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::puppet
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
+  include ::profile::baseconfig::uefi
   include ::profile::baseconfig::updates
 
   include ::profile::utilities::ntnuskytools
