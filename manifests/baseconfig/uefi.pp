@@ -1,7 +1,7 @@
 # This class configures the UEFI boot-order to first do a network-boot, then
 # start the OS. 
 class profile::baseconfig::uefi {
-  $enable = lookup('profile::baseconfig::uefi::bootorder', {
+  $enable = lookup('profile::baseconfig::uefi::bootorder::managed', {
     'default_value' => true,
     'value_type'    => Boolean,
   })
