@@ -168,9 +168,7 @@ def getSystemBonds():
       'name': bond, 
       'type': 'system',
       'bond_mode': bonddata['Transmit Hash Policy'],
-      'lacp_status': 'configured' \
-        if bonddata['Partner Mac Address'] == '00:00:00:00:00:00' \
-        else 'negotiated',
+      'lacp_status': 'configured' if 'Partner Mac Address' in bonddata else 'negotiated',
       'members': {},
       'interfaces': len(bonddata['members']),
       'interfaces_enabled': 0,
