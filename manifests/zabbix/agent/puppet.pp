@@ -1,5 +1,7 @@
 # Configures the zabbix-agent to monitor puppet run-stats
 class profile::zabbix::agent::puppet {
+  include ::profile::zabbix::agent::sudo
+
   file { '/usr/local/sbin/puppetStatus.py':
     ensure => present,
     owner  => 'root',
@@ -18,10 +20,5 @@ class profile::zabbix::agent::puppet {
     ], "\n"),
     require => Package['zabbix-agent2'],
     notify  => Service['zabbix-agent2'],
-  }
-
-  sudo::conf { 'zabbix_agent':
-    priority => 15,
-    source   => 'puppet:///modules/profile/zabbix/sudoers',
   }
 }
