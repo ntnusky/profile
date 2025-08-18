@@ -96,7 +96,11 @@ def parse(input, section = ''):
 
 def getOVSBonds():
   bonds = {}
-  p = subprocess.run(['/usr/bin/ovs-appctl','bond/list'], capture_output=True, text=True)
+  try:
+    p = subprocess.run(['/usr/bin/ovs-appctl','bond/list'], capture_output=True, text=True)
+  except:
+    return bonds
+
   for line in p.stdout.split('\n')[1:]:
     try:
       bond, type, recircID, members = line.split('\t')
@@ -208,11 +212,7 @@ def getSystemBonds():
 
 bonds = {}
 
-try:
-  bonds.update(getOVSBonds())
-except ArithmeticError:
-  pass
-
+bonds.update(getOVSBonds())
 bonds.update(getSystemBonds())
 
 print(json.dumps(bonds))
