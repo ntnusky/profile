@@ -146,6 +146,8 @@ def getOVSBonds():
         bonds[bond]['members'][member][key] = data['members'][member][key]
   
       bonds[bond]['interfaces'] += 1
+      bonds[bond]['members'][member]['bond_name'] = bond
+      bonds[bond]['members'][member]['interface_name'] = member
 
       if bonds[bond]['members'][member]['speed'] > 0:
         bonds[bond]['speed'] += bonds[bond]['members'][member]['speed']
