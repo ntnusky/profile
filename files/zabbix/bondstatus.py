@@ -180,12 +180,14 @@ def getSystemBonds():
 
     for member in bonddata['members']:
       data[bond]['members'][member] = {
+        'bond_name': bond,
+        'interface_name': member,
         'enabled': bonddata['members'][member]["MII Status"] == "up",
         'may_enable_bond': bonddata['members'][member]["MII Status"] == "up",
         'may_enable_lacp': True,
         'actor sys_id': 
           bonddata['members'][member]['actor']['system mac address'],
-        'parter sys_id': 
+        'partner sys_id': 
           bonddata['members'][member]['partner']['system mac address'],
         'actor port_id':
           bonddata['members'][member]['actor']['port number'],
