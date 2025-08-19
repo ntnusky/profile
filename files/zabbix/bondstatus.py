@@ -79,6 +79,9 @@ def parse(input, section = ''):
         key = key.lstrip()
       except:
         continue
+      
+      if key.startswith('hash'):
+        continue
 
       if key.startswith('status'):
         for status in value.split(' '):
