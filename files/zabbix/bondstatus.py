@@ -169,11 +169,17 @@ def getSystemBonds():
     with open(os.path.join('/proc/net/bonding', bond), 'r') as f:
       bonddata = parse(f.readlines())
 
+    if 'Partner Mac Address' not in bonddata or \
+        bonddata['Partner Mac Address'] == '00:00:00:00:00:00':
+      lacp_status = 'configured'
+    else:
+      lacp_status = 'negotiated'
+
     data[bond] = {
       'name': bond, 
       'type': 'system',
       'bond_mode': bonddata['Transmit Hash Policy'],
-      'lacp_status': 'configured' if 'Partner Mac Address' in bonddata else 'negotiated',
+      'lacp_status': lacp_status, 
       'members': {},
       'interfaces': len(bonddata['members']),
       'interfaces_enabled': 0,
