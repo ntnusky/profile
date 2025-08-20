@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $# -le 3 ]]; then
+if [[ $# -le 2 ]]; then
   echo "Usage: $0 <bridge-name> <bond-name> <bond-if1> ... <bond-ifN>"
   exit 1
 fi
