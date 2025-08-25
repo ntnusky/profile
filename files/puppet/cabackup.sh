@@ -1,6 +1,6 @@
 #!/bin/bash
 
-backupsource='/etc/puppetlabs/puppet/ssl/ca'
+backupsource='/etc/puppetlabs/puppetserver/ca'
 backupdest="/var/opt/puppet/$(hostname)/"
 sshprivkey='/etc/ssh/ssh_host_rsa_key'
 

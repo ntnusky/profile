@@ -40,6 +40,8 @@ class profile::services::apache {
     ensure => present,
   }
 
+  apache::listen { '127.0.0.1:80': }
+  apache::listen { '[::1]:80': }
   apache::listen { "${management_ipv4}:80": }
   if ( $management_netv6 ) {
     apache::listen { "[${management_ipv6}]:80": }
@@ -57,6 +59,7 @@ class profile::services::apache {
   include ::apache::mod::rewrite
   include ::apache::mod::prefork
   include ::apache::mod::ssl
+  include ::apache::mod::status
   include ::apache::mod::wsgi
   include ::profile::services::apache::firewall
 }

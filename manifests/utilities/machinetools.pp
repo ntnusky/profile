@@ -9,6 +9,8 @@ class profile::utilities::machinetools {
     'default_value' => true,
   })
 
+  $distro = $facts['os']['release']['major']
+
   # If it is an HP machine, install hpacucli.
   if($::bios_vendor == 'HP' and $machinetools) {
     include ::hpacucli
@@ -23,14 +25,16 @@ class profile::utilities::machinetools {
 
     case $::osfamily {
       'Debian': {
-        require ::hwraid
-        $megaclipackages = [ 'megacli', 'mpt-status' ]
-        package { $megaclipackages :
-          ensure  => 'present',
-          require => [
-            Class['::hwraid'],
-            Class['::srvadmin'],
-          ]
+        if ( versioncmp($distro, '22.04') <= 0 ){
+          require ::hwraid
+          $megaclipackages = [ 'megacli', 'mpt-status' ]
+          package { $megaclipackages :
+            ensure  => 'present',
+            require => [
+              Class['::hwraid'],
+              Class['::srvadmin'],
+            ]
+          }
         }
       }
       'RedHat': {
