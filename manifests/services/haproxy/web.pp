@@ -48,7 +48,6 @@ class profile::services::haproxy::web {
     'use_backend'             => $backend,
     'option'                  => [
       'forwardfor',
-      'http-server-close',
     ],
     'http-request add-header' => 'X-Forwarded-Proto https if { ssl_fc }',
   }

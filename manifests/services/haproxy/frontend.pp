@@ -30,6 +30,7 @@ define profile::services::haproxy::frontend (
   # traffic was indeed encrypted in front of the loadbalancer, if that was the
   # case.
   if($mode == 'http') {
+    $forwardfor = { 'option' => [ 'forwardfor' ] }
     if($certfile) {
       $sslpar = ['ssl', 'crt', $certfile]
       $proto = { 'http-request add-header' => 'X-Forwarded-Proto https' }
@@ -38,6 +39,7 @@ define profile::services::haproxy::frontend (
       $proto = { 'http-request add-header' => 'X-Forwarded-Proto http' }
     }
   } else {
+    $forwardfor = {}
     if($certfile) {
       $sslpar = ['ssl', 'crt', $certfile]
     } else {
@@ -70,7 +72,7 @@ define profile::services::haproxy::frontend (
   haproxy::frontend { "ft_${name}":
     bind    => $bind,
     mode    => $mode,
-    options => deep_merge($ftbaseoptions, $proto, $ftoptions),
+    options => deep_merge($ftbaseoptions, $proto, $ftoptions, $forwardfor),
   }
   haproxy::backend { "bk_${name}":
     collect_exported => false,
