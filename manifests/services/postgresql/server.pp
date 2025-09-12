@@ -1,7 +1,7 @@
 # This class installs and configures the postgresql server
 class profile::services::postgresql::server {
   $mif = lookup('profile::interfaces::management', {
-    'default_value' => $::sl2['server']['primary_interface']['name'], 
+    'default_value' => $::sl2['server']['primary_interface']['name'],
     'value_type'    => String,
   })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {
@@ -29,6 +29,10 @@ class profile::services::postgresql::server {
 
   $max_connections = lookup('profile::postgres::max_connections', {
     'default_value' => 250,
+    'value_type'    => Integer,
+  })
+  $max_wal_senders = lookup('profile::postgres::max_wal_senders', {
+    'default_value' => 3,
     'value_type'    => Integer,
   })
 
@@ -66,7 +70,7 @@ class profile::services::postgresql::server {
   postgresql::server::config_entry {
     'checkpoint_segments': ensure => 'absent';
     'max_connections':     value  => $max_connections;
-    'max_wal_senders':     value  => '3';
+    'max_wal_senders':     value  => $max_wal_senders;
     'wal_level':           value  => 'hot_standby';
   }
 
@@ -76,12 +80,12 @@ class profile::services::postgresql::server {
 
   if(versioncmp($postgres_version, '15') <= 0) {
     postgresql::server::config_entry {
-      'promote_trigger_file': 
+      'promote_trigger_file':
         value => "/var/lib/postgresql/${postgres_version}/main/triggerfile";
     }
   } else {
     postgresql::server::config_entry {
-      'promote_trigger_file': ensure => absent; 
+      'promote_trigger_file': ensure => absent;
     }
   }
 }
