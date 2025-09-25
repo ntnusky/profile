@@ -9,7 +9,7 @@ class profile::utilities::ntnuskytools {
   vcsrepo { '/usr/ntnusky/tools':
     ensure   => latest,
     provider => git,
-    source   => 'https://github.com/ntnusky/tools.git',
+    source   => 'https://git.ntnu.no/ntnusky/tools.git',
     revision => master,
     require  => File['/usr/ntnusky'],
   }
