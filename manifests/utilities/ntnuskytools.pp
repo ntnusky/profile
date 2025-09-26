@@ -1,5 +1,11 @@
 # Install our homemade administration scripts
 class profile::utilities::ntnuskytools {
+
+  $repo_source = lookup('profile::utilities::ntnuskytools::repo', {
+    'default_value' => 'https://git.ntnu.no/ntnusky/tools.git',
+    'value_type'    => String
+  })
+
   file { '/usr/ntnusky':
     ensure => directory,
     owner  => 'root',
@@ -9,7 +15,7 @@ class profile::utilities::ntnuskytools {
   vcsrepo { '/usr/ntnusky/tools':
     ensure   => latest,
     provider => git,
-    source   => 'https://git.ntnu.no/ntnusky/tools.git',
+    source   => $repo_source,
     revision => master,
     require  => File['/usr/ntnusky'],
   }
