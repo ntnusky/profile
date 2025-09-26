@@ -14,6 +14,7 @@ class profile::utilities::ntnuskytools {
   }
   vcsrepo { '/usr/ntnusky/tools':
     ensure   => latest,
+    force    => true,
     provider => git,
     source   => $repo_source,
     revision => master,
