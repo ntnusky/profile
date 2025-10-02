@@ -53,13 +53,22 @@ class profile::services::rabbitmq {
     password => $rabbitpass,
     provider => 'rabbitmqctl',
   }
+  -> rabbitmq_vhost { 'openstack':
+    ensure             => present,
+    default_queue_type => 'quorum',
+  }
   -> rabbitmq_user_permissions { "${rabbituser}@/":
     configure_permission => '.*',
     write_permission     => '.*',
     read_permission      => '.*',
     provider             => 'rabbitmqctl',
   }
-
+  -> rabbitmq_user_permissions { "${rabbituser}@/openstack":
+    configure_permission => '.*',
+    write_permission     => '.*',
+    read_permission      => '.*',
+    provider             => 'rabbitmqctl',
+  }
   profile::utilities::logging::module { 'rabbitmq' :
     content => [{
       'module' => 'rabbitmq',
