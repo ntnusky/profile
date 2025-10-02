@@ -63,7 +63,7 @@ class profile::services::rabbitmq {
     read_permission      => '.*',
     provider             => 'rabbitmqctl',
   }
-  -> rabbitmq_user_permissions { "${rabbituser}@/openstack":
+  -> rabbitmq_user_permissions { "${rabbituser}@openstack":
     configure_permission => '.*',
     write_permission     => '.*',
     read_permission      => '.*',
