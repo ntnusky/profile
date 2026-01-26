@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-primary="NIC"
+primary="(NIC|Network)"
 secondary="ubuntu"
 
 order=$(efibootmgr | grep "BootOrder:" | cut -f 2 -d ' ')
-primaryID=$(efibootmgr | grep $primary | grep -Po '^Boot\K[0-9]{4}' | tr '\n' ',' | sed 's/,$//g')
+primaryID=$(efibootmgr | grep -E $primary | grep -Po '^Boot\K[0-9]{4}' | tr '\n' ',' | sed 's/,$//g')
 secondaryID=$(efibootmgr | grep $secondary | grep -Po '^Boot\K[0-9]{4}' | tr '\n' ',' | sed 's/,$//g')
 
 if [[ -z $order || -z $primaryID || -z $secondaryID ]]; then
