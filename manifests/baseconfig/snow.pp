@@ -13,5 +13,10 @@ class profile::baseconfig::snow {
       ensure => file,
       source => $source,
     }
+    package { 'snowagent':
+      ensure => installed,
+      source => '/opt/snow.deb',
+      require => File['/opt/snow.deb'],
+    }
   }
 }
