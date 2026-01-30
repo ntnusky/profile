@@ -13,6 +13,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
   include ::profile::baseconfig::puppet
+  include ::profile::baseconfig::snow
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::uefi
