@@ -18,5 +18,9 @@ class profile::baseconfig::snow {
       source => '/opt/snow.deb',
       require => File['/opt/snow.deb'],
     }
+  } else {
+    package { 'snowagent':
+      ensure => purged,
+    }
   }
 }
