@@ -1,4 +1,5 @@
 Defaults:nova !requiretty
 
+zabbix_agent ALL = (root) NOPASSWD: /usr/local/sbin/bondstatus.py
+zabbix_agent ALL = (root) NOPASSWD: /usr/local/sbin/monitor-bird-bgp.py
 zabbix_agent ALL = (root) NOPASSWD: /usr/local/sbin/puppetStatus.py 
-zabbix_agent ALL = (root) NOPASSWD: /usr/local/sbin/bondstatus.py 
