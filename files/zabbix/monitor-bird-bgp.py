@@ -10,10 +10,10 @@ versions = {
 
 patterns = {
     'state': re.compile(r'^.*BGP state:\s+(.+)$'),
-    'neighbor-address': re.compile(r'^.*Neighbor address:\s+(.+)$'),
-    'neighbor-as': re.compile(r'^.*Neighbor AS:\s+(.+)$'),
-    'neighbor-id': re.compile(r'^.*Neighbor ID:\s+(.+)$'),
-    'source-ip': re.compile(r'^.*Source address:\s+(.+)$'),
+    'neighbor_address': re.compile(r'^.*Neighbor address:\s+(.+)$'),
+    'neighbor_as': re.compile(r'^.*Neighbor AS:\s+(.+)$'),
+    'neighbor_id': re.compile(r'^.*Neighbor ID:\s+(.+)$'),
+    'source_address': re.compile(r'^.*Source address:\s+(.+)$'),
     'keepalive': re.compile(r'^.*Hold timer:\s+(\d+)/(\d+)$'),
     'holdtimer': re.compile(r'^.*Keepalive timer:\s+(\d+)/(\d+)$'),
 }
