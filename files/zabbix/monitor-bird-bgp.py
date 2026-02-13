@@ -8,6 +8,15 @@ versions = {
     'ipv6': 'birdc6',
 }
 
+state_ids = {
+    'Idle': 1,
+    'Connect': 2,
+    'Active': 3,
+    'OpenSent': 4,
+    'OpenConfirm': 5,
+    'Established': 6,
+}
+
 patterns = {
     'state': re.compile(r'^.*BGP state:\s+(.+)$'),
     'neighbor_address': re.compile(r'^.*Neighbor address:\s+(.+)$'),
@@ -26,7 +35,6 @@ def getProtocolStatus(version, process):
 
     data = {}
     for line in birdc.stdout.decode().split('\n'):
-        data['family'] = version
         for field in patterns:
             m = patterns[field].match(line)
             if(m and len(m.groups()) == 1):
@@ -34,6 +42,12 @@ def getProtocolStatus(version, process):
             elif(m and len(m.groups()) == 2):
                 data[f'{field}-timer'] = m.group(1)
                 data[f'{field}'] = m.group(2)
+
+    data['family'] = version
+    try:
+        data['state_id'] = state_ids[data['state']]
+    except:
+        data['state_id'] = 0
 
     return data
 
