@@ -26,6 +26,7 @@ def getProtocolStatus(version, process):
 
     data = {}
     for line in birdc.stdout.decode().split('\n'):
+        data['family'] = version
         for field in patterns:
             m = patterns[field].match(line)
             if(m and len(m.groups()) == 1):
