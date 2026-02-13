@@ -40,7 +40,7 @@ def getProtocolStatus(version, process):
             if(m and len(m.groups()) == 1):
                 data[field] = m.group(1)
             elif(m and len(m.groups()) == 2):
-                data[f'{field}-timer'] = m.group(1)
+                data[f'{field}_timer'] = m.group(1)
                 data[f'{field}'] = m.group(2)
 
     data['family'] = version
