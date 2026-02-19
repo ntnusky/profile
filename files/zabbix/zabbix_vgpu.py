@@ -2,24 +2,26 @@
 import os
 import re
 import subprocess
+import configparser
+import ast
 
 def parseNvidiaSMI():
   process = subprocess.Popen(['nvidia-smi', 'vgpu', '-q'],
-                       stdout=subprocess.PIPE, 
+                       stdout=subprocess.PIPE,
                        stderr=subprocess.PIPE)
   stdout, stderr = process.communicate()
-  
+
   data = {}
   current = None
   stack = []
   indent = 0
-  
+
   for l in stdout.splitlines():
     line = l.decode("utf-8")
-  
+
     if(len(line.lstrip().rstrip()) == 0):
       continue
-  
+
     # If the line signals that we start a new GPU, reset data-structures
     gpuline = re.match(r"^GPU (.*)", line)
     if(gpuline):
@@ -27,12 +29,12 @@ def parseNvidiaSMI():
       current = data[gpuline.group(1)]
       indent = 4
       continue
-  
+
     # If the current line is indented less than the last one; go up a level
     while(not line.startswith(" " * indent)):
-      current = stack.pop() 
+      current = stack.pop()
       indent -= 4
-  
+
     try:
       # Split key/value and remove whitespace
       key, value = line.split(':', maxsplit=1)
@@ -58,16 +60,42 @@ def parseNvidiaSMI():
 
   return data
 
-# Parse ENV to retrieve VGPU-types for certain PCI-devices.
-def getGPUTypes():
-  pattern = re.compile(r'^GPU(\d+)$')
+def getGPUTypesMdev(nova_conf):
+  enabled_types = [t.strip() for t in nova_conf['devices']['enabled_mdev_types'].split(',')]
   gpus = {}
-  for key in os.environ:
-    match = pattern.match(key)
-    if(match):
-      a, t = os.environ[key].split(' ')
-      gpus[a] = t
+  for t in enabled_types:
+    addresses = nova_conf['mdev_%s' % t]['device_addresses'].split(',')
+    for address in addresses:
+      gpus[address] = t
+
   return gpus
+
+def getGPUTypesSRIOV(conf):
+  devices = []
+  gpus = {}
+  with open(conf,'r') as nova_conf:
+    for line in nova_conf:
+      if line.startswith('device_spec'):
+        devices.append(ast.literal_eval(line.rstrip('\n').split('=')[-1]))
+
+  for device in devices:
+    address = device['address']
+    with open('/sys/bus/pci/devices/%s/nvidia/current_vgpu_type' % address,'r') as current_vgpu_type:
+      gpus[address] = current_vgpu_type.read().rstrip('\n')
+
+  return gpus
+
+def getGPUTypes():
+  NOVA_CONF_FILE='/etc/nova/nova.conf'
+  nova_conf = configparser.ConfigParser(strict=False)
+  nova_conf.read(NOVA_CONF_FILE)
+
+  if 'device_spec' in nova_conf['pci']:
+    return getGPUTypesSRIOV(NOVA_CONF_FILE)
+  elif 'enabled_mdev_types' in nova_conf['devices']:
+    return getGPUTypesMdev(nova_conf)
+  else:
+    return {}
 
 # Open the VGPU description-file to get VGPU parameters.
 def getVGPUDescription(gpu, vgpu_type):
@@ -98,7 +126,7 @@ def getPGPU(data, address):
       return gpu
 
   # Check for parent device in sysfs, and try to find that in the adresses
-  parent_device = os.readlink(f"/sys/class/mdev_bus/{address}/physfn").split('/')[-1]
+  parent_device = os.readlink(f"/sys/bus/pci/devices/{address}/physfn").split('/')[-1]
   for gpu in data:
     if(parent_device in gpu.lower()):
       return gpu
@@ -111,10 +139,15 @@ def getGPUData():
   for t in types:
     pgpu = getPGPU(data, t)
 
+    if not 'max_vgpu_instances' in data[pgpu]:
+      data[pgpu]['max_vgpu_instances'] = 0
+
     data[pgpu]['type'] = types[t]
-    data[pgpu]['vgpu_instances'] = getMaxVGPUs(t, types[t])
-    data[pgpu]['vgpu_ram'] = getVGPURAM(t, types[t])
-  
+    if 'nvidia' in types[t]:
+      data[pgpu]['max_vgpu_instances'] = getMaxVGPUs(t, types[t])
+    else:
+      data[pgpu]['max_vgpu_instances'] += 1
+
   for gpuid in data:
     data[gpuid]['gpuID'] = gpuid
     if data[gpuid]["Active vGPUs"] != '0':
