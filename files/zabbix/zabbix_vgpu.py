@@ -1,9 +1,9 @@
 #!/usr/bin/python3
+import ast
+import configparser
 import os
 import re
 import subprocess
-import configparser
-import ast
 
 def parseNvidiaSMI():
   process = subprocess.Popen(['nvidia-smi', 'vgpu', '-q'],
