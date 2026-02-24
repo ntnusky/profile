@@ -9,7 +9,7 @@ class profile::services::postgresql::pghba {
   }
 
   $mif = lookup('profile::interfaces::management', {
-    'default_value' => $default, 
+    'default_value' => $default,
     'value_type'    => String,
   })
   $ip = lookup("profile::baseconfig::network::interfaces.${mif}.ipv4.address", {
@@ -18,9 +18,15 @@ class profile::services::postgresql::pghba {
   })
 
   $postgres_version = lookup('profile::postgres::version', {
-    'default_value' => '9.6',
+    'default_value' => '18',
     'value_type'    => String,
   })
+
+  if(versioncmp($postgres_version, '14') == -1) {
+    $auth_method = 'md5'
+  } else {
+    $auth_method = 'scram-sha-256'
+  }
 
   @@postgresql::server::pg_hba_rule { "allow ${ip} for replication":
     description => "Open up PostgreSQL for access from ${ip}",
@@ -28,7 +34,7 @@ class profile::services::postgresql::pghba {
     database    => 'replication',
     user        => 'replicator',
     address     => "${ip}/32",
-    auth_method => 'md5',
+    auth_method => $auth_method,
     tag         => "pghba-${postgres_version}",
   }
 

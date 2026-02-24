@@ -23,7 +23,7 @@ class profile::services::postgresql::server {
   $master_server = lookup('profile::postgres::masterserver', String)
 
   $postgres_version = lookup('profile::postgres::version', {
-    'default_value' => '9.6',
+    'default_value' => '18',
     'value_type'    => String,
   })
 
