@@ -24,10 +24,7 @@ sudo -u postgres pg_basebackup -h $host \
     -U replicator -v -P -w -R
 
 echo Add trigger/streaming config
-<% if(versioncmp($version, '15') >= 0) { -%>
-echo "primary_conn_info = 'host=$host user=replicator passfile=''/var/lib/postgresql/.pgpass''" >> \
-    /var/lib/postgresql/<%= $version %>/main/postgresql.auto.conf
-<% } elsif(versioncmp($version, '13') >= 0) { -%>
+<% if(versioncmp($version, '13') == 0) { -%>
 echo "promote_trigger_file = '/var/lib/postgresql/<%= $version %>/main/triggerfile'" >> \
     /var/lib/postgresql/<%= $version %>/main/postgresql.auto.conf
 <% } else { -%>
