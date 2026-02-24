@@ -27,9 +27,6 @@ echo Add trigger/streaming config
 <% if(versioncmp($version, '13') == 0) { -%>
 echo "promote_trigger_file = '/var/lib/postgresql/<%= $version %>/main/triggerfile'" >> \
     /var/lib/postgresql/<%= $version %>/main/postgresql.auto.conf
-<% } else { -%>
-echo "trigger_file = '/var/lib/postgresql/<%= $version %>/main/triggerfile'" >> \
-    /var/lib/postgresql/<%= $version %>/main/recovery.conf
 <% } -%>
 
 echo Starting PostgreSQL
