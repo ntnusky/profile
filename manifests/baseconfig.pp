@@ -19,6 +19,8 @@ class profile::baseconfig {
   include ::profile::baseconfig::uefi
   include ::profile::baseconfig::updates
 
+  include ::profile::repo::openvox
+
   include ::profile::utilities::ntnuskytools
 
   include ::profile::zabbix::agent
