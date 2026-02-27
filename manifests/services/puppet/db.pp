@@ -33,11 +33,13 @@ class profile::services::puppet::db {
 
 
   class { '::puppetdb::server':
-    database_port      => $dbport,
-    database_host      => $dbhost,
-    database_username  => $dbuser,
-    database_password  => $dbpass,
-    database_name      => $dbname,
-    ssl_listen_address => $ip,
+    database_port          => $dbport,
+    database_host          => $dbhost,
+    database_username      => $dbuser,
+    database_password      => $dbpass,
+    database_name          => $dbname,
+    read_database_username => $dbuser,
+    read_database_password => $dbpass,
+    ssl_listen_address     => $ip,
   }
 }
