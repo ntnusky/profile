@@ -14,7 +14,7 @@ class profile::baseconfig::logging::system {
   }
 
   # Determine the typical system log-files not covered by the system module
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'CentOS': {
       $logfiles = [
         '/var/log/boot.log',
@@ -60,7 +60,7 @@ class profile::baseconfig::logging::system {
       }
     }
     default: {
-      fail("Unsopperted operating system: ${::operatingsystem}")
+      fail("Unsopperted operating system: ${::facts['os']['name']}")
     }
   }
 

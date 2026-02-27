@@ -3,7 +3,7 @@ class profile::baseconfig::git {
   include ::git
 
   git::config{'root-email':
-    value => "root@${::fqdn}",
+    value => "root@${::facts['networking']['fqdn']}",
     user  => 'root',
     key   => 'user.email',
   }

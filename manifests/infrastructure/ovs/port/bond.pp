@@ -25,10 +25,9 @@ define profile::infrastructure::ovs::port::bond (
   }
 
   # Iterate through all the member ports:
-  $os = $facts['operatingsystem']
   $ifnames.each | $ifname | {
     # Make sure the physical port is up
-    if($os == 'Ubuntu') {
+    if($::facts['os']['name'] == 'Ubuntu') {
       # If a particular driver is supplied; add it.
       if($ifdata[$ifname]) {
         $match = {
@@ -57,7 +56,7 @@ define profile::infrastructure::ovs::port::bond (
         content => epp('profile/netplan/manual.epp', $parameters + $match),
         notify  => Exec['netplan_apply'],
       }
-    } elsif($os == 'CentOS') {
+    } elsif($::facts['os']['name'] == 'CentOS') {
       # CentOS
       $mac = $::facts['networking']['interfaces'][$ifname]['mac']
       ::network::interface { $ifname:

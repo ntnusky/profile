@@ -1,7 +1,7 @@
 # Installs a script which ensures that all tftp-servers are containing the same
 # set of files which the routers can download. Used for ACL distribution.
 class profile::services::tftp::acl {
-  @@ssh_authorized_key { "routeracl-${::fqdn}":
+  @@ssh_authorized_key { "routeracl-${::facts['networking']['fqdn']}":
     user    => 'root',
     type    => 'ssh-rsa',
     key     => $::facts['ssh']['rsa']['key'],

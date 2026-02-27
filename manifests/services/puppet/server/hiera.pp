@@ -6,7 +6,7 @@ class profile::services::puppet::server::hiera {
     'default_value' => 'root',
   })
 
-  @@ssh_authorized_key { "puppetmaster-${::fqdn}":
+  @@ssh_authorized_key { "puppetmaster-${::facts['networking']['fqdn']}":
     user    => 'root',
     type    => 'ssh-rsa',
     key     => $::facts['ssh']['rsa']['key'],

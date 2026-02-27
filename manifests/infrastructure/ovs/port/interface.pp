@@ -24,8 +24,7 @@ define profile::infrastructure::ovs::port::interface (
   }
 
   # Make sure that the physical port is configured to be up.
-  $os = $facts['operatingsystem']
-  if($os == 'Ubuntu') {
+  if($::facts['os']['name'] == 'Ubuntu') {
     if($driver == '') {
       $parameters = { 'ifname' => $interface }
     } else {
@@ -44,7 +43,7 @@ define profile::infrastructure::ovs::port::interface (
       content => epp('profile/netplan/manual.epp', $parameters + $mac),
       notify  => Exec['netplan_apply'],
     }
-  } elsif($os == 'CentOS') {
+  } elsif($::facts['os']['name'] == 'CentOS') {
     $macadd = $::facts['networking']['interfaces'][$ifname]['mac']
     ::network::interface { "manual-up-${interface}":
       interface     => $interface,

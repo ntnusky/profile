@@ -9,23 +9,21 @@ class profile::utilities::machinetools {
     'default_value' => true,
   })
 
-  $distro = $facts['os']['release']['major']
-
   # If it is an HP machine, install hpacucli.
-  if($::bios_vendor == 'HP' and $machinetools) {
+  if($::facts['dmi']['bios']['vendor'] == 'HP' and $machinetools) {
     include ::hpacucli
   }
 
   # If it is an Dell machine, install dell's utilities
-  if($::bios_vendor == 'Dell Inc.' and $machinetools) {
+  if($::facts['dmi']['bios']['vendor'] == 'Dell Inc.' and $machinetools) {
     include ::srvadmin
     if $manage_idrac {
       include ::profile::utilities::bmc
     }
 
-    case $::osfamily {
+    case $::facts['os']['family'] {
       'Debian': {
-        if ( versioncmp($distro, '22.04') <= 0 ){
+        if ( versioncmp($facts['os']['release']['major'], '22.04') <= 0 ){
           require ::hwraid
           $megaclipackages = [ 'megacli', 'mpt-status' ]
           package { $megaclipackages :

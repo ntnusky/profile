@@ -10,7 +10,7 @@ class profile::zabbix::server {
     'value_type'    => String,
   })
   $zabbix_web_server_name = lookup('profile::zabbix::web::server::name', {
-    'default_value' => $::fqdn,
+    'default_value' => $::facts['networking']['fqdn'],
     'value_type'    => String,
   })
   $zabbix_clients = lookup('profile::zabbix::frontend::users::networks', {
@@ -59,7 +59,7 @@ class profile::zabbix::server {
   class { 'zabbix::server':
     database_type     => 'mysql',
     database_password => $db_pass,
-    hanodename        => $::fqdn,
+    hanodename        => $::facts['networking']['fqdn'], 
     nodeaddress       => $::sl2['server']['primary_interface']['ipv4'],
     manage_database   => $db_manage,
     sshkeylocation    => '/etc/zabbix/sshkeys',
@@ -119,7 +119,7 @@ class profile::zabbix::server {
     database_password  => $db_pass,
     database_type      => 'mysql',
     default_vhost      => true,
-    zabbix_url         => $::fqdn,
+    zabbix_url         => $::facts['networking']['fqdn'], 
     zabbix_version     => $zabbix_version,
     zabbix_server_name => $zabbix_web_server_name,
     require            => [
