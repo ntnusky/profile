@@ -33,7 +33,6 @@ class profile::services::puppet::db {
 
 
   class { '::puppetdb::server':
-    database           => 'postgres',
     database_port      => $dbport,
     database_host      => $dbhost,
     database_username  => $dbuser,
