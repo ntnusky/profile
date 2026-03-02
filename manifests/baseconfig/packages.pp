@@ -7,13 +7,13 @@ class profile::baseconfig::packages {
 
   # Install a range of useful tools. Some mandatory; while others can be listed
   # in hiera.
-  ensure_packages ( [
+  stdlib::ensure_packages ( [
     'bc',
     'jq',
   ], {
     'ensure' => 'present',
   })
-  ensure_packages ( $basepackages, {
+  stdlib::ensure_packages ( $basepackages, {
     'ensure' => 'present',
   })
 
