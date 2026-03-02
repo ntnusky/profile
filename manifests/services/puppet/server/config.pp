@@ -1,5 +1,10 @@
 # Configures the puppetmaster
 class profile::services::puppet::server::config {
+  $strictness = lookup('profile::puppet::server::strcit', {
+    'default_value' => 'warning',
+    'value_type'    => String,
+  })
+
   $usepuppetdb = lookup('profile::puppetdb::masterconfig', {
     'value_type'    => Boolean,
     'default_value' => true,
@@ -54,5 +59,15 @@ class profile::services::puppet::server::config {
       puppetdb_server                => $puppetdb_hostname,
       create_puppet_service_resource => false,
     }
+  }
+
+  ini_setting { 'Puppetmaster strict':
+    ensure  => present,
+    path    => '/etc/puppetlabs/puppet/puppet.conf',
+    section => 'master',
+    setting => 'strict',
+    value   => $strictness,
+    notify  => Service['puppetserver'],
+    require => Package['puppetserver'],
   }
 }
