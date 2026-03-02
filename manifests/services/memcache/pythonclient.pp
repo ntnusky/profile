@@ -2,7 +2,7 @@
 class profile::services::memcache::pythonclient {
   $install = hiera('profile::memcache::pythonclient::install', true)
   if $install {
-    ensure_packages ( ['python-memcache'], {
+    stdlib::ensure_packages ( ['python-memcache'], {
       'ensure' => 'present',
     })
   }
