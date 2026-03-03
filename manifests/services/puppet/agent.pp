@@ -30,15 +30,7 @@ class profile::services::puppet::agent {
     require               => Apt::Source["${reponame}-release"],
   }
 
-  # Apparantly the puppet_agent class refuses to configure arbritary parameters,
-  # so we need to fix the rest ourselves...
-  $agentconfigfile = '/etc/puppetlabs/puppet/puppet.conf'
-
-  ini_setting { 'Puppet caserver':
-    ensure  => present,
-    path    => $agentconfigfile,
-    section => 'agent',
-    setting => 'ca_server',
-    value   => $caserver,
+  puppet::config::agent { 'ca_server':
+    value => $caserver,
   }
 }
