@@ -1,8 +1,8 @@
-# This class installs and configures puppet.
-class profile::baseconfig::puppet {
+# This class installs and configures the puppet agent.
+class profile::services::puppet::agent {
   $alt_names = lookup('profile::puppet::altnames', {
-    'default_value' => false,
-    'value_type'    => Variant[Array[Stdlib::Fqdn], Boolean],
+    'default_value' => [],
+    'value_type'    => Array[Stdlib::Fqdn],
   })
   $environment = lookup('profile::puppet::environment', String)
   $runinterval = lookup('profile::puppet::runinterval', {
