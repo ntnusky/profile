@@ -59,7 +59,7 @@ class profile::services::puppet::server::config {
       ensure  => 'file',
       mode    => '0644',
       content => stdlib::to_yaml( {
-        master => {
+        server => {
           facts => {
             cache    => 'json',
             terminus => 'puppetdb',
