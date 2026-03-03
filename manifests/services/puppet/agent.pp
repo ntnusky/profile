@@ -25,6 +25,7 @@ class profile::services::puppet::agent {
     environment           => $environment,
     manage_packages       => true,
     runinterval           => $runinterval,
+    runmode               => 'service',
     require               => Apt::Source["${reponame}-release"],
   }
 
