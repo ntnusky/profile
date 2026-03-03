@@ -11,8 +11,23 @@ class profile::baseconfig::puppet {
   $collection = lookup('profile::puppet::collection', {
     'value_type' => String,
   })
+  $reponame = lookup('profile::openvox::release', {
+    'default_value' => 'openvox8',
+    'value_type'    => String,
+  })
 
+  include ::profile::repo::openvox
   include ::profile::services::puppet::altnames
+
+  if($collection =~ /openvox/) {
+    $options = {
+      'manage_repo' => false,
+    }
+  } else {
+    $options = {
+      'collection' => $collection,
+    }
+  }
 
   $config = [
     {'section' => 'agent', 'setting' => 'environment', 'value' => $environment},
@@ -20,8 +35,9 @@ class profile::baseconfig::puppet {
   ]
 
   class { 'puppet_agent':
-    config     => $config,
-    collection => $collection,
+    config      => $config,
+    require     => Apt::Source["${reponame}-release"],
+    *           => $options,
   }
 
   # Apparantly the puppet_agent class refuses to configure arbritary parameters,
