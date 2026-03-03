@@ -32,7 +32,7 @@ class profile::services::puppet::server::config {
     $management_ip = $::sl2['server']['primary_interface']['ipv4']
   }
 
-  include ::profile::services::puppet::altnames
+  include ::profile::baseconfig::puppet
   include ::profile::services::puppet::server::config::ca
   include ::profile::services::puppet::server::config::report
   include ::shiftleader::integration::puppet

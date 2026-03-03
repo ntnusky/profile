@@ -1,6 +1,6 @@
 # Installs and configures puppetdb 
 class profile::services::puppet::db {
-  include ::profile::services::puppet::altnames
+  include ::profile::baseconfig::puppet
   include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
   include ::profile::services::puppet::db::logging
