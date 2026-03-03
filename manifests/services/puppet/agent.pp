@@ -26,6 +26,7 @@ class profile::services::puppet::agent {
     manage_packages       => true,
     runinterval           => $runinterval,
     runmode               => 'service',
+    unavailable_runmodes  => ['systemd.timer', 'cron'],
     require               => Apt::Source["${reponame}-release"],
   }
 
