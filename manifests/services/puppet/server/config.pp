@@ -66,7 +66,7 @@ class profile::services::puppet::server::config {
           },
         },
       }),
-      require => Package['puppetserver'] 
+      require => Package['puppetserver']
     }
 
     ini_setting { 'puppetserver-db-urls':
@@ -83,13 +83,13 @@ class profile::services::puppet::server::config {
       path    => '/etc/puppetlabs/puppet/puppetdb.conf',
       section => 'main',
       setting => 'soft_write_failure',
-      value   => false, 
+      value   => false,
       tag     => 'puppetserver-config',
     }
 
     puppet::config::server {
-      'storeconfigs':         value => true,
-      'storeconfigs_backend': value => 'puppetdb'
+      'storeconfigs':         value => true;
+      'storeconfigs_backend': value => 'puppetdb';
     }
   }
 
