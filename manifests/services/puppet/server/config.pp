@@ -66,7 +66,8 @@ class profile::services::puppet::server::config {
           },
         },
       }),
-      require => Package['puppetserver']
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
     }
 
     ini_setting { 'puppetserver-db-urls':
@@ -75,7 +76,8 @@ class profile::services::puppet::server::config {
       section => 'main',
       setting => 'server_urls',
       value   => "https://${puppetdb_hostname}:8081/",
-      tag     => 'puppetserver-config',
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
     }
 
     ini_setting { 'puppetserver-db-softwritefail':
@@ -84,7 +86,8 @@ class profile::services::puppet::server::config {
       section => 'main',
       setting => 'soft_write_failure',
       value   => false,
-      tag     => 'puppetserver-config',
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
     }
 
     puppet::config::server {
