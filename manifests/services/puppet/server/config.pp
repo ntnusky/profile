@@ -74,7 +74,7 @@ class profile::services::puppet::server::config {
       path    => '/etc/puppetlabs/puppet/puppetdb.conf',
       section => 'main',
       setting => 'server_urls',
-      value   => "https://${puppetdb_hostname}:8080/",
+      value   => "https://${puppetdb_hostname}:8081/",
       tag     => 'puppetserver-config',
     }
 
