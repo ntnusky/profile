@@ -55,9 +55,41 @@ class profile::services::puppet::server::config {
 
   if($usepuppetdb) {
     $puppetdb_hostname = lookup('profile::puppetdb::hostname', Stdlib::Fqdn)
-    class { 'puppetdb::master::config':
-      puppetdb_server                => $puppetdb_hostname,
-      create_puppet_service_resource => false,
+    file { '/etc/puppetlabs/puppet/routes.yaml':
+      ensure  => 'file',
+      mode    => '0644',
+      content => stdlib::to_yaml( {
+        master => {
+          facts => {
+            cache    => 'json',
+            terminus => 'puppetdb',
+          },
+        },
+      }),
+      require => Package['puppetserver'] 
+    }
+
+    ini_setting { 'puppetserver-db-urls':
+      ensure  => 'present',
+      path    => '/etc/puppetlabs/puppet/puppetdb.conf',
+      section => 'main',
+      setting => 'server_urls',
+      value   => "https://${puppetdb_hostname}:8080/",
+      tag     => 'puppetserver-config',
+    }
+
+    ini_setting { 'puppetserver-db-softwritefail':
+      ensure  => 'present',
+      path    => '/etc/puppetlabs/puppet/puppetdb.conf',
+      section => 'main',
+      setting => 'soft_write_failure',
+      value   => false, 
+      tag     => 'puppetserver-config',
+    }
+
+    puppet::config::server {
+      'storeconfigs':         value => true,
+      'storeconfigs_backend': value => 'puppetdb'
     }
   }
 
