@@ -61,13 +61,7 @@ class profile::services::puppet::server::config {
     }
   }
 
-  ini_setting { 'Puppetmaster strict':
-    ensure  => present,
-    path    => '/etc/puppetlabs/puppet/puppet.conf',
-    section => 'master',
-    setting => 'strict',
-    value   => $strictness,
-    notify  => Service['puppetserver'],
-    require => Package['puppetserver'],
+  puppet::config::server { 'strict':
+    value => $strictness,
   }
 }
