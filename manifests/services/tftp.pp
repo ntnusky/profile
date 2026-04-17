@@ -12,7 +12,8 @@ class profile::services::tftp {
 
   # Install and configure the tftp server.
   class { '::tftp':
-    root => $rootdir,
+    root                    => $rootdir,
+    manage_syslinux_package => false,
   }
 
   # TODO: Remove this purge at a later release
@@ -26,7 +27,7 @@ class profile::services::tftp {
   }
 
   # Set up the tftp-boot directory
-  package { ['syslinux', 'syslinux-efi', 'pxelinux']:
+  package { ['syslinux', 'syslinux-common', 'syslinux-efi', 'pxelinux']:
     ensure => 'present',
   }
 
