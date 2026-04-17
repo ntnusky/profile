@@ -19,6 +19,7 @@ class profile::services::tftp {
   # TODO: Remove this purge at a later release
   package { 'xinetd':
     ensure => 'purged',
+    before => Class['::tftp'],
   }
 
   # A tftp client is handy for testing.
