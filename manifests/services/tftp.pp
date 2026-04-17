@@ -31,13 +31,6 @@ class profile::services::tftp {
     ensure => 'present',
   }
 
-  file { $rootdir:
-    ensure => directory, 
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
-  }
-
   file { "${rootdir}pxelinux.0":
     ensure  => 'file',
     source  => '/usr/lib/PXELINUX/pxelinux.0',
