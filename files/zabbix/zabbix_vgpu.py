@@ -42,6 +42,8 @@ def parseNvidiaSMI():
       value = value.rstrip().lstrip()
       if(len(value) == 0):
         raise ValueError
+      if(key == "GPU"):
+          key = "Gpu"
       if(key == "vGPU ID"):
         if("VGPUs" not in current):
           current["VGPUs"] = {}
