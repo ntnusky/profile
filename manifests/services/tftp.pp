@@ -12,8 +12,12 @@ class profile::services::tftp {
 
   # Install and configure the tftp server.
   class { '::tftp':
-    directory => $rootdir,
-    options   => '--secure',
+    root => $rootdir,
+  }
+
+  # TODO: Remove this purge at a later release
+  package { 'xinetd':
+    ensure => 'purged',
   }
 
   # A tftp client is handy for testing.
