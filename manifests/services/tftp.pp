@@ -6,9 +6,6 @@ class profile::services::tftp {
     'value_type'    => Stdlib::Unixpath,
   })
 
-  # TODO: Remove this purge at a later release
-  include ::profile::services::dashboard::clients::purge
-
   include ::profile::services::tftp::acl
   include ::profile::services::tftp::firewall
   include ::shiftleader::worker::tftp

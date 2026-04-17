@@ -1,9 +1,6 @@
 # Installs and configures a puppetmaster that both is a CA and registers with
 # the LB. 
 class profile::services::puppet::aio {
-  # TODO: Remove this purge at a later release
-  include ::profile::services::dashboard::clients::purge
-
   include ::profile::services::puppet::backup::ca
   include ::profile::services::puppet::ca::certclean
   include ::profile::services::puppet::server::config
