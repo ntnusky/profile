@@ -1,6 +1,6 @@
 # Configures the puppetmaster
 class profile::services::puppet::server::config {
-  $strictness = lookup('profile::puppet::server::strcit', {
+  $strictness = lookup('profile::puppet::server::strict', {
     'default_value' => 'warning',
     'value_type'    => String,
   })
