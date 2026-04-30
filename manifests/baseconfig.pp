@@ -1,5 +1,6 @@
 # This class ensures that all baseconfiguration are brought in.
 class profile::baseconfig {
+  include ::profile::baseconfig::copyfail
   include ::profile::baseconfig::disk
   include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
