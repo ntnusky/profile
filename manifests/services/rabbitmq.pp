@@ -32,8 +32,6 @@ class profile::services::rabbitmq {
     $cluster_config = {}
   }
 
-  include ::profile::services::keepalived::uninstall
-
   if ( $management_netv6 ) {
     $ipv6 = true
   } else {
