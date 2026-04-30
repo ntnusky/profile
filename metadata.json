@@ -1,6 +1,6 @@
 {
   "name": "ntnusky-profile",
-  "version": "1.30.9",
+  "version": "1.31.1",
   "author": "NTNU IIK",
   "summary": "Installs, configures, and manages services in our openstack environment.",
   "license": "",

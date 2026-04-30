@@ -1,6 +1,6 @@
 # Configures an appropriate apt-repo for the openvox tools.
 class profile::repo::openvox {
-  $reponame = lookup('profile::openvx::release', {
+  $reponame = lookup('profile::openvox::release', {
     'default_value' => 'openvox8',
     'value_type'    => String,
   })
