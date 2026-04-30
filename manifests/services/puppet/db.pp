@@ -1,6 +1,6 @@
 # Installs and configures puppetdb 
 class profile::services::puppet::db {
-  include ::profile::services::puppet::altnames
+  include ::profile::services::puppet::agent
   include ::profile::services::puppet::db::firewall
   include ::profile::services::puppet::db::haproxy::backend
   include ::profile::services::puppet::db::logging
@@ -33,12 +33,13 @@ class profile::services::puppet::db {
 
 
   class { '::puppetdb::server':
-    database           => 'postgres',
-    database_port      => $dbport,
-    database_host      => $dbhost,
-    database_username  => $dbuser,
-    database_password  => $dbpass,
-    database_name      => $dbname,
-    ssl_listen_address => $ip,
+    database_port          => $dbport,
+    database_host          => $dbhost,
+    database_username      => $dbuser,
+    database_password      => $dbpass,
+    database_name          => $dbname,
+    read_database_username => $dbuser,
+    read_database_password => $dbpass,
+    ssl_listen_address     => $ip,
   }
 }

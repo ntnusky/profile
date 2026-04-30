@@ -39,7 +39,7 @@ class profile::services::info {
       content => "${auth_user}:${pw_hash}",
     }
 
-    ensure_packages ( ['ldap-utils'], {
+    stdlib::ensure_packages ( ['ldap-utils'], {
         'ensure' => 'present',
     })
   }

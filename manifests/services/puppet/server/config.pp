@@ -1,5 +1,10 @@
 # Configures the puppetmaster
 class profile::services::puppet::server::config {
+  $strictness = lookup('profile::puppet::server::strict', {
+    'default_value' => 'warning',
+    'value_type'    => String,
+  })
+
   $usepuppetdb = lookup('profile::puppetdb::masterconfig', {
     'value_type'    => Boolean,
     'default_value' => true,
@@ -27,7 +32,7 @@ class profile::services::puppet::server::config {
     $management_ip = $::sl2['server']['primary_interface']['ipv4']
   }
 
-  include ::profile::services::puppet::altnames
+  include ::profile::services::puppet::agent
   include ::profile::services::puppet::server::config::ca
   include ::profile::services::puppet::server::config::report
   include ::shiftleader::integration::puppet
@@ -50,9 +55,48 @@ class profile::services::puppet::server::config {
 
   if($usepuppetdb) {
     $puppetdb_hostname = lookup('profile::puppetdb::hostname', Stdlib::Fqdn)
-    class { 'puppetdb::master::config':
-      puppetdb_server                => $puppetdb_hostname,
-      create_puppet_service_resource => false,
+    file { '/etc/puppetlabs/puppet/routes.yaml':
+      ensure  => 'file',
+      mode    => '0644',
+      content => stdlib::to_yaml( {
+        server => {
+          facts => {
+            cache    => 'json',
+            terminus => 'puppetdb',
+          },
+        },
+      }),
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
     }
+
+    ini_setting { 'puppetserver-db-urls':
+      ensure  => 'present',
+      path    => '/etc/puppetlabs/puppet/puppetdb.conf',
+      section => 'main',
+      setting => 'server_urls',
+      value   => "https://${puppetdb_hostname}:8081/",
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
+    }
+
+    ini_setting { 'puppetserver-db-softwritefail':
+      ensure  => 'present',
+      path    => '/etc/puppetlabs/puppet/puppetdb.conf',
+      section => 'main',
+      setting => 'soft_write_failure',
+      value   => false,
+      require => Package['puppetserver'],
+      notify  => Service['puppetserver'],
+    }
+
+    puppet::config::server {
+      'storeconfigs':         value => true;
+      'storeconfigs_backend': value => 'puppetdb';
+    }
+  }
+
+  puppet::config::server { 'strict':
+    value => $strictness,
   }
 }

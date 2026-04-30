@@ -46,9 +46,9 @@ class profile::services::postgresql::pgpass {
     content => "${ip}:${mid}:${replicator_password}",
     tag     => 'pgpass',
   }
-  @@concat::fragment { "postgres replication ${::hostname}":
+  @@concat::fragment { "postgres replication ${::facts['networking']['hostname']}":
     target  => '/var/lib/postgresql/.pgpass',
-    content => "${::hostname}:${mid}:${replicator_password}",
+    content => "${::facts['networking']['hostname']}:${mid}:${replicator_password}",
     tag     => 'pgpass',
   }
   concat::fragment { 'postgres /var/lib comment-hack':
@@ -61,9 +61,9 @@ class profile::services::postgresql::pgpass {
     content => "${ip}:${database_port}:*:postgres:${password}",
     tag     => 'pgpass',
   }
-  @@concat::fragment { "postgres postgres ${::hostname}":
+  @@concat::fragment { "postgres postgres ${::facts['networking']['hostname']}":
     target  => '/root/.pgpass',
-    content => "${::hostname}:${database_port}:*:postgres:${password}",
+    content => "${::facts['networking']['hostname']}:${database_port}:*:postgres:${password}",
     tag     => 'pgpass',
   }
   concat::fragment { 'postgres /root comment-hack':

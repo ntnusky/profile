@@ -1,8 +1,5 @@
 # Installs and configures a puppetmaster 
 class profile::services::puppet::server {
-  # TODO: Remove this purge at a later release
-  include ::profile::services::dashboard::clients::purge
-
   include ::profile::services::puppet::backup::server
   include ::profile::services::puppet::server::config
   include ::profile::services::puppet::server::firewall

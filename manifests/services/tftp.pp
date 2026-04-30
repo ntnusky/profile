@@ -6,17 +6,20 @@ class profile::services::tftp {
     'value_type'    => Stdlib::Unixpath,
   })
 
-  # TODO: Remove this purge at a later release
-  include ::profile::services::dashboard::clients::purge
-
   include ::profile::services::tftp::acl
   include ::profile::services::tftp::firewall
   include ::shiftleader::worker::tftp
 
   # Install and configure the tftp server.
   class { '::tftp':
-    directory => $rootdir,
-    options   => '--secure',
+    root                    => $rootdir,
+    manage_syslinux_package => false,
+  }
+
+  # TODO: Remove this purge at a later release
+  package { 'xinetd':
+    ensure => 'purged',
+    before => Class['::tftp'],
   }
 
   # A tftp client is handy for testing.
@@ -25,15 +28,8 @@ class profile::services::tftp {
   }
 
   # Set up the tftp-boot directory
-  package { ['syslinux', 'syslinux-efi', 'pxelinux']:
+  package { ['syslinux', 'syslinux-common', 'syslinux-efi', 'pxelinux']:
     ensure => 'present',
-  }
-
-  file { $rootdir:
-    ensure => directory, 
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
   }
 
   file { "${rootdir}pxelinux.0":

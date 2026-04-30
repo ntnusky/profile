@@ -13,12 +13,15 @@ class profile::baseconfig {
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
-  include ::profile::baseconfig::puppet
   include ::profile::baseconfig::snow
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::uefi
   include ::profile::baseconfig::updates
+
+  include ::profile::repo::openvox
+
+  include ::profile::services::puppet::agent
 
   include ::profile::utilities::ntnuskytools
 

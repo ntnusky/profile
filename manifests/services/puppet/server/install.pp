@@ -1,13 +1,15 @@
 # Installs the puppetmaster with r10k.
 class profile::services::puppet::server::install {
-  $r10krepo = lookup('profile::puppet::r10k::repo', Stdlib::HTTPUrl)
-  $adminmail = lookup('profile::admin::maillist', {
-    'value_type'    => String,
-    'default_value' => 'root',
+  $package = lookup('profile::puppet::server::package', {
+    # TODO: Switch default to openvox after we have migrated.
+    'default_value' => 'puppetserver',
+    'value_type'    => Enum['openvox-server', 'puppetserver'],
   })
+  $r10krepo = lookup('profile::puppet::r10k::repo', Stdlib::HTTPUrl)
 
   package { 'puppetserver':
     ensure => 'present',
+    name   => $package,
   }
 
   class { 'r10k':

@@ -32,8 +32,6 @@ class profile::services::rabbitmq {
     $cluster_config = {}
   }
 
-  include ::profile::services::keepalived::uninstall
-
   if ( $management_netv6 ) {
     $ipv6 = true
   } else {
@@ -65,7 +63,7 @@ class profile::services::rabbitmq {
       'module' => 'rabbitmq',
       'log'    => {
         'enabled'   => true,
-        'var.paths' => [ "/var/log/rabbitmq/rabbit@${::hostname}.log" ],
+        'var.paths' => [ "/var/log/rabbitmq/rabbit@${::facts['networking']['hostname']}.log" ],
       },
     }]
   }

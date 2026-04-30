@@ -4,10 +4,9 @@ class profile::baseconfig::networking {
   include ::profile::baseconfig::network::socketbuffer
 
   # Determine if we need ifupdown or netplan for networking
-  $os = $facts['operatingsystem']
-  if($os == 'Ubuntu') {
+  if($::facts['os']['name'] == 'Ubuntu') {
     include ::profile::baseconfig::network::netplan
-  } elsif ($os == 'CentOS') {
+  } elsif ($::facts['os']['name'] == 'CentOS') {
     include ::profile::baseconfig::network::ifupdown
   }
 

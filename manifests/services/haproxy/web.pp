@@ -58,8 +58,8 @@ class profile::services::haproxy::web {
 
   if($addpuppetcert) {
     $cmdparts = [
-      "/usr/bin/cat /etc/puppetlabs/puppet/ssl/private_keys/${::fqdn}.pem",
-      "/etc/puppetlabs/puppet/ssl/certs/${::fqdn}.pem",
+      "/usr/bin/cat /etc/puppetlabs/puppet/ssl/private_keys/${::facts['networking']['fqdn']}.pem",
+      "/etc/puppetlabs/puppet/ssl/certs/${::facts['networking']['fqdn']}.pem",
       '/etc/puppetlabs/puppet/ssl/certs/ca.pem'
     ]
     $joincmd = join($cmdparts, ' ')

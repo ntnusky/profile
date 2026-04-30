@@ -12,11 +12,11 @@ class profile::ceph::monitor {
   include ::profile::ceph::keys
   include ::profile::ceph::zabbix::monitor
 
-  ceph::mgr { $::hostname :
+  ceph::mgr { $::facts['networking']['hostname']:
     key        => $mgr_key,
     inject_key => true,
   }
-  ceph::mon { $::hostname:
+  ceph::mon { $::facts['networking']['hostname']: 
     key    => $mon_key,
     before => Anchor['profile::ceph::monitor::end']
   }
