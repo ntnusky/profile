@@ -1,10 +1,10 @@
 # This class ensures that all baseconfiguration are brought in.
 class profile::baseconfig {
-  include ::profile::baseconfig::copyfail
   include ::profile::baseconfig::disk
   include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
+  include ::profile::baseconfig::kmodblock
   include ::profile::baseconfig::locale
   include ::profile::baseconfig::logging
   include ::profile::baseconfig::logrotate
