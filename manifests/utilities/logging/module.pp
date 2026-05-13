@@ -24,7 +24,7 @@ define profile::utilities::logging::module (
     }
     file { "/etc/filebeat/modules.d/${name}.yml":
       notify  => Service['filebeat'],
-      require => Anchor['filebeat::install::end'],
+      require => Class['filebeat::install::linux'],
       *       => $opts,
     }
   }

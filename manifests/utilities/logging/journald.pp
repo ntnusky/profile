@@ -25,7 +25,7 @@ define profile::utilities::logging::journald (
       ensure  => 'file',
       content => stdlib::to_yaml($content),
       notify  => Service['filebeat'],
-      require => Anchor['filebeat::install::end'],
+      require => Class['filebeat::install::linux'],
     }
   }
 }
