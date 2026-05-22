@@ -12,6 +12,12 @@ class profile::services::puppet::server::install {
     name   => $package,
   }
 
+  if($package == 'openvox-server') {
+    package { 'openvoxdb-termini':
+      ensure => 'present',
+    }
+  }
+
   class { 'r10k':
     remote => $r10krepo,
   }
