@@ -1,6 +1,5 @@
 # This class ensures that all baseconfiguration are brought in.
 class profile::baseconfig {
-  include ::needrestart # Configured via the hash needrestart::configs in hiera
   include ::profile::baseconfig::disk
   include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
@@ -11,6 +10,7 @@ class profile::baseconfig {
   include ::profile::baseconfig::logrotate
   include ::profile::baseconfig::mounts
   include ::profile::baseconfig::motd
+  include ::profile::baseconfig::needrestart
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
