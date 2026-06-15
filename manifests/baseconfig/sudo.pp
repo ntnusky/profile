@@ -8,7 +8,7 @@ class profile::baseconfig::sudo {
     'value_type'    => Boolean,
   })
 
-  $use_old_sudo = lookup('profile::baseconfig::sudo::use_old_suo', {
+  $use_old_sudo = lookup('profile::baseconfig::sudo::use_old_sudo', {
     'default_value' => false,
     'value_type'    => Boolean,
   })
