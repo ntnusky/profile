@@ -8,6 +8,11 @@ class profile::baseconfig::sudo {
     'value_type'    => Boolean,
   })
 
+  $use_old_sudo = lookup('profile::baseconfig::sudo::use_old_suo', {
+    'default_value' => false,
+    'value_type'    => Boolean,
+  })
+
   if($purge) {
     $opts = {}
   } else {
@@ -27,5 +32,18 @@ class profile::baseconfig::sudo {
   sudo::conf { 'administrator':
     priority => 11,
     source   => 'puppet:///modules/profile/sudo/administrator_sudoers',
+  }
+
+  if( versioncmp($facts['os']['release']['major'], '26.04') >= 0 ) {
+    if($use_old_sudo) {
+      alternatives { 'sudo':
+        path => '/usr/bin/sudo.ws',
+      }
+    }
+    else {
+      alternatives { 'sudo':
+        path => '/usr/lib/cargo/bin/sudo',
+      }
+    }
   }
 }
