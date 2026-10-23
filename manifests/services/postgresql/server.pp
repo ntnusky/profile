@@ -43,7 +43,7 @@ class profile::services::postgresql::server {
   if($::facts['networking']['fqdn'] == $master_server) {
     $confpassword = $password
     postgresql::server::role { 'replicator':
-      password_hash => postgresql_password('replicator', $replicator_password),
+      password_hash => postgresql::postgresql_password('replicator', $replicator_password),
       replication   => true,
     }
   } else {
