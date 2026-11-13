@@ -58,6 +58,7 @@ class profile::zabbix::agent {
           'zabbix_group' => $user,
       }),
       notify  => Service[$servicename],
+      require => File['/etc/zabbix/zabbix_agent2.d'],
     }
 
     file { $pidfile_dir:
