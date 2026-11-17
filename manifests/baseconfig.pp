@@ -4,19 +4,26 @@ class profile::baseconfig {
   include ::profile::baseconfig::facts
   include ::profile::baseconfig::git
   include ::profile::baseconfig::ioscheduler
+  include ::profile::baseconfig::kmodblock
   include ::profile::baseconfig::locale
   include ::profile::baseconfig::logging
   include ::profile::baseconfig::logrotate
   include ::profile::baseconfig::mounts
   include ::profile::baseconfig::motd
+  include ::profile::baseconfig::openstackclients
+  include ::profile::baseconfig::needrestart
   include ::profile::baseconfig::networking
   include ::profile::baseconfig::ntp
   include ::profile::baseconfig::packages
-  include ::profile::baseconfig::puppet
+  include ::profile::baseconfig::snow
   include ::profile::baseconfig::ssh
   include ::profile::baseconfig::sudo
   include ::profile::baseconfig::uefi
   include ::profile::baseconfig::updates
+
+  include ::profile::repo::openvox
+
+  include ::profile::services::puppet::agent
 
   include ::profile::utilities::ntnuskytools
 

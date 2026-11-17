@@ -52,7 +52,7 @@ class profile::services::mysql::backup {
     cron { 'Mysql database backup':
       command => $backup_command, 
       hour    => $hour, 
-      minute  => fqdn_rand(60, "${::hostname}-backup"), 
+      minute  => fqdn_rand(60, "${::facts['networking']['hostname']}-backup"), 
       user    => 'root',
       weekday => $day,
     }
@@ -60,7 +60,7 @@ class profile::services::mysql::backup {
     cron { 'Mysql database backup cleaning':
       command => $clean_command, 
       hour    => fqdn_rand(6) + 8, 
-      minute  => fqdn_rand(60, "${::hostname}-cleaning"), 
+      minute  => fqdn_rand(60, "${::facts['networking']['hostname']}-cleaning"), 
       user    => 'root',
       weekday => $day,
     }

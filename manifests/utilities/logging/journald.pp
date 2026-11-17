@@ -23,7 +23,7 @@ define profile::utilities::logging::journald (
 
     file { "/etc/filebeat/conf.d/${name}.yml":
       ensure  => 'file',
-      content => to_yaml($content),
+      content => stdlib::to_yaml($content),
       notify  => Service['filebeat'],
       require => Anchor['filebeat::install::end'],
     }

@@ -37,9 +37,9 @@ class profile::ceph::osd {
     fail('Cannot automatically set a manually supplied crush location')
   }
 
-  if($autolocation and $::hostname =~ /.*\-([bg]?)(\d{2})\-(\d{2})\-(\d{2})/ ) {
+  if($autolocation and $::facts['networking']['hostname'] =~ /.*\-([bg]?)(\d{2})\-(\d{2})\-(\d{2})/ ) {
     ceph_config { 'global/crush_location':
-      value => "root=default row=row${2} rack=rack${2}-${3} host=${::hostname}",
+      value => "root=default row=row${2} rack=rack${2}-${3} host=${::facts['networking']['hostname']}",
     }
   } elsif ($crush_location) {
     ceph_config { 'global/crush_location':

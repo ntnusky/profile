@@ -7,7 +7,7 @@ class profile::services::puppet::backup::folders {
     mode   => '0750',
   }
 
-  @@file { "/var/opt/puppet/${::hostname}":
+  @@file { "/var/opt/puppet/${::facts['networking']['hostname']}":
     ensure => directory,
     owner  => 'root',
     group  => 'root',

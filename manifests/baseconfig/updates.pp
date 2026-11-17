@@ -1,6 +1,6 @@
 # Abstraction for selecting correct auto-update package based on OS
 class profile::baseconfig::updates {
-  case $::operatingsystem {
+  case $facts['os']['name'] {
     'CentOS': {
       include ::profile::baseconfig::updates::yumcron
     }
@@ -8,7 +8,7 @@ class profile::baseconfig::updates {
       include ::profile::baseconfig::updates::unattendedupgrades
     }
     default: {
-      fail("Unsopperted operating system: ${::operatingsystem}")
+      fail("Unsopperted operating system: ${::facts['os']['name']}")
     }
   }
 }

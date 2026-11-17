@@ -23,7 +23,7 @@ class profile::services::postgresql::server {
   $master_server = lookup('profile::postgres::masterserver', String)
 
   $postgres_version = lookup('profile::postgres::version', {
-    'default_value' => '9.6',
+    'default_value' => '18',
     'value_type'    => String,
   })
 
@@ -40,7 +40,7 @@ class profile::services::postgresql::server {
   include ::profile::services::postgresql::pgpass
   include ::profile::services::postgresql::scripts
 
-  if($::fqdn == $master_server) {
+  if($::facts['networking']['fqdn'] == $master_server) {
     $confpassword = $password
     postgresql::server::role { 'replicator':
       password_hash => postgresql_password('replicator', $replicator_password),

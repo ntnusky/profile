@@ -13,7 +13,7 @@ class profile::services::apache {
   })
   $default_docroot = lookup('profile::apache::vhost::default::docroot', {
     'value_type'    => Stdlib::Absolutepath,
-    'default_value' => "/var/www/${::fqdn}",
+    'default_value' => "/var/www/${::facts['networking']['fqdn']}",
   })
 
   $management_netv6 = lookup('profile::networks::management::ipv6::prefix', {
@@ -47,8 +47,8 @@ class profile::services::apache {
     apache::listen { "[${management_ipv6}]:80": }
   }
 
-  apache::vhost { "${::fqdn}-http":
-    servername    => $::fqdn,
+  apache::vhost { "${::facts['networking']['fqdn']}-http":
+    servername    => $::facts['networking']['fqdn'],
     port          => 80,
     add_listen    => false,
     docroot       => $default_docroot,

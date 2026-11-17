@@ -2,7 +2,7 @@
 define profile::services::haproxy::backend (
   String                                  $backend,
   String                                  $port,
-  String                                  $hostname = $::hostname,
+  String                                  $hostname = $::facts['networking']['hostname'],
   Optional[String]                        $interface = undef,
   Optional[Stdlib::IP::Address::Nosubnet] $ip = undef,
   Variant[Array[String], String]          $options = [],
@@ -53,13 +53,13 @@ define profile::services::haproxy::backend (
     }
 
     # Make a registration for our helper-scripts.
-    profile::services::haproxy::tools::register { "${name}-${::fqdn}":
+    profile::services::haproxy::tools::register { "${name}-${::facts['networking']['fqdn']}":
       servername  => $hostname,
       backendname => $backend,
     }
 
     # Make a registration for the loadbalancer.
-    @@haproxy::balancermember { "${name}-${::fqdn}":
+    @@haproxy::balancermember { "${name}-${::facts['networking']['fqdn']}":
       listening_service => $backend,
       server_names      => $hostname,
       ipaddresses       => $real_ip,

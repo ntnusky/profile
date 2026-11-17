@@ -14,7 +14,7 @@ define profile::utilities::logging::module (
     if $content {
       $opts = {
         ensure  => 'file',
-        content => to_yaml($content),
+        content => stdlib::to_yaml($content),
       }
     } else {
       $opts = {

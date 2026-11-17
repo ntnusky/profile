@@ -23,7 +23,7 @@ class profile::baseconfig::facts {
     file { '/etc/puppetlabs/facter/facts.d/ntnu.yaml':
       ensure  => 'file',
       mode    => '0644',
-      content => to_yaml( {
+      content => stdlib::to_yaml( {
         ntnu => {
           region => $region,
         },

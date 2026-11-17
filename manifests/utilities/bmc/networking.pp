@@ -16,7 +16,7 @@ class profile::utilities::bmc::networking {
     dns_domain_from_dhcp      => false,
     dns_domain_name_from_dhcp => false,
     dns_domain_name           => $dns_domain_name,
-    dns_bmc_name              => $::hostname,
+    dns_bmc_name              => $::facts['networking']['hostname'],
     *                         => $connection,
   }
 }

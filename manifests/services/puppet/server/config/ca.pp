@@ -3,7 +3,7 @@
 class profile::services::puppet::server::config::ca {
   $puppetca = lookup('profile::puppet::caserver', Stdlib::Fqdn)
 
-  if($puppetca == $::fqdn) {
+  if($puppetca == $::facts['networking']['fqdn']) {
     $template = 'ca.enabled.cfg'
 
     file { '/etc/puppetlabs/puppetserver/conf.d/ca.conf':
