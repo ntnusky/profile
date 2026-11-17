@@ -33,8 +33,8 @@ class profile::services::rabbitmq {
       applyto    => 'quorum_queues',
       pattern    => '^(?!amq\.).*',
       definition => {
-        'expires'     => 86400000,
-        'message-ttl' => 600000,
+        'expires'     => '86400000',
+        'message-ttl' => '600000',
       },
       require    => Class['rabbitmq'],
     }
@@ -43,8 +43,8 @@ class profile::services::rabbitmq {
       applyto    => 'streams',
       pattern    => '.*_fanout.*',
       definition => {
-        'max-length-bytes'              => 15000000,
-        'stream-max-segment-size-bytes' => 5000000,
+        'max-length-bytes'              => '15000000',
+        'stream-max-segment-size-bytes' => '5000000',
       },
       require    => Class['rabbitmq'],
     }
