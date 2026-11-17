@@ -44,7 +44,7 @@ class profile::services::rabbitmq {
       pattern    => '.*_fanout.*',
       definition => {
         'max-length-bytes'              => '15000000',
-        'stream-max-segment-size-bytes' => 5000000,
+        'stream-max-segment-size-bytes' => '5000000',
       },
       require    => Class['rabbitmq'],
     }
