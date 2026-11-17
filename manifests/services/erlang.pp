@@ -25,7 +25,6 @@ class profile::services::erlang {
     }
 
     apt::source { 'erlang':
-      comment  => '',
       location => "https://deb1.rabbitmq.com/rabbitmq-erlang/ubuntu/${distro}",
       release  => $distro,
       repos    => 'main',
