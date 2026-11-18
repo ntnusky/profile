@@ -15,6 +15,9 @@ class profile::services::rabbitmq::firewall {
     ::profile::firewall::infra::all { 'RabbitMQ-Clustering-CLI':
       port     => '35672-35682',
     }
+    ::profile::firewall::infra::all { 'RabbitMQ-Stream-Replication':
+      port     => '6000-6500',
+    }
   } else {
     ::profile::firewall::infra::region { 'RabbitMQ':
       port     => 5672,
@@ -24,6 +27,9 @@ class profile::services::rabbitmq::firewall {
     }
     ::profile::firewall::infra::region { 'RabbitMQ-Clustering-CLI':
       port     => '35672-35682',
+    }
+    ::profile::firewall::infra::region { 'RabbitMQ-Stream-Replication':
+      port     => '6000-6500',
     }
   }
 }
