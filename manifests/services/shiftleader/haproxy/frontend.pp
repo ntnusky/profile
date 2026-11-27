@@ -28,12 +28,24 @@ class profile::services::shiftleader::haproxy::frontend {
       'default_value' => undef,
       'value_type'    => Optional[String],
     })
-    $region = lookup('profile::haproxy::region', {
-      'default_value' => $region_fallback,
-      'value_type'    => String,
+    $overrides = lookup('profile::haproxy::region::override', {
+      'default_value' => {},
+      'value_type'    => Hash[String, Array[String]],
     })
 
-    Haproxy::Balancermember <<| listening_service == 'bk_shiftleader2' and
-        tag == "region-${region}" |>>
+    # If there is defined an override-list for a certain haproxy-backend, use
+    # that list as the list of regions to collect servers from.
+    if('bk_shiftleader2' in $overrides) {
+      $regions = [] + $overrides['bk_shiftleader2']
+
+    # Otherwise use the haproxy-servers region
+    } else {
+      $regions = [ $region_fallback ]
+    }
+
+    $regions.each | $region | {
+      Haproxy::Balancermember <<| listening_service == 'bk_shiftleader2' and
+          tag == "region-${region}" |>>
+    }
   }
 }

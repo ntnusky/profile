@@ -4,6 +4,7 @@
 class profile::services::libvirt::architectures {
   $arch = [
     'x86_Icelake-Server-NTNU.xml',
+    'x86_SapphireRapids-NTNU.xml',
     'x86_Skylake-Server-NTNU.xml',
   ]
 
